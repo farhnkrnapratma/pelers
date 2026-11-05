@@ -1,4 +1,6 @@
 pub mod api;
+#[cfg(feature = "napi")]
+mod bindings;
 pub mod detect;
 pub mod errors;
 pub mod flowchart;

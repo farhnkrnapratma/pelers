@@ -13,6 +13,10 @@ Commit messages must follow [Conventional Commits](https://www.conventionalcommi
 
 CI runs on CircleCI (`.circleci/config.yml`): `reuse lint`, format/lint, tests, `cargo deny`, secret scan (trufflehog) and commitlint on every push.
 
+## Rust port
+
+The Rust core in `src/` is being ported from the TypeScript renderer in `ts/`, and the package exposes only a JS/TS binding (napi, later WASM). `ts/` is the oracle: a diagram type's TypeScript is deleted only after the Rust output is byte-identical on the golden corpus and a differential fuzz run is clean. SVG parity needs JS number semantics (`Math.round` ties go toward +infinity, UTF-16 text widths, insertion-ordered maps, stable sorts); do not use `f64::round` or hash-map iteration order in rendering code. Run the oracle's commands from `ts/` (`bun run typecheck`, `lint`, `fmt:check`, `test`) and the core's from the repo root (`cargo test`, `bun run test:native`).
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.

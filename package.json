@@ -1,0 +1,74 @@
+{
+    "name": "pelers",
+    "version": "1.0.0-alpha2",
+    "description": "A fast, lightweight Mermaid renderer that outputs themeable SVG. Rust core with a JavaScript/TypeScript binding (derived from Pele).",
+    "license": "MIT OR Apache-2.0",
+    "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
+    "keywords": [
+        "mermaid",
+        "diagram",
+        "diagrams",
+        "flowchart",
+        "svg",
+        "renderer"
+    ],
+    "homepage": "https://github.com/farhnkrnapratma/pelers#readme",
+    "bugs": {
+        "url": "https://github.com/farhnkrnapratma/pelers/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/farhnkrnapratma/pelers.git"
+    },
+    "type": "module",
+    "main": "./index.js",
+    "types": "./index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./index.d.ts",
+            "default": "./index.js"
+        }
+    },
+    "files": [
+        "index.js",
+        "index.native.js",
+        "index.d.ts",
+        "index.native.d.ts",
+        "README.md",
+        "NOTICE",
+        "LICENSE-MIT",
+        "LICENSE-APACHE"
+    ],
+    "sideEffects": false,
+    "scripts": {
+        "prepare": "bash .githooks/install.sh",
+        "build": "napi build --platform --features napi --esm --js index.native.js --dts index.native.d.ts",
+        "build:release": "napi build --platform --release --features napi --esm --js index.native.js --dts index.native.d.ts",
+        "test:bindings": "bun scripts/test-bindings.mjs",
+        "test:native": "bun run build:release && bun run test:bindings"
+    },
+    "napi": {
+        "binaryName": "pelers",
+        "targets": [
+            "x86_64-unknown-linux-gnu",
+            "aarch64-unknown-linux-gnu",
+            "x86_64-unknown-linux-musl",
+            "aarch64-unknown-linux-musl",
+            "x86_64-apple-darwin",
+            "aarch64-apple-darwin",
+            "x86_64-pc-windows-msvc",
+            "aarch64-pc-windows-msvc"
+        ]
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^21.2.4",
+        "@commitlint/config-conventional": "^21.2.4",
+        "@napi-rs/cli": "^3.10.12"
+    }
+}
