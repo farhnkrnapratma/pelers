@@ -1,7 +1,8 @@
-use serde_json::Value;
-
 use crate::diagrams::info::{self, InfoModel, render_info};
+use crate::errors::{Edit, input_offset, locating_in};
+use crate::preprocess::{encode_entities, source_map};
 use crate::svg::root::RenderOptions;
+use crate::util::value::Value;
 use crate::{
     Config, Detected, DiagramType, FlowchartModel, MermaidType, PeleError, PeleErrorCode,
     Preprocessed, detect_diagram, parse_flowchart, preprocess, render_flowchart,
@@ -68,6 +69,15 @@ fn unsupported(detected: Option<Detected>) -> PeleError {
     }
 }
 
+fn source_finder(source: &str) -> impl Fn(usize) -> (String, usize) + 'static {
+    let source = source.to_owned();
+    let mapped: std::cell::OnceCell<(String, Vec<Vec<Edit>>)> = std::cell::OnceCell::new();
+    move |at| {
+        let (text, steps) = mapped.get_or_init(|| source_map(&source, false));
+        (text.clone(), input_offset(steps, at))
+    }
+}
+
 pub fn parse(source: &str) -> Result<ParsedDiagram, PeleError> {
     parse_with(source, &ParseOptions::default())
 }
@@ -82,12 +92,14 @@ pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram,
     }
     let prepared: Preprocessed = preprocess(source)?;
     let found = detect_diagram(&prepared.text).ok_or_else(|| unsupported(None))?;
-    let parsed = crate::preprocess::encode_entities(&prepared.text) + "\n";
-    let model = match found.diagram_type {
-        DiagramType::Flowchart => parse_flowchart(&prepared.text).map(Model::Flowchart),
-        DiagramType::Info => info::parse(&parsed, prepared.title.clone()).map(Model::Info),
-        _ => return Err(unsupported(Some(found))),
-    }
+    let parsed = encode_entities(&prepared.text, None) + "\n";
+    let model = locating_in(parsed.clone(), source_finder(source), || {
+        match found.diagram_type {
+            DiagramType::Flowchart => parse_flowchart(&prepared.text).map(Model::Flowchart),
+            DiagramType::Info => info::parse(&parsed, prepared.title.clone()).map(Model::Info),
+            _ => Err(unsupported(Some(found))),
+        }
+    })
     .map_err(|error| with_types(error, found))?;
     Ok(ParsedDiagram {
         diagram_type: found.diagram_type,
