@@ -21,7 +21,14 @@ if (!existsSync(new URL('index.native.js', root))) {
     const result = render('flowchart LR\n  A[Start] --> B[End]');
     assert.match(result.svg, /^<svg/);
     assert.ok(result.width > 0 && result.height > 0);
-    assert.equal(detectType('graph TD\n  A-->B'), 'Flowchart');
+    assert.equal(detectType('graph TD\n  A-->B'), 'flowchart');
+    assert.equal(detectType('pie\n  "a": 1'), 'pie');
+    assert.equal(detectType('hello'), null);
+    const info = render('info showInfo');
+    assert.match(info.svg, /class="pele pele-info"/);
+    assert.equal(info.width, 150);
+    assert.equal(info.height, 40);
+    assert.equal(supports('info'), true);
     assert.equal(supports('graph TD\n  A-->B'), true);
     assert.equal(supports('pie\n  "a": 1'), false);
     assert.throws(

@@ -6,8 +6,8 @@ use napi_derive::napi;
 #[napi(object)]
 pub struct RenderResult {
     pub svg: String,
-    pub width: u32,
-    pub height: u32,
+    pub width: f64,
+    pub height: f64,
     pub title: Option<String>,
 }
 
@@ -48,21 +48,25 @@ pub fn render(source: String) -> std::result::Result<RenderResult, Error<String>
     let rendered = render_catching_panics(&source).map_err(to_napi)?;
     Ok(RenderResult {
         svg: rendered.svg,
-        width: rendered.width as u32,
-        height: rendered.height as u32,
+        width: rendered.width,
+        height: rendered.height,
         title: rendered.title,
     })
 }
 
 #[napi(js_name = "detectType")]
 pub fn detect_type(source: String) -> Option<String> {
-    detect_diagram(&source).map(|found| format!("{:?}", found.diagram_type))
+    detect_diagram(&source).map(|found| found.diagram_type.as_str().to_owned())
 }
 
 #[napi]
 pub fn supports(source: String) -> bool {
-    detect_diagram(&source)
-        .is_some_and(|found| matches!(found.diagram_type, DiagramType::Flowchart))
+    detect_diagram(&source).is_some_and(|found| {
+        matches!(
+            found.diagram_type,
+            DiagramType::Flowchart | DiagramType::Info
+        )
+    })
 }
 
 #[cfg(test)]
@@ -85,7 +89,7 @@ mod tests {
     fn detects_and_supports() {
         assert_eq!(
             detect_type("pie\n \"a\": 1".to_owned()).as_deref(),
-            Some("Pie")
+            Some("pie")
         );
         assert!(supports("graph TD\n A-->B".to_owned()));
         assert!(!supports("pie\n \"a\": 1".to_owned()));

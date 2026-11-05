@@ -130,10 +130,109 @@ pub fn preprocess(source: &str) -> Result<Preprocessed, PeleError> {
     })
 }
 
+fn is_line_break(c: char) -> bool {
+    matches!(c, '\n' | '\r' | '\u{2028}' | '\u{2029}')
+}
+
+fn drop_color_semicolons(text: &str, keyword: &str) -> String {
+    let Some(mut from) = text.find(keyword) else {
+        return text.to_owned();
+    };
+    let mut drops = Vec::new();
+    loop {
+        let line_end = text[from..]
+            .find(is_line_break)
+            .map_or(text.len(), |i| from + i);
+        let mut after_colon = false;
+        let mut hash = None;
+        for (j, c) in text[from + keyword.len()..line_end].char_indices() {
+            match c {
+                ':' => after_colon = true,
+                '#' if after_colon => {
+                    hash = Some(from + keyword.len() + j);
+                    break;
+                }
+                c if crate::util::chars::is_js_space(c) => after_colon = false,
+                _ => {}
+            }
+        }
+        if let Some(hash) = hash
+            && let Some(semi) = text[..line_end].rfind(';').filter(|&semi| semi > hash)
+        {
+            drops.push(semi);
+        }
+        if line_end >= text.len() {
+            break;
+        }
+        match text[line_end + 1..].find(keyword) {
+            Some(next) => from = line_end + 1 + next,
+            None => break,
+        }
+    }
+    let mut out = String::with_capacity(text.len());
+    let mut last = 0;
+    for semi in drops {
+        out.push_str(&text[last..semi]);
+        last = semi + 1;
+    }
+    out.push_str(&text[last..]);
+    out
+}
+
+pub fn encode_entities(text: &str) -> String {
+    if !text.contains('#') {
+        return text.to_owned();
+    }
+    let text = drop_color_semicolons(&drop_color_semicolons(text, "style"), "classDef");
+    let mut out = String::with_capacity(text.len());
+    let mut rest = text.as_str();
+    while let Some(at) = rest.find('#') {
+        out.push_str(&rest[..at]);
+        let body = &rest[at + 1..];
+        let word = body
+            .find(|c: char| !crate::util::chars::is_word(c))
+            .unwrap_or(body.len());
+        if word > 0 && body[word..].starts_with(';') {
+            let inner = &body[..word];
+            out.push_str(if inner.bytes().all(|b| b.is_ascii_digit()) {
+                "ﬂ°°"
+            } else {
+                "ﬂ°"
+            });
+            out.push_str(inner);
+            out.push_str("¶ß");
+            rest = &body[word + 1..];
+        } else {
+            out.push('#');
+            rest = body;
+        }
+    }
+    out.push_str(rest);
+    out
+}
+
 #[cfg(test)]
 mod tests {
-    use super::preprocess;
+    use super::{encode_entities, preprocess};
     use serde_json::json;
+
+    #[test]
+    fn hides_entity_codes_behind_placeholders() {
+        assert_eq!(
+            encode_entities("a #35; b #quot; c #x;"),
+            "a ﬂ°°35¶ß b ﬂ°quot¶ß c ﬂ°x¶ß"
+        );
+        assert_eq!(encode_entities("# no code; #;"), "# no code; #;");
+    }
+
+    #[test]
+    fn drops_the_semicolon_after_a_color_in_a_style_line() {
+        assert_eq!(encode_entities("style A fill:#f00;"), "style A fill:#f00");
+        assert_eq!(
+            encode_entities("classDef a fill:#f00,stroke:#000;\nstyle B x:y"),
+            "classDef a fill:#f00,stroke:#000\nstyle B x:y"
+        );
+    }
 
     #[test]
     fn normalizes_line_breaks_and_removes_comments() {

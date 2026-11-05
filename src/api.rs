@@ -1,55 +1,94 @@
+use serde_json::Value;
+
+use crate::diagrams::info::{self, InfoModel, render_info};
+use crate::svg::root::RenderOptions;
 use crate::{
     Config, Detected, DiagramType, FlowchartModel, MermaidType, PeleError, PeleErrorCode,
-    Preprocessed, preprocess,
+    Preprocessed, detect_diagram, parse_flowchart, preprocess, render_flowchart,
 };
-use crate::{detect_diagram, parse_flowchart, render_flowchart};
+
+const DEFAULT_LIMIT: usize = 50_000;
+const DEFAULT_OUTPUT_LIMIT: usize = 4_000_000;
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Model {
+    Flowchart(FlowchartModel),
+    Info(InfoModel),
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParsedDiagram {
     pub diagram_type: DiagramType,
     pub mermaid_type: MermaidType,
-    pub model: FlowchartModel,
+    pub model: Model,
     pub title: Option<String>,
     pub config: Config,
     pub source: String,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct RenderResult {
     pub svg: String,
-    pub width: usize,
-    pub height: usize,
+    pub width: f64,
+    pub height: f64,
     pub title: Option<String>,
 }
 
-fn unsupported(detected: Option<Detected>) -> PeleError {
-    let mut error = PeleError::new(
-        match detected {
-            Some(found) => format!(
-                "Rendering diagram type {:?} ({:?}) is not supported.",
-                found.diagram_type, found.mermaid_type
-            ),
-            None => "No supported diagram type detected.".to_owned(),
-        },
-        PeleErrorCode::UnsupportedDiagram,
-    );
-    if let Some(found) = detected {
-        error.diagram_type = Some(format!("{:?}", found.diagram_type));
-        error.mermaid_type = Some(format!("{:?}", found.mermaid_type));
-    }
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ParseOptions {
+    pub limit: Option<usize>,
+}
+
+fn with_types(mut error: PeleError, found: Detected) -> PeleError {
+    error
+        .diagram_type
+        .get_or_insert_with(|| found.diagram_type.as_str().to_owned());
+    error
+        .mermaid_type
+        .get_or_insert_with(|| found.mermaid_type.as_str().to_owned());
     error
 }
 
-pub fn parse(source: &str) -> Result<ParsedDiagram, PeleError> {
-    let prepared: Preprocessed = preprocess(source)?;
-    let detected = detect_diagram(&prepared.text);
-    let Some(found) = detected else {
-        return Err(unsupported(None));
-    };
-    if !matches!(found.diagram_type, DiagramType::Flowchart) {
-        return Err(unsupported(Some(found)));
+fn unsupported(detected: Option<Detected>) -> PeleError {
+    match detected {
+        Some(found) => with_types(
+            PeleError::new(
+                format!(
+                    "Diagram type \"{}\" is not supported yet.",
+                    found.diagram_type.as_str()
+                ),
+                PeleErrorCode::UnsupportedDiagram,
+            ),
+            found,
+        ),
+        None => PeleError::new(
+            "No diagram type detected for the given text.",
+            PeleErrorCode::UnsupportedDiagram,
+        ),
     }
-    let model = parse_flowchart(&prepared.text)?;
+}
+
+pub fn parse(source: &str) -> Result<ParsedDiagram, PeleError> {
+    parse_with(source, &ParseOptions::default())
+}
+
+pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram, PeleError> {
+    let limit = options.limit.unwrap_or(DEFAULT_LIMIT);
+    if source.encode_utf16().count() > limit {
+        return Err(PeleError::new(
+            format!("Diagram source is longer than the limit of {limit} characters."),
+            PeleErrorCode::Limit,
+        ));
+    }
+    let prepared: Preprocessed = preprocess(source)?;
+    let found = detect_diagram(&prepared.text).ok_or_else(|| unsupported(None))?;
+    let parsed = crate::preprocess::encode_entities(&prepared.text) + "\n";
+    let model = match found.diagram_type {
+        DiagramType::Flowchart => parse_flowchart(&prepared.text).map(Model::Flowchart),
+        DiagramType::Info => info::parse(&parsed, prepared.title.clone()).map(Model::Info),
+        _ => return Err(unsupported(Some(found))),
+    }
+    .map_err(|error| with_types(error, found))?;
     Ok(ParsedDiagram {
         diagram_type: found.diagram_type,
         mermaid_type: found.mermaid_type,
@@ -60,25 +99,58 @@ pub fn parse(source: &str) -> Result<ParsedDiagram, PeleError> {
     })
 }
 
+fn fixed_width(config: &Config, section: &str) -> bool {
+    matches!(config.get(section), Some(Value::Object(map)) if map.get("useMaxWidth") == Some(&Value::Bool(false)))
+}
+
 pub fn render(model: &ParsedDiagram) -> Result<RenderResult, PeleError> {
-    if !matches!(model.diagram_type, DiagramType::Flowchart) {
-        return Err(unsupported(Some(Detected {
-            diagram_type: model.diagram_type,
-            mermaid_type: model.mermaid_type,
-        })));
+    render_with(model, &RenderOptions::default())
+}
+
+pub fn render_with(
+    model: &ParsedDiagram,
+    options: &RenderOptions,
+) -> Result<RenderResult, PeleError> {
+    let found = Detected {
+        diagram_type: model.diagram_type,
+        mermaid_type: model.mermaid_type,
+    };
+    let mut options = options.clone();
+    options
+        .responsive
+        .get_or_insert(!fixed_width(&model.config, model.diagram_type.as_str()));
+    let (svg, width, height) = match &model.model {
+        Model::Flowchart(flowchart) => {
+            let rendered = render_flowchart(flowchart);
+            (rendered.svg, rendered.width as f64, rendered.height as f64)
+        }
+        Model::Info(info) => {
+            let drawn = render_info(info, &options);
+            (drawn.svg, drawn.width, drawn.height)
+        }
+    };
+    if svg.encode_utf16().count() > DEFAULT_OUTPUT_LIMIT {
+        return Err(with_types(
+            PeleError::new(
+                format!(
+                    "Diagram output is longer than the limit of {DEFAULT_OUTPUT_LIMIT} characters."
+                ),
+                PeleErrorCode::Limit,
+            ),
+            found,
+        ));
     }
-    let rendered = render_flowchart(&model.model);
     Ok(RenderResult {
-        svg: rendered.svg,
-        width: rendered.width,
-        height: rendered.height,
+        svg,
+        width,
+        height,
         title: model.title.clone(),
     })
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{parse, render};
+    use super::{Model, ParseOptions, parse, parse_with, render};
     use crate::{DiagramType, PeleErrorCode};
 
     #[test]
@@ -86,7 +158,7 @@ mod tests {
         let parsed = parse("flowchart LR\n  A[Start] --> B[End]").unwrap();
         let rendered = render(&parsed).unwrap();
         assert_eq!(parsed.diagram_type, DiagramType::Flowchart);
-        assert_eq!(parsed.model.nodes.len(), 2);
+        assert!(matches!(&parsed.model, Model::Flowchart(m) if m.nodes.len() == 2));
         assert!(rendered.svg.contains(">Start</text>"));
         assert!(rendered.width > rendered.height);
     }
@@ -111,6 +183,32 @@ flowchart TB
     fn rejects_detected_unsupported_diagrams() {
         let error = parse("sequenceDiagram\n  Alice->>Bob: Hello").unwrap_err();
         assert_eq!(error.code, PeleErrorCode::UnsupportedDiagram);
-        assert_eq!(error.diagram_type.as_deref(), Some("Sequence"));
+        assert_eq!(error.diagram_type.as_deref(), Some("sequence"));
+        assert_eq!(error.mermaid_type.as_deref(), Some("sequence"));
+    }
+
+    #[test]
+    fn renders_info_with_the_crate_version() {
+        let rendered = render(&parse("info showInfo").unwrap()).unwrap();
+        assert!(
+            rendered
+                .svg
+                .contains(&format!(">Pele v{}</text>", env!("CARGO_PKG_VERSION")))
+        );
+        assert_eq!((rendered.width, rendered.height), (150.0, 40.0));
+    }
+
+    #[test]
+    fn enforces_the_source_limit_in_utf16_units() {
+        let error = parse_with("info\n", &ParseOptions { limit: Some(4) }).unwrap_err();
+        assert_eq!(error.code, PeleErrorCode::Limit);
+        assert!(parse_with("info", &ParseOptions { limit: Some(4) }).is_ok());
+    }
+
+    #[test]
+    fn tags_syntax_errors_with_the_detected_type() {
+        let error = parse("info\nnope").unwrap_err();
+        assert_eq!(error.diagram_type.as_deref(), Some("info"));
+        assert_eq!(error.mermaid_type.as_deref(), Some("info"));
     }
 }

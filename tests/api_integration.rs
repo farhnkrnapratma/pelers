@@ -1,4 +1,4 @@
-use pelers::{DiagramType, PeleErrorCode, parse, render};
+use pelers::{DiagramType, Model, PeleErrorCode, parse, render};
 
 #[test]
 fn generic_api_parses_and_renders_flowcharts() {
@@ -6,7 +6,7 @@ fn generic_api_parses_and_renders_flowcharts() {
     let rendered = render(&parsed).unwrap();
 
     assert_eq!(parsed.diagram_type, DiagramType::Flowchart);
-    assert_eq!(parsed.model.nodes.len(), 2);
+    assert!(matches!(&parsed.model, Model::Flowchart(m) if m.nodes.len() == 2));
     assert!(rendered.svg.contains(">Start</text>"));
     assert!(rendered.svg.contains(">Finish</text>"));
     assert!(rendered.width > rendered.height);
@@ -34,6 +34,6 @@ fn generic_api_reports_unsupported_detected_diagrams() {
     let error = parse("sequenceDiagram\n  Alice->>Bob: Hello").unwrap_err();
 
     assert_eq!(error.code, PeleErrorCode::UnsupportedDiagram);
-    assert_eq!(error.diagram_type.as_deref(), Some("Sequence"));
-    assert_eq!(error.mermaid_type.as_deref(), Some("Sequence"));
+    assert_eq!(error.diagram_type.as_deref(), Some("sequence"));
+    assert_eq!(error.mermaid_type.as_deref(), Some("sequence"));
 }

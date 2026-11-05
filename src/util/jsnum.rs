@@ -1,6 +1,3 @@
-//! JavaScript number semantics the SVG output depends on: `Math.round` and `Number#toString`.
-
-/// `Math.round`: ties go toward +infinity (`f64::round` rounds ties away from zero).
 pub fn js_round(value: f64) -> f64 {
     if !value.is_finite() {
         return value;
@@ -13,7 +10,16 @@ pub fn js_round(value: f64) -> f64 {
     }
 }
 
-/// `String(value)` for a JavaScript number (ECMAScript Number::toString, radix 10).
+pub fn js_max(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        f64::NAN
+    } else if a > b {
+        a
+    } else {
+        b
+    }
+}
+
 pub fn js_number_to_string(value: f64) -> String {
     if value.is_nan() {
         return "NaN".to_owned();

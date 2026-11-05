@@ -1,8 +1,3 @@
-//! Byte-for-byte comparison with the TypeScript oracle (`scripts/gen-golden.mjs`).
-//!
-//! Types listed in `tests/golden/parity.txt` must match on every case. The rest only report their
-//! status (run with `--nocapture`), so a type joins the list the moment it reaches parity.
-
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
