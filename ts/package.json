@@ -1,21 +1,9 @@
 {
-  "name": "pelers",
+  "name": "pelers-ts",
   "version": "1.0.0-alpha1",
-  "description": "A fast, lightweight Mermaid renderer that outputs themeable SVG (derived from Pele; Rust port in progress).",
+  "description": "The TypeScript Pele renderer, kept as the oracle for the Rust port (not published).",
   "license": "MIT OR Apache-2.0",
   "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
-  "keywords": [
-    "mermaid",
-    "diagram",
-    "diagrams",
-    "flowchart",
-    "svg",
-    "renderer"
-  ],
-  "homepage": "https://github.com/farhnkrnapratma/pelers#readme",
-  "bugs": {
-    "url": "https://github.com/farhnkrnapratma/pelers/issues"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/farhnkrnapratma/pelers.git"
@@ -48,39 +36,20 @@
     "./global": "./dist/pele.global.js",
     "./package.json": "./package.json"
   },
-  "files": [
-    "dist",
-    "README.md",
-    "NOTICE",
-    "LICENSE-MIT",
-    "LICENSE-APACHE"
-  ],
-  "sideEffects": [
-    "./dist/pele.js",
-    "./src/index.ts"
-  ],
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude \"tests/website/**\"",
     "test:website": "vitest run tests/website",
-    "prepublishOnly": "npm run typecheck && npm test && npm run build",
     "test:watch": "vitest --exclude \"tests/website/**\"",
     "bench": "node scripts/bench.mjs",
     "bench:mermaid": "node scripts/bench-mermaid.mjs",
-    "website": "cd website && pnpm dev",
-    "prepare": "bash .githooks/install.sh",
     "lint": "eslint .",
     "fmt": "prettier --write .",
     "fmt:check": "prettier --check ."
   },
-  "engines": {
-    "node": ">=20"
-  },
   "devDependencies": {
     "@braintree/sanitize-url": "^7.1.2",
-    "@commitlint/cli": "^21.2.4",
-    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@mermaid-js/parser": "^2.0.1",
     "@typescript/native": "npm:typescript@^7.0.2",
@@ -97,7 +66,5 @@
   "overrides": {
     "underscore": "^1.13.8"
   },
-  "publishConfig": {
-    "access": "public"
-  }
+  "private": true
 }
