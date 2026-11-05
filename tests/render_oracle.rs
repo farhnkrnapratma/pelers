@@ -26,6 +26,8 @@ fn options(case: &Json) -> RenderOptions {
         font_size: given["fontSize"].as_f64(),
         padding: given["padding"].as_f64(),
         max_width: given["maxWidth"].as_f64(),
+        auto_direction: given["autoDirection"].as_bool(),
+        direction_breakpoint: given["directionBreakpoint"].as_f64(),
         ..RenderOptions::default()
     }
 }
@@ -84,4 +86,9 @@ fn check(name: &str) {
 #[test]
 fn pie_matches_the_oracle() {
     check("render-pie.json");
+}
+
+#[test]
+fn packet_matches_the_oracle() {
+    check("render-packet.json");
 }

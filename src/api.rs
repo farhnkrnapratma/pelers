@@ -1,4 +1,5 @@
 use crate::diagrams::info::{self, InfoModel, render_info};
+use crate::diagrams::packet::{self, PacketModel, render_packet};
 use crate::diagrams::pie::{self, PieModel, render_pie};
 use crate::errors::{Edit, input_offset, locating_in};
 use crate::preprocess::{encode_entities, source_map};
@@ -17,6 +18,7 @@ const DEFAULT_OUTPUT_LIMIT: usize = 4_000_000;
 pub enum Model {
     Flowchart(FlowchartModel),
     Info(InfoModel),
+    Packet(PacketModel),
     Pie(PieModel),
 }
 
@@ -100,6 +102,9 @@ pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram,
         match found.diagram_type {
             DiagramType::Flowchart => parse_flowchart(&prepared.text).map(Model::Flowchart),
             DiagramType::Info => info::parse(&parsed, prepared.title.clone()).map(Model::Info),
+            DiagramType::Packet => {
+                packet::parse(&parsed, &prepared.config, prepared.title.clone()).map(Model::Packet)
+            }
             DiagramType::Pie => pie::parse(&parsed, prepared.title.clone()).map(Model::Pie),
             _ => Err(unsupported(Some(found))),
         }
@@ -144,6 +149,10 @@ pub fn render_with(
             }
             Model::Info(info) => {
                 let drawn = render_info(info, &options);
+                (drawn.svg, drawn.width, drawn.height)
+            }
+            Model::Packet(packet) => {
+                let drawn = render_packet(packet, &model.config, &options);
                 (drawn.svg, drawn.width, drawn.height)
             }
             Model::Pie(pie) => {

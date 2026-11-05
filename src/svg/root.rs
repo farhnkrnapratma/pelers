@@ -12,6 +12,8 @@ pub struct RenderOptions {
     pub font_family_mono: Option<String>,
     pub padding: Option<f64>,
     pub max_width: Option<f64>,
+    pub auto_direction: Option<bool>,
+    pub direction_breakpoint: Option<f64>,
     pub responsive: Option<bool>,
     pub id_prefix: Option<String>,
 }

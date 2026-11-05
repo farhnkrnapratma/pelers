@@ -76,7 +76,7 @@ function config() {
     return `${lines.join('\n')}\n`;
 }
 
-function source() {
+function pieSource() {
     let text = config();
     if (chance(0.1)) text += '%% a comment\n';
     text += chance(0.5) ? 'pie' : 'pie showData';
@@ -98,7 +98,7 @@ function source() {
     return text;
 }
 
-function options() {
+function pieOptions() {
     const result = {};
     if (chance(0.25)) result.maxWidth = pick([100, 200, 300, 400, 500, 640, 1000]);
     if (chance(0.15)) result.fontSize = pick([10, 12, 14, 20, 24]);
@@ -115,17 +115,82 @@ function capture(text, opts) {
     }
 }
 
-const seen = new Set();
-const cases = [];
-while (cases.length < 700) {
-    const text = source();
-    const opts = options();
-    const key = JSON.stringify([text, opts]);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    cases.push({ source: text, options: opts, ...capture(text, opts) });
+const FIELD_LABELS = ['Source Port', 'Destination Port', 'Sequence Number', 'Flags', 'URG', 'a', 'A very long field label that cannot possibly fit in a small box', 'Data (variable length)', 'Reserved', '日本語フィールド', 'x&amp;y', '<b>b</b>', '', ' padded ', 'with "quote"', 'emoji 😀 field', 'Übergrößenträger', 'averyveryveryverylongwordwithoutanyspacesatall'];
+
+function packetConfig() {
+    const entries = [];
+    if (chance(0.4)) entries.push(`bitsPerRow: ${pick([4, 8, 8, 16, 16, 24, 32, 32, 64, 0.5, 5000, -1, 7.9, 1])}`);
+    if (chance(0.25)) entries.push(`rowHeight: ${pick([1, 10, 20, 32, 60, 500, 0])}`);
+    if (chance(0.25)) entries.push(`bitWidth: ${pick([1, 5, 10, 18, 32, 50, 500, 0])}`);
+    if (chance(0.2)) entries.push(`paddingX: ${pick([0, 1, 5, 20, 600])}`);
+    if (chance(0.2)) entries.push(`paddingY: ${pick([0, 2, 5, 30])}`);
+    if (chance(0.3)) entries.push(`showBits: ${pick(['true', 'false'])}`);
+    if (chance(0.3)) entries.push(`bitOrder: ${pick(['descending', 'ascending', 'other'])}`);
+    if (chance(0.1)) entries.push('useMaxWidth: false');
+    if (entries.length === 0) return '';
+    return `---\nconfig:\n  packet:\n${entries.map(entry => `    ${entry}`).join('\n')}\n---\n`;
 }
 
-writeFileSync(join(root, 'tests/fixtures/render-pie.json'), `${JSON.stringify({ cases })}\n`);
-const failed = cases.filter(entry => entry.error).length;
-console.log(`render-pie: ${cases.length} cases, ${failed} errors`);
+function packetLabel() {
+    const text = pick(FIELD_LABELS);
+    const escaped = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    return `"${escaped}"`;
+}
+
+function packetSource() {
+    let text = packetConfig();
+    if (chance(0.1)) text += '%% a comment\n';
+    text += chance(0.8) ? 'packet' : 'packet-beta';
+    text += '\n';
+    if (chance(0.3)) text += `title ${pick(['TCP Packet', 'A rather long packet title that spans quite a bit of width', 'x < y', 'T&amp;C'])}\n`;
+    if (chance(0.1)) text += `accTitle: ${pick(['Packet', '  spaced  '])}\n`;
+    if (chance(0.1)) text += pick(['accDescr: A packet\n', 'accDescr {\n  one\n    two\n}\n']);
+    let next = 0;
+    const count = chance(0.1) ? 0 : between(1, chance(0.2) ? 30 : 10);
+    for (let i = 0; i < count; i++) {
+        const length = pick([1, 1, 2, 3, 4, 8, 8, 16, 16, 32, 48, 64, between(1, 70)]);
+        const form = between(0, 3);
+        if (form === 0 && length > 1) text += `${next}-${next + length - 1}: ${packetLabel()}\n`;
+        else if (form === 1) text += `+${length}: ${packetLabel()}\n`;
+        else if (length === 1) text += `${next}: ${packetLabel()}\n`;
+        else text += `${next}${pick(['-', ' - ', ' -', '- '])}${next + length - 1}${pick([': ', ' : ', ':'])}${packetLabel()}\n`;
+        next += length;
+        if (chance(0.05)) text += '\n';
+        if (chance(0.05)) text += '%% note\n';
+    }
+    if (chance(0.06)) text += pick([`${next + 3}: "gap"\n`, '5-2: "backwards"\n', '+0: "zero"\n', '9999999999999999999999: "huge"\n', '0-99999999999999999999: "huge range"\n', 'x: "bad"\n', '1-: "open"\n', '+: "plus"\n', `${next}: nolabel\n`, '-1: "neg"\n']);
+    return text;
+}
+
+function packetOptions() {
+    const result = {};
+    if (chance(0.5)) result.maxWidth = pick([100, 159, 160, 200, 295, 303, 304, 320, 400, 500, 591, 592, 610, 639, 640, 1000]);
+    if (chance(0.1)) result.autoDirection = false;
+    if (chance(0.15)) result.directionBreakpoint = pick([0, 100, 400, 1000]);
+    if (chance(0.15)) result.fontSize = pick([10, 12, 14, 20, 24]);
+    if (chance(0.15)) result.padding = pick([0, 4, 16, 30]);
+    return result;
+}
+
+const GENERATORS = {
+    pie: { source: pieSource, options: pieOptions, count: 700 },
+    packet: { source: packetSource, options: packetOptions, count: 300 },
+};
+
+const wanted = process.argv.slice(2);
+for (const [type, generator] of Object.entries(GENERATORS)) {
+    if (wanted.length > 0 && !wanted.includes(type)) continue;
+    const seen = new Set();
+    const cases = [];
+    while (cases.length < generator.count) {
+        const text = generator.source();
+        const opts = generator.options();
+        const key = JSON.stringify([text, opts]);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        cases.push({ source: text, options: opts, ...capture(text, opts) });
+    }
+    writeFileSync(join(root, `tests/fixtures/render-${type}.json`), `${JSON.stringify({ cases })}\n`);
+    const failed = cases.filter(entry => entry.error).length;
+    console.log(`render-${type}: ${cases.length} cases, ${failed} errors`);
+}

@@ -2,6 +2,7 @@ pub const ROOT_STYLE: &str = "--_bg:var(--pele-bg,#fff);--_fg:var(--pele-fg,#1f1
 --_l:var(--pele-line,#1f1f1f);--_s:var(--pele-surface,#f3f3f3);--_a:var(--pele-surface-alt,#e6e6e6);\
 --_b:var(--pele-border,#8a8a8a);--_c:var(--pele-accent,#5b7bd5);color:var(--_fg)";
 
+pub const ROUNDED: &str = " style=\"rx:var(--_r)\"";
 pub const RADIUS: &str = "var(--pele-radius,4px)";
 
 fn quoted_body(c: char) -> bool {

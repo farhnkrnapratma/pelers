@@ -35,6 +35,9 @@ if (!existsSync(new URL('index.native.js', root))) {
     const pie = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
     assert.match(pie.svg, /class="pele pele-pie"/);
     assert.ok(pie.width > 0 && pie.height > 0);
+    assert.equal(supports('packet\n  0-15: "Port"'), true);
+    const packet = render('packet\n  0-15: "Source Port"\n  16-31: "Destination Port"');
+    assert.match(packet.svg, /class="pele pele-packet"/);
     assert.throws(
         () => render('sequenceDiagram\n  A->>B: hi'),
         error => error instanceof PeleError && error.code === 'unsupported-diagram',

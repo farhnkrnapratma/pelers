@@ -17,6 +17,7 @@ pub struct TokenType {
     pub hidden: bool,
     pub opener: Option<Matcher>,
     pub first: Option<&'static str>,
+    pub longer: &'static [&'static str],
 }
 
 impl TokenType {
@@ -27,6 +28,7 @@ impl TokenType {
             hidden: false,
             opener: None,
             first,
+            longer: &[],
         }
     }
 }
@@ -264,11 +266,24 @@ pub fn tokenize(src: &str, types: &[TokenType], diagram: &str) -> Result<Tokens,
             if byte < 128 && !starts_with(types, k, byte) {
                 continue;
             }
-            let Some(end) = match_at(types, &mut dead, src, k, p).filter(|&end| end > p) else {
+            let Some(mut end) = match_at(types, &mut dead, src, k, p).filter(|&end| end > p) else {
                 continue;
             };
-            if !types[k].hidden {
-                kinds.push(k as i32);
+            let mut kind = k;
+            for name in types[k].longer {
+                let Some(alt) = types.iter().position(|t| t.name == *name) else {
+                    continue;
+                };
+                if let Some(alt_end) = match_at(types, &mut dead, src, alt, p)
+                    && alt_end > end
+                {
+                    kind = alt;
+                    end = alt_end;
+                    break;
+                }
+            }
+            if !types[kind].hidden {
+                kinds.push(kind as i32);
                 starts.push(p);
                 ends.push(end);
             }
@@ -562,6 +577,20 @@ mod tests {
     fn front_matter_and_directives_are_hidden() {
         assert_eq!(kinds("---\ntitle: x\n---\ninfo"), vec![1, -1]);
         assert_eq!(kinds("%%{init: {}}%%\ninfo"), vec![1, -1]);
+    }
+
+    #[test]
+    fn a_longer_alternative_wins_over_the_token_it_extends() {
+        let dash = TokenType {
+            longer: &["YAML"],
+            ..TokenType::new("-", Pattern::Literal("-"), None)
+        };
+        let types = [dash, NEWLINE, YAML, keyword("x")];
+        assert_eq!(
+            tokenize("---\na: 1\n---\nx", &types, "t").unwrap().kinds,
+            vec![3, -1]
+        );
+        assert_eq!(tokenize("-\n", &types, "t").unwrap().kinds, vec![0, 1, -1]);
     }
 
     #[test]

@@ -27,6 +27,35 @@ pub fn fit_width(
     result
 }
 
+const BREAKPOINT: f64 = 640.0;
+
+pub fn turn_to_fit(options: &RenderOptions, mut draw: impl FnMut(bool) -> Drawn) -> Drawn {
+    let across = draw(false);
+    let Some(available) = options.max_width else {
+        return across;
+    };
+    if options.auto_direction == Some(false)
+        || available.is_nan()
+        || available <= 0.0
+        || across.width <= available
+    {
+        return across;
+    }
+    let breakpoint = match options.direction_breakpoint {
+        Some(value) if value > 0.0 => value,
+        _ => BREAKPOINT,
+    };
+    if available >= breakpoint {
+        return across;
+    }
+    let down = draw(true);
+    if down.width < across.width {
+        down
+    } else {
+        across
+    }
+}
+
 pub fn title_room(options: &RenderOptions) -> f64 {
     match options.max_width {
         Some(available) if available > 0.0 => {
@@ -83,6 +112,32 @@ mod tests {
             fit_width(&tiny, 240.0, 140.0, |p, _| drawn(p + 100.0)).width,
             240.0
         );
+    }
+
+    #[test]
+    fn turns_down_only_when_narrow_and_shorter() {
+        let draw = |down: bool| drawn(if down { 200.0 } else { 500.0 });
+        let narrow = RenderOptions {
+            max_width: Some(300.0),
+            ..RenderOptions::default()
+        };
+        assert_eq!(turn_to_fit(&narrow, draw).width, 200.0);
+        let fixed = RenderOptions {
+            auto_direction: Some(false),
+            ..narrow.clone()
+        };
+        assert_eq!(turn_to_fit(&fixed, draw).width, 500.0);
+        let wide = RenderOptions {
+            max_width: Some(700.0),
+            ..RenderOptions::default()
+        };
+        assert_eq!(turn_to_fit(&wide, draw).width, 500.0);
+        let early = RenderOptions {
+            direction_breakpoint: Some(250.0),
+            ..narrow
+        };
+        assert_eq!(turn_to_fit(&early, draw).width, 500.0);
+        assert_eq!(turn_to_fit(&RenderOptions::default(), draw).width, 500.0);
     }
 
     #[test]
