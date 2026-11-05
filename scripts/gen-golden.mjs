@@ -1,5 +1,3 @@
-// Renders every tests-corpus source with the TypeScript oracle and stores the result as the reference
-// the Rust port must reproduce byte for byte. Run `bun run build` in ts/ first.
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -9,7 +7,10 @@ const corpus = join(root, 'ts/tests/corpus');
 const out = join(root, 'tests/golden');
 const { render } = await import(join(root, 'ts/dist/pele.js'));
 
-rmSync(out, { recursive: true, force: true });
+mkdirSync(out, { recursive: true });
+for (const entry of readdirSync(out, { withFileTypes: true })) {
+    if (entry.isDirectory()) rmSync(join(out, entry.name), { recursive: true });
+}
 let svgs = 0;
 let errors = 0;
 

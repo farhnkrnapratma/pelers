@@ -1,6 +1,6 @@
 {
   "name": "pelers-ts",
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha2",
   "description": "The TypeScript Pele renderer, kept as the oracle for the Rust port (not published).",
   "license": "MIT OR Apache-2.0",
   "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
