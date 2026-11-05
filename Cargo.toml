@@ -1,6 +1,6 @@
 [package]
 name = "pelers"
-version = "1.0.0-alpha1"
+version = "1.0.0-alpha2"
 authors = ["Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>"]
 edition = "2024"
 description = "Pele, but in Rust"
