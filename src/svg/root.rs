@@ -1,4 +1,5 @@
 use super::builder::{esc, esc_text};
+use super::palette::palette_style;
 use super::theme::{RADIUS, ROOT_STYLE, font_style};
 use crate::util::jsnum::js_number_to_string;
 
@@ -10,6 +11,7 @@ pub struct RenderOptions {
     pub font_family: Option<String>,
     pub font_family_mono: Option<String>,
     pub padding: Option<f64>,
+    pub max_width: Option<f64>,
     pub responsive: Option<bool>,
     pub id_prefix: Option<String>,
 }
@@ -90,8 +92,9 @@ pub fn svg_document(
     );
     let (w, h) = (js_number_to_string(width), js_number_to_string(height));
     format!(
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pele pele-{kind}\" viewBox=\"0 0 {w} {h}\" width=\"{w}\" height=\"{h}\" style=\"{fit}{ROOT_STYLE}{weights}{}\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"{kind}\"{aria}>{head}{content}</svg>",
-        esc(&fonts)
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pele pele-{kind}\" viewBox=\"0 0 {w} {h}\" width=\"{w}\" height=\"{h}\" style=\"{fit}{ROOT_STYLE}{weights}{}{}\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"{kind}\"{aria}>{head}{content}</svg>",
+        esc(&fonts),
+        palette_style()
     )
 }
 

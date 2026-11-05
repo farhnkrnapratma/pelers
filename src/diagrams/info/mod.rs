@@ -1,6 +1,7 @@
 mod parser;
 mod render;
 
+use crate::diagrams::common::{acc_descr, acc_title};
 use crate::errors::PeleError;
 
 pub use parser::{InfoAst, parse_info};
@@ -13,30 +14,11 @@ pub struct InfoModel {
     pub acc_descr: Option<String>,
 }
 
-fn dedent_descr(text: &str) -> String {
-    let mut out = String::with_capacity(text.len());
-    let mut skipping = false;
-    for c in text.chars() {
-        if skipping && crate::util::chars::is_js_space(c) {
-            continue;
-        }
-        skipping = c == '\n';
-        out.push(c);
-    }
-    out
-}
-
 pub fn build_info(ast: InfoAst, title: Option<String>) -> InfoModel {
     InfoModel {
         title: ast.title.filter(|t| !t.is_empty()).or(title),
-        acc_title: ast
-            .acc_title
-            .filter(|t| !t.is_empty())
-            .map(|t| crate::util::chars::trim_start(&t).to_owned()),
-        acc_descr: ast
-            .acc_descr
-            .filter(|d| !d.is_empty())
-            .map(|d| dedent_descr(&d)),
+        acc_title: acc_title(ast.acc_title),
+        acc_descr: acc_descr(ast.acc_descr),
     }
 }
 

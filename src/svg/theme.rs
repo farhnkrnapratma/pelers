@@ -70,6 +70,15 @@ pub fn font_style(size: f64, family: Option<&str>, mono: Option<&str>) -> String
     )
 }
 
+const SERIES: [&str; 8] = [
+    "#4c78a8", "#f58518", "#54a24b", "#e45756", "#72b7b2", "#eeca3b", "#b279a2", "#9d755d",
+];
+
+pub fn series_color(index: usize) -> String {
+    let k = index % 8;
+    format!("var(--pele-series-{},{})", k + 1, SERIES[k])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

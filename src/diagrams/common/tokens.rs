@@ -161,11 +161,32 @@ fn single_line_comment(src: &str, at: usize) -> Option<usize> {
     src[p..].starts_with("%%").then(|| line_end(src, p + 2))
 }
 
+fn string(src: &str, at: usize) -> Option<usize> {
+    let quote = src[at..]
+        .chars()
+        .next()
+        .filter(|c| matches!(c, '"' | '\''))?;
+    let mut chars = src[at + 1..].char_indices();
+    while let Some((i, c)) = chars.next() {
+        if c == quote {
+            return Some(at + 1 + i + 1);
+        }
+        if c == '\\' {
+            let (_, next) = chars.next()?;
+            if is_terminator(next) {
+                return None;
+            }
+        }
+    }
+    None
+}
+
 pub const ACC_DESCR: TokenType =
     TokenType::new("ACC_DESCR", Pattern::Match(acc_descr), Some("\t a"));
 pub const ACC_TITLE: TokenType =
     TokenType::new("ACC_TITLE", Pattern::Match(acc_title), Some("\t a"));
 pub const TITLE: TokenType = TokenType::new("TITLE", Pattern::Match(title), Some("\t t"));
+pub const STRING: TokenType = TokenType::new("STRING", Pattern::Match(string), Some("\"'"));
 pub const NEWLINE: TokenType =
     TokenType::new("NEWLINE", Pattern::Match(newline_token), Some("\r\n"));
 pub const WHITESPACE: TokenType = TokenType {
@@ -308,6 +329,33 @@ pub fn acc_title_value(text: &str) -> String {
 
 fn is_terminator(c: char) -> bool {
     matches!(c, '\n' | '\r' | '\u{2028}' | '\u{2029}')
+}
+
+pub fn string_value(text: &str) -> String {
+    let inner = &text[1..text.len() - 1];
+    if !inner.contains('\\') {
+        return inner.to_owned();
+    }
+    let mut out = String::with_capacity(inner.len());
+    let mut chars = inner.chars();
+    while let Some(c) = chars.next() {
+        if c != '\\' {
+            out.push(c);
+            continue;
+        }
+        match chars.next() {
+            Some('b') => out.push('\u{8}'),
+            Some('f') => out.push('\u{c}'),
+            Some('n') => out.push('\n'),
+            Some('r') => out.push('\r'),
+            Some('t') => out.push('\t'),
+            Some('v') => out.push('\u{b}'),
+            Some('0') => out.push('\0'),
+            Some(other) => out.push(other),
+            None => {}
+        }
+    }
+    out
 }
 
 fn strip_line_indent(chars: &[char]) -> Vec<char> {
@@ -529,6 +577,18 @@ mod tests {
             acc_descr_value("accDescr {\n   first  line\n\n  second   \n}"),
             "first line\nsecond"
         );
+    }
+
+    #[test]
+    fn reads_quoted_strings() {
+        let types = [STRING, NEWLINE, WHITESPACE];
+        let tokens = tokenize("\"a\\\"b\" 'c'\n", &types, "x").unwrap();
+        assert_eq!(tokens.kinds, vec![0, 0, 1, -1]);
+        assert_eq!(string_value("\"a\\\"b\\n\\q\""), "a\"b\nq");
+        assert_eq!(string_value("'x'"), "x");
+        assert!(tokenize("\"open", &types, "x").is_err());
+        assert!(tokenize("\"a\\\nb\"", &types, "x").is_err());
+        assert!(tokenize("\"a\nb\"", &types, "x").is_ok());
     }
 
     #[test]

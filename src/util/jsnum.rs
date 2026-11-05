@@ -20,6 +20,29 @@ pub fn js_max(a: f64, b: f64) -> f64 {
     }
 }
 
+pub fn js_min(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        f64::NAN
+    } else if a < b {
+        a
+    } else {
+        b
+    }
+}
+
+pub fn to_fixed_0(value: f64) -> String {
+    if value.is_nan() {
+        return "NaN".to_owned();
+    }
+    if value.abs() >= 1e21 {
+        return js_number_to_string(value);
+    }
+    if value < 0.0 {
+        return format!("-{}", to_fixed_0(-value));
+    }
+    format!("{:.0}", js_round(value) + 0.0)
+}
+
 pub fn js_number_to_string(value: f64) -> String {
     if value.is_nan() {
         return "NaN".to_owned();
@@ -62,7 +85,25 @@ pub fn js_number_to_string(value: f64) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{js_number_to_string, js_round};
+    use super::{js_min, js_number_to_string, js_round, to_fixed_0};
+
+    #[test]
+    fn fixes_to_zero_places_like_javascript() {
+        assert_eq!(to_fixed_0(0.5), "1");
+        assert_eq!(to_fixed_0(1.5), "2");
+        assert_eq!(to_fixed_0(2.5), "3");
+        assert_eq!(to_fixed_0(0.49999999999999994), "0");
+        assert_eq!(to_fixed_0(-0.4), "-0");
+        assert_eq!(to_fixed_0(-0.0), "0");
+        assert_eq!(to_fixed_0(45.96), "46");
+        assert_eq!(to_fixed_0(1e21), "1e+21");
+    }
+
+    #[test]
+    fn min_propagates_nan() {
+        assert!(js_min(f64::NAN, 1.0).is_nan());
+        assert_eq!(js_min(2.0, 1.0), 1.0);
+    }
 
     #[test]
     fn rounds_ties_toward_positive_infinity() {

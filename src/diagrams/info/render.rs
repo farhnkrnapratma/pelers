@@ -1,4 +1,5 @@
 use super::InfoModel;
+use crate::diagrams::common::Drawn;
 use crate::svg::builder::label_svg;
 use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::text::label::layout_label;
@@ -6,12 +7,6 @@ use crate::text::measurer::BOLD_STYLE;
 use crate::util::jsnum::js_max;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
-
-pub struct Drawn {
-    pub svg: String,
-    pub width: f64,
-    pub height: f64,
-}
 
 pub fn render_info(model: &InfoModel, options: &RenderOptions) -> Drawn {
     let size = options.font_size.unwrap_or(16.0);

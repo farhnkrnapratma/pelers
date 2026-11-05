@@ -64,7 +64,7 @@ pub fn supports(source: String) -> bool {
     detect_diagram(&source).is_some_and(|found| {
         matches!(
             found.diagram_type,
-            DiagramType::Flowchart | DiagramType::Info
+            DiagramType::Flowchart | DiagramType::Info | DiagramType::Pie
         )
     })
 }

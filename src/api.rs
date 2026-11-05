@@ -1,6 +1,8 @@
 use crate::diagrams::info::{self, InfoModel, render_info};
+use crate::diagrams::pie::{self, PieModel, render_pie};
 use crate::errors::{Edit, input_offset, locating_in};
 use crate::preprocess::{encode_entities, source_map};
+use crate::svg::palette::{palette, with_palette};
 use crate::svg::root::RenderOptions;
 use crate::util::value::Value;
 use crate::{
@@ -15,6 +17,7 @@ const DEFAULT_OUTPUT_LIMIT: usize = 4_000_000;
 pub enum Model {
     Flowchart(FlowchartModel),
     Info(InfoModel),
+    Pie(PieModel),
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -97,6 +100,7 @@ pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram,
         match found.diagram_type {
             DiagramType::Flowchart => parse_flowchart(&prepared.text).map(Model::Flowchart),
             DiagramType::Info => info::parse(&parsed, prepared.title.clone()).map(Model::Info),
+            DiagramType::Pie => pie::parse(&parsed, prepared.title.clone()).map(Model::Pie),
             _ => Err(unsupported(Some(found))),
         }
     })
@@ -131,16 +135,23 @@ pub fn render_with(
     options
         .responsive
         .get_or_insert(!fixed_width(&model.config, model.diagram_type.as_str()));
-    let (svg, width, height) = match &model.model {
-        Model::Flowchart(flowchart) => {
-            let rendered = render_flowchart(flowchart);
-            (rendered.svg, rendered.width as f64, rendered.height as f64)
-        }
-        Model::Info(info) => {
-            let drawn = render_info(info, &options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-    };
+    let (svg, width, height) = with_palette(
+        palette(model.diagram_type.as_str(), &model.config),
+        || match &model.model {
+            Model::Flowchart(flowchart) => {
+                let rendered = render_flowchart(flowchart);
+                (rendered.svg, rendered.width as f64, rendered.height as f64)
+            }
+            Model::Info(info) => {
+                let drawn = render_info(info, &options);
+                (drawn.svg, drawn.width, drawn.height)
+            }
+            Model::Pie(pie) => {
+                let drawn = render_pie(pie, &model.config, &options);
+                (drawn.svg, drawn.width, drawn.height)
+            }
+        },
+    );
     if svg.encode_utf16().count() > DEFAULT_OUTPUT_LIMIT {
         return Err(with_types(
             PeleError::new(

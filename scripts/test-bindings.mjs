@@ -30,7 +30,11 @@ if (!existsSync(new URL('index.native.js', root))) {
     assert.equal(info.height, 40);
     assert.equal(supports('info'), true);
     assert.equal(supports('graph TD\n  A-->B'), true);
-    assert.equal(supports('pie\n  "a": 1'), false);
+    assert.equal(supports('pie\n  "a": 1'), true);
+    assert.equal(supports('sequenceDiagram\n  A->>B: hi'), false);
+    const pie = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
+    assert.match(pie.svg, /class="pele pele-pie"/);
+    assert.ok(pie.width > 0 && pie.height > 0);
     assert.throws(
         () => render('sequenceDiagram\n  A->>B: hi'),
         error => error instanceof PeleError && error.code === 'unsupported-diagram',
