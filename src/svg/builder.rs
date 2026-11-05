@@ -207,4 +207,10 @@ mod tests {
             "<text class=\"x\" x=\"75\" y=\"25.6\" text-anchor=\"middle\">Pele</text>"
         );
     }
+
+    #[test]
+    fn detects_characters_xml_cannot_hold() {
+        assert!(has_invalid_xml("a\u{1}b"));
+        assert!(!has_invalid_xml("plain\ttext\n"));
+    }
 }

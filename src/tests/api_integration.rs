@@ -1,4 +1,4 @@
-use pelers::{DiagramType, Model, PeleErrorCode, parse, render};
+use crate::{DiagramType, Model, PeleErrorCode, parse, render};
 
 #[test]
 fn generic_api_parses_and_renders_flowcharts() {

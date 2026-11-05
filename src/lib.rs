@@ -22,3 +22,6 @@ pub use flowchart::{
 pub use preprocess::{Config, Preprocessed, preprocess};
 pub use render::{Rendered, render_flowchart};
 pub use svg::root::RenderOptions;
+
+#[cfg(test)]
+mod tests;

@@ -1,11 +1,11 @@
 use std::fs;
 use std::path::Path;
 
-use pelers::errors::input_offset;
-use pelers::preprocess::{encode_entities, preprocess, source_map};
-use pelers::util::jsnum::js_number_to_string;
-use pelers::util::value::Value;
-use pelers::util::yaml::parse_yaml;
+use crate::errors::input_offset;
+use crate::preprocess::{encode_entities, preprocess, source_map};
+use crate::util::jsnum::js_number_to_string;
+use crate::util::value::Value;
+use crate::util::yaml::parse_yaml;
 use serde_json::Value as Json;
 
 fn fixtures() -> Json {

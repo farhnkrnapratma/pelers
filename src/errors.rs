@@ -176,7 +176,7 @@ fn located(
     diagram_type: String,
     source: &str,
     offset: usize,
-    head: impl FnOnce(usize) -> String,
+    head: fn(usize) -> String,
     tail: &str,
 ) -> PeleError {
     let (line, column, snippet) = locate(source, offset);
@@ -281,5 +281,13 @@ mod tests {
         assert_eq!(error.code, PeleErrorCode::Syntax);
         assert_eq!(error.line, 2);
         assert_eq!(error.column, 1);
+    }
+
+    #[test]
+    fn displays_the_message() {
+        let error = super::PeleError::new("boom", PeleErrorCode::Syntax);
+        assert_eq!(error.to_string(), "boom");
+        let boxed: &dyn std::error::Error = &error;
+        assert_eq!(boxed.to_string(), "boom");
     }
 }

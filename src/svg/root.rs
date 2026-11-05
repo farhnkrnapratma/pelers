@@ -127,4 +127,11 @@ mod tests {
         assert!(svg.contains("style=\"--_bg:"));
         assert!(svg.starts_with("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pele pele-info\" viewBox=\"0 0 10 5\""));
     }
+
+    #[test]
+    fn stops_scanning_once_every_alias_is_used() {
+        let content = "var(--_r) var(--_tw) var(--_hw) var(--_w) var(--_r)";
+        assert_eq!(used_aliases(content), [true; 4]);
+        assert_eq!(used_aliases("var(--_x) var(--_rr)"), [false; 4]);
+    }
 }

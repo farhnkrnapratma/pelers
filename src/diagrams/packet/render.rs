@@ -285,3 +285,22 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
         height: total_height,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::diagrams::packet::parse;
+    use crate::util::json::parse as parse_json;
+
+    #[test]
+    fn keeps_the_model_width_when_reflowing_would_exceed_the_row_cap() {
+        let config = parse_json("{}").unwrap().as_object().cloned().unwrap();
+        let model = parse("packet\n0-99999: \"x\"\n", &config, None).unwrap();
+        let options = RenderOptions {
+            max_width: Some(160.0),
+            ..RenderOptions::default()
+        };
+        let drawn = render_packet(&model, &config, &options);
+        assert!(drawn.height > 0.0);
+    }
+}

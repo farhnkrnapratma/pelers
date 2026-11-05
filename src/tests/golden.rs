@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
-use pelers::{PeleErrorCode, parse, render};
+use crate::{PeleErrorCode, parse, render};
 
 #[derive(Default)]
 struct Tally {

@@ -116,4 +116,11 @@ mod tests {
         );
         assert!(literal_label("", 14.0, 100.0, 0).lines.is_empty());
     }
+
+    #[test]
+    fn keeps_whitespace_only_lines_that_wrap() {
+        let label = literal_label("          x", 14.0, 12.0, 0);
+        assert!(texts(&label)[0].chars().all(|c| c == ' '));
+        assert_eq!(texts(&label).last(), Some(&"x"));
+    }
 }

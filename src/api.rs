@@ -243,4 +243,28 @@ flowchart TB
         assert_eq!(error.diagram_type.as_deref(), Some("info"));
         assert_eq!(error.mermaid_type.as_deref(), Some("info"));
     }
+
+    #[test]
+    fn rejects_text_without_a_diagram_type() {
+        let error = parse("hello").unwrap_err();
+        assert_eq!(error.code, PeleErrorCode::UnsupportedDiagram);
+        assert_eq!(error.diagram_type, None);
+    }
+
+    #[test]
+    fn enforces_the_output_limit() {
+        let rows = (0..9000)
+            .map(|row| format!("{}-{}: \"{}\"", row * 32, row * 32 + 31, "x".repeat(200)))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let parsed = parse_with(
+            &format!("packet\n{rows}"),
+            &ParseOptions {
+                limit: Some(10_000_000),
+            },
+        )
+        .unwrap();
+        let code = render(&parsed).err().map(|error| error.code);
+        assert_eq!(code, Some(PeleErrorCode::Limit));
+    }
 }

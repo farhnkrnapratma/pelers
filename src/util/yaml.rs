@@ -884,4 +884,64 @@ mod tests {
         let value = parse_yaml("{ __proto__: { polluted: true } }").unwrap();
         assert_eq!(keys(&value), ["__proto__"]);
     }
+
+    fn field<'a>(value: &'a Value, key: &str) -> &'a Value {
+        value.as_object().unwrap().get(key).unwrap()
+    }
+
+    #[test]
+    fn normalizes_carriage_returns() {
+        let value = parse_yaml("a: 1\r\nb: 2\rc: 3").unwrap();
+        assert_eq!(keys(&value), ["a", "b", "c"]);
+    }
+
+    #[test]
+    fn reads_oversized_radix_numbers() {
+        let value = parse_yaml(&format!("a: 0x{}\nb: -0o17", "f".repeat(40))).unwrap();
+        assert!(matches!(field(&value, "a"), Value::Number(n) if *n > 1e47));
+        assert_eq!(field(&value, "b"), &Value::Number(-15.0));
+    }
+
+    #[test]
+    fn maps_every_double_quoted_escape() {
+        let value = parse_yaml(
+            "a: \"\\0\\a\\b\\t\\n\\v\\f\\r\\e\\ \\\"\\/\\\\\\N\\_\\L\\P\\x41\\u0042\\U00000043\"",
+        )
+        .unwrap();
+        assert_eq!(
+            field(&value, "a").as_str(),
+            Some("\0\u{7}\u{8}\t\n\u{b}\u{c}\r\u{1b} \"/\\\u{85}\u{a0}\u{2028}\u{2029}ABC")
+        );
+    }
+
+    #[test]
+    fn rejects_bad_double_quoted_escapes() {
+        assert!(parse_yaml("a: \"\\q\"").is_err());
+        assert!(parse_yaml("a: \"\\x-1\"").is_err());
+        assert!(parse_yaml("a: \"b\\\\\n\"").is_err());
+    }
+
+    #[test]
+    fn rejects_unterminated_single_quotes() {
+        assert!(parse_yaml("a: 'abc").is_err());
+    }
+
+    #[test]
+    fn reads_empty_and_commented_block_scalars() {
+        let value = parse_yaml("a: |\nb: 1").unwrap();
+        assert_eq!(field(&value, "a").as_str(), Some(""));
+        let value = parse_yaml("a: |+\n\n\nb: 1").unwrap();
+        assert_eq!(field(&value, "a").as_str(), Some("\n\n"));
+        let value = parse_yaml("a: | # note\n  x\nb: 1").unwrap();
+        assert_eq!(field(&value, "a").as_str(), Some("x\n"));
+    }
+
+    #[test]
+    fn refuses_deep_block_nesting() {
+        let source = (0..80)
+            .map(|level| format!("{}k:", " ".repeat(level)))
+            .collect::<Vec<_>>()
+            .join("\n");
+        assert!(parse_yaml(&source).is_err());
+    }
 }

@@ -201,4 +201,10 @@ mod tests {
         assert!(parse_packet("packet\n0 - 1: \"a\"\n").is_ok());
         assert!(parse_packet("packet\n0 - : \"a\"\n").is_err());
     }
+
+    #[test]
+    fn ends_without_a_line_break_and_rejects_trailing_tokens() {
+        assert_eq!(parse_packet("packet\n0-3: \"a\"").unwrap().blocks.len(), 1);
+        assert!(parse_packet("packet\n0-3: \"a\" 4-7: \"b\"\n").is_err());
+    }
 }

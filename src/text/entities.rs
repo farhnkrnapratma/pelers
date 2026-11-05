@@ -196,4 +196,12 @@ mod tests {
         assert_eq!(written_codes("a ﬂ°°35¶ß b ﬂ°quot¶ß"), "a #35; b #quot;");
         assert_eq!(written_codes("no codes"), "no codes");
     }
+
+    #[test]
+    fn leaves_unfinished_placeholders_and_entities_alone() {
+        assert_eq!(restore_placeholders("ﬂ°amp¶x ﬂ°lt¶ß"), "ﬂ°amp¶x &lt;");
+        assert_eq!(written_codes("ﬂ°a¶x ﬂ°b¶ß"), "ﬂ°a¶x #b;");
+        assert_eq!(entity_at("&#xZ;"), None);
+        assert_eq!(entity_at("&#12"), None);
+    }
 }

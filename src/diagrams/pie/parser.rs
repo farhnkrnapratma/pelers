@@ -187,4 +187,14 @@ mod tests {
     fn requires_the_header() {
         assert!(parse_pie("\"a\" : 1").is_err());
     }
+
+    #[test]
+    fn reports_stray_tokens_and_ends_without_a_line_break() {
+        assert_eq!(
+            parse_pie("pie\ntitle End").unwrap().title.as_deref(),
+            Some("End")
+        );
+        assert!(parse_pie("pie\nshowData\n").is_err());
+        assert!(parse_pie("pie\naccDescr {x} \"a\" : 1\n").is_err());
+    }
 }

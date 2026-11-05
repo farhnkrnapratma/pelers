@@ -38,6 +38,13 @@ const fixed = [
     '    indented\n    markdown', '', ' ', 'x', 'fa:fa-user Alice', 'Alice fa:fa-user', 'text &amp; more',
 ];
 for (const raw of fixed) for (const markdown of [false, true]) cases.push({ raw, markdown, size: 16, max: 4000, base: 0 });
+const narrow = [
+    '漢字」漢字」', '「漢字」かな、です。', 'Supercalifragilisticexpialidocious\u200b', 'ab\u00ad<b>cd</b>', 'ab\u00ad<b>cd\u00ad</b>ef',
+    'x<b/>y z', 'a<brx b c', 'one two three four five', '<b>aaa</b> bbb ccc ddd eee', 'aaa bbb ', 'abc\u200bdef\u200bghi',
+    'long<br>line one two three<br>x', 'a <i>b c d e f</i> g h i', 'ａｂ（漢字）ｃｄ', 'word1 word2 word3\u00adword4 word5',
+];
+for (const raw of narrow) for (const markdown of [false, true]) for (const max of [20, 45, 80]) cases.push({ raw, markdown, size: 16, max, base: 0 });
+for (const raw of ['a<br><br>b', '<br>a', 'a<br>', '漢字),漢,字.', 'abc\u200b)def ghi', 'ab\u00ad,cd efg']) for (const max of [-1, 0, 20, 45]) cases.push({ raw, markdown: false, size: 16, max, base: 0 });
 for (let i = 0; i < 1500; i++) {
     let raw = '';
     for (let n = 1 + Math.floor(random() * 7); n > 0; n--) raw += pick(FRAGMENTS) + (random() < 0.5 ? ' ' : '');

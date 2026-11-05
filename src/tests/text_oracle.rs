@@ -1,9 +1,9 @@
 use std::fs;
 use std::path::Path;
 
-use pelers::svg::builder::{esc, label_svg, num};
-use pelers::text::label::layout_label;
-use pelers::util::jsnum::js_number_to_string as js;
+use crate::svg::builder::{esc, label_svg, num};
+use crate::text::label::layout_label;
+use crate::util::jsnum::js_number_to_string as js;
 use serde_json::Value;
 
 fn fixtures() -> Value {

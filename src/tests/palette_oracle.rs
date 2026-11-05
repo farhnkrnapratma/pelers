@@ -1,9 +1,9 @@
 use std::fs;
 use std::path::Path;
 
-use pelers::svg::palette::palette;
-use pelers::util::json::parse;
-use pelers::util::value::Value;
+use crate::svg::palette::palette;
+use crate::util::json::parse;
+use crate::util::value::Value;
 use serde_json::Value as Json;
 
 #[test]

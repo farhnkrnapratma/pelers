@@ -339,4 +339,28 @@ mod tests {
         assert!(!plain_color("#ff"));
         assert!(!plain_color("rgb(0,0,0)"));
     }
+
+    #[test]
+    fn scans_number_edges() {
+        assert!(number(".").is_none());
+        assert!(number("-.x").is_none());
+        assert_eq!(number("1e+2").map(|n| n.value), Some(100.0));
+        assert!(number("1e").is_none());
+        assert!(number("1e+").is_none());
+        assert_eq!(split_runs(""), vec![String::new()]);
+    }
+
+    #[test]
+    fn finds_fill_after_other_declarations() {
+        assert_eq!(fill_of("stroke:red;fill:#fff"), Some("#fff"));
+        assert_eq!(fill_of("stroke:red"), None);
+    }
+
+    #[test]
+    fn weighs_fill_by_opacity() {
+        assert_eq!(ink(";fill:#fff;opacity:0.2", ""), None);
+        assert_eq!(ink(";fill:#fff;fill-opacity:50%;", ""), Some(ON_LIGHT));
+        assert_eq!(ink(";fill:#fff;opacity:x", ""), None);
+        assert_eq!(opacity(";opacity:0.5;fill-opacity:0.5\""), 0.25);
+    }
 }

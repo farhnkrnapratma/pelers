@@ -44,3 +44,21 @@ pub fn render_info(model: &InfoModel, options: &RenderOptions) -> Drawn {
         height,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use crate::diagrams::info::parse;
+
+    #[test]
+    fn makes_room_for_a_title() {
+        let plain = render_info(&parse("info\n", None).unwrap(), &RenderOptions::default());
+        let titled = render_info(
+            &parse("info\n", Some("Release".to_owned())).unwrap(),
+            &RenderOptions::default(),
+        );
+        assert!(titled.height > plain.height);
+        assert!(titled.svg.contains("pele-title"));
+    }
+}

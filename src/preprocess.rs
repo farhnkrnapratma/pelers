@@ -201,9 +201,6 @@ fn is_line_break(c: char) -> bool {
 }
 
 fn closing_end(text: &str, i: usize, fence: &str) -> Option<usize> {
-    if !text[i..].starts_with(is_line_break) || !text[i + 1..].starts_with(fence) {
-        return None;
-    }
     let mut last = None;
     for (offset, c) in text[i + 1 + fence.len()..].char_indices() {
         if !is_js_space(c) {
@@ -218,11 +215,7 @@ fn closing_end(text: &str, i: usize, fence: &str) -> Option<usize> {
 
 fn last_index_from(text: &str, needle: &str, from: i64) -> Option<usize> {
     let limit = (from.max(0) as usize + needle.len()).min(text.len());
-    let mut end = limit;
-    while !text.is_char_boundary(end) {
-        end -= 1;
-    }
-    text[..end].rfind(needle)
+    text[..text.floor_char_boundary(limit)].rfind(needle)
 }
 
 fn match_front_matter(text: &str) -> Option<FrontMatter> {
@@ -268,27 +261,19 @@ fn match_front_matter(text: &str) -> Option<FrontMatter> {
         .unwrap_or(first_opening);
     let body_start = opening_end + 1;
     let first_at = body_start.saturating_sub(1);
-    let mut i = text[first_at..].find(&needle).map(|found| first_at + found);
-    while let Some(at) = i {
-        if at > last_fence {
-            break;
-        }
-        if at >= body_start
-            && let Some(end) = closing_end(text, at, &fence)
-        {
-            return Some(FrontMatter {
-                indent: indent.to_owned(),
-                body: text[body_start..at].to_owned(),
-                length: end + 1,
-            });
-        }
-        i = text[at + 1..].find(&needle).map(|found| at + 1 + found);
-    }
-    None
-}
-
-pub fn is_record(value: &Value) -> bool {
-    matches!(value, Value::Object(_))
+    let first = text[first_at..].find(&needle).map(|found| first_at + found);
+    std::iter::successors(first, |&at| {
+        text[at + 1..].find(&needle).map(|found| at + 1 + found)
+    })
+    .take_while(|&at| at <= last_fence)
+    .filter(|&at| at >= body_start)
+    .find_map(|at| {
+        closing_end(text, at, &fence).map(|end| FrontMatter {
+            indent: indent.to_owned(),
+            body: text[body_start..at].to_owned(),
+            length: end + 1,
+        })
+    })
 }
 
 fn merge(target: &mut Object, source: &Object) {
@@ -429,9 +414,11 @@ pub fn preprocess_steps(source: &str, mut steps: Steps) -> Result<Preprocessed, 
                 if !matches!(config.get("gantt"), Some(Value::Object(_))) {
                     config.set("gantt", Value::Object(Object::new()));
                 }
-                if let Some(Value::Object(gantt)) = config.get_mut("gantt") {
-                    gantt.set("displayMode", Value::String(mode.to_js_string()));
-                }
+                config
+                    .get_mut("gantt")
+                    .and_then(Value::as_object_mut)
+                    .expect("gantt was just set to an object")
+                    .set("displayMode", Value::String(mode.to_js_string()));
             }
         }
         line_offset = text[..front.length].matches('\n').count();
@@ -549,4 +536,29 @@ pub fn source_map(source: &str, keep_comments: bool) -> (String, Vec<Vec<Edit>>)
         encode_entities(&kept, Some(&mut steps));
     }
     (normalize_line_breaks(source) + "\n", steps)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn reads_directive_bodies_across_crlf_and_stops_at_other_terminators() {
+        let crlf = directives_in("%%{init: {\"a\":\r\n1}}%%");
+        assert_eq!(crlf.len(), 1);
+        assert_eq!(crlf[0].body.as_deref(), Some("{\"a\":\r\n1}"));
+        let lone = directives_in("%%{init: {\"a\":\r1}}%%");
+        assert_eq!(lone[0].body.as_deref(), Some("{\"a\":"));
+        assert_eq!(lone[0].end, 15);
+    }
+
+    #[test]
+    fn maps_sources_with_kept_comments_and_invalid_front_matter() {
+        let (text, steps) = source_map("%%{wrap}%%\ninfo\n%% c\n", true);
+        assert_eq!(text, "%%{wrap}%%\ninfo\n%% c\n\n");
+        assert!(!steps.is_empty());
+        let (text, steps) = source_map("---\n{ a: 1\n---\ninfo", false);
+        assert_eq!(text, "---\n{ a: 1\n---\ninfo\n");
+        assert!(steps.is_empty());
+    }
 }

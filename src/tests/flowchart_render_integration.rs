@@ -1,4 +1,4 @@
-use pelers::{Direction, EdgeEndpoint, Shape, parse_flowchart, render_flowchart};
+use crate::{Direction, EdgeEndpoint, Shape, parse_flowchart, render_flowchart};
 
 #[test]
 fn public_parser_and_renderer_produce_a_connected_flowchart() {

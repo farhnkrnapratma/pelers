@@ -147,4 +147,13 @@ mod tests {
         }
         assert_eq!(js_number_to_string(f64::NAN), "NaN");
     }
+
+    #[test]
+    fn keeps_nan_through_fixed_and_min() {
+        assert_eq!(to_fixed_0(f64::NAN), "NaN");
+        assert!(js_min(f64::NAN, 1.0).is_nan());
+        assert!(js_min(1.0, f64::NAN).is_nan());
+        assert_eq!(js_min(2.0, 1.0), 1.0);
+        assert_eq!(js_min(1.0, 2.0), 1.0);
+    }
 }

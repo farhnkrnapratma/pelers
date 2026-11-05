@@ -74,6 +74,7 @@ const YAML_CASES = [
     'a: !!str 1',
     '- - a\n  - b\n- c',
     'a: |+\n  keep\n\n\nb: >-\n  fold\n  me\n',
+    'a: 0b101\nb: -0b11\nc: 0o17\nd: 0b12',
     'a: |2\n    indented\nb: 1',
 ];
 const YAML_FRAGMENTS = [
@@ -137,6 +138,21 @@ for (const source of [
     '---\ntitle: a\n---\n---\ntitle: b\n---\ninfo',
     '---\n: bad\n---\ninfo',
     '\n\n  %% lead\ninfo\n',
+    '---\n---\ninfo',
+    '---\n---',
+    '---\n{ a: 1\n---\ninfo',
+    '---\na: 1\n---x\n---\ninfo',
+    '---\ntitle: t\n---\ninfo\n---x',
+    '---\ntitle: 漢\n---漢\n---\ninfo',
+    '---\ndisplayMode: compact\nconfig:\n  gantt:\n    x: 1\n---\ngantt',
+    '%% c',
+    'info\n%% c',
+    '%%{init: {"a":\r\n1}}%%\ninfo',
+    '%%{init: {"a":\r1}}%%\ninfo',
+    '%%{init: {"a":\u20281}}%%\ninfo',
+    'A["<b a="1"]',
+    'A["<b a="1" c="2]',
+    '<span class="x>hi</span>',
 ]) addPre(source);
 for (let i = 0; i < 2500; i++) {
     let source = '';

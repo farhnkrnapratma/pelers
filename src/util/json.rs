@@ -256,4 +256,43 @@ mod tests {
     fn refuses_absurd_nesting() {
         assert!(parse(&"[".repeat(100_000)).is_none());
     }
+
+    #[test]
+    fn reads_literals_exponents_and_escapes() {
+        assert_eq!(parse("false"), Some(Value::Bool(false)));
+        assert_eq!(parse("1e+2"), Some(Value::Number(100.0)));
+        assert_eq!(parse("1E-2"), Some(Value::Number(0.01)));
+        assert_eq!(
+            parse(r#""\" \\ \/ \b \f \n \r \t""#).unwrap().as_str(),
+            Some("\" \\ / \u{8} \u{c} \n \r \t")
+        );
+        assert_eq!(
+            parse(r#""\ud83d\u0041""#).unwrap().as_str(),
+            Some("\u{fffd}A")
+        );
+    }
+
+    #[test]
+    fn rejects_malformed_numbers_escapes_and_separators() {
+        for bad in [
+            "-",
+            "-x",
+            "1e",
+            "1e+",
+            r#""\uzzzz""#,
+            r#""\u12""#,
+            r#""\q""#,
+            r#""\"#,
+            "[1 2]",
+            r#"{"a" 1}"#,
+            r#"{"a":1 "b":2}"#,
+            r#"{"a":1"#,
+            "[1",
+            "tru",
+            "fals",
+            "@",
+        ] {
+            assert!(parse(bad).is_none(), "{bad:?}");
+        }
+    }
 }

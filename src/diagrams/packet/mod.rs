@@ -143,10 +143,7 @@ mod tests {
     use crate::util::json::parse as parse_json;
 
     fn config(text: &str) -> Config {
-        match parse_json(text) {
-            Some(Value::Object(object)) => object,
-            _ => Config::default(),
-        }
+        parse_json(text).unwrap().as_object().cloned().unwrap()
     }
 
     fn model(source: &str, json: &str) -> Result<PacketModel, PeleError> {

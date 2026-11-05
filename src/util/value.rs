@@ -176,4 +176,36 @@ mod tests {
         assert!(!Value::Number(f64::NAN).is_truthy() && !Value::Number(-0.0).is_truthy());
         assert!(Value::Array(Vec::new()).is_truthy());
     }
+
+    #[test]
+    fn exposes_object_and_scalar_accessors() {
+        let mut object = Object::new();
+        assert!(object.is_empty());
+        object.set("a", Value::Number(1.0));
+        assert!(!object.is_empty());
+        assert_eq!(object.len(), 1);
+        *object.get_mut("a").unwrap() = Value::Number(2.0);
+        assert_eq!(object.get("a"), Some(&Value::Number(2.0)));
+        assert!(object.get_mut("b").is_none());
+        let mut value = Value::Object(object);
+        assert!(value.as_object_mut().is_some());
+        assert!(Value::Null.as_object().is_none());
+        assert!(Value::Null.as_object_mut().is_none());
+        assert_eq!(Value::String("x".to_owned()).as_str(), Some("x"));
+        assert_eq!(Value::Null.as_str(), None);
+    }
+
+    #[test]
+    fn evaluates_truthiness_like_javascript() {
+        assert!(!Value::Null.is_truthy());
+        assert!(Value::Bool(true).is_truthy());
+        assert!(!Value::Bool(false).is_truthy());
+        assert!(!Value::Number(f64::NAN).is_truthy());
+        assert!(!Value::Number(0.0).is_truthy());
+        assert!(Value::Number(2.0).is_truthy());
+        assert!(!Value::String(String::new()).is_truthy());
+        assert!(Value::String("a".to_owned()).is_truthy());
+        assert!(Value::Array(Vec::new()).is_truthy());
+        assert!(Value::Object(Object::new()).is_truthy());
+    }
 }

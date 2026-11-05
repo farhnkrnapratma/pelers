@@ -634,4 +634,68 @@ mod tests {
                 .ends_with("Expecting a title or the end of input but found `info`.")
         );
     }
+
+    #[test]
+    fn matches_line_breaks_titles_and_fences_at_the_edges() {
+        assert_eq!(newline("a\r\nb", 1), Some(3));
+        assert_eq!(newline("ab", 0), None);
+        assert_eq!(string("x", 0), None);
+        assert_eq!(title("titlex", 0), Some(5));
+        assert_eq!(fence_end("---\n", 0), Some(4));
+        assert_eq!(fence_end("---", 0), Some(3));
+        assert_eq!(yaml("---\na: 1\n---\n", 0), Some(13));
+        assert_eq!(yaml("---\n---", 0), Some(7));
+        assert_eq!(yaml("---\na: 1\n", 0), None);
+    }
+
+    #[test]
+    fn closes_directives_at_a_line_break_a_space_or_the_end() {
+        assert_eq!(directive("%%{a}%%\n", 0), Some(8));
+        assert_eq!(directive("%%{a}%% x", 0), Some(7));
+        assert_eq!(directive("%%{a}%%", 0), Some(7));
+        assert_eq!(directive("%%{a}%%x%%{b}%%\n", 0), Some(16));
+        assert_eq!(directive("%%{a}", 0), None);
+    }
+
+    #[test]
+    fn falls_back_to_a_comment_once_a_directive_is_unterminated() {
+        let kinds = tokenize("info\n%%{a\n%%{b\n", &TYPES, "info")
+            .unwrap()
+            .kinds;
+        assert_eq!(kinds, vec![1, 5, 5, 5, -1]);
+    }
+
+    #[test]
+    fn skips_unknown_longer_alternatives() {
+        const ONLY: [TokenType; 1] = [TokenType {
+            longer: &["missing"],
+            ..TokenType::new("A", Pattern::Literal("a"), None)
+        }];
+        assert_eq!(tokenize("aa", &ONLY, "x").unwrap().kinds, vec![0, 0, -1]);
+    }
+
+    #[test]
+    fn unescapes_quoted_strings() {
+        assert_eq!(
+            string_value("\"\\b\\f\\n\\r\\t\\v\\0\\q\""),
+            "\u{8}\u{c}\n\r\t\u{b}\0q"
+        );
+        assert_eq!(string_value("\"a\\\""), "a");
+    }
+
+    #[test]
+    fn points_end_of_input_errors_at_the_last_token() {
+        let mut reader = Reader::new(
+            tokenize("info\n\n", &TYPES, "info").unwrap(),
+            &TYPES,
+            "info",
+        );
+        reader.i = 3;
+        let error = reader.fail("a title");
+        assert!(error.message.contains("but found end of input"));
+        assert_eq!((error.line, error.column), (1, 5));
+        let mut blank = Reader::new(tokenize("\n", &TYPES, "info").unwrap(), &TYPES, "info");
+        blank.i = 1;
+        assert_eq!(blank.fail("a title").line, 2);
+    }
 }

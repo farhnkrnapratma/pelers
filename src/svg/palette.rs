@@ -154,15 +154,14 @@ fn record(value: Option<&Value>) -> Option<&Object> {
     }
 }
 
-fn entries(kind: &str, vars: Option<&Object>) -> Option<(Vec<Value>, bool)> {
+fn entries(kind: &str, vars: Option<&Object>) -> Option<Vec<Value>> {
     if kind == "xychart" {
         let list =
             record(vars.and_then(|v| v.get("xyChart"))).and_then(|x| x.get("plotColorPalette"));
         return match list {
-            Some(Value::String(text)) => Some((
-                split_list(text).into_iter().map(Value::String).collect(),
-                true,
-            )),
+            Some(Value::String(text)) => {
+                Some(split_list(text).into_iter().map(Value::String).collect())
+            }
             _ => None,
         };
     }
@@ -179,7 +178,7 @@ fn entries(kind: &str, vars: Option<&Object>) -> Option<(Vec<Value>, bool)> {
             !matches!(value, Value::Null) && *value != Value::String(String::new())
         });
     }
-    Some((list, scale.repeat))
+    Some(list)
 }
 
 #[derive(Clone, Default)]
@@ -190,7 +189,7 @@ pub struct Palette {
 
 pub fn palette(kind: &str, config: &Object) -> Palette {
     let vars = record(config.get("themeVariables"));
-    let Some((list, repeat)) = entries(kind, vars) else {
+    let Some(list) = entries(kind, vars) else {
         return Palette::default();
     };
     if list.is_empty() {
@@ -199,9 +198,6 @@ pub fn palette(kind: &str, config: &Object) -> Palette {
     let mut style = String::new();
     let mut inks = [None; SLOTS];
     for i in 0..SLOTS {
-        if !repeat && i >= list.len() {
-            break;
-        }
         let Some(color) = safe_color(&list[i % list.len()]) else {
             continue;
         };
@@ -251,10 +247,7 @@ mod tests {
     use crate::util::json::parse as parse_json;
 
     fn config(text: &str) -> Object {
-        match parse_json(text) {
-            Some(Value::Object(object)) => object,
-            other => panic!("not an object: {other:?}"),
-        }
+        parse_json(text).unwrap().as_object().cloned().unwrap()
     }
 
     #[test]

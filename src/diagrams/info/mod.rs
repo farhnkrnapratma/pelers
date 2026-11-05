@@ -60,4 +60,16 @@ mod tests {
         let error = parse("info\nnope\n", None).unwrap_err();
         assert!(error.message.starts_with("Lexical error on line 2."));
     }
+
+    #[test]
+    fn reads_accessible_titles_and_reports_stray_tokens() {
+        let model = parse("info\naccTitle: Name\n", None).unwrap();
+        assert_eq!(model.acc_title.as_deref(), Some("Name"));
+        assert_eq!(
+            parse("info\ntitle End", None).unwrap().title.as_deref(),
+            Some("End")
+        );
+        assert!(parse("info\ninfo\n", None).is_err());
+        assert!(parse("info\naccDescr {x} title y\n", None).is_err());
+    }
 }

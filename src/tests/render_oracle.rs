@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 
-use pelers::{PeleErrorCode, RenderOptions, parse, render_with};
+use crate::{PeleErrorCode, RenderOptions, parse, render_with};
 use serde_json::Value as Json;
 
 fn load(name: &str) -> Json {
