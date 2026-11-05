@@ -6,6 +6,7 @@ pub mod errors;
 pub mod flowchart;
 pub mod preprocess;
 pub mod render;
+pub mod util;
 
 pub use api::{ParsedDiagram, RenderResult, parse, render};
 pub use detect::{Detected, DiagramType, MermaidType, detect_diagram};
