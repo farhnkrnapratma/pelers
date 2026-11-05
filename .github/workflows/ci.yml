@@ -1,0 +1,139 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        id: node
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - name: Look up successful library tests
+        id: library-tests
+        uses: actions/cache@v6
+        with:
+          path: ${{ runner.temp }}/pele-library-tests
+          key: library-tests-${{ runner.os }}-${{ runner.arch }}-${{ steps.node.outputs.node-version }}-${{ hashFiles('src/**', 'tests/**', '!tests/website/**', 'scripts/**', 'package.json', 'package-lock.json', 'tsconfig*.json', 'vitest*.ts', '.github/workflows/ci.yml') }}
+          lookup-only: true
+      - name: Run full test suite
+        if: steps.library-tests.outputs.cache-hit != 'true'
+        run: |
+          npm test -- --reporter=verbose
+          mkdir -p "$RUNNER_TEMP/pele-library-tests"
+          touch "$RUNNER_TEMP/pele-library-tests/passed"
+      - run: npm run build
+
+  website:
+    needs: check
+    runs-on: ubuntu-latest
+    # Releases and pushes queue apart, so a push can't replace a waiting release deploy.
+    concurrency:
+      group: website-${{ github.event_name == 'pull_request' && github.ref || github.event_name }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event_name == 'release' && 'main' || '' }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.8.1
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: website/pnpm-lock.yaml
+      - run: npm ci
+      - run: pnpm --dir website install --frozen-lockfile
+      - run: npm run test:website
+      - run: pnpm --dir website check
+      - run: pnpm --dir website build
+      # The site runs main's website with the latest published release's library. When a commit since
+      # that release changes src/ and website/, or main's website doesn't build with the release, it runs
+      # the tag's website instead.
+      - name: Build with the latest release
+        id: release
+        if: github.event_name == 'release' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="$(gh release view --json tagName --jq .tagName)"
+          if [ "$GITHUB_EVENT_NAME" = release ] && [ "$GITHUB_REF_NAME" != "$tag" ]; then
+            echo "$GITHUB_REF_NAME is not the latest release."
+            exit 0
+          fi
+          library="src package.json tests/corpus"
+          website=main
+          commits="$(git rev-list "$tag..HEAD")"
+          for commit in $commits; do
+            files="$(git diff-tree --cc --no-commit-id --name-only -r "$commit")"
+            if grep -q '^src/' <<< "$files" && grep -q '^website/' <<< "$files"; then
+              echo "$(git log -1 --format='%h %s' "$commit") changes src/ and website/."
+              website=tag
+              break
+            fi
+          done
+          if [ "$website" = main ] && ! git diff --quiet "$tag" HEAD -- $library; then
+            git restore --source="$tag" -- $library
+            if ! pnpm --dir website build; then
+              echo "Main's website doesn't build with $tag."
+              website=tag
+            fi
+          fi
+          if [ "$website" = tag ]; then
+            echo "Building $tag's website."
+            git restore --source="$tag" -- website $library
+            pnpm --dir website install --frozen-lockfile
+            pnpm --dir website build
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Deploy website
+        if: steps.release.outputs.tag != ''
+        working-directory: website
+        run: |
+          for attempt in 1 2 3; do
+            # A newer release or push has its own run, so this one leaves the deploy to it.
+            latest="$(gh release view --json tagName --jq .tagName)"
+            main="$(git ls-remote --exit-code origin refs/heads/main)"
+            main="${main%%[[:space:]]*}"
+            if [ "$latest" != "$TAG" ] || [ "$main" != "$COMMIT" ]; then
+              echo "The latest release is $latest and main is at $main, so a newer run deploys."
+              exit 0
+            fi
+
+            if pnpm exec wrangler deploy; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+
+            echo "Deployment failed; retrying in 15 seconds..."
+            sleep 15
+          done
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+          COMMIT: ${{ steps.release.outputs.commit }}

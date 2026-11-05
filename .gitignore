@@ -1,0 +1,21 @@
+node_modules/
+dist/
+
+# Local state
+.wrangler/
+tests/scratch/
+
+# System
+.DS_Store
+*.log
+
+# AI
+.claude/skills/
+.claude/settings.local.json
+graphify-out/
+.cursor/
+.codex/
+
+# Added by cargo
+
+/target

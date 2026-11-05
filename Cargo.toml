@@ -1,0 +1,17 @@
+[package]
+name = "pelers"
+version = "1.0.0-alpha1"
+authors = ["Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>"]
+edition = "2024"
+description = "Pele, but in Rust"
+readme = "README.md"
+homepage = "https://fkp.my.id"
+repository = "https://github.com/farhnkrnapratma/pelers"
+license = "MIT OR Apache-2.0"
+keywords = ["mermaid", "diagram", "diagrams", "svg", "renderer"]
+categories = ["rendering", "command-line-utilities"]
+include = ["/src/**/*.rs", "/README.md", "/NOTICE", "/LICENSE-MIT", "/LICENSE-APACHE"]
+
+[dependencies]
+serde_json = "1.0.154"
+serde_yaml = "0.9.34"

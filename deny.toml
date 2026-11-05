@@ -1,0 +1,28 @@
+[graph]
+all-features = true
+
+[advisories]
+# serde_yaml pulls unsafe-libyaml (unmaintained, no CVE). Drop this once pelers moves off serde_yaml.
+ignore = ["RUSTSEC-2024-0449"]
+
+[licenses]
+# MPL-2.0 is file-level copyleft: fine while we only depend on it, never patch its files.
+allow = [
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSL-1.0",
+    "ISC",
+    "MIT",
+    "MPL-2.0",
+    "Unicode-3.0",
+    "Unlicense",
+    "Zlib",
+]
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
