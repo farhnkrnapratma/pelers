@@ -15,7 +15,6 @@ npm/
 *.log
 
 # AI
-.claude/skills/
 .claude/settings.local.json
 graphify-out/
 .cursor/
