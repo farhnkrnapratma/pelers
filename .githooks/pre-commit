@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+forbidden=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '(^|/)(AGENTS\.md|GEMINI\.md|CONVENTIONS\.md|openai\.yaml|copilot-instructions\.md|\.cursorrules|\.windsurfrules|\.clinerules|\.aider[^/]*|\.(codex|copilot|cursor|windsurf|roo|kiro|amazonq|junie|trae|augment|gemini|opencode|continue|devin|qwen|cline)|\.tessl[^/]*|\.(claude|agents)/skills/[^/]+/\.github)(/|$)' || true)
+if [ -n "$forbidden" ]; then
+  echo "Commit blocked: other AI agent config is staged; keep only .agents/ and .claude/:" >&2
+  echo "$forbidden" >&2
+  exit 1
+fi
+
 if ! command -v trufflehog >/dev/null 2>&1; then
   echo "trufflehog not installed, skipping secret scan (https://github.com/trufflesecurity/trufflehog#installation)" >&2
   exit 0
