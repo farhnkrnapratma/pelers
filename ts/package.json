@@ -1,0 +1,70 @@
+{
+  "name": "pelers-ts",
+  "version": "1.0.0-alpha2",
+  "description": "The TypeScript Pele renderer, kept as the oracle for the Rust port (not published).",
+  "license": "MIT OR Apache-2.0",
+  "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farhnkrnapratma/pelers.git"
+  },
+  "type": "module",
+  "main": "./dist/pele.js",
+  "module": "./dist/pele.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/pele.js",
+      "default": "./dist/pele.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/esm/core.js",
+      "default": "./dist/esm/core.js"
+    },
+    "./lazy": {
+      "types": "./dist/lazy.d.ts",
+      "import": "./dist/esm/lazy.js",
+      "default": "./dist/esm/lazy.js"
+    },
+    "./diagrams/*": {
+      "types": "./dist/entries/*.d.ts",
+      "import": "./dist/esm/diagrams/*.js",
+      "default": "./dist/esm/diagrams/*.js"
+    },
+    "./global": "./dist/pele.global.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --exclude \"tests/website/**\"",
+    "test:website": "vitest run tests/website",
+    "test:watch": "vitest --exclude \"tests/website/**\"",
+    "bench": "node scripts/bench.mjs",
+    "bench:mermaid": "node scripts/bench-mermaid.mjs",
+    "lint": "eslint .",
+    "fmt": "prettier --write .",
+    "fmt:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@braintree/sanitize-url": "^7.1.2",
+    "@eslint/js": "^10.0.1",
+    "@mermaid-js/parser": "^2.0.1",
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "beautiful-mermaid": "^1.1.3",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.14.0",
+    "jison": "^0.4.18",
+    "js-yaml": "^4.3.2",
+    "prettier": "^3.9.10",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "underscore": "^1.13.8"
+  },
+  "private": true
+}

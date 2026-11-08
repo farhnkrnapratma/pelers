@@ -323,7 +323,7 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
 #[cfg(test)]
 mod tests {
     use super::render_flowchart;
-    use crate::flowchart::parse;
+    use crate::flowchart::{Subgraph, parse};
 
     #[test]
     fn renders_nodes_edges_and_escaped_labels() {
@@ -430,5 +430,41 @@ mod tests {
         let rendered = render_flowchart(&model);
         assert!(rendered.svg.contains("font-family:Arial"));
         assert!(!rendered.svg.contains("<style"));
+    }
+
+    #[test]
+    fn keeps_only_safe_style_declarations() {
+        let model = parse(
+            "flowchart LR\n  style A stroke-linecap:round,stroke-linejoin:bevel,font-weight:700,font-style:italic,text-decoration:underline,junk,font-weight:650,stroke-linecap:wide,font-style:slanted,text-decoration:blink",
+        )
+        .unwrap();
+        let svg = render_flowchart(&model).svg;
+        assert!(svg.contains("stroke-linecap:round"));
+        assert!(svg.contains("stroke-linejoin:bevel"));
+        assert!(svg.contains("font-weight:700"));
+        assert!(svg.contains("font-style:italic"));
+        assert!(svg.contains("text-decoration:underline"));
+        assert!(!svg.contains("650"));
+        assert!(!svg.contains("wide"));
+        assert!(!svg.contains("slanted"));
+        assert!(!svg.contains("blink"));
+        let bold = parse("flowchart LR\n  style A font-weight:bold").unwrap();
+        assert!(render_flowchart(&bold).svg.contains("font-weight:bold"));
+    }
+
+    #[test]
+    fn skips_dangling_edges_and_empty_subgraphs() {
+        let mut model = parse("flowchart LR\n  A --> B").unwrap();
+        model.edges[0].to = "missing".to_owned();
+        model.subgraphs.push(Subgraph {
+            id: "s".to_owned(),
+            label: "Empty".to_owned(),
+            nodes: vec!["missing".to_owned()],
+        });
+        let dangling_target = render_flowchart(&model).svg;
+        assert!(!dangling_target.contains("<line"));
+        assert!(!dangling_target.contains("Empty"));
+        model.edges[0].from = "missing".to_owned();
+        assert!(!render_flowchart(&model).svg.contains("<line"));
     }
 }

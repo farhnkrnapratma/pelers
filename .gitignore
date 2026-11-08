@@ -3,7 +3,12 @@ dist/
 
 # Local state
 .wrangler/
-tests/scratch/
+ts/tests/scratch/
+
+# Build output
+*.node
+artifacts/
+npm/
 
 # System
 .DS_Store

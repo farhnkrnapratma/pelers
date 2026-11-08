@@ -279,7 +279,7 @@ pub fn parse(source: &str) -> Result<FlowchartModel, PeleError> {
                 ));
             }
             add_node(&mut model.nodes, id, None, Shape::Rectangle);
-            if let Some(node) = model.nodes.iter_mut().find(|node| node.id == id) {
+            for node in model.nodes.iter_mut().filter(|node| node.id == id) {
                 node.styles.extend(
                     declarations
                         .split(',')
@@ -341,11 +341,9 @@ pub fn parse(source: &str) -> Result<FlowchartModel, PeleError> {
             add_node(&mut model.nodes, id, label, shape);
         }
         if let Some(subgraph) = &mut active_subgraph {
-            for node in &model.nodes[before..] {
-                if !subgraph.nodes.contains(&node.id) {
-                    subgraph.nodes.push(node.id.clone());
-                }
-            }
+            subgraph
+                .nodes
+                .extend(model.nodes[before..].iter().map(|node| node.id.clone()));
         }
         offset += line.len() + 1;
     }
@@ -490,5 +488,40 @@ mod tests {
     fn rejects_malformed_style_statements() {
         assert!(parse("flowchart LR\n  style A").is_err());
         assert!(parse("flowchart LR\n  style A fill:red\n  style A").is_err());
+    }
+
+    #[test]
+    fn rejects_malformed_headers() {
+        assert!(parse("").is_err());
+        assert!(parse("flowchart").is_err());
+        assert!(parse("chart LR").is_err());
+        assert_eq!(parse("flowchart BT").unwrap().direction, Direction::Bt);
+    }
+
+    #[test]
+    fn relabels_a_node_declared_twice() {
+        let model = parse("flowchart LR\n  A\n  A[Named]").unwrap();
+        assert_eq!(model.nodes.len(), 1);
+        assert_eq!(model.nodes[0].label, "Named");
+    }
+
+    #[test]
+    fn groups_nodes_into_subgraphs() {
+        let model = parse(
+            "flowchart LR\n  subgraph one [First]\n    A --> B\n    style A fill:#f00\n    style C fill:#00f\n  end",
+        )
+        .unwrap();
+        assert_eq!(model.subgraphs[0].id, "one");
+        assert_eq!(model.subgraphs[0].nodes, ["A", "B", "C"]);
+        let bracketed = parse("flowchart LR\n  subgraph [Only]\n    A\n  end").unwrap();
+        assert_eq!(bracketed.subgraphs[0].label, "Only");
+    }
+
+    #[test]
+    fn rejects_misplaced_subgraph_keywords() {
+        assert!(parse("flowchart LR\n  subgraph a\n  subgraph b\n  end\n  end").is_err());
+        assert!(parse("flowchart LR\n  subgraph\n  end").is_err());
+        assert!(parse("flowchart LR\n  end").is_err());
+        assert!(parse("flowchart LR\n  subgraph a\n    A").is_err());
     }
 }

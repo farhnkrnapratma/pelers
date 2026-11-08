@@ -83,18 +83,40 @@ jobs:
       - checkout
       - restore-cargo:
           scope: test
+      - setup-bun
+      - run: bun install --frozen-lockfile
       - run: cargo test --locked
+      - run: bun run test:native
       - save-cargo:
           scope: test
+
+  coverage:
+    executor: rust
+    steps:
+      - checkout
+      - restore-cargo:
+          scope: coverage
+      - run:
+          name: Install cargo-llvm-cov
+          command: |
+            rustup component add llvm-tools-preview
+            curl -fsSL https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.9.1/cargo-llvm-cov-x86_64-unknown-linux-musl.tar.gz \
+              | tar -xz -C "$HOME/.cargo/bin"
+      - run: cargo llvm-cov --locked --summary-only --fail-under-lines 99.999 --fail-under-functions 99.999
+      - save-cargo:
+          scope: coverage
 
   secrets:
     docker:
       - image: cimg/python:3.12
     steps:
-      - checkout
       - setup-trufflehog
-      - run: if [ "$(git rev-parse --is-shallow-repository)" = true ]; then git fetch --unshallow; fi
-      - run: trufflehog git "file://$PWD" --results=verified --fail --no-update
+      # CircleCI checks out a blobless clone, so trufflehog scans a full clone instead
+      - run:
+          name: Scan history
+          command: |
+            git clone --quiet "https://github.com/farhnkrnapratma/pelers.git" "$HOME/scan"
+            trufflehog git "file://$HOME/scan" --results=verified --fail --no-update
 
   commitlint:
     executor: rust
@@ -119,11 +141,26 @@ jobs:
     steps:
       - checkout
       - setup-bun
-      - run: bun install --frozen-lockfile
-      - run: bun run typecheck
-      - run: bun run lint
-      - run: bun run fmt:check
-      - run: bun run test
+      - run:
+          name: Install
+          working_directory: ts
+          command: bun install --frozen-lockfile
+      - run:
+          name: Typecheck
+          working_directory: ts
+          command: bun run typecheck
+      - run:
+          name: Lint
+          working_directory: ts
+          command: bun run lint
+      - run:
+          name: Format
+          working_directory: ts
+          command: bun run fmt:check
+      - run:
+          name: Test
+          working_directory: ts
+          command: bun run test
 
 workflows:
   ci:
@@ -131,6 +168,7 @@ workflows:
       - reuse
       - lint
       - test
+      - coverage
       - secrets
       - commitlint
       - js

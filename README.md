@@ -1,34 +1,34 @@
 # pelers
 
-A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is derived from [Pele](https://github.com/obsidianmd/pele) by kepano: the npm package is the TypeScript renderer, and the Rust crate is a port that is being built up one diagram type at a time.
+A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is derived from [Pele](https://github.com/obsidianmd/pele) by kepano. It is being ported from TypeScript to Rust, and will expose only a JavaScript/TypeScript binding (native addon for Node, Bun and Deno, WebAssembly for browsers), like [`markers`](https://github.com/farhnkrnapratma/markers) and [`mdrs`](https://github.com/farhnkrnapratma/mdrs).
 
 ## Status
 
-Alpha (`v1.0.0-alpha1`).
+Alpha. The port is in progress; the TypeScript renderer in [`ts/`](ts) is the reference until each diagram type matches it byte for byte.
 
-| Registry  | Name                                             | State                                                                                                                                                      |
-| --------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | The TypeScript renderer: Mermaid 12.1.0 syntax, themeable SVG, browser mounting, lazy loading and per-diagram registration.                                |
-| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust port: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. Other diagram types and the full CLI are not ported yet. |
+| Registry  | Name                                             | State                                                                                                                                                                    |
+| --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the TypeScript renderer (33 diagram types). The next version is the Rust binding and starts with flowcharts only; other types return `unsupported-diagram` until ported. |
+| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. There is no command-line interface.                                    |
+
+The npm API of the Rust-backed version is `render`, `detectType`, `supports` and `PeleError`. `register()` and the per-diagram `pelers/diagrams/*` entry points of the TypeScript package go away.
 
 ## Install
 
 ```sh
-bun add pelers          # TypeScript / JavaScript (or: npm install pelers)
+bun add pelers          # JavaScript / TypeScript (or: npm install pelers)
 cargo add pelers        # Rust
 ```
 
 ## Usage
 
-TypeScript / JavaScript:
+JavaScript / TypeScript (Rust-backed version):
 
 ```ts
 import { render } from 'pelers';
 
 const { svg, width, height } = render('flowchart LR\n  A --> B');
 ```
-
-Smaller bundles: `pelers/core` plus the diagram types you need (`pelers/diagrams/<type>`), or `pelers/lazy` to load a type the first time it is rendered. `pelers/global` is a browser build that exposes a global.
 
 Rust:
 
@@ -42,20 +42,14 @@ if detect_diagram(&prepared.text).is_some() {
 }
 ```
 
-Command line (reads Mermaid source on standard input, prints the detected diagram and, for flowcharts, the SVG):
-
-```sh
-printf 'flowchart LR\n  A --> B\n' | cargo run
-```
-
 ## Repository layout
 
 ```
-src/*.rs          the Rust crate: api, detect, preprocess, flowchart, render, errors
-src/diagrams/     the TypeScript renderer, one directory per diagram type
-src/entries/      generated per-diagram entry points
-scripts/          build, benchmarks and generators (registry, metrics, unicode, specs)
-tests/            vitest suites, compatibility specs and corpus
+src/*.rs                 the Rust core: api, detect, preprocess, flowchart, render, errors
+src/bindings/node.rs     the napi binding (feature `napi`)
+index.js, index.d.ts     hand-written wrapper over the generated index.native.js / index.native.d.ts
+scripts/                 binding checks
+ts/                      the TypeScript renderer, kept as the oracle for the port (private, not published)
 ```
 
 ## Development
@@ -64,24 +58,32 @@ Requirements: Rust (stable), [Bun](https://bun.sh) and Node.js 20 or newer.
 
 ```sh
 bun install                # JS dependencies and git hooks
-bun run build              # bundles dist/ with esbuild
-bun run typecheck          # tsc --noEmit (TypeScript 7)
-bun run lint               # eslint (typescript-eslint on the TypeScript 6 API)
-bun run fmt:check          # prettier
-bun run test               # vitest
+bun run build              # napi build (debug) -> pelers.<platform>.node, index.native.js
+bun run test:native        # release build + scripts/test-bindings.mjs
 cargo test --locked
 cargo clippy --all-targets --all-features --locked -- -D warnings
 cargo fmt --check
 cargo deny check
 ```
 
-TypeScript 7 does not ship a programmatic API yet, so the repository installs both compilers side by side: `typescript` is an alias for `@typescript/typescript6` (used by typescript-eslint) and `@typescript/native` provides the `tsc` 7 binary. See the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
+The TypeScript oracle lives in `ts/` with its own dependencies:
 
-Releases are cut with git-flow (`git-flow release start/finish`), tagged `vX.Y.Z`. The npm package is published with `npm publish --tag alpha` while the version is a prerelease, and the crate with `cargo publish`.
+```sh
+cd ts
+bun install
+bun run typecheck          # tsc --noEmit (TypeScript 7)
+bun run lint               # eslint (typescript-eslint on the TypeScript 6 API)
+bun run fmt:check          # prettier
+bun run test               # vitest
+```
+
+TypeScript 7 does not ship a programmatic API yet, so `ts/` installs both compilers side by side: `typescript` is an alias for `@typescript/typescript6` (used by typescript-eslint) and `@typescript/native` provides the `tsc` 7 binary. See the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
+
+Releases are cut with git-flow (`git flow release start vX.Y.Z`), so the tag carries the `v`. The npm package is published with `--tag alpha` while the version is a prerelease, and the crate with `cargo publish`.
 
 ## Upstream and attribution
 
-Pele is © kepano and distributed under the MIT License. The TypeScript implementation and test corpus here carry over that work, together with material from Mermaid and Lucide. Their notices are reproduced in [`NOTICE`](NOTICE) and must stay with every copy of this code.
+Pele is © kepano and distributed under the MIT License. The TypeScript implementation and test corpus in `ts/` carry over that work, together with material from Mermaid and Lucide. Their notices are reproduced in [`NOTICE`](NOTICE) and must stay with every copy of this code.
 
 ## Contributing
 
