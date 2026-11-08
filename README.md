@@ -1,5 +1,8 @@
 # pelers
 
+[![CI](https://img.shields.io/circleci/build/github/farhnkrnapratma/pelers/main?label=CI)](https://app.circleci.com/pipelines/github/farhnkrnapratma/pelers) [![npm](https://img.shields.io/npm/v/pelers?label=npm)](https://www.npmjs.com/package/pelers) [![crates.io](https://img.shields.io/crates/v/pelers?label=crates.io)](https://crates.io/crates/pelers) ![Language](https://img.shields.io/badge/language-Rust-orange?logo=rust) ![Tests](https://img.shields.io/badge/tests-cargo%20test-orange?logo=rust) ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
+
+
 A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is derived from [Pele](https://github.com/obsidianmd/pele) by kepano. It is being ported from TypeScript to Rust, and will expose only a JavaScript/TypeScript binding (native addon for Node, Bun and Deno, WebAssembly for browsers), like [`markers`](https://github.com/farhnkrnapratma/markers) and [`mdrs`](https://github.com/farhnkrnapratma/mdrs).
 
 ## Status
