@@ -1,3 +1,4 @@
+use super::spans::{Span, Spans, empty, text as span_text};
 use crate::diagrams::common::scan::{space, word};
 use crate::errors::{PelersError, lexical_error, syntax_error};
 use crate::util::chars::utf16_to_byte;
@@ -72,8 +73,17 @@ pub fn get_type(start: &str, end: &str) -> i32 {
 #[derive(Debug, Default)]
 pub struct Tokens {
     pub types: Vec<i32>,
-    pub texts: Vec<String>,
     pub starts: Vec<isize>,
+    spans: Vec<Span>,
+    source: String,
+}
+
+impl Tokens {
+    pub fn text(&self, at: usize) -> &str {
+        self.spans
+            .get(at)
+            .map_or("", |span| span_text(&self.source, span))
+    }
 }
 
 #[derive(Default)]
@@ -155,7 +165,7 @@ fn matches_rule(rule: Rule, u: u16) -> bool {
     }
 }
 
-fn js_slice(src: &[u16], from: isize, to: isize) -> String {
+fn js_text(src: &[u16], from: isize, to: isize) -> String {
     let n = src.len() as isize;
     let clamp = |x: isize| if x < 0 { (n + x).max(0) } else { x.min(n) };
     let (a, b) = (clamp(from), clamp(to));
@@ -166,24 +176,36 @@ fn js_slice(src: &[u16], from: isize, to: isize) -> String {
     }
 }
 
+fn js_span(src: &[u16], spans_of: &Spans, from: isize, to: isize) -> Span {
+    let n = src.len() as isize;
+    let clamp = |x: isize| if x < 0 { (n + x).max(0) } else { x.min(n) };
+    let (a, b) = (clamp(from), clamp(to));
+    if a >= b {
+        empty()
+    } else {
+        spans_of.span(src, a as usize, b as usize)
+    }
+}
+
 struct Lexer<'a> {
     src: &'a [u16],
+    spans_of: Spans,
     out: Tokens,
     p: isize,
     state: State,
 }
 
 impl Lexer<'_> {
-    fn put(&mut self, kind: i32, text: String, end: isize) {
+    fn put(&mut self, kind: i32, span: Span, end: isize) {
         self.out.types.push(kind);
-        self.out.texts.push(text);
+        self.out.spans.push(span);
         self.out.starts.push(self.p);
         self.p = end;
     }
 
     fn emit(&mut self, kind: i32, end: isize, next: State) {
-        let text = js_slice(self.src, self.p, end);
-        self.put(kind, text, end);
+        let span = js_span(self.src, &self.spans_of, self.p, end);
+        self.put(kind, span, end);
         self.state = next;
     }
 
@@ -203,6 +225,7 @@ pub fn tokenize(source: &str, kanban: bool) -> Tokens {
     let id_rule = if kanban { Rule::IdKanban } else { Rule::Id };
     let mut lx = Lexer {
         src: &src,
+        spans_of: Spans::new(source),
         out: Tokens::default(),
         p: 0,
         state: State::Initial,
@@ -223,7 +246,7 @@ pub fn tokenize(source: &str, kanban: bool) -> Tokens {
                     p
                 };
                 if kanban && cq(64) && dq(123) {
-                    lx.put(SHAPE_DATA, String::new(), p + 2);
+                    lx.put(SHAPE_DATA, empty(), p + 2);
                     lx.state = State::Data;
                 } else if is(&src, w, 37) && is(&src, w + 1, 37) {
                     let end = sticky(&src, Rule::Line, w).unwrap_or(w);
@@ -353,8 +376,8 @@ pub fn tokenize(source: &str, kanban: bool) -> Tokens {
                     lx.emit(SHAPE_DATA, p + 1, State::Data);
                 } else {
                     let end = lx.up_to(34);
-                    let text = break_runs(&js_slice(&src, p, end));
-                    lx.put(SHAPE_DATA, text, end);
+                    let text = break_runs(&js_text(&src, p, end));
+                    lx.put(SHAPE_DATA, Span::Lossy(text), end);
                 }
                 true
             }
@@ -366,13 +389,14 @@ pub fn tokenize(source: &str, kanban: bool) -> Tokens {
 
     if lx.p < n {
         let p = lx.p;
-        lx.put(ERROR, String::new(), p);
+        lx.put(ERROR, empty(), p);
     } else {
         if lx.state == State::Initial {
-            lx.put(EOF, String::new(), n);
+            lx.put(EOF, empty(), n);
         }
-        lx.put(END, String::new(), n);
+        lx.put(END, empty(), n);
     }
+    lx.out.source = source.to_owned();
     lx.out
 }
 
@@ -412,13 +436,10 @@ pub fn parse_outline<D: OutlineDb>(
     kanban: bool,
 ) -> Result<(), PelersError> {
     let diagram = if kanban { "kanban" } else { "mindmap" };
-    let Tokens {
-        types,
-        texts,
-        starts,
-    } = tokenize(source, kanban);
+    let tokens = tokenize(source, kanban);
+    let (types, starts) = (&tokens.types, &tokens.starts);
     let kind = |i: usize| types.get(i).copied().unwrap_or(-1);
-    let text = |i: usize| texts.get(i).cloned().unwrap_or_default();
+    let text = |i: usize| tokens.text(i);
     let data = if kanban { ", 'SHAPE_DATA'" } else { "" };
     let fail = |i: usize, expected: &str| {
         let offset = utf16_to_byte(
@@ -471,7 +492,7 @@ pub fn parse_outline<D: OutlineDb>(
         if t == NODE_ID || t == NODE_DSTART {
             let mut id: Option<String> = None;
             if t == NODE_ID {
-                id = Some(text(i));
+                id = Some(text(i).to_owned());
                 i += 1;
             }
             let descr: String;
@@ -482,7 +503,7 @@ pub fn parse_outline<D: OutlineDb>(
                 if kind(i) != NODE_DESCR {
                     return Err(fail(i, "'NODE_DESCR'"));
                 }
-                descr = text(i);
+                descr = text(i).to_owned();
                 i += 1;
                 if kind(i) != NODE_DEND {
                     return Err(fail(i, "'NODE_DEND'"));
@@ -492,7 +513,7 @@ pub fn parse_outline<D: OutlineDb>(
                 if !is_stop(kind(i)) && kind(i) != SHAPE_DATA {
                     return Err(fail(i, &format!("{STOP}{data}")));
                 }
-                node_type = get_type(&start, &end);
+                node_type = get_type(start, end);
             } else {
                 if !is_stop(kind(i)) && kind(i) != SHAPE_DATA {
                     return Err(fail(i, &format!("{STOP}, 'NODE_DSTART'{data}")));
@@ -501,10 +522,10 @@ pub fn parse_outline<D: OutlineDb>(
             }
             let node_id = id.unwrap_or_else(|| descr.clone());
             if kind(i) == SHAPE_DATA {
-                let mut shape_data = text(i);
+                let mut shape_data = text(i).to_owned();
                 i += 1;
                 while kind(i) == SHAPE_DATA {
-                    shape_data.push_str(&text(i));
+                    shape_data.push_str(text(i));
                     i += 1;
                 }
                 if !is_stop(kind(i)) {
@@ -522,13 +543,13 @@ pub fn parse_outline<D: OutlineDb>(
             }
             db.decorate_node(if t == ICON {
                 Decoration {
-                    icon: Some(value),
+                    icon: Some(value.to_owned()),
                     class: None,
                 }
             } else {
                 Decoration {
                     icon: None,
-                    class: Some(value),
+                    class: Some(value.to_owned()),
                 }
             });
         } else if indented {
