@@ -1,5 +1,4 @@
 use std::fs;
-use std::path::Path;
 
 use crate::svg::builder::{esc, label_svg, num};
 use crate::text::label::layout_label;
@@ -7,7 +6,7 @@ use crate::util::jsnum::js_number_to_string as js;
 use serde_json::Value;
 
 fn fixtures() -> Value {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/text.json");
+    let path = crate::tests::fixture_path("text.json");
     serde_json::from_str(&fs::read_to_string(path).unwrap()).unwrap()
 }
 

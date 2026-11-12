@@ -2,7 +2,7 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::Path;
 
-use crate::{PeleErrorCode, parse, render};
+use crate::{PelersErrorCode, parse, render};
 
 #[derive(Default)]
 struct Tally {
@@ -27,7 +27,9 @@ fn tally(dir: &Path) -> Tally {
                 tally.matched += 1
             }
             Ok(_) => tally.differed += 1,
-            Err(error) if error.code == PeleErrorCode::UnsupportedDiagram => tally.unsupported += 1,
+            Err(error) if error.code == PelersErrorCode::UnsupportedDiagram => {
+                tally.unsupported += 1
+            }
             Err(_) => tally.differed += 1,
         }
     }

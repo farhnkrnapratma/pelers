@@ -1,5 +1,4 @@
 use std::fs;
-use std::path::Path;
 
 use crate::svg::palette::palette;
 use crate::util::json::parse;
@@ -8,7 +7,7 @@ use serde_json::Value as Json;
 
 #[test]
 fn palettes_match_the_oracle() {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/palette.json");
+    let path = crate::tests::fixture_path("palette.json");
     let fixtures: Json = serde_json::from_str(&fs::read_to_string(path).unwrap()).unwrap();
     let cases = fixtures["cases"].as_array().unwrap();
     let mut failures = Vec::new();
