@@ -27,7 +27,7 @@ fn task(name: &str, data: &str, section: &str) -> JourneyTask {
 
 pub fn parse_journey(source: &str, title: Option<String>) -> Result<JourneyModel, PelersError> {
     let tokens = tokenize(source);
-    let (types, texts, starts) = (tokens.types, tokens.texts, tokens.starts);
+    let (types, starts) = (&tokens.types, &tokens.starts);
     let fail = |i: usize, expected: &str| {
         let got = if types[i] == END {
             "1"
@@ -54,17 +54,17 @@ pub fn parse_journey(source: &str, title: Option<String>) -> Result<JourneyModel
     let mut section = String::new();
     let mut i = 1;
     loop {
-        let text = texts[i].as_str();
+        let text = tokens.text(i);
         match types[i] {
             NEWLINE => {}
             TITLE => model.title = Some(text.chars().skip(6).collect()),
             ACC_TITLE => {
                 i += 1;
-                model.acc_title = Some(trim(&texts[i]).to_owned());
+                model.acc_title = Some(trim(tokens.text(i)).to_owned());
             }
             ACC_DESCR => {
                 i += 1;
-                model.acc_descr = Some(trim(&texts[i]).to_owned());
+                model.acc_descr = Some(trim(tokens.text(i)).to_owned());
             }
             ACC_DESCR_MULTILINE_VALUE => model.acc_descr = Some(trim(text).to_owned()),
             SECTION => section = text.chars().skip(8).collect(),
@@ -73,7 +73,7 @@ pub fn parse_journey(source: &str, title: Option<String>) -> Result<JourneyModel
                 if types[i] != TASK_DATA {
                     return Err(fail(i, "'taskData'"));
                 }
-                model.tasks.push(task(text, &texts[i], &section));
+                model.tasks.push(task(text, tokens.text(i), &section));
             }
             EOF => return Ok(model),
             _ => return Err(fail(i, STATEMENT)),

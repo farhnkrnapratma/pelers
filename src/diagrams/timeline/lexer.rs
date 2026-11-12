@@ -1,5 +1,5 @@
 use crate::diagrams::common::scan::{
-    Tokens, accessibility, keyword_at, line_end, skip_trivia, slice, space, word,
+    Tokens, accessibility, keyword_at, line_end, skip_trivia, space, word,
 };
 
 pub const END: i32 = 0;
@@ -50,11 +50,11 @@ fn period_end(src: &[u16], from: usize) -> usize {
 pub fn tokenize(source: &str) -> Tokens {
     let src: Vec<u16> = source.encode_utf16().collect();
     let n = src.len();
-    let mut out = Tokens::default();
+    let mut out = Tokens::new(source);
     let mut p = 0usize;
     let emit = |out: &mut Tokens, p: &mut usize, kind: i32, end: usize| {
         out.types.push(kind);
-        out.texts.push(slice(&src, *p, end));
+        out.push_text(&src, *p, end);
         out.starts.push(*p);
         *p = end;
     };

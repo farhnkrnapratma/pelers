@@ -1,6 +1,4 @@
-use crate::diagrams::common::scan::{
-    Tokens, accessibility, keyword_at, skip_trivia, slice, space, word,
-};
+use crate::diagrams::common::scan::{Tokens, accessibility, keyword_at, skip_trivia, space, word};
 
 pub const END: i32 = 0;
 pub const EOF: i32 = 1;
@@ -47,7 +45,7 @@ fn text_end(src: &[u16], from: usize, colon: bool) -> usize {
 
 fn emit(out: &mut Tokens, src: &[u16], start: usize, kind: i32, end: usize) -> usize {
     out.types.push(kind);
-    out.texts.push(slice(src, start, end));
+    out.push_text(src, start, end);
     out.starts.push(start);
     end
 }
@@ -55,7 +53,7 @@ fn emit(out: &mut Tokens, src: &[u16], start: usize, kind: i32, end: usize) -> u
 pub fn tokenize(source: &str) -> Tokens {
     let src: Vec<u16> = source.encode_utf16().collect();
     let n = src.len();
-    let mut out = Tokens::default();
+    let mut out = Tokens::new(source);
     let mut p = 0;
     loop {
         p = skip_trivia(&src, p);

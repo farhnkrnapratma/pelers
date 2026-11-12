@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum Span {
     Bytes(usize, usize),
     Lossy(String),
@@ -9,6 +10,7 @@ pub fn empty() -> Span {
     Span::Bytes(0, 0)
 }
 
+#[derive(Debug)]
 pub struct Spans {
     byte_of: Option<Vec<usize>>,
 }

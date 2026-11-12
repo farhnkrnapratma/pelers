@@ -10,7 +10,7 @@ const STATEMENT: &str = "'EOF', 'SPACE', 'NEWLINE', 'title', 'acc_title', 'acc_d
 
 pub fn parse_timeline(source: &str, db: &mut TimelineModel) -> Result<(), PelersError> {
     let tokens = tokenize(source);
-    let (types, texts, starts) = (tokens.types, tokens.texts, tokens.starts);
+    let (types, starts) = (&tokens.types, &tokens.starts);
     let fail = |i: usize, expected: &str| {
         let got = if types[i] == END {
             "1"
@@ -35,17 +35,17 @@ pub fn parse_timeline(source: &str, db: &mut TimelineModel) -> Result<(), Pelers
 
     let mut i = 1usize;
     loop {
-        let text = texts[i].as_str();
+        let text = tokens.text(i);
         match types[i] {
             NEWLINE => {}
             TITLE => db.title = Some(text.chars().skip(6).collect()),
             ACC_TITLE => {
                 i += 1;
-                db.acc_title = Some(trim(&texts[i]).to_owned());
+                db.acc_title = Some(trim(tokens.text(i)).to_owned());
             }
             ACC_DESCR => {
                 i += 1;
-                db.acc_descr = Some(trim(&texts[i]).to_owned());
+                db.acc_descr = Some(trim(tokens.text(i)).to_owned());
             }
             ACC_DESCR_MULTILINE_VALUE => db.acc_descr = Some(trim(text).to_owned()),
             SECTION => db.add_section(&text.chars().skip(8).collect::<String>()),

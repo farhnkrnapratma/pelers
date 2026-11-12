@@ -22,7 +22,7 @@ fn eol_flag(kind: i32) -> bool {
 
 pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError> {
     let tokens = tokenize(source);
-    let (types, texts, starts) = (tokens.types, tokens.texts, tokens.starts);
+    let (types, starts) = (&tokens.types, &tokens.starts);
     let mut i = 0usize;
 
     let fail = |i: usize, expected: &str| -> PelersError {
@@ -45,7 +45,7 @@ pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError
                 return Err(fail(i, &format!("'{}'", TOKEN_NAMES[$kind as usize])));
             }
             i += 1;
-            texts[i - 1].clone()
+            tokens.text(i - 1).to_owned()
         }};
     }
 
@@ -65,11 +65,11 @@ pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError
             if !is_text(types[i]) {
                 return Err(fail(i, "'STR', 'ALPHA', 'NUM'"));
             }
-            let mut s = texts[i].clone();
+            let mut s = tokens.text(i).to_owned();
             i += 1;
             if types[i - 1] != STR {
                 while word_flag(types[i]) {
-                    s.push_str(&texts[i]);
+                    s.push_str(tokens.text(i));
                     i += 1;
                 }
             }
@@ -85,7 +85,7 @@ pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError
         } else {
             i += 1;
             if types[i] == CHART_ORIENTATION {
-                db.set_orientation(&texts[i]);
+                db.set_orientation(tokens.text(i));
                 i += 1;
             }
         }
@@ -149,7 +149,7 @@ pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError
                     let value = js_number(&expect!(NUMBER_WITH_DECIMAL));
                     let label = if types[i] == STR {
                         i += 1;
-                        texts[i - 1].clone()
+                        tokens.text(i - 1).to_owned()
                     } else {
                         String::new()
                     };
@@ -175,7 +175,7 @@ pub fn parse_xychart(source: &str, db: &mut XyChartDb) -> Result<(), PelersError
                 db.set_acc_description(trim(&value));
             }
             ACC_DESCR_MULTILINE_VALUE => {
-                db.set_acc_description(trim(&texts[i - 1]));
+                db.set_acc_description(trim(tokens.text(i - 1)));
             }
             _ => {
                 i -= 1;

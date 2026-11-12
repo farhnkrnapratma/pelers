@@ -1,10 +1,40 @@
+use super::spans::{Span, Spans, empty, text as span_text};
 use crate::util::chars::is_js_space;
 
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Tokens {
     pub types: Vec<i32>,
-    pub texts: Vec<String>,
     pub starts: Vec<usize>,
+    spans: Vec<Span>,
+    spans_of: Spans,
+    source: String,
+}
+
+impl Tokens {
+    pub fn new(source: &str) -> Self {
+        Self {
+            types: Vec::new(),
+            starts: Vec::new(),
+            spans: Vec::new(),
+            spans_of: Spans::new(source),
+            source: source.to_owned(),
+        }
+    }
+
+    pub fn push_text(&mut self, units: &[u16], from: usize, to: usize) {
+        let span = self.spans_of.span(units, from, to);
+        self.spans.push(span);
+    }
+
+    pub fn push_empty(&mut self) {
+        self.spans.push(empty());
+    }
+
+    pub fn text(&self, at: usize) -> &str {
+        self.spans
+            .get(at)
+            .map_or("", |span| span_text(&self.source, span))
+    }
 }
 
 pub fn space(unit: u16) -> bool {
@@ -66,7 +96,7 @@ pub fn skip_trivia(src: &[u16], from: usize) -> usize {
 
 fn push(out: &mut Tokens, src: &[u16], kind: i32, start: usize, end: usize) {
     out.types.push(kind);
-    out.texts.push(slice(src, start, end));
+    out.push_text(src, start, end);
     out.starts.push(start);
 }
 

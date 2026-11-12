@@ -1,4 +1,4 @@
-use crate::diagrams::common::scan::{Tokens, slice, word_at};
+use crate::diagrams::common::scan::{Tokens, word_at};
 use crate::util::chars::{is_js_space, is_word};
 
 pub const END: i32 = 0;
@@ -142,7 +142,7 @@ fn is_space_unit(c: u16) -> bool {
 pub fn tokenize(source: &str) -> Tokens {
     let src: Vec<u16> = source.encode_utf16().collect();
     let n = src.len();
-    let mut out = Tokens::default();
+    let mut out = Tokens::new(source);
     let mut state = State::Initial;
     let mut stack: Vec<State> = Vec::new();
     let mut p = 0usize;
@@ -171,7 +171,7 @@ pub fn tokenize(source: &str) -> Tokens {
         ($kind:expr, $s:expr, $e:expr) => {{
             let (s, e): (usize, usize) = ($s, $e);
             out.types.push($kind);
-            out.texts.push(slice(&src, s, e));
+            out.push_text(&src, s, e);
             out.starts.push(s);
             p = e;
         }};
@@ -400,15 +400,15 @@ pub fn tokenize(source: &str) -> Tokens {
 
     if p < n {
         out.types.push(ERROR);
-        out.texts.push(String::new());
+        out.push_empty();
         out.starts.push(p);
         return out;
     }
     out.types.push(at_end(state));
-    out.texts.push(String::new());
+    out.push_empty();
     out.starts.push(n);
     out.types.push(END);
-    out.texts.push(String::new());
+    out.push_empty();
     out.starts.push(n);
     out
 }
