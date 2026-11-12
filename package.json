@@ -1,7 +1,7 @@
 {
     "name": "pelers",
     "version": "1.0.0-alpha2",
-    "description": "A fast, lightweight Mermaid renderer that outputs themeable SVG. Rust core with a JavaScript/TypeScript binding (derived from Pele).",
+    "description": "A fast, lightweight Mermaid renderer that outputs themeable SVG. Rust core with a JavaScript/TypeScript binding (derived from Pelers).",
     "license": "MIT OR Apache-2.0",
     "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
     "keywords": [
