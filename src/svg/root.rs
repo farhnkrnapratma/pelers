@@ -38,8 +38,13 @@ pub struct Accessible<'a> {
 fn used_aliases(content: &str) -> [bool; 4] {
     let mut used = [false; 4];
     let mut rest = content;
-    while let Some(at) = rest.find("var(--_") {
-        rest = &rest[at + 7..];
+    while let Some(at) = rest.find('v') {
+        rest = &rest[at..];
+        let Some(tail) = rest.strip_prefix("var(--_") else {
+            rest = &rest[1..];
+            continue;
+        };
+        rest = tail;
         for (k, alias) in ["r", "tw", "hw", "w"].iter().enumerate() {
             if rest
                 .strip_prefix(alias)
