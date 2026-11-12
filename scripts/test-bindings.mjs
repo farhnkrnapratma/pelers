@@ -17,7 +17,7 @@ for (const [name, jsName] of [['render', 'render'], ['detectType', 'detect_type'
 if (!existsSync(new URL('index.native.js', root))) {
     console.log('index.native.js not built, skipping runtime checks');
 } else {
-    const { PeleError, detectType, render, supports } = await import(new URL('index.js', root));
+    const { PelersError, detectType, render, supports } = await import(new URL('index.js', root));
     const result = render('flowchart LR\n  A[Start] --> B[End]');
     assert.match(result.svg, /^<svg/);
     assert.ok(result.width > 0 && result.height > 0);
@@ -25,7 +25,7 @@ if (!existsSync(new URL('index.native.js', root))) {
     assert.equal(detectType('pie\n  "a": 1'), 'pie');
     assert.equal(detectType('hello'), null);
     const info = render('info showInfo');
-    assert.match(info.svg, /class="pele pele-info"/);
+    assert.match(info.svg, /class="pelers pelers-info"/);
     assert.equal(info.width, 150);
     assert.equal(info.height, 40);
     assert.equal(supports('info'), true);
@@ -33,14 +33,14 @@ if (!existsSync(new URL('index.native.js', root))) {
     assert.equal(supports('pie\n  "a": 1'), true);
     assert.equal(supports('sequenceDiagram\n  A->>B: hi'), false);
     const pie = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
-    assert.match(pie.svg, /class="pele pele-pie"/);
+    assert.match(pie.svg, /class="pelers pelers-pie"/);
     assert.ok(pie.width > 0 && pie.height > 0);
     assert.equal(supports('packet\n  0-15: "Port"'), true);
     const packet = render('packet\n  0-15: "Source Port"\n  16-31: "Destination Port"');
-    assert.match(packet.svg, /class="pele pele-packet"/);
+    assert.match(packet.svg, /class="pelers pelers-packet"/);
     assert.throws(
         () => render('sequenceDiagram\n  A->>B: hi'),
-        error => error instanceof PeleError && error.code === 'unsupported-diagram',
+        error => error instanceof PelersError && error.code === 'unsupported-diagram',
     );
 }
 console.log('bindings ok');
