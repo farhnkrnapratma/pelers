@@ -285,35 +285,39 @@ pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool)
                         num(side)
                     ));
                 } else if !span.text.is_empty() {
-                    body.push_str(&format!(
-                        "<tspan x=\"{}\" y=\"{}\" text-anchor=\"start\"{}>{}</tspan>",
-                        num(x),
-                        num(y),
-                        span_style(span.style & !shared),
-                        esc(&span.text)
-                    ));
+                    body.push_str("<tspan x=\"");
+                    body.push_str(&num(x));
+                    body.push_str("\" y=\"");
+                    body.push_str(&num(y));
+                    body.push_str("\" text-anchor=\"start\"");
+                    body.push_str(&span_style(span.style & !shared));
+                    body.push('>');
+                    body.push_str(&esc(&span.text));
+                    body.push_str("</tspan>");
                 }
                 x += span.width;
             }
         } else {
             for (j, span) in line.iter().enumerate() {
-                let pos = if j == 0 {
-                    format!(" x=\"{}\" y=\"{}\"", num(cx), num(y))
-                } else {
-                    String::new()
-                };
-                body.push_str(&format!(
-                    "<tspan{pos}{}>{}</tspan>",
-                    span_style(span.style & !shared),
-                    esc(&span.text)
-                ));
+                body.push_str("<tspan");
+                if j == 0 {
+                    body.push_str(" x=\"");
+                    body.push_str(&num(cx));
+                    body.push_str("\" y=\"");
+                    body.push_str(&num(y));
+                    body.push('"');
+                }
+                body.push_str(&span_style(span.style & !shared));
+                body.push('>');
+                body.push_str(&esc(&span.text));
+                body.push_str("</tspan>");
             }
             if line.is_empty() {
-                body.push_str(&format!(
-                    "<tspan x=\"{}\" y=\"{}\"> </tspan>",
-                    num(cx),
-                    num(y)
-                ));
+                body.push_str("<tspan x=\"");
+                body.push_str(&num(cx));
+                body.push_str("\" y=\"");
+                body.push_str(&num(y));
+                body.push_str("\"> </tspan>");
             }
         }
         top += h;
