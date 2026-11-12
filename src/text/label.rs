@@ -51,6 +51,12 @@ const MAX_MARKS: usize = 0x1900;
 const SHIFT: u32 = SUB | SUP;
 const SHY: char = '\u{ad}';
 
+fn html_tags() -> &'static std::collections::HashSet<&'static str> {
+    static SET: std::sync::OnceLock<std::collections::HashSet<&'static str>> =
+        std::sync::OnceLock::new();
+    SET.get_or_init(|| HTML_TAGS.split(' ').collect())
+}
+
 const HTML_TAGS: &str = "a abbr address article aside audio b bdi bdo big blockquote body br button caption center cite code col \
 colgroup data dd del details dfn dialog div dl dt em embed fieldset figcaption figure font footer form h1 h2 \
 h3 h4 h5 h6 head header hr html i iframe img input ins kbd label legend li link main map mark meta meter nav \
@@ -408,7 +414,7 @@ fn inline(line: &mut Vec<Span>, source: &str, markdown: bool, base: u32, open: &
                         style | bit
                     };
                 }
-                if bit != 0 || HTML_TAGS.split(' ').any(|t| t == tag) {
+                if bit != 0 || html_tags().contains(tag.as_str()) {
                     i += len;
                     continue;
                 }
