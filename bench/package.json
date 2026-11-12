@@ -1,0 +1,11 @@
+{
+  "name": "pelers-bench",
+  "private": true,
+  "type": "module",
+  "description": "Benchmarks the Rust port against pele (npm) and the official Mermaid release in headless Chrome.",
+  "dependencies": {
+    "mermaid": "12.1.0",
+    "pele": "1.13.0",
+    "puppeteer-core": "24.11.1"
+  }
+}

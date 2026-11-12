@@ -1,0 +1,3147 @@
+[
+ {
+  "type": "agentflow",
+  "pelers": 0.06145702211302215,
+  "reference": 0.2198190350877193
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.06911148342541415,
+  "reference": 0.09194726838235316
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.062868650753769,
+  "reference": 0.10417888750000041
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.062016512376237586,
+  "reference": 0.0774902043343655
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.0606392542372883,
+  "reference": 0.07919039432176646
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.05222336743215032,
+  "reference": 0.07335366568914956
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.048077642307692244,
+  "reference": 0.07301427405247851
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.09423331578947321,
+  "reference": 0.23316862037036876
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.04705442293233065,
+  "reference": 0.06603435092348314
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.056862456818181396,
+  "reference": 0.1142228045454534
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.11229270403587363,
+  "reference": 0.22975124770642366
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.009589665132336075,
+  "reference": 0.015552516169154401
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.04692582926829318,
+  "reference": 0.06224616417910452
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.05675537641723363,
+  "reference": 0.07340144868035262
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.05912256501181995,
+  "reference": 0.12914858247422764
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.06087598783454992,
+  "reference": 0.07787042546584044
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.03677976029411826,
+  "reference": 0.07592714848484651
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.04157267940199352,
+  "reference": 0.054503851851850985
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.04086607026143682,
+  "reference": 0.060701407766989346
+ },
+ {
+  "type": "agentflow",
+  "pelers": 0.09769369921875182,
+  "reference": 0.12995260103626968
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.13335293085106542,
+  "reference": 0.2256101441441412
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.1253961782178233,
+  "reference": 0.20157878399999754
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.1381851878453021,
+  "reference": 0.2448452330097089
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.2105280168067233,
+  "reference": 0.3392103513513428
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.14368725862069087,
+  "reference": 0.21841011304347732
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.12660957575757253,
+  "reference": 0.2096549583333323
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.1256077950000008,
+  "reference": 0.20692309090908798
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.0611082926829268,
+  "reference": 0.10169617886179079
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.013475255926724215,
+  "reference": 0.01888113735849024
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.1930678538461507,
+  "reference": 0.37071041176470904
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.0342592890410954,
+  "reference": 0.05447819172113193
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.00614047666994122,
+  "reference": 0.010138444038929524
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.0188596681749623,
+  "reference": 0.029783386904760584
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.01449489101449296,
+  "reference": 0.022952329357796956
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.05570748106904228,
+  "reference": 0.10620725423728739
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.0704375774647879,
+  "reference": 0.11099054867256715
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.056316948198199754,
+  "reference": 0.0913953576642319
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.06122638141809468,
+  "reference": 0.10440828333332774
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.0765469542682961,
+  "reference": 0.12416362376238299
+ },
+ {
+  "type": "architecture",
+  "pelers": 0.049553956435643205,
+  "reference": 0.08022282371794996
+ },
+ {
+  "type": "block",
+  "pelers": 0.08353077000000364,
+  "reference": 0.13463956989247675
+ },
+ {
+  "type": "block",
+  "pelers": 0.15766666037735325,
+  "reference": 0.20232116935482825
+ },
+ {
+  "type": "block",
+  "pelers": 0.12977755958549322,
+  "reference": 0.15402077300614167
+ },
+ {
+  "type": "block",
+  "pelers": 0.08779070175438838,
+  "reference": 0.11923600947867483
+ },
+ {
+  "type": "block",
+  "pelers": 0.15082677108434345,
+  "reference": 0.19260695384616086
+ },
+ {
+  "type": "block",
+  "pelers": 0.1687287382550335,
+  "reference": 0.18762170895522795
+ },
+ {
+  "type": "block",
+  "pelers": 0.14387081034482405,
+  "reference": 0.15503441975308732
+ },
+ {
+  "type": "block",
+  "pelers": 0.11903563507108646,
+  "reference": 0.13086295833333375
+ },
+ {
+  "type": "block",
+  "pelers": 0.09698223643410825,
+  "reference": 0.104937702928875
+ },
+ {
+  "type": "block",
+  "pelers": 0.1804659280575618,
+  "reference": 0.17513044755244161
+ },
+ {
+  "type": "block",
+  "pelers": 0.13297892021276486,
+  "reference": 0.13670190163934595
+ },
+ {
+  "type": "block",
+  "pelers": 0.11108761946902672,
+  "reference": 0.12092723671497624
+ },
+ {
+  "type": "block",
+  "pelers": 0.1499459760479096,
+  "reference": 0.15661626249999472
+ },
+ {
+  "type": "block",
+  "pelers": 0.12653029797979568,
+  "reference": 0.1342473957219212
+ },
+ {
+  "type": "block",
+  "pelers": 0.10667042978723444,
+  "reference": 0.10970187280702048
+ },
+ {
+  "type": "block",
+  "pelers": 0.13099350261779522,
+  "reference": 0.1303010208333338
+ },
+ {
+  "type": "block",
+  "pelers": 0.11041165638766569,
+  "reference": 0.11068910176991026
+ },
+ {
+  "type": "block",
+  "pelers": 0.15131275903614408,
+  "reference": 0.1482985207100559
+ },
+ {
+  "type": "block",
+  "pelers": 0.06616184656084721,
+  "reference": 0.06585248157894776
+ },
+ {
+  "type": "block",
+  "pelers": 0.11757969014084631,
+  "reference": 0.12675695454545532
+ },
+ {
+  "type": "c4",
+  "pelers": 0.07211443804034433,
+  "reference": 0.0893372071428595
+ },
+ {
+  "type": "c4",
+  "pelers": 0.027973005592841455,
+  "reference": 0.028385329171394462
+ },
+ {
+  "type": "c4",
+  "pelers": 0.06477856735751074,
+  "reference": 0.060650220338983325
+ },
+ {
+  "type": "c4",
+  "pelers": 0.05394579741379136,
+  "reference": 0.04930092716535445
+ },
+ {
+  "type": "c4",
+  "pelers": 0.02155774655172442,
+  "reference": 0.02063854290428977
+ },
+ {
+  "type": "c4",
+  "pelers": 0.10912863913042162,
+  "reference": 0.16146189032257216
+ },
+ {
+  "type": "c4",
+  "pelers": 0.0780381121495279,
+  "reference": 0.0851289319727869
+ },
+ {
+  "type": "c4",
+  "pelers": 0.05987337559808716,
+  "reference": 0.06832794262295043
+ },
+ {
+  "type": "c4",
+  "pelers": 0.22555151351352343,
+  "reference": 0.25931613402059794
+ },
+ {
+  "type": "c4",
+  "pelers": 0.08711273867596052,
+  "reference": 0.10601661864406567
+ },
+ {
+  "type": "c4",
+  "pelers": 0.15674566874999982,
+  "reference": 0.1895902575757425
+ },
+ {
+  "type": "c4",
+  "pelers": 0.18916284962406485,
+  "reference": 0.29111309302327776
+ },
+ {
+  "type": "c4",
+  "pelers": 0.20566296721308838,
+  "reference": 0.28545543181818095
+ },
+ {
+  "type": "c4",
+  "pelers": 0.21400927350427643,
+  "reference": 0.2766190879120876
+ },
+ {
+  "type": "c4",
+  "pelers": 0.13662896721310613,
+  "reference": 0.1391500222222223
+ },
+ {
+  "type": "c4",
+  "pelers": 0.049513722772278945,
+  "reference": 0.0568468295454543
+ },
+ {
+  "type": "c4",
+  "pelers": 0.04615251845018226,
+  "reference": 0.049773417495027755
+ },
+ {
+  "type": "c4",
+  "pelers": 0.0473079678638979,
+  "reference": 0.03904383931357203
+ },
+ {
+  "type": "c4",
+  "pelers": 0.09207126102941242,
+  "reference": 0.059842707142862696
+ },
+ {
+  "type": "c4",
+  "pelers": 0.14239697159091105,
+  "reference": 0.2020377741935649
+ },
+ {
+  "type": "class",
+  "pelers": 0.061015787804877264,
+  "reference": 0.11696898130841839
+ },
+ {
+  "type": "class",
+  "pelers": 0.03000960187353536,
+  "reference": 0.05587675446428518
+ },
+ {
+  "type": "class",
+  "pelers": 0.04828131467181184,
+  "reference": 0.08489897627118577
+ },
+ {
+  "type": "class",
+  "pelers": 0.060006930455635946,
+  "reference": 0.06945556666666258
+ },
+ {
+  "type": "class",
+  "pelers": 0.00645832644628089,
+  "reference": 0.007340639753375851
+ },
+ {
+  "type": "class",
+  "pelers": 0.005825780288909934,
+  "reference": 0.006181556983930113
+ },
+ {
+  "type": "class",
+  "pelers": 0.00544515243902459,
+  "reference": 0.006553188466579793
+ },
+ {
+  "type": "class",
+  "pelers": 0.11722244859813026,
+  "reference": 0.2539543535353409
+ },
+ {
+  "type": "class",
+  "pelers": 0.020799985856906088,
+  "reference": 0.02582739359504257
+ },
+ {
+  "type": "class",
+  "pelers": 0.02668824012806954,
+  "reference": 0.03253213784135177
+ },
+ {
+  "type": "class",
+  "pelers": 0.06475184496123988,
+  "reference": 0.076102936170209
+ },
+ {
+  "type": "class",
+  "pelers": 0.06535140731069959,
+  "reference": 0.04921391141732332
+ },
+ {
+  "type": "class",
+  "pelers": 0.12827075384616948,
+  "reference": 0.10628227118643936
+ },
+ {
+  "type": "class",
+  "pelers": 0.0867188373702378,
+  "reference": 0.10659595744681552
+ },
+ {
+  "type": "class",
+  "pelers": 0.0684179371584604,
+  "reference": 0.05486404824561855
+ },
+ {
+  "type": "class",
+  "pelers": 0.05762680414747073,
+  "reference": 0.09128861313868843
+ },
+ {
+  "type": "class",
+  "pelers": 0.11271236486486036,
+  "reference": 0.0827391353135315
+ },
+ {
+  "type": "class",
+  "pelers": 0.051756683884295024,
+  "reference": 0.061452793611787564
+ },
+ {
+  "type": "class",
+  "pelers": 0.07872283018867783,
+  "reference": 0.07404472189349443
+ },
+ {
+  "type": "class",
+  "pelers": 0.008544470266575807,
+  "reference": 0.008736338225016696
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.05573093541202647,
+  "reference": 0.053773047311825466
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.05402208423326613,
+  "reference": 0.0505921656565639
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.10158119838056355,
+  "reference": 0.13314385185186492
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.05953115476190544,
+  "reference": 0.07366955588235322
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08665537024221222,
+  "reference": 0.08294852980132732
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.07939256825396562,
+  "reference": 0.09475223106060046
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.09697078682170673,
+  "reference": 0.10308874590164571
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.09452667169812144,
+  "reference": 0.10951164347826979
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08615765410959035,
+  "reference": 0.08215684918033105
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.10980456578947365,
+  "reference": 0.12703655329949534
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.06719560053619078,
+  "reference": 0.07447608630952475
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.0758870939393863,
+  "reference": 0.08496353559322277
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08436341077440956,
+  "reference": 0.09436513207547251
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08969351971326331,
+  "reference": 0.09608320689655218
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08737687108014427,
+  "reference": 0.10514798739495745
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.06928734626038568,
+  "reference": 0.06586347894736766
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.06670535466666722,
+  "reference": 0.06128815686273739
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.07482229552239114,
+  "reference": 0.07120764488635442
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.08170095098040037,
+  "reference": 0.09945082539682532
+ },
+ {
+  "type": "cynefin",
+  "pelers": 0.051298940573770616,
+  "reference": 0.04589027522935894
+ },
+ {
+  "type": "er",
+  "pelers": 0.08981434050179149,
+  "reference": 0.1160879212963024
+ },
+ {
+  "type": "er",
+  "pelers": 0.0038726679058239837,
+  "reference": 0.005311160530191181
+ },
+ {
+  "type": "er",
+  "pelers": 0.023054235944701983,
+  "reference": 0.029857360381860144
+ },
+ {
+  "type": "er",
+  "pelers": 0.023230873723307652,
+  "reference": 0.029134187427242258
+ },
+ {
+  "type": "er",
+  "pelers": 0.03267088903394372,
+  "reference": 0.037654262048193464
+ },
+ {
+  "type": "er",
+  "pelers": 0.058204184757502844,
+  "reference": 0.11179429464285866
+ },
+ {
+  "type": "er",
+  "pelers": 0.034114563437926376,
+  "reference": 0.04983605577689309
+ },
+ {
+  "type": "er",
+  "pelers": 0.05776988683603088,
+  "reference": 0.0694046094182829
+ },
+ {
+  "type": "er",
+  "pelers": 0.08988293189963852,
+  "reference": 0.10466912133891901
+ },
+ {
+  "type": "er",
+  "pelers": 0.06371736132315643,
+  "reference": 0.07278771511628715
+ },
+ {
+  "type": "er",
+  "pelers": 0.0909159745454566,
+  "reference": 0.11335163348417875
+ },
+ {
+  "type": "er",
+  "pelers": 0.009345273916293076,
+  "reference": 0.010589220669206444
+ },
+ {
+  "type": "er",
+  "pelers": 0.04383095271452711,
+  "reference": 0.04703056578946963
+ },
+ {
+  "type": "er",
+  "pelers": 0.05586876785714269,
+  "reference": 0.07057093521127146
+ },
+ {
+  "type": "er",
+  "pelers": 0.08969370250895892,
+  "reference": 0.12027729807690636
+ },
+ {
+  "type": "er",
+  "pelers": 0.04776022137404986,
+  "reference": 0.06651587499999685
+ },
+ {
+  "type": "er",
+  "pelers": 0.03483650139275386,
+  "reference": 0.04679254579438586
+ },
+ {
+  "type": "er",
+  "pelers": 0.005282881047961651,
+  "reference": 0.0064942280519485335
+ },
+ {
+  "type": "er",
+  "pelers": 0.028905298265899704,
+  "reference": 0.045730473491771534
+ },
+ {
+  "type": "er",
+  "pelers": 0.05888959294118275,
+  "reference": 0.07259051594202005
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.034347276098892356,
+  "reference": 0.045392903811247075
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.02124723874256723,
+  "reference": 0.03623958985507657
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.02073623714759333,
+  "reference": 0.029187177362893706
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.031606740834390204,
+  "reference": 0.04738637310605775
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.0695169694444404,
+  "reference": 0.10427669583332318
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.04855222912622249,
+  "reference": 0.08438535690235005
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.032495777922077335,
+  "reference": 0.0532288425531891
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.030822763546795272,
+  "reference": 0.050423717741934174
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.030868996296294988,
+  "reference": 0.04977060636182276
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.05271448631579436,
+  "reference": 0.08947216785714512
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.03933842610063067,
+  "reference": 0.06746655525606705
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.0548912653508651,
+  "reference": 0.08850010954064803
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.022931508707603337,
+  "reference": 0.037727134238311276
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.032544460338099844,
+  "reference": 0.05301923516948961
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.062275014925388006,
+  "reference": 0.09192759191177281
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.04366379057590874,
+  "reference": 0.0774196191950499
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.011880873634203834,
+  "reference": 0.020813257903493664
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.058257546511628976,
+  "reference": 0.09867048818897295
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.03587515208034178,
+  "reference": 0.053960827586204935
+ },
+ {
+  "type": "eventmodeling",
+  "pelers": 0.03406027929155709,
+  "reference": 0.054115779220784366
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.03952190363349083,
+  "reference": 0.05759134022989003
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.04379026970228263,
+  "reference": 0.06256221749999895
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.036106650793654806,
+  "reference": 0.04958157029703414
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.45520127272730776,
+  "reference": 0.7278594571427675
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.5576053777777512,
+  "reference": 1.1814154999999367
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.2877777816091989,
+  "reference": 0.5734742727272533
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.31050777777775773,
+  "reference": 0.37117226470592657
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.907482714285704,
+  "reference": 1.7792941333333148
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.4064509354838294,
+  "reference": 0.765079121212087
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.48607626923078967,
+  "reference": 0.792618468749879
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.37418692537317133,
+  "reference": 0.6827337297296696
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.9557965555555981,
+  "reference": 2.120117750000039
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.8039206562500567,
+  "reference": 1.378878157894896
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.024607515748027976,
+  "reference": 0.050138879759519576
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.024505102840353073,
+  "reference": 0.02887862933026054
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.03076540713406398,
+  "reference": 0.04222090219223429
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.02726546237731747,
+  "reference": 0.03835416232772078
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.03319722413793813,
+  "reference": 0.046877698501873295
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.06384784183673943,
+  "reference": 0.07757699690400925
+ },
+ {
+  "type": "flowchart",
+  "pelers": 0.017604344827585862,
+  "reference": 0.020839690833333105
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.019702754137116103,
+  "reference": 0.030359441747571252
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.0124057440476167,
+  "reference": 0.021714636284722626
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.014544773123912176,
+  "reference": 0.024713713438736722
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.042215391231019465,
+  "reference": 0.0644817525773254
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.007330911462914153,
+  "reference": 0.012876539134909794
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.006790210755023253,
+  "reference": 0.010760394148020512
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.012343796150049107,
+  "reference": 0.021827727748692318
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.03757309009009763,
+  "reference": 0.04980139840637525
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.010872530434783624,
+  "reference": 0.017630942877294522
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.0177769772565741,
+  "reference": 0.02788584057970799
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.00982850864779978,
+  "reference": 0.015573835616437425
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.007300674160583417,
+  "reference": 0.011481995867769643
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.012457720976582373,
+  "reference": 0.019140465187451102
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.017333164934165084,
+  "reference": 0.024309654033041014
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.05863170725995085,
+  "reference": 0.08319349833886933
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.026705378868732726,
+  "reference": 0.043110565517242225
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.050762314401613856,
+  "reference": 0.07175307736389658
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.03232532945736892,
+  "reference": 0.044663091071431286
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.01140266256269944,
+  "reference": 0.020350941415779818
+ },
+ {
+  "type": "gitGraph",
+  "pelers": 0.01712859589041391,
+  "reference": 0.02670385378868624
+ },
+ {
+  "type": "info",
+  "pelers": 0.0036959478196606946,
+  "reference": 0.0041281664464995664
+ },
+ {
+  "type": "info",
+  "pelers": 0.007011802579921902,
+  "reference": 0.007114331721194727
+ },
+ {
+  "type": "info",
+  "pelers": 0.0034904794080694483,
+  "reference": 0.0035445127587187242
+ },
+ {
+  "type": "info",
+  "pelers": 0.004012047817715485,
+  "reference": 0.004197170723517891
+ },
+ {
+  "type": "info",
+  "pelers": 0.004830561630602753,
+  "reference": 0.0054828201754389735
+ },
+ {
+  "type": "info",
+  "pelers": 0.005002614845938076,
+  "reference": 0.004655774487896003
+ },
+ {
+  "type": "info",
+  "pelers": 0.00679824170744969,
+  "reference": 0.007667935909230537
+ },
+ {
+  "type": "info",
+  "pelers": 0.007515966636610726,
+  "reference": 0.007696345029240694
+ },
+ {
+  "type": "info",
+  "pelers": 0.005960546841478118,
+  "reference": 0.00552780256466904
+ },
+ {
+  "type": "info",
+  "pelers": 0.004521831434255891,
+  "reference": 0.004785250143541255
+ },
+ {
+  "type": "info",
+  "pelers": 0.007755506823820586,
+  "reference": 0.0077010061595305535
+ },
+ {
+  "type": "info",
+  "pelers": 0.008081378474464614,
+  "reference": 0.008000791360000148
+ },
+ {
+  "type": "info",
+  "pelers": 0.00375566937058776,
+  "reference": 0.0038965917095216654
+ },
+ {
+  "type": "info",
+  "pelers": 0.009052245474294273,
+  "reference": 0.011035241394529454
+ },
+ {
+  "type": "info",
+  "pelers": 0.003737745552399266,
+  "reference": 0.003820674663814278
+ },
+ {
+  "type": "info",
+  "pelers": 0.00511680085959894,
+  "reference": 0.0058140109302316995
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.01261679313824305,
+  "reference": 0.014388796892978825
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.02595515663899987,
+  "reference": 0.024881628855720594
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.022940990825689934,
+  "reference": 0.0208658065054227
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.01315402630194653,
+  "reference": 0.014279616790405148
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.0590004410377384,
+  "reference": 0.07059123380282652
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.021181233700251812,
+  "reference": 0.028642475372280356
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.05413842424242586,
+  "reference": 0.05469507860261212
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.05676000907029476,
+  "reference": 0.06964463231197239
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.024189232108315778,
+  "reference": 0.0239404976076564
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.04081115171288693,
+  "reference": 0.04922378192535267
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.02343890159325267,
+  "reference": 0.02840597843360012
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.025743481481477818,
+  "reference": 0.03444081017882592
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.0246150472440912,
+  "reference": 0.028815877880191073
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.02257295938628367,
+  "reference": 0.028838943483271637
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.05089902642275109,
+  "reference": 0.05030818108650898
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.02719880326087308,
+  "reference": 0.03802210030394829
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.039635014263074975,
+  "reference": 0.04839224371373675
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.02333159888059608,
+  "reference": 0.029495429245283925
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.025993527027031612,
+  "reference": 0.02973531510107281
+ },
+ {
+  "type": "ishikawa",
+  "pelers": 0.03310688359788545,
+  "reference": 0.0423327935702223
+ },
+ {
+  "type": "journey",
+  "pelers": 0.02539672690355349,
+  "reference": 0.027741486696237178
+ },
+ {
+  "type": "journey",
+  "pelers": 0.010741167955326666,
+  "reference": 0.011724938584151834
+ },
+ {
+  "type": "journey",
+  "pelers": 0.04468534107142789,
+  "reference": 0.04680964859812053
+ },
+ {
+  "type": "journey",
+  "pelers": 0.032994593667553085,
+  "reference": 0.038379417177912156
+ },
+ {
+  "type": "journey",
+  "pelers": 0.03225948774193849,
+  "reference": 0.0323999507772001
+ },
+ {
+  "type": "journey",
+  "pelers": 0.019125551223245656,
+  "reference": 0.01587985460317531
+ },
+ {
+  "type": "journey",
+  "pelers": 0.02195507199297404,
+  "reference": 0.02286621663620239
+ },
+ {
+  "type": "journey",
+  "pelers": 0.03227404645161568,
+  "reference": 0.028825110599084037
+ },
+ {
+  "type": "journey",
+  "pelers": 0.0113504226055404,
+  "reference": 0.01091441903099264
+ },
+ {
+  "type": "journey",
+  "pelers": 0.014745150943395376,
+  "reference": 0.014370072988504557
+ },
+ {
+  "type": "journey",
+  "pelers": 0.0778095621118036,
+  "reference": 0.08056412218648594
+ },
+ {
+  "type": "journey",
+  "pelers": 0.04841632688587418,
+  "reference": 0.05382829462365818
+ },
+ {
+  "type": "journey",
+  "pelers": 0.03156364312735891,
+  "reference": 0.031483562264145566
+ },
+ {
+  "type": "journey",
+  "pelers": 0.036738327459615784,
+  "reference": 0.033240078353249373
+ },
+ {
+  "type": "journey",
+  "pelers": 0.03588573601147769,
+  "reference": 0.040494758899683535
+ },
+ {
+  "type": "journey",
+  "pelers": 0.003578461714613044,
+  "reference": 0.003672934479212008
+ },
+ {
+  "type": "journey",
+  "pelers": 0.03308562962963522,
+  "reference": 0.030876681481485892
+ },
+ {
+  "type": "journey",
+  "pelers": 0.057973148148145505,
+  "reference": 0.05709227853882303
+ },
+ {
+  "type": "journey",
+  "pelers": 0.019636498430142868,
+  "reference": 0.02274269363636532
+ },
+ {
+  "type": "journey",
+  "pelers": 0.027869504454340135,
+  "reference": 0.02952513459268354
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.04213630134680858,
+  "reference": 0.0630786322418186
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.05352746153846219,
+  "reference": 0.06196022029702236
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.09576842748092462,
+  "reference": 0.09837847450980916
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.007200076590841416,
+  "reference": 0.006596424802112618
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.014375291954019796,
+  "reference": 0.014724944051827778
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.013255102808687073,
+  "reference": 0.012828449974346762
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.00837265673141335,
+  "reference": 0.00724324594438103
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.006169821569592467,
+  "reference": 0.005499238838797138
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.014667605865105598,
+  "reference": 0.016062581245986703
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.013577362106410277,
+  "reference": 0.014924095465397328
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.021319079216364598,
+  "reference": 0.02249568165467058
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.002980535884596348,
+  "reference": 0.0026566033365212527
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.045185456678706486,
+  "reference": 0.04564641058395798
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.033686432032313196,
+  "reference": 0.03730055886737505
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.01572047517285024,
+  "reference": 0.015678268965513616
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.022846335159828906,
+  "reference": 0.028970362688306835
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.021256061172480863,
+  "reference": 0.02382004761904855
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.021611226447709003,
+  "reference": 0.02756207599118711
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.00763157600732496,
+  "reference": 0.008087785899094176
+ },
+ {
+  "type": "kanban",
+  "pelers": 0.018327671062274183,
+  "reference": 0.01926955238828803
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.01095314805081636,
+  "reference": 0.010511140815472825
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.006835030617824493,
+  "reference": 0.008150515645369266
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.006533396132742701,
+  "reference": 0.007218036085449238
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.008819810229275997,
+  "reference": 0.01077036563307473
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.003280989632546016,
+  "reference": 0.004325377335641001
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.01206186927158348,
+  "reference": 0.012876857878472385
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.04188962144052459,
+  "reference": 0.04928025787401881
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.04595734007352803,
+  "reference": 0.053934413793097616
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.06021499038461815,
+  "reference": 0.07338664222871741
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.0511568224489658,
+  "reference": 0.06437545758354087
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.041448847682111004,
+  "reference": 0.04998865469061781
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.04653905390333999,
+  "reference": 0.05087832723577636
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.0470247142857124,
+  "reference": 0.06370164122136693
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.013941481605353788,
+  "reference": 0.015171961887479442
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.036461498542270813,
+  "reference": 0.03924080250783569
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.027303828602624567,
+  "reference": 0.02643140274839969
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.013027805106828964,
+  "reference": 0.015819354838709176
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.049051254901974504,
+  "reference": 0.06416671538463561
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.01985474999999583,
+  "reference": 0.021079811973015904
+ },
+ {
+  "type": "mindmap",
+  "pelers": 0.06823798365123654,
+  "reference": 0.08318461461792905
+ },
+ {
+  "type": "packet",
+  "pelers": 0.02092193723848639,
+  "reference": 0.03235652393273338
+ },
+ {
+  "type": "packet",
+  "pelers": 0.02837972985244267,
+  "reference": 0.03829899540582046
+ },
+ {
+  "type": "packet",
+  "pelers": 0.008194297279581106,
+  "reference": 0.01261595105953227
+ },
+ {
+  "type": "packet",
+  "pelers": 0.009509008365014645,
+  "reference": 0.015271296703302295
+ },
+ {
+  "type": "packet",
+  "pelers": 0.023074216636199327,
+  "reference": 0.03766531777108023
+ },
+ {
+  "type": "packet",
+  "pelers": 0.05088897764227756,
+  "reference": 0.07496703592814648
+ },
+ {
+  "type": "packet",
+  "pelers": 0.021335919795228774,
+  "reference": 0.02927961124120737
+ },
+ {
+  "type": "packet",
+  "pelers": 0.03970083809524242,
+  "reference": 0.0589652287736104
+ },
+ {
+  "type": "packet",
+  "pelers": 0.018306905563687137,
+  "reference": 0.023526532455321852
+ },
+ {
+  "type": "packet",
+  "pelers": 0.042559210884361647,
+  "reference": 0.05661471719456925
+ },
+ {
+  "type": "packet",
+  "pelers": 0.06772032702704293,
+  "reference": 0.0909216872727583
+ },
+ {
+  "type": "packet",
+  "pelers": 0.0470923935969732,
+  "reference": 0.06288734422110363
+ },
+ {
+  "type": "packet",
+  "pelers": 0.04100733278689001,
+  "reference": 0.06135964705882704
+ },
+ {
+  "type": "packet",
+  "pelers": 0.03444887603305668,
+  "reference": 0.0480346852207298
+ },
+ {
+  "type": "packet",
+  "pelers": 0.021980805799646567,
+  "reference": 0.03493906284916828
+ },
+ {
+  "type": "packet",
+  "pelers": 0.01866516791044738,
+  "reference": 0.02989087455197398
+ },
+ {
+  "type": "packet",
+  "pelers": 0.007928613823717356,
+  "reference": 0.012282051571709683
+ },
+ {
+  "type": "packet",
+  "pelers": 0.02662002872341273,
+  "reference": 0.037212117559517664
+ },
+ {
+  "type": "packet",
+  "pelers": 0.014217661171122093,
+  "reference": 0.024497005876601696
+ },
+ {
+  "type": "packet",
+  "pelers": 0.022072819064428623,
+  "reference": 0.034537346685077394
+ },
+ {
+  "type": "pie",
+  "pelers": 0.06603396042214926,
+  "reference": 0.10262191393443662
+ },
+ {
+  "type": "pie",
+  "pelers": 0.05045611290323347,
+  "reference": 0.08543858020479986
+ },
+ {
+  "type": "pie",
+  "pelers": 0.025915972020723158,
+  "reference": 0.03883310559006684
+ },
+ {
+  "type": "pie",
+  "pelers": 0.022852304387572468,
+  "reference": 0.03106317267081084
+ },
+ {
+  "type": "pie",
+  "pelers": 0.028133066366696404,
+  "reference": 0.04488663082438213
+ },
+ {
+  "type": "pie",
+  "pelers": 0.03445811570247927,
+  "reference": 0.05538188053099403
+ },
+ {
+  "type": "pie",
+  "pelers": 0.030207890096614176,
+  "reference": 0.04889989843749731
+ },
+ {
+  "type": "pie",
+  "pelers": 0.04206991260504436,
+  "reference": 0.06302100755667234
+ },
+ {
+  "type": "pie",
+  "pelers": 0.022500272482025237,
+  "reference": 0.03446586225894982
+ },
+ {
+  "type": "pie",
+  "pelers": 0.09736232295720014,
+  "reference": 0.15540332298139067
+ },
+ {
+  "type": "pie",
+  "pelers": 0.016702861055442407,
+  "reference": 0.025415564024388743
+ },
+ {
+  "type": "pie",
+  "pelers": 0.026749401069513925,
+  "reference": 0.04430878584070205
+ },
+ {
+  "type": "pie",
+  "pelers": 0.019742798737170147,
+  "reference": 0.035057775910365095
+ },
+ {
+  "type": "pie",
+  "pelers": 0.0323139664082525,
+  "reference": 0.04391045614034387
+ },
+ {
+  "type": "pie",
+  "pelers": 0.033037151915460757,
+  "reference": 0.049488053359663005
+ },
+ {
+  "type": "pie",
+  "pelers": 0.009727672373545075,
+  "reference": 0.01552632774674505
+ },
+ {
+  "type": "pie",
+  "pelers": 0.024975039960037766,
+  "reference": 0.03721917708333508
+ },
+ {
+  "type": "pie",
+  "pelers": 0.03210600385110166,
+  "reference": 0.05059416161616676
+ },
+ {
+  "type": "pie",
+  "pelers": 0.04495109874328044,
+  "reference": 0.060458850241548796
+ },
+ {
+  "type": "pie",
+  "pelers": 0.030516082926837176,
+  "reference": 0.048193483622347655
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.045734537477138744,
+  "reference": 0.057052970387245494
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.011354173024519498,
+  "reference": 0.010963881192458636
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.009677470201236401,
+  "reference": 0.00916272663979322
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.00810849513618686,
+  "reference": 0.007862922012579515
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.009300632205284463,
+  "reference": 0.007451738897170948
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.014635272674071996,
+  "reference": 0.013939016722411672
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.007025715650460342,
+  "reference": 0.006662395416997245
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.011059106590004069,
+  "reference": 0.010238498976667194
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.012134227559434135,
+  "reference": 0.011475797613581345
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.0327481806282762,
+  "reference": 0.04804531861803939
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.00917946182085128,
+  "reference": 0.009321664056673335
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.022314967885820103,
+  "reference": 0.027408975903614862
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.03524642394366592,
+  "reference": 0.043647781849920464
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.021841746724887312,
+  "reference": 0.02647644444444234
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.03216822493572915,
+  "reference": 0.03943594952680579
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.046908403377115944,
+  "reference": 0.062358476309235814
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.03881507596897156,
+  "reference": 0.05053501818179167
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.04270257508532588,
+  "reference": 0.05634150675675981
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.05196577800831857,
+  "reference": 0.06798466847826405
+ },
+ {
+  "type": "quadrantChart",
+  "pelers": 0.05336262686566553,
+  "reference": 0.07442991964282035
+ },
+ {
+  "type": "radar",
+  "pelers": 0.023505495300746145,
+  "reference": 0.036131323699420015
+ },
+ {
+  "type": "radar",
+  "pelers": 0.012744651376150197,
+  "reference": 0.021064157540015598
+ },
+ {
+  "type": "radar",
+  "pelers": 0.014636359859562496,
+  "reference": 0.024920803784862146
+ },
+ {
+  "type": "radar",
+  "pelers": 0.007774974813432733,
+  "reference": 0.013111372836915238
+ },
+ {
+  "type": "radar",
+  "pelers": 0.013063505224660883,
+  "reference": 0.017505100069979292
+ },
+ {
+  "type": "radar",
+  "pelers": 0.014913582587958626,
+  "reference": 0.023345719887954912
+ },
+ {
+  "type": "radar",
+  "pelers": 0.012480048902196035,
+  "reference": 0.019120915137612368
+ },
+ {
+  "type": "radar",
+  "pelers": 0.013304846808510929,
+  "reference": 0.023060915207362642
+ },
+ {
+  "type": "radar",
+  "pelers": 0.018786213373409195,
+  "reference": 0.025437420420418563
+ },
+ {
+  "type": "radar",
+  "pelers": 0.014254748004559266,
+  "reference": 0.019495543257993176
+ },
+ {
+  "type": "radar",
+  "pelers": 0.03620654848044453,
+  "reference": 0.061649396551738254
+ },
+ {
+  "type": "radar",
+  "pelers": 0.03916162441314106,
+  "reference": 0.07039504494380534
+ },
+ {
+  "type": "radar",
+  "pelers": 0.02369675071089599,
+  "reference": 0.044935502692995614
+ },
+ {
+  "type": "radar",
+  "pelers": 0.03535439830508851,
+  "reference": 0.05769575806451969
+ },
+ {
+  "type": "radar",
+  "pelers": 0.021210391009336537,
+  "reference": 0.036275714492755164
+ },
+ {
+  "type": "radar",
+  "pelers": 0.02256317477477169,
+  "reference": 0.03813569664632779
+ },
+ {
+  "type": "radar",
+  "pelers": 0.02150967841787912,
+  "reference": 0.038817632558138304
+ },
+ {
+  "type": "radar",
+  "pelers": 0.03546604822694856,
+  "reference": 0.06231985074627666
+ },
+ {
+  "type": "radar",
+  "pelers": 0.01657315175613687,
+  "reference": 0.029393498237369545
+ },
+ {
+  "type": "radar",
+  "pelers": 0.021984030755714683,
+  "reference": 0.03975050634922116
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.014470446759265475,
+  "reference": 0.01897582549316982
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.010338405126079846,
+  "reference": 0.013852644875343151
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.012732001018333211,
+  "reference": 0.014683572769953713
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.012211945312500916,
+  "reference": 0.01726298688751142
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.010484805450734705,
+  "reference": 0.015371735709889367
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.011805408404156118,
+  "reference": 0.023622518413604195
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.02062794389438759,
+  "reference": 0.02860222285713202
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.010087329568374246,
+  "reference": 0.012275819833084145
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.011082444148932225,
+  "reference": 0.01990960987260588
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.006889204188479468,
+  "reference": 0.008550603283172194
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.024897557213935488,
+  "reference": 0.032632324641460105
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.01874834482759093,
+  "reference": 0.02942947176469983
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.04055914100484732,
+  "reference": 0.06340909620251099
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.01447947365373708,
+  "reference": 0.02659483740701168
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.053815294623654086,
+  "reference": 0.07837277742948122
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.04017029213483156,
+  "reference": 0.06746041239894308
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.07712864923075988,
+  "reference": 0.12596630150750315
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.04065220487804239,
+  "reference": 0.06858601369863146
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.0690048732782394,
+  "reference": 0.11229236771303257
+ },
+ {
+  "type": "railroad",
+  "pelers": 0.03778173262840316,
+  "reference": 0.06609038786280262
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.0040114017327126305,
+  "reference": 0.006775117886178088
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.00434722100504309,
+  "reference": 0.005726381584971975
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.08523534353744068,
+  "reference": 0.13114747643977873
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.05125820901641836,
+  "reference": 0.06463406976743767
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.10106783467745117,
+  "reference": 0.13121972774868254
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.08072466774193021,
+  "reference": 0.09422292105263384
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.08557352901025359,
+  "reference": 0.09434650188678753
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.06643599469495062,
+  "reference": 0.07450636011903303
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.08405767114090361,
+  "reference": 0.09766578906248924
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.08826242957745219,
+  "reference": 0.1027972786885316
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.05845716588785159,
+  "reference": 0.06831767759564182
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.05792870833334342,
+  "reference": 0.06611076517151619
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.05762255990783596,
+  "reference": 0.06498448571429116
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.07350844574776919,
+  "reference": 0.08404912080536847
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.05354724839398023,
+  "reference": 0.05941471971495817
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.03413442019098816,
+  "reference": 0.0421297609427711
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.04597634558823462,
+  "reference": 0.05074470182557843
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.06278244862156421,
+  "reference": 0.07145845142858369
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.1296700777202016,
+  "reference": 0.1436972471265003
+ },
+ {
+  "type": "requirement",
+  "pelers": 0.0727181918604782,
+  "reference": 0.07579641818178282
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.032692926797389624,
+  "reference": 0.05084357926830492
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.016952470508473136,
+  "reference": 0.01974426992896596
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.040578066450555964,
+  "reference": 0.053600554603865674
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.04559236612022606,
+  "reference": 0.05741676376145809
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.05651767945822258,
+  "reference": 0.06781633875339398
+ },
+ {
+  "type": "sankey",
+  "pelers": 0.016081221221865324,
+  "reference": 0.019346962103628546
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02083134471273459,
+  "reference": 0.019190009209511985
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.028600737142858892,
+  "reference": 0.02668329455709361
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02307166789668409,
+  "reference": 0.033214588313427496
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02943450823530678,
+  "reference": 0.02823555643340987
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.03275251701570263,
+  "reference": 0.035376851485148526
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.029109351571599305,
+  "reference": 0.02543917321248312
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.028855053056511495,
+  "reference": 0.02747779340658511
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.023295898510242233,
+  "reference": 0.021804273757629288
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02369363636364252,
+  "reference": 0.021865338286712815
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.03108385590061268,
+  "reference": 0.044536037366549125
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.027592224917298694,
+  "reference": 0.038645454404956245
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.025486535641536412,
+  "reference": 0.02659718510637523
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.029637316350723888,
+  "reference": 0.027087631635966974
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02695522306035416,
+  "reference": 0.02539194619289285
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.02962545260662319,
+  "reference": 0.026467737566144452
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.030085722021664697,
+  "reference": 0.025570948875242805
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.026594763018069498,
+  "reference": 0.02561238075742005
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.029192218203033738,
+  "reference": 0.025355242393505558
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.03251465929777562,
+  "reference": 0.030799860837442107
+ },
+ {
+  "type": "sequence",
+  "pelers": 0.021501714531385305,
+  "reference": 0.01996262410215878
+ },
+ {
+  "type": "state",
+  "pelers": 0.027515746974694923,
+  "reference": 0.05298498942917675
+ },
+ {
+  "type": "state",
+  "pelers": 0.02641059873284995,
+  "reference": 0.038549126348231676
+ },
+ {
+  "type": "state",
+  "pelers": 0.04067567317073169,
+  "reference": 0.06705737533512052
+ },
+ {
+  "type": "state",
+  "pelers": 0.03545442351273893,
+  "reference": 0.05428834056398764
+ },
+ {
+  "type": "state",
+  "pelers": 0.05613946412556733,
+  "reference": 0.09935141666666447
+ },
+ {
+  "type": "state",
+  "pelers": 0.09281494074077475,
+  "reference": 0.17307599999998086
+ },
+ {
+  "type": "state",
+  "pelers": 0.0799208722044673,
+  "reference": 0.14373871999992324
+ },
+ {
+  "type": "state",
+  "pelers": 0.2003019520000089,
+  "reference": 0.5414864893617515
+ },
+ {
+  "type": "state",
+  "pelers": 0.09522726615969873,
+  "reference": 0.1728335448275802
+ },
+ {
+  "type": "state",
+  "pelers": 0.05754782988505181,
+  "reference": 0.08256417491747775
+ },
+ {
+  "type": "state",
+  "pelers": 0.19526080620161965,
+  "reference": 0.4349042413791878
+ },
+ {
+  "type": "state",
+  "pelers": 0.08041850803855101,
+  "reference": 0.13392677540101178
+ },
+ {
+  "type": "state",
+  "pelers": 0.14642323976614421,
+  "reference": 0.2761011208790728
+ },
+ {
+  "type": "state",
+  "pelers": 0.14501368786123206,
+  "reference": 0.24755348514844455
+ },
+ {
+  "type": "state",
+  "pelers": 0.3129294374999517,
+  "reference": 0.670262815789197
+ },
+ {
+  "type": "state",
+  "pelers": 0.18482986764705428,
+  "reference": 0.3671236956520327
+ },
+ {
+  "type": "state",
+  "pelers": 0.18554602222230407,
+  "reference": 0.3583636999999206
+ },
+ {
+  "type": "state",
+  "pelers": 0.1568389500000194,
+  "reference": 0.37004086764714245
+ },
+ {
+  "type": "state",
+  "pelers": 0.1841856544117892,
+  "reference": 0.30750707317077663
+ },
+ {
+  "type": "state",
+  "pelers": 0.15741698742139815,
+  "reference": 0.2895398390805215
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.004720261846326937,
+  "reference": 0.005759100437685266
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.006409930875573012,
+  "reference": 0.0067156363148031485
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.14352251428570265,
+  "reference": 0.23054938532111402
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.07594253030304875,
+  "reference": 0.09427978195490962
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.16457878289475047,
+  "reference": 0.2059671721311685
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.17176760273964833,
+  "reference": 0.21198695762710887
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.23867406666658575,
+  "reference": 0.3281107142857917
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.10250283606555818,
+  "reference": 0.11451221917806136
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.09398031460677408,
+  "reference": 0.10965913157895302
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.04171411833332968,
+  "reference": 0.06262578750000103
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.10413239004150326,
+  "reference": 0.13278313756614885
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.06515975260416933,
+  "reference": 0.07643001829269562
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.06369919289339442,
+  "reference": 0.06994856145251126
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.15760680503142727,
+  "reference": 0.17009409523810987
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.22665518918926805,
+  "reference": 0.33250694736833747
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.09125797818182037,
+  "reference": 0.09025779061370558
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.16713719333327995,
+  "reference": 0.17084851700671613
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.07300310495625006,
+  "reference": 0.08072605466237479
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.12760664795919463,
+  "reference": 0.14594395348839773
+ },
+ {
+  "type": "swimlane",
+  "pelers": 0.11794572169811493,
+  "reference": 0.19179373282442874
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.031773294790350154,
+  "reference": 0.0373517641791146
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.020982249161070225,
+  "reference": 0.023666751182599782
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.022337818749994246,
+  "reference": 0.0706615423728823
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.006801594506393641,
+  "reference": 0.007202987899740909
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.02837772417706374,
+  "reference": 0.03335765333333984
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.03813940396341378,
+  "reference": 0.04260492504258927
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.05898984433962433,
+  "reference": 0.06557280366492295
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.09605018007662683,
+  "reference": 0.11778147887324307
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.005385278914493579,
+  "reference": 0.0066532118147968125
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.0428538304794317,
+  "reference": 0.059783350835327306
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.07531946084335171,
+  "reference": 0.09209430147059132
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.02026836952998158,
+  "reference": 0.02207946778465005
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.00526173884679984,
+  "reference": 0.006528734203657365
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.08940019642853128,
+  "reference": 0.09288924814814149
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.04421352296820311,
+  "reference": 0.04008966987179846
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.05764171889400907,
+  "reference": 0.06960722222223316
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.04596199632353947,
+  "reference": 0.04635359629631879
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.10156997570851421,
+  "reference": 0.10255812295079403
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.17932980714291002,
+  "reference": 0.16725238666665973
+ },
+ {
+  "type": "timeline",
+  "pelers": 0.05933664691941653,
+  "reference": 0.06776187262871065
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.012341703849949558,
+  "reference": 0.02328114897579124
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.010430385064667138,
+  "reference": 0.016309480104371478
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.0056788233022948015,
+  "reference": 0.010709295503217309
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.006432234370981082,
+  "reference": 0.012194642613365269
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.007784179950185955,
+  "reference": 0.014086190422539415
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.010578947546536318,
+  "reference": 0.02196348814750205
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.017345208044375563,
+  "reference": 0.03410045912807137
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.031793776365944326,
+  "reference": 0.05347854059828723
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.011474312987607736,
+  "reference": 0.023332557835818814
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.02930888276669887,
+  "reference": 0.05176502484474529
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.012265357037766048,
+  "reference": 0.022786497267751206
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.02903015197216835,
+  "reference": 0.04822839691713255
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.009857642096962667,
+  "reference": 0.020870717028381367
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.01602842499999567,
+  "reference": 0.030399228432570796
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.01650196042216202,
+  "reference": 0.030848729963012158
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.009033256141622646,
+  "reference": 0.017578278988049933
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.03018304101327396,
+  "reference": 0.056941802272723926
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.022489698741024088,
+  "reference": 0.040230768488712945
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.061426599508583896,
+  "reference": 0.10612440677961509
+ },
+ {
+  "type": "treeView",
+  "pelers": 0.010808182800353776,
+  "reference": 0.020738561359861792
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.018475774002952385,
+  "reference": 0.03127442375000101
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.004678470995506773,
+  "reference": 0.009354560044892006
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.013460156620023105,
+  "reference": 0.023248578066926588
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.017800881138802224,
+  "reference": 0.03219069111970148
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.01711655578372521,
+  "reference": 0.030105129963924008
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.006674611852642918,
+  "reference": 0.013300042021264164
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.006916202489627373,
+  "reference": 0.012686490106544865
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.01233293786981897,
+  "reference": 0.01902649010655373
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.005345654051741888,
+  "reference": 0.010228139468302554
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.012609491679263013,
+  "reference": 0.02136871282050573
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.005021290620607727,
+  "reference": 0.010697655304650326
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.0038265915212713475,
+  "reference": 0.0071335446504931154
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.04277558974358532,
+  "reference": 0.07403512130172499
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.03151933249370289,
+  "reference": 0.05488403728068398
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.0261276948798298,
+  "reference": 0.0487490935672867
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.02795573519552569,
+  "reference": 0.057180689497689764
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.0365556008771776,
+  "reference": 0.06366080152673313
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.05738229128440528,
+  "reference": 0.08773018596489636
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.02506298597196102,
+  "reference": 0.038095284627101635
+ },
+ {
+  "type": "treemap",
+  "pelers": 0.012743219164126315,
+  "reference": 0.026087782064628057
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.04616636162366232,
+  "reference": 0.08607512714778941
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.030053997596146822,
+  "reference": 0.04801699999996261
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.053482307692289226,
+  "reference": 0.11113263999991532
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.020754529460559355,
+  "reference": 0.03379997027030284
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.04573987751368729,
+  "reference": 0.05828629836827052
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.01622482349123536,
+  "reference": 0.019873815580278217
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.021830700698078458,
+  "reference": 0.031118856965166294
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.014512051654089343,
+  "reference": 0.01941520885093664
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.017499151154651168,
+  "reference": 0.025317351214553755
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.02641428722278387,
+  "reference": 0.03772586425337034
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.051929000000052995,
+  "reference": 0.06181380246912509
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.09714619767441064,
+  "reference": 0.16272242207801296
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.05564737333334051,
+  "reference": 0.07583704242424574
+ },
+ {
+  "type": "usecase",
+  "pelers": 0.03601948057557624,
+  "reference": 0.0549482923076529
+ },
+ {
+  "type": "venn",
+  "pelers": 0.1985289682539472,
+  "reference": 0.49138982352965016
+ },
+ {
+  "type": "venn",
+  "pelers": 0.0813566883116909,
+  "reference": 0.22025514912271765
+ },
+ {
+  "type": "venn",
+  "pelers": 0.2267815945945315,
+  "reference": 0.5026031400001375
+ },
+ {
+  "type": "venn",
+  "pelers": 0.25272389898997394,
+  "reference": 0.552136347825897
+ },
+ {
+  "type": "venn",
+  "pelers": 0.4007652063488162,
+  "reference": 0.858381600000818
+ },
+ {
+  "type": "venn",
+  "pelers": 0.010675185738687334,
+  "reference": 0.03287404467803475
+ },
+ {
+  "type": "venn",
+  "pelers": 0.227123675675725,
+  "reference": 0.5382456595741926
+ },
+ {
+  "type": "venn",
+  "pelers": 0.011993396163058782,
+  "reference": 0.03327059840426336
+ },
+ {
+  "type": "venn",
+  "pelers": 0.1857005185184621,
+  "reference": 0.435475068965702
+ },
+ {
+  "type": "venn",
+  "pelers": 0.28260746067409465,
+  "reference": 0.6702910263151065
+ },
+ {
+  "type": "venn",
+  "pelers": 0.2783009555556216,
+  "reference": 0.6018502857145255
+ },
+ {
+  "type": "venn",
+  "pelers": 0.010959631901839524,
+  "reference": 0.029556343971632464
+ },
+ {
+  "type": "venn",
+  "pelers": 0.40067017460306587,
+  "reference": 0.7986431874996924
+ },
+ {
+  "type": "venn",
+  "pelers": 0.01047573984080173,
+  "reference": 0.029780565476193302
+ },
+ {
+  "type": "venn",
+  "pelers": 0.010854505642353414,
+  "reference": 0.03096817202970102
+ },
+ {
+  "type": "venn",
+  "pelers": 0.05048066330645299,
+  "reference": 0.14516426011569383
+ },
+ {
+  "type": "venn",
+  "pelers": 0.053427944444460716,
+  "reference": 0.14653719298246082
+ },
+ {
+  "type": "venn",
+  "pelers": 0.08893495035456438,
+  "reference": 0.346370657534364
+ },
+ {
+  "type": "venn",
+  "pelers": 0.24235649038466642,
+  "reference": 0.5204493877548031
+ },
+ {
+  "type": "venn",
+  "pelers": 0.2269920720721423,
+  "reference": 0.47370494339661234
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.04144339072847637,
+  "reference": 0.05993199282297675
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.014304941075512216,
+  "reference": 0.023144055504157362
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.0189713148710172,
+  "reference": 0.027246677559891245
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.0525895525209636,
+  "reference": 0.07897251735014285
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.026590517534519072,
+  "reference": 0.037969499241263215
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03196484802044288,
+  "reference": 0.050032086000021084
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03365564737550433,
+  "reference": 0.050645374493962836
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03292529078944905,
+  "reference": 0.049904159680585154
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.04385258844129426,
+  "reference": 0.06554949476439396
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03430904801098971,
+  "reference": 0.052003380457380316
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03881629612405113,
+  "reference": 0.0707051751412988
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.026627113951020007,
+  "reference": 0.03880456434107068
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.018752751124428823,
+  "reference": 0.03048067965895566
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03783333131619208,
+  "reference": 0.05746633256885699
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.03475305972222284,
+  "reference": 0.053434102564120296
+ },
+ {
+  "type": "wardley",
+  "pelers": 0.030303516363633345,
+  "reference": 0.04500236510794958
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.032958981578964375,
+  "reference": 0.034509897931029314
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03277171559636097,
+  "reference": 0.038634541666666605
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03407853133515715,
+  "reference": 0.03597970647480265
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.034645707756209954,
+  "reference": 0.05382781290325276
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03085968965515259,
+  "reference": 0.029045900116147556
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03551314488636721,
+  "reference": 0.03638434883721984
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.02567641991786434,
+  "reference": 0.035738710000005086
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.024043455769228436,
+  "reference": 0.026210835429769503
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.020934944769886818,
+  "reference": 0.02803306502243478
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.020975679530213853,
+  "reference": 0.031982214833774114
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03278439318478049,
+  "reference": 0.03970116984130563
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.03373612398920252,
+  "reference": 0.04003833599998616
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.025140626130633795,
+  "reference": 0.02702390064793884
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.030513471951204206,
+  "reference": 0.038807069767463245
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.032751253926736446,
+  "reference": 0.040142778491165584
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.033701322102405236,
+  "reference": 0.04217397976392043
+ },
+ {
+  "type": "xychart",
+  "pelers": 0.031182435162092834,
+  "reference": 0.036217982633872964
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.06615610052910005,
+  "reference": 0.07258652753620139
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.03925075862070598,
+  "reference": 0.045232301989115965
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.06696304010696097,
+  "reference": 0.07324133040929794
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.08821801408452251,
+  "reference": 0.09140070802918772
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.035929646551695685,
+  "reference": 0.03852281664099576
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.05142445995889985,
+  "reference": 0.053364211087438294
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.04646137476812768,
+  "reference": 0.04723092830187492
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.06358426903558571,
+  "reference": 0.06419817179490704
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.022722585831065033,
+  "reference": 0.02694876831898502
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.0721878876081119,
+  "reference": 0.0773176790122913
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.05268446736846511,
+  "reference": 0.053837664516126954
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.09795373437498256,
+  "reference": 0.09625263846156976
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.0631282619647541,
+  "reference": 0.06489087046631323
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.04521704339962259,
+  "reference": 0.05534396681417423
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.06116807823956598,
+  "reference": 0.05827039767437084
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.0874838706293596,
+  "reference": 0.08241677960521836
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.08213727540989238,
+  "reference": 0.08564768150683623
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.04188512395313704,
+  "reference": 0.04085062745097055
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.07451159523805559,
+  "reference": 0.07736905555560233
+ },
+ {
+  "type": "gantt",
+  "pelers": 0.05012503607216793,
+  "reference": 0.047192894339611983
+ }
+]

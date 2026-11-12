@@ -1,0 +1,4086 @@
+{
+  "corpus": 631,
+  "identical": 615,
+  "rows": [
+    {
+      "type": "agentflow",
+      "pelers": 0.06676348000000022,
+      "reference": 0.3017464337349393,
+      "mermaid": 37
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.06676469333333322,
+      "reference": 0.08053029581993583,
+      "mermaid": 35.79999999701977
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.056715290249432816,
+      "reference": 0.06441350507614212,
+      "mermaid": 34.20000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.057688707373272294,
+      "reference": 0.0751029969969982,
+      "mermaid": 36.70000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.06543683028720813,
+      "reference": 0.06229675373134427,
+      "mermaid": 36.70000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.05018833867735432,
+      "reference": 0.05437083913043352,
+      "mermaid": 40.900000005960464
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.04616388929889245,
+      "reference": 0.060151798076923606,
+      "mermaid": 38.599999994039536
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.16032797435897733,
+      "reference": 0.27057730107526856,
+      "mermaid": 95
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.10133573279352291,
+      "reference": 0.07599683282674782,
+      "mermaid": 70.70000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.1269978223350234,
+      "reference": 0.15285353048780165,
+      "mermaid": 40.70000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.15216828484848188,
+      "reference": 0.21076421848738391,
+      "mermaid": 60.099999994039536
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.009061955418629362,
+      "reference": 0.01437839275445669,
+      "mermaid": 25.400000005960464
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.04444002131438515,
+      "reference": 0.058936955294120706,
+      "mermaid": 34.5
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.06465107493540011,
+      "reference": 0.1145344474885885,
+      "mermaid": 43.5
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.10181563008130225,
+      "reference": 0.1470812131147532,
+      "mermaid": 58.29999999701977
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.06003412470024248,
+      "reference": 0.05940359619952495,
+      "mermaid": 32.70000000298023
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.030692803921568815,
+      "reference": 0.06124094132029204,
+      "mermaid": 25.899999991059303
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.03444041322314064,
+      "reference": 0.043194949913644344,
+      "mermaid": 28.899999991059303
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.03707378254437884,
+      "reference": 0.0528829260042306,
+      "mermaid": 30.899999991059303
+    },
+    {
+      "type": "agentflow",
+      "pelers": 0.10214865714285169,
+      "reference": 0.15292267073170768,
+      "mermaid": 46.599999994039536
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.12517319499999757,
+      "reference": 0.21380274358974324,
+      "mermaid": 66.20000000298023
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.11151148888888808,
+      "reference": 0.16313395454546314,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.14625107017544434,
+      "reference": 0.21912688695652913,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.18229704347826212,
+      "reference": 0.2801274555555412,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.1360499565217335,
+      "reference": 0.18034417985611542,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.13369312299465505,
+      "reference": 0.15706841250000708,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.12786989285714112,
+      "reference": 0.1981141811023502,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.06545709947644145,
+      "reference": 0.11935810476189501,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.011959554280247328,
+      "reference": 0.02786516258351679,
+      "mermaid": 30.200000002980232
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.24553700980394233,
+      "reference": 0.3063403292682956,
+      "mermaid": 119.5
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.026001871101871757,
+      "reference": 0.03510414866760491,
+      "mermaid": 23.149999998509884
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.00423202183480037,
+      "reference": 0.007146245784510553,
+      "mermaid": 13.299999997019768
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.014290124000000235,
+      "reference": 0.017562558286517437,
+      "mermaid": 17.100000001490116
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.012677930020283428,
+      "reference": 0.014938811827958134,
+      "mermaid": 16.600000001490116
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.04456783065954025,
+      "reference": 0.0665521329787167,
+      "mermaid": 32.5
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.055220055187634176,
+      "reference": 0.07807362616821766,
+      "mermaid": 32.099999994039536
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.04444395737122812,
+      "reference": 0.058991068396230646,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.047907226053637196,
+      "reference": 0.06890521212120973,
+      "mermaid": null
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.05969518615751796,
+      "reference": 0.0819439901960697,
+      "mermaid": 36.20000000298023
+    },
+    {
+      "type": "architecture",
+      "pelers": 0.03828745022970714,
+      "reference": 0.05378331612903244,
+      "mermaid": 31.299999997019768
+    },
+    {
+      "type": "block",
+      "pelers": 0.09760384046692756,
+      "reference": 0.12565541500000107,
+      "mermaid": 80.3999999910593
+    },
+    {
+      "type": "block",
+      "pelers": 0.15010567065868174,
+      "reference": 0.15061116867468352,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.1141264909090916,
+      "reference": 0.09885476284585396,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.08964905734766722,
+      "reference": 0.07475905074626546,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.15718138749998617,
+      "reference": 0.140649915730331,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.18095915827339765,
+      "reference": 0.131521272251311,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.13977243575418621,
+      "reference": 0.10523053361344757,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.1143489634703149,
+      "reference": 0.08299177483444364,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.09042976895306891,
+      "reference": 0.07459017857142196,
+      "mermaid": 73.59999999403954
+    },
+    {
+      "type": "block",
+      "pelers": 0.16303496753248686,
+      "reference": 0.12035312499999516,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.1252083700000003,
+      "reference": 0.09289485925926581,
+      "mermaid": 80.20000000298023
+    },
+    {
+      "type": "block",
+      "pelers": 0.10905988260868901,
+      "reference": 0.0744903244047648,
+      "mermaid": 76.3999999910593
+    },
+    {
+      "type": "block",
+      "pelers": 0.14092516853932546,
+      "reference": 0.10541278151261188,
+      "mermaid": 71.5
+    },
+    {
+      "type": "block",
+      "pelers": 0.12506604000000152,
+      "reference": 0.20138292800000637,
+      "mermaid": 60.19999998807907
+    },
+    {
+      "type": "block",
+      "pelers": 0.10731791416309272,
+      "reference": 0.07486078143712345,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.1270793502538203,
+      "reference": 0.1276252704081678,
+      "mermaid": 83.1000000089407
+    },
+    {
+      "type": "block",
+      "pelers": 0.11731366822427378,
+      "reference": 0.07555543202416215,
+      "mermaid": 66.59999999403954
+    },
+    {
+      "type": "block",
+      "pelers": 0.14266922159090842,
+      "reference": 0.10655605531916236,
+      "mermaid": 98.8999999910593
+    },
+    {
+      "type": "block",
+      "pelers": 0.06251426250000805,
+      "reference": 0.04659375791433913,
+      "mermaid": null
+    },
+    {
+      "type": "block",
+      "pelers": 0.1795165571428827,
+      "reference": 0.12415901970446168,
+      "mermaid": 81.70000000298023
+    },
+    {
+      "type": "c4",
+      "pelers": 0.056328808558556286,
+      "reference": 0.056089062780261115,
+      "mermaid": 16.600000001490116
+    },
+    {
+      "type": "c4",
+      "pelers": 0.02105016077440584,
+      "reference": 0.02081173128120125,
+      "mermaid": 13.049999997019768
+    },
+    {
+      "type": "c4",
+      "pelers": 0.0496685813492034,
+      "reference": 0.04230780372250444,
+      "mermaid": 12.649999998509884
+    },
+    {
+      "type": "c4",
+      "pelers": 0.041558722591360134,
+      "reference": 0.0294321317647101,
+      "mermaid": 14.599999994039536
+    },
+    {
+      "type": "c4",
+      "pelers": 0.01645632236842223,
+      "reference": 0.015433443209878061,
+      "mermaid": 10.266666665673256
+    },
+    {
+      "type": "c4",
+      "pelers": 0.09381317228463841,
+      "reference": 0.08598623024053208,
+      "mermaid": 18.25
+    },
+    {
+      "type": "c4",
+      "pelers": 0.06139367892157287,
+      "reference": 0.05775731639722757,
+      "mermaid": 16.700000002980232
+    },
+    {
+      "type": "c4",
+      "pelers": 0.0413997483443767,
+      "reference": 0.046308029629626955,
+      "mermaid": 11.533333331346512
+    },
+    {
+      "type": "c4",
+      "pelers": 0.1945164418604352,
+      "reference": 0.17944336428575167,
+      "mermaid": 45.599999994039536
+    },
+    {
+      "type": "c4",
+      "pelers": 0.06906295580110008,
+      "reference": 0.06878625274725642,
+      "mermaid": 25.700000002980232
+    },
+    {
+      "type": "c4",
+      "pelers": 0.13978288826817523,
+      "reference": 0.12227535609755007,
+      "mermaid": 24.049999997019768
+    },
+    {
+      "type": "c4",
+      "pelers": 0.152196557575768,
+      "reference": 0.16366214935061923,
+      "mermaid": 40
+    },
+    {
+      "type": "c4",
+      "pelers": 0.17961622857141524,
+      "reference": 0.18875965413533954,
+      "mermaid": 25.700000002980232
+    },
+    {
+      "type": "c4",
+      "pelers": 0.17746995744683056,
+      "reference": 0.19729214960631986,
+      "mermaid": 42
+    },
+    {
+      "type": "c4",
+      "pelers": 0.2538150101010082,
+      "reference": 0.1812605107914076,
+      "mermaid": 43.900000005960464
+    },
+    {
+      "type": "c4",
+      "pelers": 0.11081680973448438,
+      "reference": 0.10582931223629363,
+      "mermaid": 15.800000004470348
+    },
+    {
+      "type": "c4",
+      "pelers": 0.04037621774193887,
+      "reference": 0.0361834196816169,
+      "mermaid": 13.950000002980232
+    },
+    {
+      "type": "c4",
+      "pelers": 0.04046813570274611,
+      "reference": 0.03571534142856503,
+      "mermaid": 14.049999997019768
+    },
+    {
+      "type": "c4",
+      "pelers": 0.05454615250544398,
+      "reference": 0.044279998230085445,
+      "mermaid": 19.399999998509884
+    },
+    {
+      "type": "c4",
+      "pelers": 0.17372022916667143,
+      "reference": 0.19879596031745358,
+      "mermaid": 31.899999991059303
+    },
+    {
+      "type": "class",
+      "pelers": 0.07284639244187209,
+      "reference": 0.10334754132231902,
+      "mermaid": 52.5
+    },
+    {
+      "type": "class",
+      "pelers": 0.03011163417568624,
+      "reference": 0.0322410824742245,
+      "mermaid": 34.20000000298023
+    },
+    {
+      "type": "class",
+      "pelers": 0.047370179924242126,
+      "reference": 0.05435475652172855,
+      "mermaid": 48.900000005960464
+    },
+    {
+      "type": "class",
+      "pelers": 0.04064582305194823,
+      "reference": 0.05191448547717844,
+      "mermaid": 37.70000000298023
+    },
+    {
+      "type": "class",
+      "pelers": 0.00656895901208587,
+      "reference": 0.007128668092386905,
+      "mermaid": 19.649999998509884
+    },
+    {
+      "type": "class",
+      "pelers": 0.006451066821464863,
+      "reference": 0.006578491449617516,
+      "mermaid": 19.399999998509884
+    },
+    {
+      "type": "class",
+      "pelers": 0.006290663144653355,
+      "reference": 0.007205229106627828,
+      "mermaid": 19.600000001490116
+    },
+    {
+      "type": "class",
+      "pelers": 0.15964773248408026,
+      "reference": 0.24511877450983294,
+      "mermaid": null
+    },
+    {
+      "type": "class",
+      "pelers": 0.02581836945304065,
+      "reference": 0.03319101989389995,
+      "mermaid": 33.3999999910593
+    },
+    {
+      "type": "class",
+      "pelers": 0.030430649635037495,
+      "reference": 0.05204593970894675,
+      "mermaid": 43.20000000298023
+    },
+    {
+      "type": "class",
+      "pelers": 0.1637629542483707,
+      "reference": 0.12715873232324762,
+      "mermaid": 70.40000000596046
+    },
+    {
+      "type": "class",
+      "pelers": 0.07332239002931612,
+      "reference": 0.05486171115973429,
+      "mermaid": 39.400000005960464
+    },
+    {
+      "type": "class",
+      "pelers": 0.14842473372781564,
+      "reference": 0.13104921874999795,
+      "mermaid": 59.5
+    },
+    {
+      "type": "class",
+      "pelers": 0.11051640088106726,
+      "reference": 0.11423090867579651,
+      "mermaid": 82.79999999701977
+    },
+    {
+      "type": "class",
+      "pelers": 0.07791923676012066,
+      "reference": 0.0626288299999942,
+      "mermaid": 42
+    },
+    {
+      "type": "class",
+      "pelers": 0.06899663636363647,
+      "reference": 0.06980832869080877,
+      "mermaid": null
+    },
+    {
+      "type": "class",
+      "pelers": 0.13959094444447448,
+      "reference": 0.09935232539681324,
+      "mermaid": 66.09999999403954
+    },
+    {
+      "type": "class",
+      "pelers": 0.07003329888266815,
+      "reference": 0.06317772727273066,
+      "mermaid": 56.900000005960464
+    },
+    {
+      "type": "class",
+      "pelers": 0.11081562831857375,
+      "reference": 0.07841184639499568,
+      "mermaid": null
+    },
+    {
+      "type": "class",
+      "pelers": 0.011029340538157906,
+      "reference": 0.008857419411973448,
+      "mermaid": 20.850000001490116
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.06314916414141242,
+      "reference": 0.056709487528334025,
+      "mermaid": 7.125
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.0600711079136727,
+      "reference": 0.05403299999999933,
+      "mermaid": 7.974999997764826
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.12132512560387165,
+      "reference": 0.1564571750000141,
+      "mermaid": 9.966666668653488
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.07031758707865704,
+      "reference": 0.08464699999999661,
+      "mermaid": 7.274999998509884
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.10871208695651781,
+      "reference": 0.11231234977579092,
+      "mermaid": 12.433333332339922
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.11435446575342212,
+      "reference": 0.1492021071428445,
+      "mermaid": 8.666666666666666
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.12200682439022163,
+      "reference": 0.10257836065576441,
+      "mermaid": 8.76666667064031
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.10947437991266008,
+      "reference": 0.111699843750005,
+      "mermaid": 8.633333335320154
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.11054987224669063,
+      "reference": 0.08368172575251949,
+      "mermaid": 9.133333330353102
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.12990828497409054,
+      "reference": 0.13206020526317605,
+      "mermaid": 9.766666665673256
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.08000388178915252,
+      "reference": 0.07022537078649221,
+      "mermaid": 8
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.08795226923078323,
+      "reference": 0.07988679872205728,
+      "mermaid": 8.533333331346512
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.10291098765434828,
+      "reference": 0.09845139370077587,
+      "mermaid": 8.799999997019768
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.1089795521738858,
+      "reference": 0.10185884146341141,
+      "mermaid": 8.733333334326744
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.10640519915256645,
+      "reference": 0.1005451967871358,
+      "mermaid": 9.200000002980232
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.08405294295301936,
+      "reference": 0.06716909651476304,
+      "mermaid": 8.350000001490116
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.07914685443038368,
+      "reference": 0.061068148780493464,
+      "mermaid": 7.849999997764826
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.09001939208628885,
+      "reference": 0.07248666956523042,
+      "mermaid": 8.074999999254942
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.08929182500001584,
+      "reference": 0.09755635019458589,
+      "mermaid": 8.40000000099341
+    },
+    {
+      "type": "cynefin",
+      "pelers": 0.05922573995272146,
+      "reference": 0.06745329380052345,
+      "mermaid": 7.050000000745058
+    },
+    {
+      "type": "er",
+      "pelers": 0.15533513043472408,
+      "reference": 0.26042345833335884,
+      "mermaid": 87.79999999701977
+    },
+    {
+      "type": "er",
+      "pelers": 0.005877322990125567,
+      "reference": 0.007456184014311674,
+      "mermaid": 26
+    },
+    {
+      "type": "er",
+      "pelers": 0.03357409261744829,
+      "reference": 0.0341928346994687,
+      "mermaid": 33.70000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.03214963671374129,
+      "reference": 0.034121980900399126,
+      "mermaid": 32.70000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.04232010998307233,
+      "reference": 0.04133760661157598,
+      "mermaid": 32.6000000089407
+    },
+    {
+      "type": "er",
+      "pelers": 0.08987713620072067,
+      "reference": 0.09227729779414563,
+      "mermaid": 53.70000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.04481129928315301,
+      "reference": 0.06915064917128656,
+      "mermaid": 33
+    },
+    {
+      "type": "er",
+      "pelers": 0.08438849831652602,
+      "reference": 0.09660607335904053,
+      "mermaid": 50.20000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.13599404347824812,
+      "reference": 0.1340228609625875,
+      "mermaid": 78
+    },
+    {
+      "type": "er",
+      "pelers": 0.14014693296082933,
+      "reference": 0.10376923651452837,
+      "mermaid": 90.09999999403954
+    },
+    {
+      "type": "er",
+      "pelers": 0.16159052903221305,
+      "reference": 0.15163934545460947,
+      "mermaid": 66.29999999701977
+    },
+    {
+      "type": "er",
+      "pelers": 0.013111024646043735,
+      "reference": 0.013096758638743582,
+      "mermaid": 28.899999991059303
+    },
+    {
+      "type": "er",
+      "pelers": 0.05898320283020714,
+      "reference": 0.05694836446471647,
+      "mermaid": 47.29999999701977
+    },
+    {
+      "type": "er",
+      "pelers": 0.08542972108840999,
+      "reference": 0.08232637171051083,
+      "mermaid": 54.6000000089407
+    },
+    {
+      "type": "er",
+      "pelers": 0.1301437668393606,
+      "reference": 0.12344504433501687,
+      "mermaid": 65.20000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.07221249855906496,
+      "reference": 0.07572170090633008,
+      "mermaid": 42.20000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.04843710831722143,
+      "reference": 0.053838339784953705,
+      "mermaid": 45.70000000298023
+    },
+    {
+      "type": "er",
+      "pelers": 0.007681866973889248,
+      "reference": 0.008250060706037845,
+      "mermaid": 21.850000001490116
+    },
+    {
+      "type": "er",
+      "pelers": 0.03898760436136838,
+      "reference": 0.05467046288209515,
+      "mermaid": 38
+    },
+    {
+      "type": "er",
+      "pelers": 0.0823270888157774,
+      "reference": 0.08049583922828499,
+      "mermaid": 55
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.04600659926470197,
+      "reference": 0.0587514765258521,
+      "mermaid": 11.433333332339922
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.037936593323228074,
+      "reference": 0.0635881649746059,
+      "mermaid": 14.5
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.06872469505493767,
+      "reference": 0.14706655428570228,
+      "mermaid": 10.066666667660078
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.060264816867462524,
+      "reference": 0.06614601322754333,
+      "mermaid": 10.166666666666666
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.09569950381682463,
+      "reference": 0.14484500578031648,
+      "mermaid": 13.300000004470348
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.06625727777778621,
+      "reference": 0.10978454385966822,
+      "mermaid": 11.966666663686434
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.048290416988412466,
+      "reference": 0.06356650000000207,
+      "mermaid": 8.466666668653488
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.04247341765705413,
+      "reference": 0.057788210161634955,
+      "mermaid": 9.200000002980232
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.04206868739494909,
+      "reference": 0.056747965986392715,
+      "mermaid": 8.799999997019768
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.10188453658533612,
+      "reference": 0.12733161421318367,
+      "mermaid": 14.600000001490116
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.05911207092196866,
+      "reference": 0.08353390666670749,
+      "mermaid": 9.433333332339922
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.08852927112677438,
+      "reference": 0.11089302654869018,
+      "mermaid": 12.849999994039536
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.033041047556130486,
+      "reference": 0.04523079746836358,
+      "mermaid": 7.549999997019768
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.04524957142856813,
+      "reference": 0.05872096955503988,
+      "mermaid": 7.375
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.08528084353737646,
+      "reference": 0.10876240869566454,
+      "mermaid": 11.766666665673256
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.06413664615385455,
+      "reference": 0.08986273476700415,
+      "mermaid": 10.90000000099341
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.01676331836461519,
+      "reference": 0.021849152838427973,
+      "mermaid": 5.840000000596047
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.0775685417956486,
+      "reference": 0.1183147735848835,
+      "mermaid": 13.850000001490116
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.05051686868687146,
+      "reference": 0.06957460555555978,
+      "mermaid": 11.166666666666666
+    },
+    {
+      "type": "eventmodeling",
+      "pelers": 0.047375964015152545,
+      "reference": 0.0603883309178881,
+      "mermaid": 7.300000000745058
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.05651965990991894,
+      "reference": 0.1059622330508704,
+      "mermaid": 32.3999999910593
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.06267408020049654,
+      "reference": 0.07950101904760462,
+      "mermaid": 38.5
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.05108450204083501,
+      "reference": 0.06426170512821931,
+      "mermaid": 36.29999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.6840206486486824,
+      "reference": 1.4982768235298436,
+      "mermaid": 100.30000001192093
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.8814493448278818,
+      "reference": 2.3591520909090336,
+      "mermaid": 110
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.4238435932204731,
+      "reference": 1.4043341666668614,
+      "mermaid": 106.59999999403954
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.39550693749993115,
+      "reference": 0.789300812500187,
+      "mermaid": 103.79999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 2.1289729999989504,
+      "reference": 5.527971800000524,
+      "mermaid": 119.20000000298023
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.553774586956538,
+      "reference": 1.230947809523925,
+      "mermaid": 95.8999999910593
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.6637813421054345,
+      "reference": 1.332133368421254,
+      "mermaid": 96.29999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.5241116041667434,
+      "reference": 0.9277959285713483,
+      "mermaid": 104.70000000298023
+    },
+    {
+      "type": "flowchart",
+      "pelers": 1.2387632380954787,
+      "reference": 2.7850153333323155,
+      "mermaid": 154.29999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 1.0905626086953462,
+      "reference": 2.131247249999433,
+      "mermaid": 168.59999999403954
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.03837319018405936,
+      "reference": 0.06617398148147105,
+      "mermaid": 35.5
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.03278160943642996,
+      "reference": 0.0683081498637536,
+      "mermaid": 40.29999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.04711508851225085,
+      "reference": 0.05726748283750546,
+      "mermaid": 33
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.04067853170731465,
+      "reference": 0.054433493478269236,
+      "mermaid": 33.900000005960464
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.04858944271846552,
+      "reference": 0.06012877884614472,
+      "mermaid": null
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.10560321940928462,
+      "reference": 0.14641592982461696,
+      "mermaid": 55.29999999701977
+    },
+    {
+      "type": "flowchart",
+      "pelers": 0.023537416745070105,
+      "reference": 0.0306333170134799,
+      "mermaid": 28.899999991059303
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.025794073195870577,
+      "reference": 0.0325757330729175,
+      "mermaid": 9.466666668653488
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.019404803723812317,
+      "reference": 0.024614916338585202,
+      "mermaid": 9.09999999900659
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.02107576074136249,
+      "reference": 0.028753786206903772,
+      "mermaid": 10.5
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.06073199271843108,
+      "reference": 0.11583658796290466,
+      "mermaid": 48.599999994039536
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.012289225552828882,
+      "reference": 0.020685197684030505,
+      "mermaid": 7.474999997764826
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.009447067623728328,
+      "reference": 0.012404777281748438,
+      "mermaid": 7.074999999254942
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.01908599618320906,
+      "reference": 0.030150080722892034,
+      "mermaid": 13.200000002980232
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.0732620497076222,
+      "reference": 0.09211531617647244,
+      "mermaid": 18.350000001490116
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.0164549500000009,
+      "reference": 0.0207336550580478,
+      "mermaid": 8.800000001986822
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.025600620266115637,
+      "reference": 0.03250445844155778,
+      "mermaid": 12.366666669646898
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.014109658577872816,
+      "reference": 0.020557819227607663,
+      "mermaid": 8.224999997764826
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.00966389215307236,
+      "reference": 0.014046323595506734,
+      "mermaid": 7.125
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.016949782520319652,
+      "reference": 0.022230569777777417,
+      "mermaid": 9.166666666666666
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.022391150402857347,
+      "reference": 0.027693545957920885,
+      "mermaid": 9.333333333333334
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.09175476556779874,
+      "reference": 0.10041798393573541,
+      "mermaid": null
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.03621236034731317,
+      "reference": 0.05580518262804759,
+      "mermaid": null
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.07513620420418507,
+      "reference": 0.08635943793106607,
+      "mermaid": null
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.047305022684313906,
+      "reference": 0.05525302428256327,
+      "mermaid": 23.350000001490116
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.0385023153846179,
+      "reference": 0.03463522576176903,
+      "mermaid": 10.866666669646898
+    },
+    {
+      "type": "gitGraph",
+      "pelers": 0.03182849109414761,
+      "reference": 0.053117529661009896,
+      "mermaid": 13.75
+    },
+    {
+      "type": "info",
+      "pelers": 0.010021662525051107,
+      "reference": 0.005250210625788908,
+      "mermaid": 4.25
+    },
+    {
+      "type": "info",
+      "pelers": 0.008969041965565926,
+      "reference": 0.008503735034015199,
+      "mermaid": 4.166666666666667
+    },
+    {
+      "type": "info",
+      "pelers": 0.00488752814698948,
+      "reference": 0.004563069355722086,
+      "mermaid": 4.166666666666667
+    },
+    {
+      "type": "info",
+      "pelers": 0.0058634577861180395,
+      "reference": 0.005181727046632555,
+      "mermaid": 4.114285713859966
+    },
+    {
+      "type": "info",
+      "pelers": 0.006512883042458272,
+      "reference": 0.0068429838533101426,
+      "mermaid": 4.283333333830039
+    },
+    {
+      "type": "info",
+      "pelers": 0.009189018375601021,
+      "reference": 0.007278274235804836,
+      "mermaid": 5.319999998807907
+    },
+    {
+      "type": "info",
+      "pelers": 0.010811813661912287,
+      "reference": 0.010835428942808048,
+      "mermaid": 7.074999999254942
+    },
+    {
+      "type": "info",
+      "pelers": 0.010969804738919326,
+      "reference": 0.010986242530756106,
+      "mermaid": 4.799999999503295
+    },
+    {
+      "type": "info",
+      "pelers": 0.009913363600314126,
+      "reference": 0.014562966802565492,
+      "mermaid": 8.433333332339922
+    },
+    {
+      "type": "info",
+      "pelers": 0.0078114790755752644,
+      "reference": 0.0065771717517079135,
+      "mermaid": 4.400000000993411
+    },
+    {
+      "type": "info",
+      "pelers": 0.009952907643310027,
+      "reference": 0.008656655124657624,
+      "mermaid": 4.057142857994352
+    },
+    {
+      "type": "info",
+      "pelers": 0.010096085183688078,
+      "reference": 0.009693225581396792,
+      "mermaid": 4.071428571428571
+    },
+    {
+      "type": "info",
+      "pelers": 0.0054820857268166575,
+      "reference": 0.004628430951498817,
+      "mermaid": 3.9714285731315613
+    },
+    {
+      "type": "info",
+      "pelers": 0.012428060139170787,
+      "reference": 0.012751185619586037,
+      "mermaid": 4.583333333333333
+    },
+    {
+      "type": "info",
+      "pelers": 0.00549020970575217,
+      "reference": 0.00544104809575814,
+      "mermaid": 4.5
+    },
+    {
+      "type": "info",
+      "pelers": 0.009220007743362475,
+      "reference": 0.008198070491804382,
+      "mermaid": 8.074999999254942
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.041690144758737765,
+      "reference": 0.037188176820199086,
+      "mermaid": 11.133333335320154
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.040685315447153404,
+      "reference": 0.053548276231275685,
+      "mermaid": 12.850000001490116
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.0349657067039028,
+      "reference": 0.029106952270095285,
+      "mermaid": 10.90000000099341
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.018370943423957203,
+      "reference": 0.017307357093434908,
+      "mermaid": 7.599999997764826
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.08616608591068975,
+      "reference": 0.09263248518518931,
+      "mermaid": 17.600000001490116
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.02880404147466088,
+      "reference": 0.034715289875163265,
+      "mermaid": 8.766666665673256
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.0702581235955324,
+      "reference": 0.06485189405684745,
+      "mermaid": 14.75
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.08738102787458224,
+      "reference": 0.08203252131147043,
+      "mermaid": 14.650000005960464
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.02999391856287539,
+      "reference": 0.027045829189167283,
+      "mermaid": 18.30000000447035
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.13769485714274796,
+      "reference": 0.07557930211481016,
+      "mermaid": 20.849999994039536
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.04229178885135617,
+      "reference": 0.03553715198863343,
+      "mermaid": 16.200000002980232
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.0618811407407464,
+      "reference": 0.08238231250001454,
+      "mermaid": 11.566666667660078
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.04095701636661167,
+      "reference": 0.03633229898406951,
+      "mermaid": 9.366666669646898
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.0452309041591378,
+      "reference": 0.03510573632538555,
+      "mermaid": 8.766666665673256
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.06776470460706241,
+      "reference": 0.058028791666637755,
+      "mermaid": 16.600000001490116
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.04304662822720093,
+      "reference": 0.04635673333331296,
+      "mermaid": 10.166666666666666
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.05349624999999079,
+      "reference": 0.05796307407406318,
+      "mermaid": 14.450000002980232
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.03302976221926978,
+      "reference": 0.03297488142295136,
+      "mermaid": 13.350000001490116
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.03473829166662957,
+      "reference": 0.03377924426450135,
+      "mermaid": 8.90000000099341
+    },
+    {
+      "type": "ishikawa",
+      "pelers": 0.04374693881122353,
+      "reference": 0.050057107999979054,
+      "mermaid": 12.366666664679846
+    },
+    {
+      "type": "journey",
+      "pelers": 0.03671721292217057,
+      "reference": 0.03482746378829785,
+      "mermaid": 11.633333330353102
+    },
+    {
+      "type": "journey",
+      "pelers": 0.01641568483256072,
+      "reference": 0.01665233688415202,
+      "mermaid": 8.90000000099341
+    },
+    {
+      "type": "journey",
+      "pelers": 0.07983753184710442,
+      "reference": 0.07095781869689338,
+      "mermaid": 17.200000002980232
+    },
+    {
+      "type": "journey",
+      "pelers": 0.051693033057850425,
+      "reference": 0.05356570021413881,
+      "mermaid": 12.066666667660078
+    },
+    {
+      "type": "journey",
+      "pelers": 0.0533679083155628,
+      "reference": 0.04868885019452335,
+      "mermaid": 17.75
+    },
+    {
+      "type": "journey",
+      "pelers": 0.04535376086958264,
+      "reference": 0.02441890039060013,
+      "mermaid": 10.833333333333334
+    },
+    {
+      "type": "journey",
+      "pelers": 0.07738383024690937,
+      "reference": 0.06589127894740637,
+      "mermaid": 13.049999997019768
+    },
+    {
+      "type": "journey",
+      "pelers": 0.04729252741021801,
+      "reference": 0.03923471786833017,
+      "mermaid": 11.26666667064031
+    },
+    {
+      "type": "journey",
+      "pelers": 0.015898848061018503,
+      "reference": 0.015112045317222829,
+      "mermaid": 8.125
+    },
+    {
+      "type": "journey",
+      "pelers": 0.02070910678808797,
+      "reference": 0.017134402739741258,
+      "mermaid": 7.774999998509884
+    },
+    {
+      "type": "journey",
+      "pelers": 0.09967058964142765,
+      "reference": 0.1034230495867279,
+      "mermaid": 17.25
+    },
+    {
+      "type": "journey",
+      "pelers": 0.06750114824796394,
+      "reference": 0.06958253888887056,
+      "mermaid": 12.949999995529652
+    },
+    {
+      "type": "journey",
+      "pelers": 0.04826791698839444,
+      "reference": 0.04023179421222872,
+      "mermaid": 10.166666666666666
+    },
+    {
+      "type": "journey",
+      "pelers": 0.043657904013992985,
+      "reference": 0.038103694063958624,
+      "mermaid": 12.033333331346512
+    },
+    {
+      "type": "journey",
+      "pelers": 0.04497950179855174,
+      "reference": 0.04846185077520542,
+      "mermaid": 11.799999997019768
+    },
+    {
+      "type": "journey",
+      "pelers": 0.004850603685742308,
+      "reference": 0.004334036921478535,
+      "mermaid": 5.4
+    },
+    {
+      "type": "journey",
+      "pelers": 0.04084182055465737,
+      "reference": 0.03584607306593978,
+      "mermaid": 11.5
+    },
+    {
+      "type": "journey",
+      "pelers": 0.07703989230767967,
+      "reference": 0.07053727605634263,
+      "mermaid": 14.150000005960464
+    },
+    {
+      "type": "journey",
+      "pelers": 0.02660627127659106,
+      "reference": 0.029904391148310592,
+      "mermaid": 8.350000001490116
+    },
+    {
+      "type": "journey",
+      "pelers": 0.0399187304625125,
+      "reference": 0.038726521671820655,
+      "mermaid": 11.533333336313566
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.06717150670236872,
+      "reference": 0.10360185537186128,
+      "mermaid": 36.6000000089407
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.09338068656713282,
+      "reference": 0.0906590652173137,
+      "mermaid": 83
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.2320385833332289,
+      "reference": 0.1410079269663083,
+      "mermaid": 94.40000000596046
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.011790886845831346,
+      "reference": 0.009842060606059681,
+      "mermaid": 10.566666662693024
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.02636349736565667,
+      "reference": 0.020186535108972063,
+      "mermaid": 28.900000005960464
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.021865529720286814,
+      "reference": 0.018215747268757534,
+      "mermaid": 20.149999998509884
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.014245799999996527,
+      "reference": 0.010389797673447988,
+      "mermaid": 17.19999999552965
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.011930618320603634,
+      "reference": 0.00840703496973612,
+      "mermaid": 10.299999997019768
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.02553838815116628,
+      "reference": 0.02409747976876808,
+      "mermaid": 25.700000002980232
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.02130060817717017,
+      "reference": 0.019742331491711042,
+      "mermaid": null
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.03766873644575293,
+      "reference": 0.03238237516171863,
+      "mermaid": 38.79999999701977
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.005273916684244315,
+      "reference": 0.004060793730715775,
+      "mermaid": 7.774999998509884
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.0766304862385207,
+      "reference": 0.07257122318834013,
+      "mermaid": 58
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.055088986784139225,
+      "reference": 0.05791528935184976,
+      "mermaid": 52.099999994039536
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.058797746478905684,
+      "reference": 0.029122302677541727,
+      "mermaid": 30.25
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.05675641950115597,
+      "reference": 0.0466879533581851,
+      "mermaid": 30.5
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.03886621894411777,
+      "reference": 0.03736074029849391,
+      "mermaid": 14
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.029753128418535012,
+      "reference": 0.03414919099590702,
+      "mermaid": 22.5
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.020564208059209034,
+      "reference": 0.010102628282826357,
+      "mermaid": 8.966666663686434
+    },
+    {
+      "type": "kanban",
+      "pelers": 0.026178043979068935,
+      "reference": 0.02404392403847081,
+      "mermaid": 59.400000005960464
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.01410879740407023,
+      "reference": 0.012971605290462533,
+      "mermaid": 22.5
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.01039643035342398,
+      "reference": 0.009870496644294059,
+      "mermaid": 17.599999994039536
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.012250769720720797,
+      "reference": 0.011300868052415636,
+      "mermaid": 18.5
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.01761325422535457,
+      "reference": 0.019867407466254233,
+      "mermaid": 19.5
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.00535479545941261,
+      "reference": 0.0056064203253824016,
+      "mermaid": 5.240000000596046
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.017849901498923227,
+      "reference": 0.016780326174491635,
+      "mermaid": 27.700000002980232
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.06380209183674995,
+      "reference": 0.061129012224941874,
+      "mermaid": 66.5
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.07849629780561897,
+      "reference": 0.07659053822631509,
+      "mermaid": 63
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.09682333204635908,
+      "reference": 0.08155415635182468,
+      "mermaid": 73.70000000298023
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.07978548407641753,
+      "reference": 0.10937318340600692,
+      "mermaid": 85.70000000298023
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.08073118709679318,
+      "reference": 0.07241811849714548,
+      "mermaid": 59.900000005960464
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.06099777317076365,
+      "reference": 0.0680760217390976,
+      "mermaid": 64.30000001192093
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.07650714373083953,
+      "reference": 0.07441212500002405,
+      "mermaid": 71.70000000298023
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.035417992917851485,
+      "reference": 0.022568792605968283,
+      "mermaid": 30.5
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.08243570394733979,
+      "reference": 0.055342745575209074,
+      "mermaid": 57.70000000298023
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.03879789922480262,
+      "reference": 0.032330346253250236,
+      "mermaid": 49.29999999701977
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.03770935993978413,
+      "reference": 0.022836655109476453,
+      "mermaid": 42.19999998807907
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.1082561853447636,
+      "reference": 0.1973495275590213,
+      "mermaid": 101.70000000298023
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.0478547323135887,
+      "reference": 0.060899812652043424,
+      "mermaid": 48.400000005960464
+    },
+    {
+      "type": "mindmap",
+      "pelers": 0.14464557225441807,
+      "reference": 0.20018639682541742,
+      "mermaid": 75.19999998807907
+    },
+    {
+      "type": "packet",
+      "pelers": 0.036775663235312096,
+      "reference": 0.04107061083744355,
+      "mermaid": 5.8799999982118605
+    },
+    {
+      "type": "packet",
+      "pelers": 0.03628552539909565,
+      "reference": 0.047647258555133715,
+      "mermaid": 6.375
+    },
+    {
+      "type": "packet",
+      "pelers": 0.01099594547054419,
+      "reference": 0.015056101143892662,
+      "mermaid": 5.040000000596047
+    },
+    {
+      "type": "packet",
+      "pelers": 0.012422885742684239,
+      "reference": 0.017876375982840097,
+      "mermaid": 5.340000000596047
+    },
+    {
+      "type": "packet",
+      "pelers": 0.031850648407674556,
+      "reference": 0.04473342933807204,
+      "mermaid": 6.2
+    },
+    {
+      "type": "packet",
+      "pelers": 0.06547911780106491,
+      "reference": 0.08948550357142397,
+      "mermaid": 7.675000000745058
+    },
+    {
+      "type": "packet",
+      "pelers": 0.03835084073507237,
+      "reference": 0.0394681608832749,
+      "mermaid": 6.079999998211861
+    },
+    {
+      "type": "packet",
+      "pelers": 0.058315284382283256,
+      "reference": 0.0977656225681102,
+      "mermaid": 7.625
+    },
+    {
+      "type": "packet",
+      "pelers": 0.04055691247976142,
+      "reference": 0.042893910806158425,
+      "mermaid": 7.575000002980232
+    },
+    {
+      "type": "packet",
+      "pelers": 0.060694868932011904,
+      "reference": 0.07129943874647027,
+      "mermaid": null
+    },
+    {
+      "type": "packet",
+      "pelers": 0.09366716417907946,
+      "reference": 0.1065078893616954,
+      "mermaid": null
+    },
+    {
+      "type": "packet",
+      "pelers": 0.0577567921477955,
+      "reference": 0.07142994285710821,
+      "mermaid": 7.699999999254942
+    },
+    {
+      "type": "packet",
+      "pelers": 0.051939425311177866,
+      "reference": 0.07167684813753908,
+      "mermaid": 7.774999998509884
+    },
+    {
+      "type": "packet",
+      "pelers": 0.042718503412974555,
+      "reference": 0.05782582448032151,
+      "mermaid": 6.699999999254942
+    },
+    {
+      "type": "packet",
+      "pelers": 0.029754066587396422,
+      "reference": 0.03913034115805391,
+      "mermaid": 6.2
+    },
+    {
+      "type": "packet",
+      "pelers": 0.02765968915930665,
+      "reference": 0.04079170962481313,
+      "mermaid": 5.940000000596046
+    },
+    {
+      "type": "packet",
+      "pelers": 0.01064879088585219,
+      "reference": 0.014520379210218304,
+      "mermaid": 5
+    },
+    {
+      "type": "packet",
+      "pelers": 0.06447947164944952,
+      "reference": 0.04485774910395404,
+      "mermaid": 6.849999997764826
+    },
+    {
+      "type": "packet",
+      "pelers": 0.019272299691831488,
+      "reference": 0.0312182322097201,
+      "mermaid": 7
+    },
+    {
+      "type": "packet",
+      "pelers": 0.05659711312212111,
+      "reference": 0.08781104210525212,
+      "mermaid": 17.899999998509884
+    },
+    {
+      "type": "pie",
+      "pelers": 0.32528463636363203,
+      "reference": 0.5595459333329927,
+      "mermaid": 22.19999999552965
+    },
+    {
+      "type": "pie",
+      "pelers": 0.17570841958025027,
+      "reference": 0.4183806666667806,
+      "mermaid": 11.533333336313566
+    },
+    {
+      "type": "pie",
+      "pelers": 0.0389777492211658,
+      "reference": 0.05047274193548806,
+      "mermaid": 6.400000002235174
+    },
+    {
+      "type": "pie",
+      "pelers": 0.034376928571433825,
+      "reference": 0.03938417165355911,
+      "mermaid": 5.979999998211861
+    },
+    {
+      "type": "pie",
+      "pelers": 0.036753663729784655,
+      "reference": 0.05224929227561025,
+      "mermaid": 5.8599999994039536
+    },
+    {
+      "type": "pie",
+      "pelers": 0.04465248035713947,
+      "reference": 0.06436873264781351,
+      "mermaid": 6.375
+    },
+    {
+      "type": "pie",
+      "pelers": 0.03906847812500018,
+      "reference": 0.05517784140970494,
+      "mermaid": 7.225000001490116
+    },
+    {
+      "type": "pie",
+      "pelers": 0.052042567567537265,
+      "reference": 0.07433789317506138,
+      "mermaid": 6.259999999403954
+    },
+    {
+      "type": "pie",
+      "pelers": 0.029998424460461512,
+      "reference": 0.04153560631226035,
+      "mermaid": 5.760000002384186
+    },
+    {
+      "type": "pie",
+      "pelers": 0.12166539805820348,
+      "reference": 0.1794986857142898,
+      "mermaid": 8.933333337306976
+    },
+    {
+      "type": "pie",
+      "pelers": 0.022152061116027064,
+      "reference": 0.027899122630992756,
+      "mermaid": 5.67999999821186
+    },
+    {
+      "type": "pie",
+      "pelers": 0.03698225443787183,
+      "reference": 0.0510891142857204,
+      "mermaid": 6.1400000005960464
+    },
+    {
+      "type": "pie",
+      "pelers": 0.026194394764390467,
+      "reference": 0.04164613144755629,
+      "mermaid": 6.675000000745058
+    },
+    {
+      "type": "pie",
+      "pelers": 0.04396774692439207,
+      "reference": 0.05383004477609501,
+      "mermaid": 6.274999998509884
+    },
+    {
+      "type": "pie",
+      "pelers": 0.041854163879568744,
+      "reference": 0.06266684962403295,
+      "mermaid": 7.724999997764826
+    },
+    {
+      "type": "pie",
+      "pelers": 0.015075213984323715,
+      "reference": 0.01843706342183221,
+      "mermaid": 6.800000000745058
+    },
+    {
+      "type": "pie",
+      "pelers": 0.03752351424287142,
+      "reference": 0.0520076908713281,
+      "mermaid": 6.575000002980232
+    },
+    {
+      "type": "pie",
+      "pelers": 0.04880332163742473,
+      "reference": 0.0630394105793778,
+      "mermaid": 7.25
+    },
+    {
+      "type": "pie",
+      "pelers": 0.05899632311315454,
+      "reference": 0.06927298060944045,
+      "mermaid": 6.675000000745058
+    },
+    {
+      "type": "pie",
+      "pelers": 0.04148910447761492,
+      "reference": 0.06568783727029016,
+      "mermaid": 7.800000000745058
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.07863906603780613,
+      "reference": 0.08344819333326692,
+      "mermaid": 14
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.014755873156335085,
+      "reference": 0.015686228983689227,
+      "mermaid": 6.424999997019768
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.012338464726197942,
+      "reference": 0.01124803103913783,
+      "mermaid": 5.759999999403954
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.013390655597224412,
+      "reference": 0.010362605055950144,
+      "mermaid": 6.300000000745058
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.011374759326650916,
+      "reference": 0.009188063188834413,
+      "mermaid": 5.780000001192093
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.018276983187137354,
+      "reference": 0.016418175968488748,
+      "mermaid": 6.675000000745058
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.009619721046556378,
+      "reference": 0.01156795235892097,
+      "mermaid": 6.019999998807907
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.014604439252346132,
+      "reference": 0.012700411376336172,
+      "mermaid": 6.240000000596046
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.01423288275468241,
+      "reference": 0.01474211255156569,
+      "mermaid": 6.25
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.056887222727329406,
+      "reference": 0.0633564886075586,
+      "mermaid": 8.5
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.01401567264572462,
+      "reference": 0.011174097408403636,
+      "mermaid": 6.950000002980232
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.03028677239708662,
+      "reference": 0.03422973597812894,
+      "mermaid": 8.799999997019768
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.04892772602740039,
+      "reference": 0.05111662040818578,
+      "mermaid": 14.850000001490116
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.05354555032120786,
+      "reference": 0.037200447251107945,
+      "mermaid": 9.333333333333334
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.04946586956517824,
+      "reference": 0.04916196856576829,
+      "mermaid": 11
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.06759647439350688,
+      "reference": 0.07570575830817512,
+      "mermaid": 11.59999999900659
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.053667525751086534,
+      "reference": 0.057386456818163754,
+      "mermaid": 11.466666668653488
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.06253681000001961,
+      "reference": 0.06156191154786715,
+      "mermaid": 12.899999998509884
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.08017565384617252,
+      "reference": 0.08028958012819669,
+      "mermaid": 13.75
+    },
+    {
+      "type": "quadrantChart",
+      "pelers": 0.07633334756095925,
+      "reference": 0.08942042142859594,
+      "mermaid": 16.19999999552965
+    },
+    {
+      "type": "radar",
+      "pelers": 0.03326265691488361,
+      "reference": 0.059052750000053084,
+      "mermaid": 9.033333331346512
+    },
+    {
+      "type": "radar",
+      "pelers": 0.031830683206117705,
+      "reference": 0.03176078680202603,
+      "mermaid": 9.366666664679846
+    },
+    {
+      "type": "radar",
+      "pelers": 0.032100052631592234,
+      "reference": 0.05029728915659247,
+      "mermaid": 10.633333335320154
+    },
+    {
+      "type": "radar",
+      "pelers": 0.015284798288517056,
+      "reference": 0.016973748811950892,
+      "mermaid": 7.025000002235174
+    },
+    {
+      "type": "radar",
+      "pelers": 0.017651493295695438,
+      "reference": 0.02644303911203744,
+      "mermaid": null
+    },
+    {
+      "type": "radar",
+      "pelers": 0.024093836381125215,
+      "reference": 0.03690208702064517,
+      "mermaid": 7.699999999254942
+    },
+    {
+      "type": "radar",
+      "pelers": 0.016358990189666568,
+      "reference": 0.025028226226217462,
+      "mermaid": 6.824999999254942
+    },
+    {
+      "type": "radar",
+      "pelers": 0.01933837509668149,
+      "reference": 0.02742321381578094,
+      "mermaid": 7.399999998509884
+    },
+    {
+      "type": "radar",
+      "pelers": 0.02264728894927733,
+      "reference": 0.028440871590911146,
+      "mermaid": 7.75
+    },
+    {
+      "type": "radar",
+      "pelers": 0.028530997719514548,
+      "reference": 0.02711694360088957,
+      "mermaid": 6.875
+    },
+    {
+      "type": "radar",
+      "pelers": 0.052367043933087366,
+      "reference": 0.07369921176475198,
+      "mermaid": 7.275000002235174
+    },
+    {
+      "type": "radar",
+      "pelers": 0.05795422222224631,
+      "reference": 0.07959991111115197,
+      "mermaid": 8.90000000099341
+    },
+    {
+      "type": "radar",
+      "pelers": 0.03474832222224601,
+      "reference": 0.05249501467506456,
+      "mermaid": 7.100000001490116
+    },
+    {
+      "type": "radar",
+      "pelers": 0.05368148497854911,
+      "reference": 0.06833078961754523,
+      "mermaid": 7.725000001490116
+    },
+    {
+      "type": "radar",
+      "pelers": 0.030571465770153825,
+      "reference": 0.04187640536013348,
+      "mermaid": 6.324999999254942
+    },
+    {
+      "type": "radar",
+      "pelers": 0.03199082736570961,
+      "reference": 0.043393384748728836,
+      "mermaid": 6.675000000745058
+    },
+    {
+      "type": "radar",
+      "pelers": 0.02975655172413185,
+      "reference": 0.055095662995593396,
+      "mermaid": 6.975000001490116
+    },
+    {
+      "type": "radar",
+      "pelers": 0.05257302935012378,
+      "reference": 0.06967213091920103,
+      "mermaid": 7
+    },
+    {
+      "type": "radar",
+      "pelers": 0.024473917808235848,
+      "reference": 0.037488163418282795,
+      "mermaid": 8.766666665673256
+    },
+    {
+      "type": "radar",
+      "pelers": 0.036415164483293586,
+      "reference": 0.05308885562633789,
+      "mermaid": 10.266666665673256
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.026187416753934024,
+      "reference": 0.03400632336955744,
+      "mermaid": 10.09999999900659
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.015562228233824527,
+      "reference": 0.017106402872786246,
+      "mermaid": 7.75
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.014881467857135466,
+      "reference": 0.020624438582025836,
+      "mermaid": 8.174999997019768
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.017102631326945894,
+      "reference": 0.028586879999975542,
+      "mermaid": 9.266666665673256
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.0152519634146479,
+      "reference": 0.025419874999979067,
+      "mermaid": 16.55000000447035
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.02203811101322083,
+      "reference": 0.04507023063063546,
+      "mermaid": 9.233333334326744
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.029958195209574278,
+      "reference": 0.03734300447759955,
+      "mermaid": 11.533333331346512
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.013528157467534942,
+      "reference": 0.0180486183261227,
+      "mermaid": 10.766666665673256
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.018854453996987836,
+      "reference": 0.027535660792941417,
+      "mermaid": null
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.010954350854138192,
+      "reference": 0.012491786320516757,
+      "mermaid": 7.25
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.037747450980389785,
+      "reference": 0.05331789339018334,
+      "mermaid": 12.09999999900659
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.029232123831793487,
+      "reference": 0.03978040540536839,
+      "mermaid": null
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.06466325581395933,
+      "reference": 0.09288924444440959,
+      "mermaid": 17.100000001490116
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.023690150568186116,
+      "reference": 0.038488521538450955,
+      "mermaid": 10.466666668653488
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.08517461224488017,
+      "reference": 0.11951400473922429,
+      "mermaid": 24.5
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.07469478805971666,
+      "reference": 0.10177282926830467,
+      "mermaid": 16.850000001490116
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.13605671739123468,
+      "reference": 0.15828181645568443,
+      "mermaid": 25.600000008940697
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.05711637899542991,
+      "reference": 0.08072589354837434,
+      "mermaid": 15.950000002980232
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.11383144090915183,
+      "reference": 0.18108293525171099,
+      "mermaid": 27
+    },
+    {
+      "type": "railroad",
+      "pelers": 0.06116501463416725,
+      "reference": 0.0800835207667605,
+      "mermaid": 12.950000002980232
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.006186903241777906,
+      "reference": 0.008612580778500077,
+      "mermaid": 21.049999997019768
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.006029993728892637,
+      "reference": 0.007647726689088445,
+      "mermaid": 21
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.1197179521530929,
+      "reference": 0.24112752884628627,
+      "mermaid": 57.900000005960464
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.07018171148459461,
+      "reference": 0.10218848979590005,
+      "mermaid": 43.3999999910593
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.14137353107338446,
+      "reference": 0.15764784276739507,
+      "mermaid": 60.900000005960464
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.25951764948447664,
+      "reference": 0.32797240259733607,
+      "mermaid": 71.6000000089407
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.1593092101910463,
+      "reference": 0.14751200588224866,
+      "mermaid": 74
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.12710238578667282,
+      "reference": 0.12744854314729623,
+      "mermaid": 57.20000000298023
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.1513937530120069,
+      "reference": 0.15724369182391237,
+      "mermaid": 64.79999999701977
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.15835941772148326,
+      "reference": 0.15671591249993072,
+      "mermaid": 71.5
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.09226042066425398,
+      "reference": 0.0926184592592849,
+      "mermaid": 51.79999999701977
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.09670554826253644,
+      "reference": 0.09399133082709006,
+      "mermaid": 55.099999994039536
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.0929819665427041,
+      "reference": 0.15438564197536858,
+      "mermaid": 55.20000000298023
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.12588728643206754,
+      "reference": 0.13050077083335054,
+      "mermaid": 78.1000000089407
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.09445824905656683,
+      "reference": 0.0956330954198075,
+      "mermaid": 53.599999994039536
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.05370398712450141,
+      "reference": 0.06558855759162463,
+      "mermaid": 46.19999998807907
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.13088430729158063,
+      "reference": 0.06823019346050037,
+      "mermaid": 53.599999994039536
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.09412836090233125,
+      "reference": 0.08613143298969783,
+      "mermaid": 53.29999999701977
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.2019740564517692,
+      "reference": 0.16035359615377204,
+      "mermaid": 77.1000000089407
+    },
+    {
+      "type": "requirement",
+      "pelers": 0.14756558823539628,
+      "reference": 0.10358953719005212,
+      "mermaid": 77.59999999403954
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.04630207222222385,
+      "reference": 0.049212212180755374,
+      "mermaid": null
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.021643850346040272,
+      "reference": 0.022648644927529316,
+      "mermaid": null
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.05418584415583531,
+      "reference": 0.09582615325671631,
+      "mermaid": 8.866666669646898
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.06056373849880124,
+      "reference": 0.09746383268482157,
+      "mermaid": 9.533333336313566
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.0745868660714699,
+      "reference": 0.08288474257427603,
+      "mermaid": null
+    },
+    {
+      "type": "sankey",
+      "pelers": 0.02076292697094377,
+      "reference": 0.022185042590932125,
+      "mermaid": 6.899999998509884
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.04927381889762377,
+      "reference": 0.027720554323719573,
+      "mermaid": 13.199999995529652
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.04764683619047338,
+      "reference": 0.05000927799998317,
+      "mermaid": 15.950000002980232
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.036070174351569416,
+      "reference": 0.04647319144982633,
+      "mermaid": 14.949999995529652
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.048388837524140305,
+      "reference": 0.03843149001535404,
+      "mermaid": 15.75
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.049143717092315964,
+      "reference": 0.041015311475408066,
+      "mermaid": 15.950000002980232
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.042739370940193436,
+      "reference": 0.03203912676055946,
+      "mermaid": 18
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.048590407767039226,
+      "reference": 0.036355988372105096,
+      "mermaid": 15.75
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.03480014881778603,
+      "reference": 0.02785142761691321,
+      "mermaid": 11.966666668653488
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.034090551771099833,
+      "reference": 0.028719569460382465,
+      "mermaid": 12.5
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.044917310592450896,
+      "reference": 0.03528857545839158,
+      "mermaid": 15.850000001490116
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.041256282178215566,
+      "reference": 0.029187898483061338,
+      "mermaid": 17.25
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.03586294555870308,
+      "reference": 0.029522831168810815,
+      "mermaid": 12.850000001490116
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.044828967741956785,
+      "reference": 0.029471138987060278,
+      "mermaid": 15.799999997019768
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.037299518628898125,
+      "reference": 0.029311622508800428,
+      "mermaid": 12.5
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.044540005338076234,
+      "reference": 0.030061370192295447,
+      "mermaid": 15.25
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.044016299295781464,
+      "reference": 0.030452459196114275,
+      "mermaid": 17.649999998509884
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.05481660393869384,
+      "reference": 0.03484306963786326,
+      "mermaid": 20.899999998509884
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.05582412500000698,
+      "reference": 0.046788719626171864,
+      "mermaid": 22.100000001490116
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.06680947733336749,
+      "reference": 0.038925356143051,
+      "mermaid": 19.850000001490116
+    },
+    {
+      "type": "sequence",
+      "pelers": 0.04114140131576661,
+      "reference": 0.03219988288287735,
+      "mermaid": 17.100000001490116
+    },
+    {
+      "type": "state",
+      "pelers": 0.044567435943074954,
+      "reference": 0.07803381308418193,
+      "mermaid": 38.70000000298023
+    },
+    {
+      "type": "state",
+      "pelers": 0.03699984023665745,
+      "reference": 0.05472254485771502,
+      "mermaid": 35.900000005960464
+    },
+    {
+      "type": "state",
+      "pelers": 0.06320560101015174,
+      "reference": 0.09534734980992887,
+      "mermaid": 50.6000000089407
+    },
+    {
+      "type": "state",
+      "pelers": 0.05043793951611611,
+      "reference": 0.07120639488634466,
+      "mermaid": 37.20000000298023
+    },
+    {
+      "type": "state",
+      "pelers": 0.08937220357142256,
+      "reference": 0.1685529060403179,
+      "mermaid": 66.40000000596046
+    },
+    {
+      "type": "state",
+      "pelers": 0.15112480120480914,
+      "reference": 0.37315120895518294,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.13163168421061097,
+      "reference": 0.23926149523828089,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.3258362077921175,
+      "reference": 0.6962651944437918,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.13190635263147812,
+      "reference": 0.2420754711540492,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.10118527016123652,
+      "reference": 0.17993459440572382,
+      "mermaid": 58.29999999701977
+    },
+    {
+      "type": "state",
+      "pelers": 0.3538370704225881,
+      "reference": 0.5889612790697991,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.14717194117650198,
+      "reference": 0.18604559259256348,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.2445439514562768,
+      "reference": 0.4252748813557091,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.2160879568965074,
+      "reference": 0.32199350000024796,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.4642225740740455,
+      "reference": 1.0929436521736258,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.6099258333339267,
+      "reference": 2.295927000004502,
+      "mermaid": 117.30000001192093
+    },
+    {
+      "type": "state",
+      "pelers": 0.28043797777758706,
+      "reference": 0.6715455526320607,
+      "mermaid": 118.70000000298023
+    },
+    {
+      "type": "state",
+      "pelers": 0.27259403260857495,
+      "reference": 0.7173156571424832,
+      "mermaid": 130.79999999701977
+    },
+    {
+      "type": "state",
+      "pelers": 0.4444103333333164,
+      "reference": 0.9780828846157349,
+      "mermaid": null
+    },
+    {
+      "type": "state",
+      "pelers": 0.22194028318606202,
+      "reference": 0.5157155714280505,
+      "mermaid": 105.29999999701977
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.0073327938416328205,
+      "reference": 0.010652389859410243,
+      "mermaid": 22
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.019724263406941837,
+      "reference": 0.024573279960684327,
+      "mermaid": 29.5
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.31527265000040644,
+      "reference": 0.6136302682926038,
+      "mermaid": 60.29999999701977
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.11059057709272738,
+      "reference": 0.13471645161306725,
+      "mermaid": 41.599999994039536
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.2285601363639051,
+      "reference": 0.23510577570087773,
+      "mermaid": 55.30000001192093
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.22356441071419145,
+      "reference": 0.26346015789497057,
+      "mermaid": null
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.30328624096421347,
+      "reference": 0.5002801199990791,
+      "mermaid": 75.69999998807907
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.1366754347827341,
+      "reference": 0.20504249180342665,
+      "mermaid": 40.8999999910593
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.12398793069313806,
+      "reference": 0.18697978358206674,
+      "mermaid": 38.5
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.06112799266510367,
+      "reference": 0.1087348043478256,
+      "mermaid": 29.299999997019768
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.1457100697673944,
+      "reference": 0.19422103875982683,
+      "mermaid": 56.70000000298023
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.12275349999995966,
+      "reference": 0.149482716763166,
+      "mermaid": 36.6000000089407
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.08961698566321417,
+      "reference": 0.09440829811314613,
+      "mermaid": 28.19999998807907
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.19400767441848005,
+      "reference": 0.2402725238098009,
+      "mermaid": 47.20000000298023
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.3580274999998177,
+      "reference": 0.439315473684314,
+      "mermaid": 149.8999999910593
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.1338738021387888,
+      "reference": 0.11594192592612537,
+      "mermaid": 35.099999994039536
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.21378673504267892,
+      "reference": 0.2434837087379651,
+      "mermaid": 46.099999994039536
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.10559197468363841,
+      "reference": 0.09695250387601338,
+      "mermaid": 31.099999994039536
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.1703440884356292,
+      "reference": 0.17937507857152793,
+      "mermaid": 43.099999994039536
+    },
+    {
+      "type": "swimlane",
+      "pelers": 0.19691642519686092,
+      "reference": 0.2621626354169469,
+      "mermaid": 57.400000005960464
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.04336277123050768,
+      "reference": 0.03480742141858303,
+      "mermaid": 11.066666667660078
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.033832705006758265,
+      "reference": 0.029964573652703805,
+      "mermaid": 9.866666669646898
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.03274386649215667,
+      "reference": 0.055833660714337645,
+      "mermaid": 9.166666666666666
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.008164745674177748,
+      "reference": 0.008475463050851693,
+      "mermaid": 6.824999999254942
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.040870792483640804,
+      "reference": 0.03874077554179454,
+      "mermaid": 13.549999997019768
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.13994244134083506,
+      "reference": 0.06433525192805693,
+      "mermaid": null
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.11636729767426936,
+      "reference": 0.15369277914123256,
+      "mermaid": 39
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.24016281904741413,
+      "reference": 0.18550277037063131,
+      "mermaid": 38.400000005960464
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.010143022312363326,
+      "reference": 0.010106143030300361,
+      "mermaid": 10.033333331346512
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.11219591517848519,
+      "reference": 0.07572648036251481,
+      "mermaid": 11.933333332339922
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.10423181250007474,
+      "reference": 0.10396794605801168,
+      "mermaid": 17.5
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.024477909980460257,
+      "reference": 0.03117543765588459,
+      "mermaid": 8.466666663686434
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.0066397575677088864,
+      "reference": 0.007245192697758281,
+      "mermaid": 6.1
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.11315142533955759,
+      "reference": 0.11983564593294484,
+      "mermaid": 23.599999994039536
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.0749080239521189,
+      "reference": 0.055813386160740004,
+      "mermaid": 12.75
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.08552705802050428,
+      "reference": 0.08806516197169836,
+      "mermaid": 13.149999998509884
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.07200472988506067,
+      "reference": 0.06562457217855057,
+      "mermaid": 10.833333333333334
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.1329925106380115,
+      "reference": 0.12098893719800671,
+      "mermaid": 23.350000001490116
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.23894453333313798,
+      "reference": 0.19618550781251543,
+      "mermaid": 28
+    },
+    {
+      "type": "timeline",
+      "pelers": 0.07898347318607268,
+      "reference": 0.09545883969474897,
+      "mermaid": 15.5
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.016578763925710654,
+      "reference": 0.027337790163974356,
+      "mermaid": 6.674999997019768
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.013126871391080975,
+      "reference": 0.019881578696360855,
+      "mermaid": 5.8800000011920925
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.008958439985673076,
+      "reference": 0.01960454153604616,
+      "mermaid": 9.59999999900659
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.021445343053143304,
+      "reference": 0.03242632814529914,
+      "mermaid": 8.666666666666666
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.013517940000007935,
+      "reference": 0.018789346356107205,
+      "mermaid": 5.539999997615814
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.014935727001190367,
+      "reference": 0.02448309393344017,
+      "mermaid": 5.580000001192093
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.023307279589963956,
+      "reference": 0.04209105546220339,
+      "mermaid": 5.659999999403953
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.04384355516641461,
+      "reference": 0.06269436250004219,
+      "mermaid": 6.774999998509884
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.015749573047869305,
+      "reference": 0.028523870011403447,
+      "mermaid": 5.519999998807907
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.042457986417691364,
+      "reference": 0.06034644337354161,
+      "mermaid": 11.23333332935969
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.01655362872272011,
+      "reference": 0.024977526473559226,
+      "mermaid": 7.375
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.039284006279441445,
+      "reference": 0.06079964077671497,
+      "mermaid": 10.433333332339922
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.014456213872833985,
+      "reference": 0.028607712814638187,
+      "mermaid": 7.899999998509884
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.02674459615380515,
+      "reference": 0.043906719298224504,
+      "mermaid": 8.566666667660078
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.027666972345166192,
+      "reference": 0.040371520967774785,
+      "mermaid": 12.799999997019768
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.02465965557728854,
+      "reference": 0.02945089163722139,
+      "mermaid": 12.200000002980232
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.11052557709242221,
+      "reference": 0.1391082762429254,
+      "mermaid": 13.050000004470348
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.04523386437615134,
+      "reference": 0.07504642514974119,
+      "mermaid": 10
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.22962433027547843,
+      "reference": 0.24772081188085296,
+      "mermaid": 15.649999998509884
+    },
+    {
+      "type": "treeView",
+      "pelers": 0.026299293067205028,
+      "reference": 0.06136277205879713,
+      "mermaid": 13.299999997019768
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.07342946627573314,
+      "reference": 0.09427214661635865,
+      "mermaid": 19.149999998509884
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.038088815680918306,
+      "reference": 0.030937342265570916,
+      "mermaid": 18.600000001490116
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.0479639885057044,
+      "reference": 0.04596165441184626,
+      "mermaid": 10.300000001986822
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.05738237385310707,
+      "reference": 0.05770243548378799,
+      "mermaid": null
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.029924663082430008,
+      "reference": 0.053777984946200084,
+      "mermaid": 15.700000002980232
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.014888786309547002,
+      "reference": 0.021436556983743527,
+      "mermaid": 14.600000001490116
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.010699692340601582,
+      "reference": 0.019123142966356227,
+      "mermaid": 9.40000000099341
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.022564017148003393,
+      "reference": 0.0311974152119771,
+      "mermaid": 9.366666664679846
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.008837027561829455,
+      "reference": 0.014008266106443557,
+      "mermaid": 10.73333332935969
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.018622069247985814,
+      "reference": 0.03763108721809966,
+      "mermaid": 9.40000000099341
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.006578876874500273,
+      "reference": 0.01347776873315235,
+      "mermaid": 6.800000000745058
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.004817480346823186,
+      "reference": 0.008268367063479557,
+      "mermaid": 6.649999998509884
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.05858923185020205,
+      "reference": 0.08813440492954662,
+      "mermaid": 10.366666669646898
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.04159908818631912,
+      "reference": 0.0611345330073924,
+      "mermaid": null
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.03489623988836983,
+      "reference": 0.07356393823540523,
+      "mermaid": 8.274999998509884
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.03473757975032403,
+      "reference": 0.06569764041998778,
+      "mermaid": 8.866666664679846
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.049610146825360725,
+      "reference": 0.07962643949053202,
+      "mermaid": 8.933333332339922
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.07604601215797627,
+      "reference": 0.1042989041665957,
+      "mermaid": 11.699999998013178
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.03007105528845736,
+      "reference": 0.04159486877077965,
+      "mermaid": 9.699999998013178
+    },
+    {
+      "type": "treemap",
+      "pelers": 0.017314922437652265,
+      "reference": 0.03128199999999197,
+      "mermaid": 7.25
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.12021144230759372,
+      "reference": 0.1421903238637738,
+      "mermaid": 38.70000000298023
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.06167035960587168,
+      "reference": 0.05808162877026604,
+      "mermaid": 31.5
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.10241547755122526,
+      "reference": 0.15933239490467058,
+      "mermaid": 40.400000005960464
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.036766251470544374,
+      "reference": 0.040899606209112864,
+      "mermaid": 27
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.0893274857142907,
+      "reference": 0.0931240037173642,
+      "mermaid": 37.29999999701977
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.034888517433752125,
+      "reference": 0.026773839400372243,
+      "mermaid": 26.900000005960464
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.03845138556065364,
+      "reference": 0.05202980249480726,
+      "mermaid": 38.29999999701977
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.029257839766115887,
+      "reference": 0.02401749375596102,
+      "mermaid": 27.799999997019768
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.0449313429084772,
+      "reference": 0.056837859090856827,
+      "mermaid": null
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.05953544761910702,
+      "reference": 0.05136133675574415,
+      "mermaid": 59.6000000089407
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.13825925274727774,
+      "reference": 0.08943524285714374,
+      "mermaid": 38.5
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.2578101340206052,
+      "reference": 0.23607991509389942,
+      "mermaid": 52.1000000089407
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.14195636723165553,
+      "reference": 0.08911354804255758,
+      "mermaid": 43.70000000298023
+    },
+    {
+      "type": "usecase",
+      "pelers": 0.07294897667645496,
+      "reference": 0.07848076802495207,
+      "mermaid": 36.8999999910593
+    },
+    {
+      "type": "venn",
+      "pelers": 0.23063721100921494,
+      "reference": 0.6815034054059258,
+      "mermaid": 44.8999999910593
+    },
+    {
+      "type": "venn",
+      "pelers": 0.10776508620695276,
+      "reference": 0.27071864516111294,
+      "mermaid": 14.950000002980232
+    },
+    {
+      "type": "venn",
+      "pelers": 0.2745852282608647,
+      "reference": 0.5889641395350377,
+      "mermaid": 19.19999999552965
+    },
+    {
+      "type": "venn",
+      "pelers": 0.3030291807224851,
+      "reference": 0.8638883793088287,
+      "mermaid": 32.20000000298023
+    },
+    {
+      "type": "venn",
+      "pelers": 0.5053081799997017,
+      "reference": 1.051165625001886,
+      "mermaid": 51.5
+    },
+    {
+      "type": "venn",
+      "pelers": 0.017373698401682937,
+      "reference": 0.044180014134300775,
+      "mermaid": 9.074999999254942
+    },
+    {
+      "type": "venn",
+      "pelers": 0.3868960769229139,
+      "reference": 0.919240714285739,
+      "mermaid": 38.79999999701977
+    },
+    {
+      "type": "venn",
+      "pelers": 0.01649134762531102,
+      "reference": 0.036997035503013406,
+      "mermaid": 6.274999998509884
+    },
+    {
+      "type": "venn",
+      "pelers": 0.21153433613445877,
+      "reference": 0.5320239574462671,
+      "mermaid": 11.433333332339922
+    },
+    {
+      "type": "venn",
+      "pelers": 0.36093542857145494,
+      "reference": 0.8264248709667534,
+      "mermaid": 41.5
+    },
+    {
+      "type": "venn",
+      "pelers": 0.3379613513518691,
+      "reference": 0.697314222222,
+      "mermaid": 27.200000002980232
+    },
+    {
+      "type": "venn",
+      "pelers": 0.014782894799049864,
+      "reference": 0.035194563994340664,
+      "mermaid": 5.919999998807907
+    },
+    {
+      "type": "venn",
+      "pelers": 0.4548051272720014,
+      "reference": 0.8827716896555322,
+      "mermaid": 35.099999994039536
+    },
+    {
+      "type": "venn",
+      "pelers": 0.014174801587303224,
+      "reference": 0.034303065843638084,
+      "mermaid": 6.400000002235174
+    },
+    {
+      "type": "venn",
+      "pelers": 0.014583986588928892,
+      "reference": 0.036170742774619104,
+      "mermaid": 5.980000001192093
+    },
+    {
+      "type": "venn",
+      "pelers": 0.06394178005110453,
+      "reference": 0.19446758914724455,
+      "mermaid": 7.775000002235174
+    },
+    {
+      "type": "venn",
+      "pelers": 0.07519741317370215,
+      "reference": 0.17216517808185317,
+      "mermaid": 8.566666667660078
+    },
+    {
+      "type": "venn",
+      "pelers": 0.10894045217377742,
+      "reference": 0.39643317187528737,
+      "mermaid": 9.533333336313566
+    },
+    {
+      "type": "venn",
+      "pelers": 0.29212591860465015,
+      "reference": 0.6306028000006336,
+      "mermaid": 27.400000005960464
+    },
+    {
+      "type": "venn",
+      "pelers": 0.2735830978256316,
+      "reference": 0.569080931818462,
+      "mermaid": 24.599999994039536
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.06161316748770995,
+      "reference": 0.08779268070173106,
+      "mermaid": 9.699999998013178
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.029554227863079974,
+      "reference": 0.03097286881191142,
+      "mermaid": 7.524999998509884
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.024976551448544868,
+      "reference": 0.03395042062417656,
+      "mermaid": 6.650000002235174
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.07176937822340573,
+      "reference": 0.0952033003800577,
+      "mermaid": 9.76666667064031
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.03891719440130436,
+      "reference": 0.05204127027022434,
+      "mermaid": 9.600000003973642
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.055718400890789596,
+      "reference": 0.10051634136552784,
+      "mermaid": 13.049999997019768
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.08149100977211511,
+      "reference": 0.17249196551716084,
+      "mermaid": 10.133333330353102
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.05289373995776113,
+      "reference": 0.06849727595620661,
+      "mermaid": 7.549999997019768
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.061043131707247525,
+      "reference": 0.07956858730157985,
+      "mermaid": 7.824999999254942
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.048075738963478866,
+      "reference": 0.06067691767558943,
+      "mermaid": 7.324999999254942
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.05418200865796126,
+      "reference": 0.07324639181296712,
+      "mermaid": 7.875
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.033379069425881244,
+      "reference": 0.04585286446890944,
+      "mermaid": 7.900000002235174
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.025680259753578464,
+      "reference": 0.035517825284097686,
+      "mermaid": 7.099999997764826
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.05565694000002824,
+      "reference": 0.0667767813334552,
+      "mermaid": 8.074999999254942
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.046809388785057256,
+      "reference": 0.0642980539844764,
+      "mermaid": 8.366666669646898
+    },
+    {
+      "type": "wardley",
+      "pelers": 0.04079140553740839,
+      "reference": 0.052467731656204025,
+      "mermaid": 7.449999999254942
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04590509357795956,
+      "reference": 0.0426635750853091,
+      "mermaid": 12.550000004470348
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.047392910984798975,
+      "reference": 0.05933742180093682,
+      "mermaid": 11.966666668653488
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.046917677298275576,
+      "reference": 0.053161537154966215,
+      "mermaid": 10.966666668653488
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04853087015503696,
+      "reference": 0.09598106896559176,
+      "mermaid": 15.550000004470348
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04586357142848317,
+      "reference": 0.04928209055118871,
+      "mermaid": 16.150000005960464
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.11420521004573063,
+      "reference": 0.10613705932189339,
+      "mermaid": 14
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04016508346707164,
+      "reference": 0.044112523809499135,
+      "mermaid": 10.666666666666666
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.0336423131720362,
+      "reference": 0.03032072969698206,
+      "mermaid": 13.350000001490116
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.0310417568238444,
+      "reference": 0.037428639760858314,
+      "mermaid": 10.133333335320154
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.029129748544842765,
+      "reference": 0.02851197491443749,
+      "mermaid": 10.233333334326744
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.044385897163165475,
+      "reference": 0.05255504831928024,
+      "mermaid": 9.199999998013178
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04541221778586713,
+      "reference": 0.046627351955325975,
+      "mermaid": 10.333333333333334
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.03596591666670671,
+      "reference": 0.030470557856270262,
+      "mermaid": 10.299999997019768
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.04295700000004148,
+      "reference": 0.044198494699706284,
+      "mermaid": 8.25
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.046847374531857264,
+      "reference": 0.043807323993001815,
+      "mermaid": 12.950000002980232
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.05732435011438113,
+      "reference": 0.05893548941171235,
+      "mermaid": 23.799999997019768
+    },
+    {
+      "type": "xychart",
+      "pelers": 0.058296104895123574,
+      "reference": 0.12395489603940324,
+      "mermaid": 14.350000001490116
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.13096173298429375,
+      "reference": 0.11631910697676155,
+      "mermaid": 10.40000000099341
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.05909277358488289,
+      "reference": 0.051270127049184475,
+      "mermaid": 8.100000001490116
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.10549886497882105,
+      "reference": 0.08194503267969042,
+      "mermaid": 9.5
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.145356767442007,
+      "reference": 0.10485653138074587,
+      "mermaid": 11.09999999900659
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.05100532993899522,
+      "reference": 0.04193732998325291,
+      "mermaid": 8.025000002235174
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.08078240000008184,
+      "reference": 0.061285330882431786,
+      "mermaid": 8.324999999254942
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.06820185558584313,
+      "reference": 0.06073635194175967,
+      "mermaid": 8.40000000099341
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.09560790076342639,
+      "reference": 0.07099016997174995,
+      "mermaid": 8.800000001986822
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.03271071372547619,
+      "reference": 0.031228282147266796,
+      "mermaid": 7.024999998509884
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.1159003518518552,
+      "reference": 0.08429643097635428,
+      "mermaid": 10.166666666666666
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.0756100845921312,
+      "reference": 0.06017191586537452,
+      "mermaid": 8.533333336313566
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.16461681578948628,
+      "reference": 0.10844942424254839,
+      "mermaid": 11.333333333333334
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.10212507755091718,
+      "reference": 0.07272474418599348,
+      "mermaid": 9.166666666666666
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.06568320472437517,
+      "reference": 0.06309993198990085,
+      "mermaid": 7.699999999254942
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.08692356249998233,
+      "reference": 0.06591988157903726,
+      "mermaid": 8.733333334326744
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.21260960169493662,
+      "reference": 0.09566465267184625,
+      "mermaid": 10.466666663686434
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.14464307514441904,
+      "reference": 0.11133984888903797,
+      "mermaid": 13.100000001490116
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.07765368012417113,
+      "reference": 0.06387242857142285,
+      "mermaid": 16.950000002980232
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.2802911666668175,
+      "reference": 0.14578288372065926,
+      "mermaid": 12.633333330353102
+    },
+    {
+      "type": "gantt",
+      "pelers": 0.08240850986840087,
+      "reference": 0.062174503722114874,
+      "mermaid": 9.566666667660078
+    },
+    {
+      "type": "flowchart-10",
+      "pelers": 0.17093511564628583,
+      "reference": 0.2642393789474705,
+      "mermaid": 79.70000000298023
+    },
+    {
+      "type": "flowchart-100",
+      "pelers": 1.350885368421012,
+      "reference": 2.015402846154757,
+      "mermaid": 524.6000000089407
+    }
+  ],
+  "summary": {
+    "agentflow": {
+      "n": 20,
+      "pelers": 1.434909506837398,
+      "reference": 2.1133805982652376,
+      "referenceN": 20,
+      "mermaid": 853.0999999791384,
+      "mermaidN": 20
+    },
+    "architecture": {
+      "n": 20,
+      "pelers": 1.633123086092974,
+      "reference": 2.348282521275525,
+      "referenceN": 20,
+      "mermaid": 418.1499999985099,
+      "mermaidN": 11
+    },
+    "block": {
+      "n": 20,
+      "pelers": 2.533882175888811,
+      "reference": 2.1347484072518195,
+      "referenceN": 20,
+      "mermaid": 772.5999999642372,
+      "mermaidN": 10
+    },
+    "c4": {
+      "n": 20,
+      "pelers": 1.9680567796685533,
+      "reference": 1.8764092179342005,
+      "referenceN": 20,
+      "mermaid": 455.69999998807907,
+      "mermaidN": 20
+    },
+    "class": {
+      "n": 20,
+      "pelers": 1.4005930343383122,
+      "reference": 1.402663036632855,
+      "referenceN": 20,
+      "mermaid": 746.5000000149012,
+      "mermaidN": 17
+    },
+    "cynefin": {
+      "n": 20,
+      "pelers": 1.8978575433943823,
+      "reference": 1.8600824151839133,
+      "referenceN": 20,
+      "mermaid": 172.7333333318432,
+      "mermaidN": 20
+    },
+    "er": {
+      "n": 20,
+      "pelers": 1.4633786144421446,
+      "reference": 1.573790470472002,
+      "referenceN": 20,
+      "mermaid": 982.8500000163913,
+      "mermaidN": 20
+    },
+    "eventmodeling": {
+      "n": 20,
+      "pelers": 1.1771806883176534,
+      "reference": 1.6627467556131308,
+      "referenceN": 20,
+      "mermaid": 210.5316666645308,
+      "mermaidN": 20
+    },
+    "flowchart": {
+      "n": 20,
+      "pelers": 9.091743645079585,
+      "reference": 20.719261474026656,
+      "referenceN": 20,
+      "mermaid": 1493.7999999672174,
+      "mermaidN": 19
+    },
+    "gitGraph": {
+      "n": 20,
+      "pelers": 0.66700018264948,
+      "reference": 0.8804911517050642,
+      "referenceN": 20,
+      "mermaid": 226.7500000037253,
+      "mermaidN": 17
+    },
+    "info": {
+      "n": 16,
+      "pelers": 0.13761940906060507,
+      "reference": 0.12995042604381307,
+      "referenceN": 16,
+      "mermaid": 80.26761904706557,
+      "mermaidN": 16
+    },
+    "ishikawa": {
+      "n": 20,
+      "pelers": 1.042193590544069,
+      "reference": 0.9825254167072014,
+      "referenceN": 20,
+      "mermaid": 259.133333351463,
+      "mermaidN": 20
+    },
+    "journey": {
+      "n": 20,
+      "pelers": 0.9380038233285789,
+      "reference": 0.8656347414321894,
+      "referenceN": 20,
+      "mermaid": 233.73333333581687,
+      "mermaidN": 20
+    },
+    "kanban": {
+      "n": 20,
+      "pelers": 0.9312039967170915,
+      "reference": 0.7945462555269849,
+      "referenceN": 20,
+      "mermaid": 649.1083333368102,
+      "mermaidN": 19
+    },
+    "mindmap": {
+      "n": 20,
+      "pelers": 1.1098347043679955,
+      "reference": 1.2114645559790425,
+      "referenceN": 20,
+      "mermaid": 1000.8400000095368,
+      "mermaidN": 20
+    },
+    "packet": {
+      "n": 20,
+      "pelers": 0.8462210087324895,
+      "reference": 1.0730663706814956,
+      "referenceN": 20,
+      "mermaid": 128.85499999523162,
+      "mermaidN": 18
+    },
+    "pie": {
+      "n": 20,
+      "pelers": 1.2715668446122474,
+      "reference": 2.040527810640227,
+      "referenceN": 20,
+      "mermaid": 154.12166667332252,
+      "mermaidN": 20
+    },
+    "quadrantChart": {
+      "n": 20,
+      "pelers": 0.7806714703206088,
+      "reference": 0.795965260306342,
+      "referenceN": 20,
+      "mermaid": 188.79999999503295,
+      "mermaidN": 20
+    },
+    "radar": {
+      "n": 20,
+      "pelers": 0.6456312025308486,
+      "reference": 0.9041784863738953,
+      "referenceN": 20,
+      "mermaid": 149.61666666964692,
+      "mermaidN": 19
+    },
+    "railroad": {
+      "n": 20,
+      "pelers": 0.8676909095568531,
+      "reference": 1.2121702851806115,
+      "referenceN": 20,
+      "mermaid": 253.14166668305796,
+      "mermaidN": 18
+    },
+    "requirement": {
+      "n": 20,
+      "pelers": 2.329722278841136,
+      "reference": 2.4851393405284425,
+      "referenceN": 20,
+      "mermaid": 1144.949999988079,
+      "mermaidN": 20
+    },
+    "sankey": {
+      "n": 6,
+      "pelers": 0.2780452982653144,
+      "reference": 0.3702206282150307,
+      "referenceN": 6,
+      "mermaid": 25.30000000447035,
+      "mermaidN": 3
+    },
+    "sequence": {
+      "n": 20,
+      "pelers": 0.9020568002741584,
+      "reference": 0.694668861758749,
+      "referenceN": 20,
+      "mermaid": 321.1166666671634,
+      "mermaidN": 20
+    },
+    "state": {
+      "n": 20,
+      "pelers": 4.381439290543062,
+      "reference": 9.992356543890294,
+      "referenceN": 20,
+      "mermaid": 759.2000000327826,
+      "mermaidN": 10
+    },
+    "swimlane": {
+      "n": 20,
+      "pelers": 3.260751185871456,
+      "reference": 4.298791426712844,
+      "referenceN": 20,
+      "mermaid": 924.4999999552965,
+      "mermaidN": 19
+    },
+    "timeline": {
+      "n": 20,
+      "pelers": 1.7096476108433154,
+      "reference": 1.5415459465718662,
+      "referenceN": 20,
+      "mermaid": 309.0916666609545,
+      "mermaidN": 19
+    },
+    "treeView": {
+      "n": 20,
+      "pelers": 0.7749696173412579,
+      "reference": 1.087530707478868,
+      "referenceN": 20,
+      "mermaid": 182.40499998728433,
+      "mermaidN": 20
+    },
+    "treemap": {
+      "n": 20,
+      "pelers": 0.6766615336118452,
+      "reference": 0.9731268970272473,
+      "referenceN": 20,
+      "mermaid": 195.79166666294137,
+      "mermaidN": 18
+    },
+    "usecase": {
+      "n": 14,
+      "pelers": 1.228430280613625,
+      "reference": 1.1977577629814817,
+      "referenceN": 14,
+      "mermaid": 498.7000000178814,
+      "mermaidN": 13
+    },
+    "venn": {
+      "n": 20,
+      "pelers": 4.064652597283059,
+      "reference": 9.463610742162476,
+      "referenceN": 20,
+      "mermaid": 428.3083333251376,
+      "mermaidN": 20
+    },
+    "wardley": {
+      "n": 16,
+      "pelers": 0.7825516128753519,
+      "reference": 1.1198712771442756,
+      "referenceN": 16,
+      "mermaid": 135.89166666443148,
+      "mermaidN": 16
+    },
+    "xychart": {
+      "n": 17,
+      "pelers": 0.8139830966552225,
+      "reference": 0.9474857833363631,
+      "referenceN": 17,
+      "mermaid": 214.75000001986822,
+      "mermaidN": 17
+    },
+    "gantt": {
+      "n": 20,
+      "pelers": 2.17768346951132,
+      "reference": 1.5540649094271335,
+      "referenceN": 20,
+      "mermaid": 198.02500000720224,
+      "mermaidN": 20
+    },
+    "flowchart-10": {
+      "n": 1,
+      "pelers": 0.17093511564628583,
+      "reference": 0.2642393789474705,
+      "referenceN": 1,
+      "mermaid": 79.70000000298023,
+      "mermaidN": 1
+    },
+    "flowchart-100": {
+      "n": 1,
+      "pelers": 1.350885368421012,
+      "reference": 2.015402846154757,
+      "referenceN": 1,
+      "mermaid": 524.6000000089407,
+      "mermaidN": 1
+    }
+  },
+  "mermaidFailures": [
+    {
+      "index": 456,
+      "type": "state",
+      "message": "Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setting in launch/connect calls for a higher timeout if needed."
+    },
+    {
+      "index": 460,
+      "type": "state",
+      "message": "Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setting in launch/connect calls for a higher timeout if needed."
+    }
+  ]
+}
