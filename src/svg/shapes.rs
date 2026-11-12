@@ -114,7 +114,13 @@ fn tri_size(tw: f64, th: f64, flip: bool) -> ShapeSize {
 }
 
 fn path(d: &str, a: &str) -> String {
-    format!("<path d=\"{d}\"{a}/>")
+    let mut out = String::with_capacity(d.len() + a.len() + 16);
+    out.push_str("<path d=\"");
+    out.push_str(d);
+    out.push('"');
+    out.push_str(a);
+    out.push_str("/>");
+    out
 }
 
 fn poly(points: &[f64], a: &str) -> String {
@@ -127,17 +133,30 @@ fn poly(points: &[f64], a: &str) -> String {
         d.push(',');
         d.push_str(&num(points[i + 1]));
     }
-    format!("<polygon points=\"{d}\"{a}/>")
+    let mut out = String::with_capacity(d.len() + a.len() + 24);
+    out.push_str("<polygon points=\"");
+    out.push_str(&d);
+    out.push('"');
+    out.push_str(a);
+    out.push_str("/>");
+    out
 }
 
 fn rect(w: f64, h: f64, a: &str, rx: &str) -> String {
-    format!(
-        "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"{rx}{a}/>",
-        num(-w / 2.0),
-        num(-h / 2.0),
-        num(w),
-        num(h)
-    )
+    let mut out = String::with_capacity(a.len() + rx.len() + 80);
+    out.push_str("<rect x=\"");
+    out.push_str(&num(-w / 2.0));
+    out.push_str("\" y=\"");
+    out.push_str(&num(-h / 2.0));
+    out.push_str("\" width=\"");
+    out.push_str(&num(w));
+    out.push_str("\" height=\"");
+    out.push_str(&num(h));
+    out.push('"');
+    out.push_str(rx);
+    out.push_str(a);
+    out.push_str("/>");
+    out
 }
 
 fn brace(x: f64, h: f64, dir: f64, line: &str) -> String {
