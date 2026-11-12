@@ -253,8 +253,16 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
                 js_min(5.0, js_max(1.0, score))
             };
             let y = chart_top + (5.0 - level) * LEVEL;
-            line += &format!("{}{},{}", if i == 0 { "M" } else { "L" }, num(cx), num(y));
-            stems += &format!("M{},{}V{}", num(cx), num(cards_y + card_h), num(y - FACE));
+            line.push_str(if i == 0 { "M" } else { "L" });
+            line.push_str(&num(cx));
+            line.push(',');
+            line.push_str(&num(y));
+            stems.push('M');
+            stems.push_str(&num(cx));
+            stems.push(',');
+            stems.push_str(&num(cards_y + card_h));
+            stems.push('V');
+            stems.push_str(&num(y - FACE));
             faces += &face(cx, y, mood(score));
 
             let people: Vec<&str> = task
@@ -270,14 +278,17 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
             let mut dots = String::new();
             for (k, name) in people.iter().enumerate() {
                 let dot_x = cx + (k as f64 - (people.len() as f64 - 1.0) / 2.0) * step;
-                dots += &format!(
-                    "<circle class=\"pelers-actor\" cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\" stroke=\"var(--_s)\"><title>{}</title></circle>",
-                    num(dot_x),
-                    num(cards_y + card_h - PAD_Y - DOT),
-                    js_number_to_string(DOT),
-                    series_color(actor.get(name).copied().unwrap_or(0)),
-                    esc_text(name)
-                );
+                dots.push_str("<circle class=\"pelers-actor\" cx=\"");
+                dots.push_str(&num(dot_x));
+                dots.push_str("\" cy=\"");
+                dots.push_str(&num(cards_y + card_h - PAD_Y - DOT));
+                dots.push_str("\" r=\"");
+                dots.push_str(&js_number_to_string(DOT));
+                dots.push_str("\" fill=\"");
+                dots.push_str(&series_color(actor.get(name).copied().unwrap_or(0)));
+                dots.push_str("\" stroke=\"var(--_s)\"><title>");
+                dots.push_str(&esc_text(name));
+                dots.push_str("</title></circle>");
             }
             cards.push(format!(
                 "<g class=\"pelers-node pelers-task\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{dots}</g>",
