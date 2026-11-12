@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { elements } from '../support/xml.js';
 
@@ -32,8 +32,8 @@ describe('quadrant chart rendering', () => {
     expect(type).toBe('quadrantChart');
     expect(supports('quadrantChart')).toBe(true);
     expect([width, height]).toEqual([500, 500]);
-    expect(svg).toContain('class="pele pele-quadrantChart"');
-    expect(svg.match(/class="pele-quadrant"/g)?.length).toBe(4);
+    expect(svg).toContain('class="pelers pelers-quadrantChart"');
+    expect(svg.match(/class="pelers-quadrant"/g)?.length).toBe(4);
     for (const text of ['Reach and engagement', 'Low Reach', 'High Reach', 'Low Engagement', 'High Engagement']) {
       expect(texts(svg)).toContain(text);
     }
@@ -41,7 +41,7 @@ describe('quadrant chart rendering', () => {
       expect(texts(svg)).toContain(text);
     }
     expect(circles(svg)).toHaveLength(2);
-    expect(svg).toContain('var(--pele-series-1,');
+    expect(svg).toContain('var(--pelers-series-1,');
   });
 
   it('places points by their coordinates, x to the right and y upwards', () => {
@@ -98,11 +98,11 @@ describe('quadrant chart rendering', () => {
     expect(dot('A').get('r')).toBe('12');
     expect(dot('B').get('r')).toBe('10');
     expect(dot('B').get('style')).toBe('fill:#ff3300;');
-    expect(dot('B').get('class')).toBe('pele-point c1');
+    expect(dot('B').get('class')).toBe('pelers-point c1');
     expect(dot('C').get('r')).toBe('9');
     expect(dot('C').get('style')).toBe('fill:#908342;stroke:#310085;stroke-width:10px;');
     expect(dot('D').get('style')).toBe('fill:#00f;stroke-width:3px;');
-    expect(dot('D').get('stroke')).toContain('--pele-series-1');
+    expect(dot('D').get('stroke')).toContain('--pelers-series-1');
     // Mermaid gives a stroke colour no width unless one is set, so it does not show.
     expect(dot('E').get('style')).toBeUndefined();
     expect(dot('E').get('r')).toBe('5');
@@ -118,8 +118,8 @@ describe('quadrant chart rendering', () => {
     expect(() => render('quadrantChart\n classDef c fill: #fff', options)).toThrow(
       'style named fill is not supported.'
     );
-    expect(() => render('quadrantChart\n A: [1.2, 0.4]', options)).toThrow(PeleError);
-    expect(() => render('quadrantChart\n A: [0.2, 0.4', options)).toThrow(PeleError);
+    expect(() => render('quadrantChart\n A: [1.2, 0.4]', options)).toThrow(PelersError);
+    expect(() => render('quadrantChart\n A: [0.2, 0.4', options)).toThrow(PelersError);
   });
 
   it('leaves out a point whose coordinate is not a number from 0 to 1', () => {
@@ -152,9 +152,9 @@ describe('quadrant chart rendering', () => {
   Herb spiral: [0.3, 0.7]`;
     const config = (body: string): string => `---\nconfig:\n  quadrantChart:\n${body}\n---\n${src}`;
     const plain = render(src, { ...options, fontSize: 16 }).svg;
-    expect(plain).toContain('class="pele-title" font-weight');
-    expect(plain).toContain('<g class="pele-axis-labels" font-size="14"');
-    expect(plain).toContain('<g class="pele-point-labels" font-size="12"');
+    expect(plain).toContain('class="pelers-title" font-weight');
+    expect(plain).toContain('<g class="pelers-axis-labels" font-size="14"');
+    expect(plain).toContain('<g class="pelers-point-labels" font-size="12"');
     const sized = render(
       config(
         '    titleFontSize: 30\n    quadrantLabelFontSize: 20\n    xAxisLabelFontSize: 11\n' +
@@ -162,14 +162,14 @@ describe('quadrant chart rendering', () => {
       ),
       { ...options, fontSize: 16 }
     ).svg;
-    expect(sized).toContain('class="pele-title" font-size="30"');
-    expect(sized).toContain('class="pele-label" font-size="20" fill="var(--_fg)"');
-    expect(sized).toContain('<g class="pele-axis-labels" font-size="11"');
+    expect(sized).toContain('class="pelers-title" font-size="30"');
+    expect(sized).toContain('class="pelers-label" font-size="20" fill="var(--_fg)"');
+    expect(sized).toContain('<g class="pelers-axis-labels" font-size="11"');
     expect(sized.match(/rotate\(-90\)" font-size="13"/g)).toHaveLength(2);
-    expect(sized).toContain('<g class="pele-point-labels" font-size="9"');
+    expect(sized).toContain('<g class="pelers-point-labels" font-size="9"');
     expect(render(config('    titleFontSize: "big"'), { ...options, fontSize: 16 }).svg).toBe(plain);
     expect(render(config('    pointLabelFontSize: 0'), { ...options, fontSize: 16 }).svg).toContain(
-      '<g class="pele-point-labels" font-size="4"'
+      '<g class="pelers-point-labels" font-size="4"'
     );
   });
 
@@ -184,7 +184,7 @@ describe('quadrant chart rendering', () => {
       'quadrantChart\n One: [0.5, 0]\n Two: [0.5, 0.02]\n Three: [1, 1]\n Four: [0, 0.5]',
       options
     );
-    const labels = [...svg.matchAll(/<text class="pele-label" x="([\d.]+)" y="([\d.]+)"/g)].map((m) => [+m[1], +m[2]]);
+    const labels = [...svg.matchAll(/<text class="pelers-label" x="([\d.]+)" y="([\d.]+)"/g)].map((m) => [+m[1], +m[2]]);
     expect(labels).toHaveLength(4);
     for (const [x, y] of labels) {
       expect(x).toBeGreaterThan(8);
@@ -212,7 +212,7 @@ describe('quadrant chart rendering', () => {
       Calendar sync: [0.65, 0.30]
       Keyboard shortcut sheet: [0.12, 0.48]`;
     const { svg } = render(source, options);
-    const quadrant = /<g class="pele-quadrant" data-id="3">([\s\S]*?)<\/g>/.exec(svg)![1];
+    const quadrant = /<g class="pelers-quadrant" data-id="3">([\s\S]*?)<\/g>/.exec(svg)![1];
     const rect = elements(quadrant).find((el) => el.name === 'rect')!.attrs;
     const title = elements(quadrant).find((el) => el.name === 'text')!.attrs;
     const label = elements(/<text[^>]*>Keyboard shortcut sheet<\/text>/.exec(svg)![0])[0].attrs;
@@ -263,8 +263,8 @@ describe('quadrant chart rendering', () => {
 
   it('names the chart for assistive technology', () => {
     const { svg } = render('quadrantChart\n accTitle: Priorities\n accDescr: Four boxes\n quadrant-1 Plan', options);
-    expect(svg).toContain('<title id="pele-title">Priorities</title>');
-    expect(svg).toContain('<desc id="pele-desc">Four boxes</desc>');
+    expect(svg).toContain('<title id="pelers-title">Priorities</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Four boxes</desc>');
   });
 
   it('exposes the model', () => {
@@ -284,7 +284,7 @@ describe('quadrant chart rendering', () => {
   it('keeps the character before a comment', () => {
     const model = parse('quadrantChart\nquadrant-1 A%% note');
     expect(model.type === 'quadrantChart' && model.quadrants[0]).toEqual({ text: 'A', type: 'text' });
-    expect(() => parse('quadrantChart\nquadrant-1 A:%% note')).toThrow(PeleError);
+    expect(() => parse('quadrantChart\nquadrant-1 A:%% note')).toThrow(PelersError);
   });
 
   it('gives the same output for the same input', () => {

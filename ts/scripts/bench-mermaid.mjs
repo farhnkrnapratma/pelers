@@ -20,7 +20,7 @@ if (typeof WebSocket === 'undefined') throw new Error('This benchmark needs Node
 if (!existsSync(chromePath)) throw new Error(`Chrome not found at ${chromePath}. Set CHROME to its path.`);
 
 const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
-const pele = readFileSync('dist/pele.global.js');
+const pelers = readFileSync('dist/pelers.global.js');
 const mermaidUrl = `https://unpkg.com/mermaid@${mermaidVersion}/dist/mermaid.min.js`;
 const res = await fetch(mermaidUrl);
 if (!res.ok) throw new Error(`${mermaidUrl}: ${res.status}`);
@@ -91,8 +91,8 @@ function page(fixtures, minSample) {
   mermaid.initialize({ startOnLoad: false, securityLevel: 'strict' });
 
   const renderers = {
-    pele: (src) => {
-      host.innerHTML = pele.render(src).svg;
+    pelers: (src) => {
+      host.innerHTML = pelers.render(src).svg;
     },
     mermaid: async (src) => {
       const { svg } = await mermaid.render(`m${id++}`, src);
@@ -110,11 +110,11 @@ function page(fixtures, minSample) {
   const median = (xs) => xs.sort((a, b) => a - b)[xs.length >> 1];
 
   window.prepare = async (i) => {
-    const rendered = { pele: 0, mermaid: 0 };
+    const rendered = { pelers: 0, mermaid: 0 };
     current = [];
     for (const src of fixtures[i]) {
       let both = true;
-      for (const engine of ['pele', 'mermaid']) {
+      for (const engine of ['pelers', 'mermaid']) {
         try {
           await renderers[engine](src);
           rendered[engine]++;
@@ -129,18 +129,18 @@ function page(fixtures, minSample) {
 
   window.time = async (passes) => {
     const reps = {};
-    for (const engine of ['pele', 'mermaid']) {
+    for (const engine of ['pelers', 'mermaid']) {
       await sample(engine, 1);
       let n = 1;
       while ((await sample(engine, n)) * n < minSample) n *= 2;
       reps[engine] = n;
     }
-    const samples = { pele: [], mermaid: [] };
+    const samples = { pelers: [], mermaid: [] };
     for (let i = 0; i < passes; i++) {
-      for (const engine of i % 2 ? ['mermaid', 'pele'] : ['pele', 'mermaid'])
+      for (const engine of i % 2 ? ['mermaid', 'pelers'] : ['pelers', 'mermaid'])
         samples[engine].push(await sample(engine, reps[engine]));
     }
-    return { pele: median(samples.pele), mermaid: median(samples.mermaid) };
+    return { pelers: median(samples.pelers), mermaid: median(samples.mermaid) };
   };
 }
 
@@ -148,13 +148,13 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <style>body { margin: 0; font-family: Arial; } #host { width: 1200px; }</style>
 <div id="host"></div>
-<script src="pele.js"></script>
+<script src="pelers.js"></script>
 <script src="mermaid.js"></script>
 <script src="bench.js"></script>`;
 
 const files = {
   '/': [html, 'text/html'],
-  '/pele.js': [pele, 'text/javascript'],
+  '/pelers.js': [pelers, 'text/javascript'],
   '/mermaid.js': [mermaid, 'text/javascript'],
   '/bench.js': [
     `(${page})(${JSON.stringify(cases.map(([, inputs]) => inputs))}, ${MIN_SAMPLE_MS});`,
@@ -168,7 +168,7 @@ const server = createServer((req, res) => {
 });
 await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
 
-const profile = mkdtempSync(join(tmpdir(), 'pele-bench-'));
+const profile = mkdtempSync(join(tmpdir(), 'pelers-bench-'));
 const chrome = spawn(
   chromePath,
   [
@@ -236,7 +236,7 @@ try {
   while (!(await evaluate(`document.readyState === 'complete' && typeof time === 'function'`))) await sleep(50);
   await evaluate('document.fonts.ready.then(() => true)');
 
-  console.log(`Pele ${version} and ${mermaidName} in ${product}, median of ${PASSES} passes\n`);
+  console.log(`Pelers ${version} and ${mermaidName} in ${product}, median of ${PASSES} passes\n`);
   const ms = (x) => (x < 1 ? x.toFixed(3) : x.toFixed(1)) + ' ms';
   const rows = [];
   for (let i = 0; i < cases.length; i++) {
@@ -244,7 +244,7 @@ try {
     const rendered = await evaluate(`prepare(${i})`);
     if (rendered.both < inputs.length) {
       console.log(
-        `${name}: Pele rendered ${rendered.pele} and Mermaid ${rendered.mermaid} of ${inputs.length}; timing the ${rendered.both} both rendered`
+        `${name}: Pelers rendered ${rendered.pelers} and Mermaid ${rendered.mermaid} of ${inputs.length}; timing the ${rendered.both} both rendered`
       );
     }
     if (!rendered.both) continue;
@@ -252,19 +252,19 @@ try {
     rows.push({
       fixture: name,
       diagrams: rendered.both,
-      pele: ms(t.pele),
+      pelers: ms(t.pelers),
       mermaid: ms(t.mermaid),
-      speedup: Math.round(t.mermaid / t.pele) + '×',
+      speedup: Math.round(t.mermaid / t.pelers) + '×',
     });
   }
   console.table(rows);
 
   const kib = (bytes) => (bytes / 1024).toFixed(1) + ' KiB';
   const size = (code) => `${kib(code.length)} minified, ${kib(gzipSync(code).length)} gzipped`;
-  console.log(`dist/pele.global.js  ${size(pele)}`);
+  console.log(`dist/pelers.global.js  ${size(pelers)}`);
   console.log(`${mermaidName}  ${size(mermaid)}`);
   console.log(
-    `Pele is ${(mermaid.length / pele.length).toFixed(1)}× smaller minified, ${(gzipSync(mermaid).length / gzipSync(pele).length).toFixed(1)}× gzipped`
+    `Pelers is ${(mermaid.length / pelers.length).toFixed(1)}× smaller minified, ${(gzipSync(mermaid).length / gzipSync(pelers).length).toFixed(1)}× gzipped`
   );
 } finally {
   ws?.close();

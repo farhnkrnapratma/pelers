@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { getType } from '../common/outline.js';
 
 export interface MindmapNode {
@@ -45,7 +45,7 @@ export class MindmapDb implements MindmapModel {
     while (depth > 0 && open[depth - 1].level >= level) depth--;
     const parent = open[depth - 1];
     if (!parent && !isRoot) {
-      throw new PeleError(`There can be only one root. No parent could be found for ("${descr}")`, 'semantic', {
+      throw new PelersError(`There can be only one root. No parent could be found for ("${descr}")`, 'semantic', {
         type: 'mindmap',
       });
     }

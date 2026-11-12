@@ -1,6 +1,6 @@
 import * as reference from '@mermaid-js/parser';
 
-// Match Pele's lexer fixes in the reference parser.
+// Match Pelers's lexer fixes in the reference parser.
 
 export interface ReferenceToken {
   name: string;

@@ -10,13 +10,13 @@ export default {
       file: 'classDiagram.spec.ts',
       test: 'should parse diagram with direction',
       reason:
-        "Its inline snapshot pins Mermaid's DOM id counter (`classId-Student-154`), the shape name and the markdown-escaped member text its renderer reads. Pele's model has none of these. The direction, members and relations it checks are covered in tests/class/parser.test.ts.",
+        "Its inline snapshot pins Mermaid's DOM id counter (`classId-Student-154`), the shape name and the markdown-escaped member text its renderer reads. Pelers's model has none of these. The direction, members and relations it checks are covered in tests/class/parser.test.ts.",
     },
     {
       file: 'classDiagram.spec.ts',
       test: 'should have functions used in class JISON as own property',
       reason:
-        'Checks that ClassDB methods are own properties, a requirement of the Jison runtime. Pele has no Jison runtime.',
+        'Checks that ClassDB methods are own properties, a requirement of the Jison runtime. Pelers has no Jison runtime.',
     },
   ],
   notPorted: [

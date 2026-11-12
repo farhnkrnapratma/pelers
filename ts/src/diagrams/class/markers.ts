@@ -31,7 +31,7 @@ export function classMarker(type: EndMarker, x: number, y: number, dx: number, d
     case 'extension': {
       const bx = x - dx * TRIANGLE;
       const by = y - dy * TRIANGLE;
-      return `<path class="pele-marker" d="M${num(x)},${num(y)}L${num(bx + nx * HALF)},${num(by + ny * HALF)}L${num(
+      return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${num(bx + nx * HALF)},${num(by + ny * HALF)}L${num(
         bx - nx * HALF
       )},${num(by - ny * HALF)}Z" stroke-linejoin="round"/>`;
     }
@@ -40,14 +40,14 @@ export function classMarker(type: EndMarker, x: number, y: number, dx: number, d
       const mx = x - (dx * DIAMOND) / 2;
       const my = y - (dy * DIAMOND) / 2;
       const half = HALF - 1;
-      return `<path class="pele-marker" d="M${num(x)},${num(y)}L${num(mx + nx * half)},${num(my + ny * half)}L${num(
+      return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${num(mx + nx * half)},${num(my + ny * half)}L${num(
         x - dx * DIAMOND
       )},${num(y - dy * DIAMOND)}L${num(mx - nx * half)},${num(my - ny * half)}Z" stroke-linejoin="round"${
         type === 'composition' ? ` fill="${color}"` : ''
       }/>`;
     }
     case 'lollipop':
-      return `<circle class="pele-marker" cx="${num(x - dx * RING)}" cy="${num(y - dy * RING)}" r="${RING}"/>`;
+      return `<circle class="pelers-marker" cx="${num(x - dx * RING)}" cy="${num(y - dy * RING)}" r="${RING}"/>`;
     case 'dependency':
       return marker('arrow_point', x, y, dx, dy, color);
   }

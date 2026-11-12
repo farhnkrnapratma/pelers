@@ -12,7 +12,7 @@ function recorder() {
 }
 
 // The reference lexer matches a character outside the CSV alphabet as empty text without
-// consuming it, and would return that token forever. Listing stops there, as Pele's lexer does.
+// consuming it, and would return that token forever. Listing stops there, as Pelers's lexer does.
 export function oracleTokens(src: string): Pair[] {
   const lexer = Object.create(oracle.parser.lexer) as typeof oracle.parser.lexer & { _input: string };
   lexer.setInput(src, {});
@@ -32,7 +32,7 @@ export function oracleTokens(src: string): Pair[] {
   return out;
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -43,7 +43,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseSankey(src, yy as unknown as SankeyDb);

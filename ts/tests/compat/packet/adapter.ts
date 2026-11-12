@@ -1,6 +1,6 @@
 import { buildPacket, type PacketBlock, type PacketModel } from '../../../src/diagrams/packet/model.js';
 import { parsePacket, type PacketAst } from '../../../src/diagrams/packet/parser.js';
-import { PeleError } from '../../../src/errors.js';
+import { PelersError } from '../../../src/errors.js';
 import { toResult } from '../../support/langium.js';
 
 export { expectNoErrorsOrAlternatives } from '../../support/langium.js';
@@ -38,7 +38,7 @@ export const parser = {
       if (parser.parser.yy) parser.parser.yy.model = model;
     } catch (error) {
       // The specs snapshot errors with their class name, which is `Error` in Mermaid.
-      if (error instanceof PeleError) throw new Error(error.message);
+      if (error instanceof PelersError) throw new Error(error.message);
       throw error;
     }
   },

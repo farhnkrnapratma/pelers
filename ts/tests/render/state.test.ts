@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import type { StateModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
@@ -16,7 +16,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -75,7 +75,7 @@ describe('state diagram rendering', () => {
     expect(supports('stateDiagram-v2\n a --> b')).toBe(true);
     const result = render('stateDiagram-v2\n a --> b', options);
     expect(result.type).toBe('state');
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-state"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-state"/);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     expect(result.height).toBeGreaterThan(result.width);
   });
@@ -111,25 +111,25 @@ describe('state diagram rendering', () => {
     expect(described).not.toContain('>s1</text>');
     const lines = draw('s1 : Title\n s1 : first\n s1 : second');
     expect(lines).toContain('>Title</text>');
-    expect(count(lines, 'class="pele-state-description"')).toBe(2);
+    expect(count(lines, 'class="pelers-state-description"')).toBe(2);
     expect(rectOf(lines, 's1').h).toBeGreaterThan(rectOf(draw('s1 : Title'), 's1').h + 30);
   });
 
   it('draws [*] as a start dot or an end ring, separately in each composite', () => {
     const svg = draw('[*] --> a\n a --> [*]\n state a {\n [*] --> b\n b --> [*]\n }');
-    expect(count(svg, 'pele-state-start')).toBe(2);
-    expect(count(svg, 'pele-state-end')).toBe(2);
+    expect(count(svg, 'pelers-state-start')).toBe(2);
+    expect(count(svg, 'pelers-state-end')).toBe(2);
     for (const id of ['root_start', 'root_end', 'a_start', 'a_end']) expect(svg).toContain(`data-id="${id}"`);
-    expect(count(svg, 'class="pele-edge pele-transition"')).toBe(4);
+    expect(count(svg, 'class="pelers-edge pelers-transition"')).toBe(4);
   });
 
   it('keeps a transition that arrives apart from one that leaves on the same side of a state', () => {
     const { svg } = render('stateDiagram-v2\n  Still --> Moving\n  Moving --> Still', options);
-    const tips = [...svg.matchAll(/class="pele-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
+    const tips = [...svg.matchAll(/class="pelers-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
       Number(m[1]),
       Number(m[2]),
     ]);
-    const starts = [...svg.matchAll(/<g class="pele-edge pele-transition"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map(
+    const starts = [...svg.matchAll(/<g class="pelers-edge pelers-transition"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map(
       (m) => [Number(m[1]), Number(m[2])]
     );
     expect(tips).toHaveLength(2);
@@ -145,19 +145,19 @@ describe('state diagram rendering', () => {
     const body =
       'state c <<choice>>\n state f <<fork>>\n state j <<join>>\n [*] --> f\n f --> x\n f --> y\n x --> j\n y --> j\n j --> c\n c --> p : yes\n c --> q : no';
     const down = draw(body);
-    expect(down).toMatch(/pele-state-choice" data-id="c"[^>]*><polygon/);
+    expect(down).toMatch(/pelers-state-choice" data-id="c"[^>]*><polygon/);
     expect(down).not.toContain('>c</text>');
     expect(rectOf(down, 'f').w).toBeGreaterThan(rectOf(down, 'f').h * 4);
-    expect(down).toContain('pele-state-join" data-id="j"');
+    expect(down).toContain('pelers-state-join" data-id="j"');
     const across = draw('direction LR\n' + body);
     expect(rectOf(across, 'f').h).toBeGreaterThan(rectOf(across, 'f').w * 4);
-    expect(draw('state f [[fork]]\n f --> x')).toContain('pele-state-fork');
+    expect(draw('state f [[fork]]\n f --> x')).toContain('pelers-state-fork');
   });
 
   it('draws a composite as a titled cluster around its states, to any depth', () => {
     const svg = draw('[*] --> A\n state A {\n state B {\n state "Deep name" as C {\n x --> y\n }\n }\n }');
-    expect(count(svg, 'pele-state-composite')).toBe(3);
-    expect(svg).toContain('class="pele-cluster-label"');
+    expect(count(svg, 'pelers-state-composite')).toBe(3);
+    expect(svg).toContain('class="pelers-cluster-label"');
     expect(svg).toContain('>Deep name</text>');
     const a = rectOf(svg, 'A');
     const b = rectOf(svg, 'B');
@@ -184,38 +184,38 @@ describe('state diagram rendering', () => {
         ' state "Described" as d : first line\n style d fill:#14201a\n state Busy {\n b\n }\n style Busy fill:#FFF9C4'
     );
     expect(svg).toMatch(
-      /data-id="Still"[^>]*><rect[^>]*\/><text class="pele-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"/
+      /data-id="Still"[^>]*><rect[^>]*\/><text class="pelers-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"/
     );
     expect(svg).toMatch(
-      /data-id="Crash"[^>]*><rect[^>]*\/><text class="pele-label" style="fill:white;font-weight:bold;"/
+      /data-id="Crash"[^>]*><rect[^>]*\/><text class="pelers-label" style="fill:white;font-weight:bold;"/
     );
-    expect(svg).toMatch(/data-id="Moving"[^>]*><rect[^>]*\/><text class="pele-label" x=/);
+    expect(svg).toMatch(/data-id="Moving"[^>]*><rect[^>]*\/><text class="pelers-label" x=/);
     expect(svg).toMatch(
-      /data-id="d"[^>]*><rect[^>]*\/><path[^>]*\/><text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"/
-    );
-    expect(svg).toMatch(
-      /<text class="pele-state-description" font-size="\d+" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>first line</
+      /data-id="d"[^>]*><rect[^>]*\/><path[^>]*\/><text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"/
     );
     expect(svg).toMatch(
-      /data-id="Busy">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>Busy</
+      /<text class="pelers-state-description" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>first line</
+    );
+    expect(svg).toMatch(
+      /data-id="Busy">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Busy</
     );
   });
 
   it('cases transitions that cross a composite fill a style sets and inks those inside it', () => {
     const src = 'state Busy {\n  a --> b\n}\nstate Idle {\n  c --> d\n}\nb --> e\ne --> c\nstyle Busy fill:#FFF9C4';
     const svg = draw(src);
-    const casings = /<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
     const group = (id: string): string =>
-      new RegExp(`<g class="pele-edge[^"]*"[^>]* data-id="${id}">.*?</g>`).exec(svg)![0];
+      new RegExp(`<g class="pelers-edge[^"]*"[^>]* data-id="${id}">.*?</g>`).exec(svg)![0];
     const edge = (id: string): string => /<path d="([^"]+)"/.exec(group(id))![1];
     // a --> b inside the composite, b --> e out of it.
-    expect(group('edge0')).toContain('class="pele-edge pele-transition" stroke="var(--pele-fg-on-light,#1f1f1f)"');
-    expect(group('edge0')).toContain('fill="var(--pele-fg-on-light,#1f1f1f)"');
+    expect(group('edge0')).toContain('class="pelers-edge pelers-transition" stroke="var(--pelers-fg-on-light,#1f1f1f)"');
+    expect(group('edge0')).toContain('fill="var(--pelers-fg-on-light,#1f1f1f)"');
     expect(casings).not.toContain(edge('edge0'));
     expect(casings).toContain(`<path d="${edge('edge2')}"/>`);
-    expect(group('edge2')).not.toContain('--pele-fg-on');
+    expect(group('edge2')).not.toContain('--pelers-fg-on');
     expect(casings).not.toContain(edge('edge3'));
-    expect(draw(src.replace('\nstyle Busy fill:#FFF9C4', ''))).not.toMatch(/pele-casings|stroke="var\(--pele-fg-on/);
+    expect(draw(src.replace('\nstyle Busy fill:#FFF9C4', ''))).not.toMatch(/pelers-casings|stroke="var\(--pelers-fg-on/);
   });
 
   it('gives each composite its own direction', () => {
@@ -234,26 +234,26 @@ describe('state diagram rendering', () => {
   it('splits a composite into regions with a dashed divider between them', () => {
     const body = 'state A {\n [*] --> a1\n --\n [*] --> b1\n --\n [*] --> c1\n }';
     const svg = draw(body);
-    expect(count(svg, 'class="pele-divider"')).toBe(2);
+    expect(count(svg, 'class="pelers-divider"')).toBe(2);
     expect(svg).toContain('stroke-dasharray="4 4"');
-    expect(count(svg, 'pele-state-start')).toBe(3);
+    expect(count(svg, 'pelers-state-start')).toBe(3);
     expect(place(svg, 'a1').x).toBeLessThan(place(svg, 'b1').x);
     expect(place(svg, 'b1').x).toBeLessThan(place(svg, 'c1').x);
-    expect(svg).toMatch(/class="pele-divider" d="M[\d.]+,[\d.]+V/);
+    expect(svg).toMatch(/class="pelers-divider" d="M[\d.]+,[\d.]+V/);
     // A transition from one region to the next puts them in a stack, divided the other way.
     const stacked = draw('state A {\n a1\n --\n b1\n }\n a1 --> b1');
-    expect(stacked).toMatch(/class="pele-divider" d="M[\d.]+,[\d.]+H/);
+    expect(stacked).toMatch(/class="pelers-divider" d="M[\d.]+,[\d.]+H/);
     expect(place(stacked, 'a1').y).toBeLessThan(place(stacked, 'b1').y);
     // Mermaid fails to draw a composite whose last statement is a divider.
     const trailing = draw('state A {\n x\n --\n y\n --\n }');
-    expect(count(trailing, 'class="pele-divider"')).toBe(1);
+    expect(count(trailing, 'class="pelers-divider"')).toBe(1);
     expect(place(trailing, 'x').x).toBeLessThan(place(trailing, 'y').x);
   });
 
   it('draws notes beside their state, joined by a dashed line', () => {
     const svg = draw('a --> b\n note right of a : on the right\n note left of b\n first line\n second line\n end note');
-    expect(count(svg, 'class="pele-note"')).toBe(2);
-    expect(count(svg, 'pele-note-edge')).toBe(2);
+    expect(count(svg, 'class="pelers-note"')).toBe(2);
+    expect(count(svg, 'pelers-note-edge')).toBe(2);
     expect(svg).toContain('>on the right</text>');
     expect(svg).toContain('>first line</tspan>');
     expect(svg).toContain('>second line</tspan>');
@@ -266,7 +266,7 @@ describe('state diagram rendering', () => {
     expect(place(across, 'b----note-2').y).toBeLessThan(place(across, 'b').y);
     const onComposite = draw('state A {\n x --> y\n }\n note right of A : about A');
     expect(onComposite).toContain('>about A</text>');
-    expect(count(onComposite, 'pele-note-edge')).toBe(1);
+    expect(count(onComposite, 'pelers-note-edge')).toBe(1);
   });
 
   it('labels transitions, including those to self and across composite borders', () => {
@@ -274,9 +274,9 @@ describe('state diagram rendering', () => {
       'state A {\n in1 --> in2 : inner\n in2 --> in2 : again\n }\n out --> in1 : cross\n A --> A : whole\n A --> in1 : enter\n in2 --> A : leave'
     );
     for (const text of ['inner', 'again', 'cross', 'whole', 'enter', 'leave']) expect(svg).toContain(`>${text}</text>`);
-    expect(count(svg, 'class="pele-edge-label"')).toBe(6);
-    expect(count(svg, 'class="pele-edge pele-transition"')).toBe(6);
-    expect(count(svg, 'class="pele-marker"')).toBe(6);
+    expect(count(svg, 'class="pelers-edge-label"')).toBe(6);
+    expect(count(svg, 'class="pelers-edge pelers-transition"')).toBe(6);
+    expect(count(svg, 'class="pelers-marker"')).toBe(6);
     expect(svg).not.toContain('NaN');
   });
 
@@ -284,7 +284,7 @@ describe('state diagram rendering', () => {
     for (const dir of ['TB', 'LR']) {
       const body = `direction ${dir}\n state A {\n a --> b\n a --> c\n }\n out --> a\n A --> out`;
       const smooth = draw(body);
-      expect(smooth).toMatch(/<g class="pele-edge pele-transition"[^>]*><path d="[^"]*C/);
+      expect(smooth).toMatch(/<g class="pelers-edge pelers-transition"[^>]*><path d="[^"]*C/);
       for (const curve of ['linear', 'step', 'stepBefore', 'stepAfter']) {
         const svg = render(
           `---\nconfig:\n  flowchart:\n    curve: ${curve}\n---\nstateDiagram-v2\n${body}`,
@@ -293,7 +293,7 @@ describe('state diagram rendering', () => {
         expect(svg).not.toBe(smooth);
         expect(() => assertWellFormed(svg)).not.toThrow();
         expect(svg).not.toMatch(/NaN|Infinity|undefined/);
-        const paths = [...svg.matchAll(/<g class="pele-edge pele-transition"[^>]*><path d="([^"]+)"/g)].map(
+        const paths = [...svg.matchAll(/<g class="pelers-edge pelers-transition"[^>]*><path d="([^"]+)"/g)].map(
           (m) => m[1]
         );
         expect(paths).toHaveLength(4);
@@ -304,7 +304,7 @@ describe('state diagram rendering', () => {
               ? /^M[-\d.]+,[-\d.]+(?:L[-\d.]+,[-\d.]+)+$/
               : /^M[-\d.]+,[-\d.]+(?:L[-\d.]+,[-\d.]+|Q[-\d.]+,[-\d.]+ [-\d.]+,[-\d.]+)+$/
           );
-        const tips = [...svg.matchAll(/class="pele-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
+        const tips = [...svg.matchAll(/class="pelers-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
           Number(m[1]),
           Number(m[2]),
         ]);
@@ -324,7 +324,7 @@ describe('state diagram rendering', () => {
         const src = `---\nconfig:\n  flowchart:\n    curve: ${curve}\n---\nstateDiagram-v2\n direction ${dir}\n A --> B\n A --> C\n A --> D\n B --> E\n C --> E\n D --> E\n E --> F : Yes\n E --> A : No`;
         const svg = render(src, options).svg;
         const markers = [
-          ...svg.matchAll(/class="pele-marker" d="M[-\d.]+,[-\d.]+L([-\d.]+),([-\d.]+)L([-\d.]+),([-\d.]+)Z"/g),
+          ...svg.matchAll(/class="pelers-marker" d="M[-\d.]+,[-\d.]+L([-\d.]+),([-\d.]+)L([-\d.]+),([-\d.]+)Z"/g),
         ];
         expect(markers).toHaveLength(8);
         // The two back corners are level, or on the same vertical for left-to-right flow.
@@ -353,7 +353,7 @@ describe('state diagram rendering', () => {
     for (const curve of ['linear', 'basis', 'step', 'stepBefore', 'stepAfter']) {
       const svg = render(`---\nconfig:\n  flowchart:\n    curve: ${curve}\n---\nstateDiagram-v2\n${body}`, options).svg;
       expect(svg).toBe(draw(body));
-      expect(count(svg, 'class="pele-marker"')).toBe(1);
+      expect(count(svg, 'class="pelers-marker"')).toBe(1);
     }
   });
 
@@ -378,11 +378,11 @@ describe('state diagram rendering', () => {
     const svg = draw(
       'classDef hot fill:#f00,color:white,font-weight:bold\n classDef cool stroke:#00f\n a:::cool --> b\n class b hot\n style c fill:#0f0,stroke-width:4px\n b --> c\n state G {\n g1\n }\n class G cool'
     );
-    expect(svg).toMatch(/class="pele-node pele-state cool" data-id="a"[^>]*><rect[^>]* style="stroke:#00f;"/);
-    expect(svg).toMatch(/class="pele-node pele-state hot" data-id="b"[^>]*><rect[^>]* style="fill:#f00;"/);
-    expect(svg).toMatch(/data-id="b"[^>]*><rect[^>]*\/><text class="pele-label" style="fill:white;font-weight:bold;"/);
+    expect(svg).toMatch(/class="pelers-node pelers-state cool" data-id="a"[^>]*><rect[^>]* style="stroke:#00f;"/);
+    expect(svg).toMatch(/class="pelers-node pelers-state hot" data-id="b"[^>]*><rect[^>]* style="fill:#f00;"/);
+    expect(svg).toMatch(/data-id="b"[^>]*><rect[^>]*\/><text class="pelers-label" style="fill:white;font-weight:bold;"/);
     expect(svg).toMatch(/data-id="c"[^>]*><rect[^>]* style="fill:#0f0;stroke-width:4px;"/);
-    expect(svg).toMatch(/class="pele-cluster pele-state-composite cool" data-id="G"><rect[^>]* style="stroke:#00f;"/);
+    expect(svg).toMatch(/class="pelers-cluster pelers-state-composite cool" data-id="G"><rect[^>]* style="stroke:#00f;"/);
   });
 
   it('turns click statements into links, with the URL sanitized', () => {
@@ -404,9 +404,9 @@ describe('state diagram rendering', () => {
 
   it('writes the accessible title and description', () => {
     const svg = draw('accTitle: The title\n accDescr: The description\n a --> b');
-    expect(svg).toContain('<title id="pele-title">The title</title>');
-    expect(svg).toContain('<desc id="pele-desc">The description</desc>');
-    expect(draw('accDescr {\n several\n lines\n }\n a --> b')).toContain('<desc id="pele-desc">several\nlines</desc>');
+    expect(svg).toContain('<title id="pelers-title">The title</title>');
+    expect(svg).toContain('<desc id="pelers-desc">The description</desc>');
+    expect(draw('accDescr {\n several\n lines\n }\n a --> b')).toContain('<desc id="pelers-desc">several\nlines</desc>');
   });
 
   it('accepts the statements that change nothing: hide empty description, scale, comments', () => {
@@ -440,8 +440,8 @@ describe('state diagram rendering', () => {
   it('rejects what Mermaid rejects', () => {
     expect(() => draw('state two words {\n a\n }')).toThrow('Error: State name must be a single word.');
     expect(() => draw('state A {\n x\n }\n A : one\n A : two')).toThrow('Group nodes can only have label.');
-    expect(() => draw('a --> b --> c')).toThrow(PeleError);
-    expect(() => draw('classDef default fill:red')).toThrow(PeleError);
+    expect(() => draw('a --> b --> c')).toThrow(PelersError);
+    expect(() => draw('classDef default fill:red')).toThrow(PelersError);
     expect(() => draw('state A {\n x --> y')).toThrow(/Parse error on line/);
     expect(() => draw('scale 350\n a --> b')).toThrow(/Lexical error on line 2/);
   });

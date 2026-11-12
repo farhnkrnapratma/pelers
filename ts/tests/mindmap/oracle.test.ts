@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/mindmap-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/mindmap-oracle.js';
 import { failure } from '../support/outline-oracle.js';
 
-// Compares Pele's mindmap lexer and parser with the parser Mermaid generates from mindmap.jison:
+// Compares Pelers's mindmap lexer and parser with the parser Mermaid generates from mindmap.jison:
 // the same tokens, the same accept or reject decision, the same calls into the model, and on
 // rejection the same kind of error. Set FUZZ to raise the number of mutated inputs.
 
@@ -81,9 +81,9 @@ const FRAGMENTS = [
 const corpus = loadCorpus('mindmap', /mindmap/);
 
 function compare(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}`).toBe(expected.ok);
   expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
   if (!expected.ok) expect(failure(actual.error), `error of ${JSON.stringify(src)}`).toBe(failure(expected.error));

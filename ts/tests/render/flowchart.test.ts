@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import { overFills } from '../../src/svg/edges.js';
 import { resolveStyle } from '../../src/svg/theme.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
@@ -13,7 +13,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -41,7 +41,7 @@ describe('flowchart rendering', () => {
     expect(result.width).toBeGreaterThan(100);
     expect(result.height).toBeGreaterThan(30);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-flowchart"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-flowchart"/);
   });
 
   it('lays out along the declared direction', () => {
@@ -53,7 +53,7 @@ describe('flowchart rendering', () => {
 
   it('themes through custom properties with fallbacks and no style element', () => {
     const { svg } = render('flowchart TD\n  A --> B', options);
-    for (const token of ['--pele-bg', '--pele-fg', '--pele-line', '--pele-surface', '--pele-border', '--pele-font']) {
+    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-font']) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');
@@ -199,7 +199,7 @@ describe('flowchart rendering', () => {
     );
     expect(svg).toContain('style="rx:var(--_r);fill:#f9f;stroke:#333;stroke-width:4px;"');
     expect(svg).toContain('style="fill:#fff;"');
-    expect(svg).toMatch(/class="pele-node pele-shape-rect warn" data-id="B"/);
+    expect(svg).toMatch(/class="pelers-node pelers-shape-rect warn" data-id="B"/);
     expect(svg).toContain('style="stroke:#f00;stroke-width:3px;"');
     expect(svg).toContain('fill="#f00"');
   });
@@ -217,17 +217,17 @@ describe('flowchart rendering', () => {
       '  style S fill:#BBDEFB\n  style C fill:#BBDEFB\n  classDef dark fill:navy\n  class D dark\n  style E fill:#BBDEFB,color:#333\n  style G fill:#000\n  G@{ shape: text }';
     const { svg } = render(src, options);
     expect(svg).toMatch(
-      /data-id="S">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>Cluster</
+      /data-id="S">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Cluster</
     );
     expect(svg).toMatch(
-      /data-id="C"[^>]*>.*?<text class="pele-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>Output</
+      /data-id="C"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Output</
     );
-    expect(svg).toMatch(/data-id="D"[^>]*>.*?<text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>Dark</);
-    expect(svg).toMatch(/data-id="E"[^>]*>.*?<text class="pele-label" style="fill:#333;"[^>]*>Own</);
-    expect(svg).toMatch(/data-id="F"[^>]*>.*?<text class="pele-label" x=[^>]*>Plain</);
-    expect(svg).toMatch(/data-id="G"[^>]*>.*?<text class="pele-label" x=[^>]*>Words</);
-    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pele-label" x=[^>]*>Start</);
-    expect(svg).toMatch(/class="pele-edge-label"[^>]*><rect [^>]*\/><text x=[^>]*>Launch</);
+    expect(svg).toMatch(/data-id="D"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</);
+    expect(svg).toMatch(/data-id="E"[^>]*>.*?<text class="pelers-label" style="fill:#333;"[^>]*>Own</);
+    expect(svg).toMatch(/data-id="F"[^>]*>.*?<text class="pelers-label" x=[^>]*>Plain</);
+    expect(svg).toMatch(/data-id="G"[^>]*>.*?<text class="pelers-label" x=[^>]*>Words</);
+    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pelers-label" x=[^>]*>Start</);
+    expect(svg).toMatch(/class="pelers-edge-label"[^>]*><rect [^>]*\/><text x=[^>]*>Launch</);
   });
 
   it('cases edges that cross into a subgraph fill a style sets and inks edges inside it', () => {
@@ -235,36 +235,36 @@ describe('flowchart rendering', () => {
       'flowchart LR\n  subgraph S["Cluster"]\n    A[Start] -- Launch --> B[Worker]\n    subgraph N\n      G --> H\n    end\n  end\n  subgraph T\n    D --> E\n  end\n  C[Output]\n  B --> C\n  C ==> D\n  B --> B\n  F --> C\n  B --> G\n  A --> H\n  style S fill:#BBDEFB\n  style N fill:navy\n  style C fill:#BBDEFB';
     const { svg } = render(src, options);
     const casings =
-      /<g class="pele-casings" fill="none" stroke="var\(--_bg\)" stroke-width="5"[^>]* pointer-events="none">(.*?)<\/g>/.exec(
+      /<g class="pelers-casings" fill="none" stroke="var\(--_bg\)" stroke-width="5"[^>]* pointer-events="none">(.*?)<\/g>/.exec(
         svg
       )![1];
     const group = (id: string): string =>
-      new RegExp(`<g class="pele-edge[^"]*" data-id="${id}"[^>]*>.*?</g>`).exec(svg)![0];
+      new RegExp(`<g class="pelers-edge[^"]*" data-id="${id}"[^>]*>.*?</g>`).exec(svg)![0];
     const edge = (id: string): string => new RegExp(`data-id="${id}"[^>]*><path d="([^"]+)"`).exec(svg)![1];
     const cased = (id: string): boolean => casings.includes(`<path d="${edge(id)}"/>`);
-    const light = 'var(--pele-fg-on-light,#1f1f1f)';
+    const light = 'var(--pelers-fg-on-light,#1f1f1f)';
     // Inside one fill: that fill's ink, on the line and its arrowhead.
     for (const id of ['L_A_B_0', 'L_B_B_0']) {
       expect(cased(id)).toBe(false);
       expect(group(id)).toContain(` stroke="${light}"`);
-      expect(group(id)).toContain(`class="pele-marker"`);
-      expect(group(id)).toMatch(new RegExp(`class="pele-marker"[^>]* fill="${light.replace(/[()]/g, '\\$&')}"`));
+      expect(group(id)).toContain(`class="pelers-marker"`);
+      expect(group(id)).toMatch(new RegExp(`class="pelers-marker"[^>]* fill="${light.replace(/[()]/g, '\\$&')}"`));
     }
-    expect(group('L_G_H_0')).toContain(' stroke="var(--pele-fg-on-dark,#fff)"');
+    expect(group('L_G_H_0')).toContain(' stroke="var(--pelers-fg-on-dark,#fff)"');
     // Across a fill's border, including into a nested fill: a casing and the theme's line.
     for (const id of ['L_B_C_0', 'L_B_G_0', 'L_A_H_0']) {
       expect(cased(id)).toBe(true);
-      expect(group(id)).not.toContain('--pele-fg-on');
+      expect(group(id)).not.toContain('--pelers-fg-on');
     }
     for (const id of ['L_C_D_0', 'L_D_E_0', 'L_F_C_0']) {
       expect(cased(id)).toBe(false);
-      expect(group(id)).not.toContain('--pele-fg-on');
+      expect(group(id)).not.toContain('--pelers-fg-on');
     }
     expect(casings).toMatch(/Z" fill="var\(--_bg\)" stroke="var\(--_bg\)"\/>/);
-    expect(casings).not.toContain('pele-marker');
-    expect(svg.indexOf('class="pele-casings"')).toBeLessThan(svg.indexOf('class="pele-edges"'));
+    expect(casings).not.toContain('pelers-marker');
+    expect(svg.indexOf('class="pelers-casings"')).toBeLessThan(svg.indexOf('class="pelers-edges"'));
     expect(render(src.replace(/\n  style [SN] fill:\S+/g, ''), options).svg).not.toMatch(
-      /pele-casings|--pele-fg-on-[a-z]+,#[0-9a-f]+\)" stroke|class="pele-edge[^>]*--pele-fg-on/
+      /pelers-casings|--pelers-fg-on-[a-z]+,#[0-9a-f]+\)" stroke|class="pelers-edge[^>]*--pelers-fg-on/
     );
   });
 
@@ -274,9 +274,9 @@ describe('flowchart rendering', () => {
       { box: [10, 0, 50, 50], shape: ' style="fill:navy;"' },
     ];
     expect(overFills('M0,10L8,10', [15, 10], fills)).toBe('');
-    expect(overFills('M0,10L8,10', [9, 10], fills)).toBe('var(--pele-fg-on-light,#1f1f1f)');
+    expect(overFills('M0,10L8,10', [9, 10], fills)).toBe('var(--pelers-fg-on-light,#1f1f1f)');
     // A path that starts on a border and stays inside is held by that fill.
-    expect(overFills('M-20,10L8,10', [9, 10], fills)).toBe('var(--pele-fg-on-light,#1f1f1f)');
+    expect(overFills('M-20,10L8,10', [9, 10], fills)).toBe('var(--pelers-fg-on-light,#1f1f1f)');
   });
 
   it('cases an edge whose curve runs into a filled subgraph', () => {
@@ -284,7 +284,7 @@ describe('flowchart rendering', () => {
       'flowchart LR\nsubgraph S\n  A\n  B --> G\nend\nD\nE --> A\nD --> F\nF --> C\nB --> C\nstyle S fill:white',
       options
     );
-    const casings = /<g class="pele-casings"[^>]*>(.*)<\/g><g class="pele-edges"/.exec(svg)![1];
+    const casings = /<g class="pelers-casings"[^>]*>(.*)<\/g><g class="pelers-edges"/.exec(svg)![1];
     const edge = (id: string): string => new RegExp(`data-id="${id}"><path d="([^"]+)"`).exec(svg)![1];
     expect(casings).toContain(`<path d="${edge('L_F_C_0')}"/>`);
     expect(casings).not.toContain(`<path d="${edge('L_D_F_0')}"/>`);
@@ -292,7 +292,7 @@ describe('flowchart rendering', () => {
 
   it('cases an edge as wide and as faint as its line style makes it', () => {
     const casings = (link: string, fill = 'white'): string =>
-      /<g class="pele-casings"[^>]*>(.*)<\/g><g class="pele-edges"/.exec(
+      /<g class="pelers-casings"[^>]*>(.*)<\/g><g class="pelers-edges"/.exec(
         render(`flowchart TB\nsubgraph S\n  A\nend\nA --x B\nstyle S fill:${fill}\n${link}`, options).svg
       )?.[1] ?? '';
     expect(casings('linkStyle 0 stroke-width:10px')).toMatch(
@@ -305,7 +305,7 @@ describe('flowchart rendering', () => {
     expect(casings('', 'transparent')).toBe('');
     expect(casings('', '#0000')).toBe('');
     const faded = render('flowchart TB\nsubgraph S\n  A --> B\nend\nstyle S fill:black,opacity:0', options).svg;
-    expect(faded).not.toMatch(/pele-casings|--pele-fg-on/);
+    expect(faded).not.toMatch(/pelers-casings|--pelers-fg-on/);
   });
 
   it('drops style values that could load resources or break out of the attribute', () => {
@@ -335,9 +335,9 @@ describe('flowchart rendering', () => {
 
   it('draws subgraphs as clusters behind their members', () => {
     const { svg } = render('flowchart TD\n  subgraph one [First group]\n    A --> B\n  end\n  B --> C', options);
-    expect(svg).toMatch(/<g class="pele-cluster" data-id="one">/);
+    expect(svg).toMatch(/<g class="pelers-cluster" data-id="one">/);
     expect(svg).toContain('First group');
-    expect(svg.indexOf('pele-clusters')).toBeLessThan(svg.indexOf('pele-nodes'));
+    expect(svg.indexOf('pelers-clusters')).toBeLessThan(svg.indexOf('pelers-nodes'));
   });
 
   it("ignores a subgraph's direction when its nodes link outside it", () => {
@@ -374,16 +374,16 @@ describe('flowchart rendering', () => {
     const { svg } = render('flowchart LR\n  A --> B\n  B --- C\n  C --x D\n  D o--o E\n  E <--> F', options);
     expect(svg).not.toContain('<marker');
     expect(svg).not.toContain('<defs');
-    expect(svg.match(/class="pele-marker"/g)?.length).toBe(6);
+    expect(svg.match(/class="pelers-marker"/g)?.length).toBe(6);
   });
 
   it('keeps an arrowhead apart from the edge that leaves beside it', () => {
     const { svg } = render('flowchart TD\n  A --> B\n  B --> A', options);
-    const tips = [...svg.matchAll(/class="pele-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
+    const tips = [...svg.matchAll(/class="pelers-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
       Number(m[1]),
       Number(m[2]),
     ]);
-    const starts = [...svg.matchAll(/<g class="pele-edge"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map((m) => [
+    const starts = [...svg.matchAll(/<g class="pelers-edge"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map((m) => [
       Number(m[1]),
       Number(m[2]),
     ]);
@@ -416,11 +416,11 @@ describe('flowchart rendering', () => {
         .reverse();
       const [ex, ey] = at('E');
       const r = Number(svg.match(/data-id="E"[^>]*><circle r="([\d.]+)"/)![1]);
-      const starts = [...svg.matchAll(/<g class="pele-edge"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map((m) => [
+      const starts = [...svg.matchAll(/<g class="pelers-edge"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map((m) => [
         Number(m[1]),
         Number(m[2]),
       ]);
-      const tips = [...svg.matchAll(/class="pele-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
+      const tips = [...svg.matchAll(/class="pelers-marker" d="M([-\d.]+),([-\d.]+)L/g)].map((m) => [
         Number(m[1]),
         Number(m[2]),
       ]);
@@ -440,7 +440,7 @@ describe('flowchart rendering', () => {
     const { svg } = render(source, options);
     const boxes = [
       ...svg.matchAll(
-        /class="pele-node[^"]*" data-id="\w+" transform="translate\(([-\d.]+),([-\d.]+)\)"><rect x="([-\d.]+)" y="([-\d.]+)"/g
+        /class="pelers-node[^"]*" data-id="\w+" transform="translate\(([-\d.]+),([-\d.]+)\)"><rect x="([-\d.]+)" y="([-\d.]+)"/g
       ),
     ].map((m) => ({
       x: Number(m[1]),
@@ -449,7 +449,7 @@ describe('flowchart rendering', () => {
       h: -2 * Number(m[4]),
     }));
     expect(boxes).toHaveLength(6);
-    const paths = [...svg.matchAll(/<g class="pele-edge"[^>]*><path d="([^"]+)"/g)].map((m) => m[1]);
+    const paths = [...svg.matchAll(/<g class="pelers-edge"[^>]*><path d="([^"]+)"/g)].map((m) => m[1]);
     expect(paths).toHaveLength(8);
     for (const d of paths) {
       // Straight runs and rounded corners only.
@@ -461,7 +461,7 @@ describe('flowchart rendering', () => {
       }
     }
     // Arrowheads point straight along the flow: the two back corners are level.
-    for (const m of svg.matchAll(/class="pele-marker" d="M[-\d.]+,[-\d.]+L[-\d.]+,([-\d.]+)L[-\d.]+,([-\d.]+)Z"/g))
+    for (const m of svg.matchAll(/class="pelers-marker" d="M[-\d.]+,[-\d.]+L[-\d.]+,([-\d.]+)L[-\d.]+,([-\d.]+)Z"/g))
       expect(Number(m[1])).toBeCloseTo(Number(m[2]), 5);
   });
 
@@ -483,7 +483,7 @@ describe('flowchart rendering', () => {
       options
     );
     const tipX = Number(svg.match(/data-id="C" transform="translate\(([-\d.]+),/)![1]);
-    const arrow = svg.match(/data-id="L_A_C_0"><path [^>]*\/><path class="pele-marker" d="M([-\d.]+),/)!;
+    const arrow = svg.match(/data-id="L_A_C_0"><path [^>]*\/><path class="pelers-marker" d="M([-\d.]+),/)!;
     expect(Number(arrow[1])).toBeCloseTo(tipX, 1);
   });
 
@@ -522,7 +522,7 @@ describe('flowchart rendering', () => {
     const label = (id: string): number => {
       const rect = svg.match(
         new RegExp(
-          `class="pele-edge-label" data-id="${id}"><rect x="[-\\d.]+" y="([-\\d.]+)" width="[-\\d.]+" height="([-\\d.]+)"`
+          `class="pelers-edge-label" data-id="${id}"><rect x="[-\\d.]+" y="([-\\d.]+)" width="[-\\d.]+" height="([-\\d.]+)"`
         )
       )!;
       return Number(rect[1]) + Number(rect[2]) / 2;
@@ -537,7 +537,7 @@ describe('flowchart rendering', () => {
   it('keeps invisible links out of the drawing but in the layout', () => {
     const linked = render('flowchart LR\n  A ~~~ B', options);
     const apart = render('flowchart LR\n  A\n  B', options);
-    expect(linked.svg).not.toContain('pele-edge"');
+    expect(linked.svg).not.toContain('pelers-edge"');
     expect(linked.width).toBeGreaterThan(apart.width - 1);
     expect(linked.height).toBeLessThan(apart.height);
   });
@@ -596,10 +596,10 @@ describe('public api', () => {
       try {
         render('zenuml\n A->B: hi');
       } catch (error) {
-        return error as PeleError;
+        return error as PelersError;
       }
     })();
-    expect(unsupported).toBeInstanceOf(PeleError);
+    expect(unsupported).toBeInstanceOf(PelersError);
     expect(unsupported?.code).toBe('unsupported-diagram');
     expect(unsupported?.type).toBe(null);
 
@@ -607,7 +607,7 @@ describe('public api', () => {
       try {
         render('flowchart TD\n  A --> B\n  C --> --> D\n  E');
       } catch (error) {
-        return error as PeleError;
+        return error as PelersError;
       }
     })();
     expect(syntax?.code).toBe('syntax');

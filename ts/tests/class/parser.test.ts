@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ClassDb } from '../../src/diagrams/class/db.js';
 import { buildClassGraph } from '../../src/diagrams/class/graph.js';
 import { parseClassDiagram } from '../../src/diagrams/class/parser.js';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 import { parse as parseAny } from '../../src/index.js';
 
 function parse(src: string): ClassDb {
@@ -168,7 +168,7 @@ describe('class diagram parser', () => {
 
   it('accepts statements with no header line when the input ends inside a token, as the grammar does', () => {
     expect([...parse('B <|-- A~').classes.keys()]).toEqual(['B', 'A']);
-    expect(() => parse('class A')).toThrow(PeleError);
+    expect(() => parse('class A')).toThrow(PelersError);
   });
 
   it('reports syntax errors in the form Mermaid uses', () => {
@@ -177,7 +177,7 @@ describe('class diagram parser', () => {
     );
     expect(() => parse('classDiagram\nclass A { x')).toThrow(/got 'EOF_IN_STRUCT'/);
     expect(() => parse('classDiagram\nclass A\n@')).toThrow(/Lexical error on line 3\. Unrecognized text\./);
-    expect(() => parse('classDiagram\n')).toThrow(PeleError);
+    expect(() => parse('classDiagram\n')).toThrow(PelersError);
     expect(() => parse('classDiagram\nnamespace N {\n}')).toThrow(
       /Expecting 'NAMESPACE', 'CLASS', 'NOTE_FOR', 'NOTE', got 'STRUCT_STOP'/
     );

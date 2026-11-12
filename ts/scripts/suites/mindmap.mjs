@@ -8,7 +8,7 @@ export default {
   notPorted: [
     [
       'mindmapLayout.spec.ts',
-      "Tests which of Mermaid's layout engines (cose-bilkent, ELK, dagre) the config selects. Pele has one mindmap layout.",
+      "Tests which of Mermaid's layout engines (cose-bilkent, ELK, dagre) the config selects. Pelers has one mindmap layout.",
     ],
   ],
   rewrite: [

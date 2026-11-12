@@ -27,7 +27,7 @@ describe('packet rendering', () => {
     const { svg, type, width } = render(TCP, options);
     expect(type).toBe('packet');
     expect(supports('packet-beta\n0: "a"')).toBe(true);
-    expect(svg.match(/class="pele-node"/g)?.length).toBe(4);
+    expect(svg.match(/class="pelers-node"/g)?.length).toBe(4);
     expect(svg).toContain('>Source Port<');
     expect(svg).toContain('data-id="32-63"');
     expect(width).toBe(32 * 32 - 5 + 16);
@@ -41,7 +41,7 @@ describe('packet rendering', () => {
 
   it('numbers the first and last bit of each field, and a single bit once', () => {
     const { svg } = render('packet\n0-15: "a"\n16: "b"', options);
-    const bits = svg.slice(svg.indexOf('pele-packet-bits'));
+    const bits = svg.slice(svg.indexOf('pelers-packet-bits'));
     expect(bits.match(/<text/g)?.length).toBe(3);
     expect(bits).toContain('>0<');
     expect(bits).toContain('text-anchor="end">15<');
@@ -51,7 +51,7 @@ describe('packet rendering', () => {
   it('hides bit numbers when showBits is off, and takes less height', () => {
     const shown = render('packet\n0-15: "a"\n32-47: "b"'.replace('32-47', '16-47'), options);
     const hidden = render(config('    showBits: false', 'packet\n0-15: "a"\n16-47: "b"'), options);
-    expect(hidden.svg).not.toContain('pele-packet-bits');
+    expect(hidden.svg).not.toContain('pelers-packet-bits');
     expect(hidden.height).toBeLessThan(shown.height);
   });
 
@@ -90,7 +90,7 @@ describe('packet rendering', () => {
     expect(descending.get('13-15')!).toBe(ascending.get('0-7')!);
     // A partly filled row keeps its lowest bit against the right edge.
     expect(descending.get('16-19')!).toBe(ascending.get('0-7')! + 12 * 32);
-    const bits = svg.slice(svg.indexOf('pele-packet-bits'));
+    const bits = svg.slice(svg.indexOf('pelers-packet-bits'));
     expect(bits.indexOf('>7<')).toBeLessThan(bits.indexOf('>0<'));
     expect(bits).toContain('text-anchor="end">0<');
   });
@@ -111,7 +111,7 @@ describe('packet rendering', () => {
     );
     const all = elements(own.svg);
     const rect = all.find((el) => el.name === 'rect')!;
-    const title = all[all.findIndex((el) => el.attrs.get('class') === 'pele-title') + 1];
+    const title = all[all.findIndex((el) => el.attrs.get('class') === 'pelers-title') + 1];
     expect(title.name).toBe('tspan');
     expect(Number(title.attrs.get('y'))).toBeGreaterThan(Number(rect.attrs.get('y')) + 32);
   });
@@ -159,8 +159,8 @@ describe('packet rendering', () => {
 
   it('writes accessible names and ignores unusable config', () => {
     const { svg } = render('packet\naccTitle: Name\naccDescr: Text\n0-31: "a"', options);
-    expect(svg).toContain('<title id="pele-title">Name</title>');
-    expect(svg).toContain('<desc id="pele-desc">Text</desc>');
+    expect(svg).toContain('<title id="pelers-title">Name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Text</desc>');
     const odd = render(
       config('    bitsPerRow: -4\n    bitWidth: "wide"\n    rowHeight: 0\n    paddingX: 9999', TCP),
       options

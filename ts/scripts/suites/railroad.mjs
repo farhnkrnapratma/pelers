@@ -9,22 +9,22 @@ export default {
     {
       file: 'railroadDb.spec.ts',
       test: 'should sanitize titles before storing them',
-      reason: 'Checks DOMPurify output. Pele stores text as written and escapes it when it writes the SVG.',
+      reason: 'Checks DOMPurify output. Pelers stores text as written and escapes it when it writes the SVG.',
     },
     {
       file: 'railroadDb.spec.ts',
       test: 'should sanitize rule names and terminal values at the db boundary',
-      reason: 'Checks DOMPurify output. Pele stores text as written and escapes it when it writes the SVG.',
+      reason: 'Checks DOMPurify output. Pelers stores text as written and escapes it when it writes the SVG.',
     },
   ],
   notPorted: [
     [
       'railroadRenderer.spec.ts',
-      "Tests Mermaid's DOM renderer: element transforms and path coordinates from a stubbed getBBox. Pele has its own layout.",
+      "Tests Mermaid's DOM renderer: element transforms and path coordinates from a stubbed getBBox. Pelers has its own layout.",
     ],
     [
       'styles.spec.ts',
-      'Tests the stylesheet text Mermaid generates from theme variables. Pele writes no stylesheet; colors come from CSS custom properties.',
+      'Tests the stylesheet text Mermaid generates from theme variables. Pelers writes no stylesheet; colors come from CSS custom properties.',
     ],
   ],
   rewrite: [

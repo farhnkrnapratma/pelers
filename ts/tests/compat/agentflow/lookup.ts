@@ -1,7 +1,7 @@
 import { isToolDefinition } from '../../../src/diagrams/agentflow/db.js';
 import type { AgentNode, AgentflowModel, ElementMapping } from '../../../src/diagrams/agentflow/types.js';
 
-// Mermaid's lookups over a parsed agentflow, which its specs call. Pele itself does not use them.
+// Mermaid's lookups over a parsed agentflow, which its specs call. Pelers itself does not use them.
 
 export { isToolDefinition };
 

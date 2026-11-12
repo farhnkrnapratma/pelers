@@ -15,7 +15,7 @@ describe('core without the full entry point', () => {
     expect(core.detectType(FLOW)).toBe('flowchart');
     expect(core.supports(FLOW)).toBe(false);
     expect(core.registered('flowchart')).toBe(false);
-    expect(() => core.render(FLOW)).toThrow(core.PeleError);
+    expect(() => core.render(FLOW)).toThrow(core.PelersError);
     try {
       core.render(FLOW);
     } catch (error) {
@@ -80,11 +80,11 @@ describe('core without the full entry point', () => {
 describe('the full entry point', () => {
   it('has every type registered', async () => {
     vi.resetModules();
-    const pele = await import('../src/index.js');
+    const pelers = await import('../src/index.js');
     const { all } = await import('../src/diagrams/registry.js');
     expect(all.length).toBe(33);
-    for (const diagram of all) expect(pele.registered(diagram.type)).toBe(true);
-    expect(pele.render(FLOW).type).toBe('flowchart');
-    expect(pele.render(PIE).type).toBe('pie');
+    for (const diagram of all) expect(pelers.registered(diagram.type)).toBe(true);
+    expect(pelers.render(FLOW).type).toBe('flowchart');
+    expect(pelers.render(PIE).type).toBe('pie');
   });
 });

@@ -10,7 +10,7 @@ export const log = {
 
 const options = { warn: (message: string) => log.warn(message) };
 
-// Mermaid's gantt database is a module-level singleton that `clear()` resets. This one holds a Pele
+// Mermaid's gantt database is a module-level singleton that `clear()` resets. This one holds a Pelers
 // model and exposes it through the names the specs call.
 class GanttDB extends GanttDb {
   constructor() {
@@ -81,7 +81,7 @@ export const parser = {
   },
 };
 
-// The specs use dayjs only to write expected dates in two fixed formats. Pele has no dayjs to depend on,
+// The specs use dayjs only to write expected dates in two fixed formats. Pelers has no dayjs to depend on,
 // so this reads those formats with the Date constructor, independently of the code under test.
 export function dayjs(text: string, format: string): { toDate(): Date } {
   const pattern = format === 'YYYY-MM-DD' ? /^(\d{4})-(\d\d)-(\d\d)$/ : /^(\d{4})-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)$/;

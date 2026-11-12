@@ -32,7 +32,7 @@ export function withTitle(
     width: full,
     height: Math.ceil(height + shift),
     content:
-      labelSvg(label, full / 2, pad + label.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+      labelSvg(label, full / 2, pad + label.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       `<g transform="translate(${num((full - width) / 2)},${num(shift)})">${content}</g>`,
   };
 }

@@ -242,10 +242,10 @@ export function renderKanban(model: KanbanModel, config: Config, options: Render
         titles[index],
         COLUMN_PAD + 4,
         COLUMN_PAD,
-        ' class="pele-cluster-label" font-weight="var(--_hw)"',
+        ' class="pelers-cluster-label" font-weight="var(--_hw)"',
         icons
       ) +
-      `<text class="pele-count" x="${edge}" y="${num(
+      `<text class="pelers-count" x="${edge}" y="${num(
         COLUMN_PAD + line / 2 + small * 0.35
       )}" text-anchor="end" font-size="${small}" fill="var(--_m)">${section.items.length}</text>`;
     if (has(section.icon)) {
@@ -265,9 +265,9 @@ export function renderKanban(model: KanbanModel, config: Config, options: Render
       const color = PRIORITY.get(priority);
       let inner = `<rect width="${cardWidth}" height="${num(card.height)}" fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>`;
       if (color !== undefined) {
-        inner += `<path class="pele-priority" d="M2.5,5V${num(card.height - 5)}" fill="none" ${color} stroke-width="3" stroke-linecap="round"/>`;
+        inner += `<path class="pelers-priority" d="M2.5,5V${num(card.height - 5)}" fill="none" ${color} stroke-width="3" stroke-linecap="round"/>`;
       }
-      inner += textBlock(card.label, CARD_PAD, CARD_PAD, ' class="pele-label"', icons);
+      inner += textBlock(card.label, CARD_PAD, CARD_PAD, ' class="pelers-label"', icons);
       if (has(item.icon)) {
         inner += iconSvg(item.icon!, cardWidth - CARD_PAD - glyph, CARD_PAD + (smallLine - glyph) / 2, glyph, icons);
       }
@@ -276,11 +276,11 @@ export function renderKanban(model: KanbanModel, config: Config, options: Render
         const top = bottom - card.meta;
         const href = baseUrl ? linkUrl(safeUrl(baseUrl.replace('#TICKET#', () => item.ticket!)), options) : undefined;
         if (href === undefined) {
-          inner += textBlock(card.ticket, CARD_PAD, top, ' class="pele-ticket" fill="var(--_m)"', icons);
+          inner += textBlock(card.ticket, CARD_PAD, top, ' class="pelers-ticket" fill="var(--_m)"', icons);
         } else {
           inner +=
             `<a href="${esc(href)}" target="_blank"${relAttr(options)}>` +
-            textBlock(card.ticket, CARD_PAD, top, ' class="pele-ticket" fill="var(--_c)"', icons) +
+            textBlock(card.ticket, CARD_PAD, top, ' class="pelers-ticket" fill="var(--_c)"', icons) +
             '</a>';
           links.push({ id: item.id, href, internal: false });
         }
@@ -290,18 +290,18 @@ export function renderKanban(model: KanbanModel, config: Config, options: Render
           card.assigned,
           cardWidth - CARD_PAD,
           bottom - card.assigned.height,
-          ' class="pele-assigned" fill="var(--_m)"',
+          ' class="pelers-assigned" fill="var(--_m)"',
           icons,
           true
         );
       }
-      body += `<g class="pele-node pele-card${color === undefined ? '' : ' pele-priority-' + priority.replace(' ', '-')}${classNames(
+      body += `<g class="pelers-node pelers-card${color === undefined ? '' : ' pelers-priority-' + priority.replace(' ', '-')}${classNames(
         item.cssClasses ?? ''
       )}" data-id="${escText(item.id)}" transform="translate(${COLUMN_PAD},${num(y)})" font-size="${small}">${inner}</g>`;
       y += card.height + CARD_GAP;
     }
 
-    out += `<g class="pele-cluster pele-column${classNames(section.cssClasses ?? '')}" data-id="${escText(section.id)}" transform="translate(${num(
+    out += `<g class="pelers-cluster pelers-column${classNames(section.cssClasses ?? '')}" data-id="${escText(section.id)}" transform="translate(${num(
       left + (index % perRow) * (columnWidth + COLUMN_GAP)
     )},${num(pad + titleHeight + rowTops[row])})">${body}</g>`;
   }
@@ -309,7 +309,7 @@ export function renderKanban(model: KanbanModel, config: Config, options: Render
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(boardHeight + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') + out;
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') + out;
 
   return {
     svg: svgDocument('kanban', totalWidth, totalHeight, size, options, {}, content),

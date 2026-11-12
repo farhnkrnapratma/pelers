@@ -1,4 +1,4 @@
-import { PeleError, written } from '../../errors.js';
+import { PelersError, written } from '../../errors.js';
 import { T } from './tokens.js';
 import { isBlank, isDigit, isHex, isLetter } from '../../util/chars.js';
 
@@ -107,10 +107,10 @@ function startsToken(src: string, at: number): boolean {
 
 // Mermaid reports the first character no token starts with, and how many characters its lexer
 // skipped before one did.
-function lexError(src: string, offset: number, length: number): PeleError {
+function lexError(src: string, offset: number, length: number): PelersError {
   const [line, column] = lineColumn(src, offset);
   const [from, to] = [written(src, offset)[1], written(src, offset + length)[1]];
-  return new PeleError(
+  return new PelersError(
     `Error lexing usecase diagram: unexpected character: ->${src.charAt(offset)}<- at offset: ${from}, skipped ${to - from} characters. at line ${line}, column ${column} [${from},${to})`,
     'syntax',
     { type: 'usecase', line, column }

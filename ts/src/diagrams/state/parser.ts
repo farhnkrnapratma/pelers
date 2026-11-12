@@ -1,4 +1,4 @@
-import { PeleError, locate, syntaxError } from '../../errors.js';
+import { PelersError, locate, syntaxError } from '../../errors.js';
 import { tokenize } from './lexer.js';
 import { T, TOKEN_NAMES } from './tokens.js';
 import type { StateStmt, Stmt } from './types.js';
@@ -26,7 +26,7 @@ export function parseState(src: string, db: StateBuilder): Stmt[] {
   const fail = (expected: string): never => {
     const t = types[i];
     if (t === T.ERROR) {
-      if (error !== undefined) throw new PeleError(error, 'syntax', { type: 'state', ...locate(src, starts[i]) });
+      if (error !== undefined) throw new PelersError(error, 'syntax', { type: 'state', ...locate(src, starts[i]) });
       throw syntaxError('state', src, starts[i], '', true);
     }
     throw syntaxError('state', src, starts[i], `Expecting ${expected}, got '${TOKEN_NAMES[t]}'`);

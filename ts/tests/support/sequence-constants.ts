@@ -1,4 +1,4 @@
-// The tables Mermaid's sequenceDb.ts exposes to its grammar and its specs. Pele's own code has
+// The tables Mermaid's sequenceDb.ts exposes to its grammar and its specs. Pelers's own code has
 // the same numbers as inlined constants; the ported specs and the parser comparison check that
 // the two agree.
 export const LINETYPE = {

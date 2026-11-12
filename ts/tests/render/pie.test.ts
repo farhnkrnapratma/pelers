@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -10,7 +10,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -20,11 +20,11 @@ describe('pie rendering', () => {
     const { svg, type } = render('pie title Pets\n "Dogs" : 386\n "Cats" : 85\n "Rats" : 15', options);
     expect(type).toBe('pie');
     expect(supports('pie\n "a": 1')).toBe(true);
-    expect(svg.match(/class="pele-slice"/g)?.length).toBe(3);
-    expect(svg.match(/class="pele-legend-item"/g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-slice"/g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-legend-item"/g)?.length).toBe(3);
     expect(svg).toContain('>79%<');
     expect(svg).toContain('>Pets<');
-    expect(svg).toContain('var(--pele-series-1,');
+    expect(svg).toContain('var(--pelers-series-1,');
   });
 
   it('shows values in the legend with showData', () => {
@@ -33,8 +33,8 @@ describe('pie rendering', () => {
 
   it('leaves out slices under one percent but keeps them in the legend', () => {
     const { svg } = render('pie\n "Big" : 1000\n "Tiny" : 1', options);
-    expect(svg.match(/class="pele-slice"/g)?.length).toBe(1);
-    expect(svg.match(/class="pele-legend-item"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-slice"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-legend-item"/g)?.length).toBe(2);
   });
 
   it('draws a single full slice and an empty chart', () => {
@@ -55,7 +55,7 @@ describe('pie rendering', () => {
   it('moves the labels of thin slices outside the rim apart', () => {
     const { svg } = render('pie\n "Calcium" : 2\n "Potassium" : 2.4\n "Magnesium" : 46\n "Test" : 50', options);
     const outside = [
-      ...svg.matchAll(/<g class="pele-slice-labels"[^>]*font-size="(\d+)" text-anchor="middle">(.*?)<\/g>/g),
+      ...svg.matchAll(/<g class="pelers-slice-labels"[^>]*font-size="(\d+)" text-anchor="middle">(.*?)<\/g>/g),
     ].find((m) => !m[0].includes('fill='));
     expect(outside).toBeDefined();
     const size = Number(outside![1]);
@@ -142,7 +142,7 @@ describe('pie rendering', () => {
       try {
         render(src, big);
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
+        expect(error).toBeInstanceOf(PelersError);
       }
       expect(performance.now() - started, src.slice(0, 30)).toBeLessThan(2000);
     }
@@ -155,7 +155,7 @@ describe('pie rendering', () => {
       '-' + '1.'.repeat(24000),
     ]) {
       const started = performance.now();
-      expect(() => render('pie\n"a": ' + tail, options)).toThrow(PeleError);
+      expect(() => render('pie\n"a": ' + tail, options)).toThrow(PelersError);
       expect(performance.now() - started).toBeLessThan(500);
     }
   });

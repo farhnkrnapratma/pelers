@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "pele",
+      "name": "pelers",
       "devDependencies": {
         "@braintree/sanitize-url": "^7.1.2",
         "@eslint/js": "^10.0.1",

@@ -2,7 +2,7 @@ import { buildUsecaseAst } from './usecase-graph-ast.js';
 import type { UsecaseModel } from '../../src/diagrams/usecase/types.js';
 
 // Mermaid keeps nodes, groups, class definitions and JSON key orders as plain objects keyed by id,
-// where an id of `__proto__` is silently lost. Pele keeps Maps; this gives the object Mermaid
+// where an id of `__proto__` is silently lost. Pelers keeps Maps; this gives the object Mermaid
 // would have built from the same entries.
 export function record<V>(map: ReadonlyMap<string, V>): Record<string, V> {
   const out: Record<string, V> = {};
@@ -10,7 +10,7 @@ export function record<V>(map: ReadonlyMap<string, V>): Record<string, V> {
   return out;
 }
 
-// Pele's use case AST in the shape Mermaid publishes it.
+// Pelers's use case AST in the shape Mermaid publishes it.
 export function mermaidAst(model: UsecaseModel): Record<string, unknown> {
   const ast = buildUsecaseAst(model);
   const nodes = record(ast.nodes);

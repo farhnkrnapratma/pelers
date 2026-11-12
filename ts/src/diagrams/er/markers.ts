@@ -16,8 +16,8 @@ export function erMarker(type: string, x: number, y: number, dx: number, dy: num
   const bar = (back: number): string => `M${at(back, -BAR)}L${at(back, BAR)}`;
   const foot = `M${at(0, -FOOT)}L${at(FOOT_LENGTH, 0)}L${at(0, FOOT)}`;
   const ring = (back: number): string =>
-    `<circle class="pele-marker" cx="${num(x - dx * back)}" cy="${num(y - dy * back)}" r="${RING}" fill="var(--_bg)"/>`;
-  const path = (d: string): string => `<path class="pele-marker" d="${d}"/>`;
+    `<circle class="pelers-marker" cx="${num(x - dx * back)}" cy="${num(y - dy * back)}" r="${RING}" fill="var(--_bg)"/>`;
+  const path = (d: string): string => `<path class="pelers-marker" d="${d}"/>`;
 
   switch (type) {
     case 'only_one':
@@ -29,7 +29,7 @@ export function erMarker(type: string, x: number, y: number, dx: number, dy: num
     case 'zero_or_more':
       return path(foot) + ring(FOOT_LENGTH + RING + 0.5);
     case 'md_parent':
-      return `<path class="pele-marker" d="M${at(0, 0)}L${at(6, 4)}L${at(12, 0)}L${at(6, -4)}Z" fill="var(--_bg)"/>`;
+      return `<path class="pelers-marker" d="M${at(0, 0)}L${at(6, 4)}L${at(12, 0)}L${at(6, -4)}Z" fill="var(--_bg)"/>`;
   }
   return '';
 }

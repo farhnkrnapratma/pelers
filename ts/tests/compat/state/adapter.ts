@@ -9,7 +9,7 @@ export function setConfig(next: Record<string, unknown>): void {
   config = { ...config, ...next };
 }
 
-// Exposes Pele's state diagram model through the method names Mermaid's specs call on StateDB.
+// Exposes Pelers's state diagram model through the method names Mermaid's specs call on StateDB.
 export class StateDB extends StateDb {
   constructor(_version?: number) {
     super();

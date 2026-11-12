@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../src/index.js';
+import { PelersError, parse, render } from '../src/index.js';
 import { tokenize } from '../src/diagrams/flowchart/lexer.js';
 import { encodeEntities, preprocess } from '../src/preprocess.js';
 import { metricsMeasurer } from '../src/text/measurer.js';
 
 // Inputs built to trigger worst cases: regex backtracking, quadratic scans, deep recursion,
-// and oversized layouts. Each must finish quickly and either succeed or fail with a PeleError.
+// and oversized layouts. Each must finish quickly and either succeed or fail with a PelersError.
 // The bounds are loose; a regression here is seconds or a hang, not milliseconds.
 
 const N = 50000;
@@ -111,7 +111,7 @@ describe('worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -133,7 +133,7 @@ describe('worst cases', () => {
     }
     const chain = (count: number): string => 'flowchart LR\n' + repeat(count, (i) => `N${i} --> N${i + 1}\n`);
     expect(render(chain(5000), { measurer: metricsMeasurer, limit: Infinity }).svg).toContain('<svg');
-    expect(() => render(chain(5001), { measurer: metricsMeasurer, limit: Infinity })).toThrow(PeleError);
+    expect(() => render(chain(5001), { measurer: metricsMeasurer, limit: Infinity })).toThrow(PelersError);
     expect(() => render(chain(11), { measurer: metricsMeasurer, maxEdges: 10 })).toThrow(
       'Edge limit exceeded. The limit is 10.'
     );
@@ -141,7 +141,7 @@ describe('worst cases', () => {
     try {
       render(chain(11), { maxEdges: 10 });
     } catch (error) {
-      expect((error as PeleError).code).toBe('limit');
+      expect((error as PelersError).code).toBe('limit');
     }
     // A diagram cannot raise the limit for itself.
     const raised = `---\nconfig:\n  maxEdges: 100000\n  flowchart:\n    maxEdges: 100000\n---\n%%{init: {'maxEdges': 100000}}%%\n${chain(11)}`;

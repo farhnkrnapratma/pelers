@@ -134,7 +134,7 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
   if (!hasPlot) {
     const width = Math.ceil(Math.max(title.width, 1) + 2 * pad);
     const height = Math.ceil(Math.max(title.height, 1) + 2 * pad);
-    const content = labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"');
+    const content = labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"');
     return { svg: svgDocument('gantt', width, height, size, options, model, content), width, height, links: [] };
   }
 
@@ -249,12 +249,12 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
     while (line < vertEnds.length && cx - label.width / 2 < vertEnds[line] + 8) line++;
     vertEnds[line] = cx + label.width / 2;
     extent = Math.max(extent, vertEnds[line]);
-    vertLines += `<path class="pele-vert" data-id="${escText(task.id)}" d="M${num(vx)},${num(plotTop - gridLead)}V${num(plotBottom)}"/>`;
+    vertLines += `<path class="pelers-vert" data-id="${escText(task.id)}" d="M${num(vx)},${num(plotTop - gridLead)}V${num(plotBottom)}"/>`;
     vertLabels += labelSvg(
       label,
       cx,
       vertTop + line * vertLine + vertLine / 2,
-      ` class="pele-vert-label" data-id="${escText(task.id)}"`
+      ` class="pelers-vert-label" data-id="${escText(task.id)}"`
     );
   }
 
@@ -272,7 +272,7 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
     const y = plotTop + row * rowHeight;
     const h = (end - row) * rowHeight;
     if (categories.size > 1 || section !== '') {
-      bands += `<rect class="pele-section pele-section-${index}" x="0" y="${num(y)}" width="${width}" height="${num(h)}" fill="${
+      bands += `<rect class="pelers-section pelers-section-${index}" x="0" y="${num(y)}" width="${width}" height="${num(h)}" fill="${
         index % 2 === 0 ? 'var(--_s)' : 'none'
       }"/>`;
     }
@@ -281,7 +281,7 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
       label,
       pad + 8 + label.width / 2,
       y + h / 2,
-      ` class="pele-section-label" data-id="${escText(section)}"`,
+      ` class="pelers-section-label" data-id="${escText(section)}"`,
       options.icons
     );
     row = end;
@@ -323,16 +323,16 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
     const task = bar.task;
     const cy = plotTop + bar.row * rowHeight + rowHeight / 2;
     const state = task.active ? 'active' : task.done ? 'done' : '';
-    let classes = 'pele-task';
-    if (state) classes += ' pele-' + state;
-    if (task.crit) classes += ' pele-crit';
-    if (task.milestone) classes += ' pele-milestone';
-    if (task.classes.includes('clickable')) classes += ' pele-clickable';
+    let classes = 'pelers-task';
+    if (state) classes += ' pelers-' + state;
+    if (task.crit) classes += ' pelers-crit';
+    if (task.milestone) classes += ' pelers-milestone';
+    if (task.classes.includes('clickable')) classes += ' pelers-clickable';
 
     let shape = '';
     let textFill = '';
     if (Number.isNaN(bar.x0)) {
-      classes += ' pele-unscheduled';
+      classes += ' pelers-unscheduled';
       textFill = ' fill="var(--_m)"';
     } else {
       // A critical task takes the critical color in place of the accent. Done, it keeps the fill
@@ -356,7 +356,7 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
       else if (state === 'done') textFill = ' fill="var(--_m)"';
     }
 
-    let body = shape + labelSvg(bar.label, bar.labelX, cy, ` class="pele-label"${textFill}`);
+    let body = shape + labelSvg(bar.label, bar.labelX, cy, ` class="pelers-label"${textFill}`);
     const url = model.links.get(task.id);
     if (url !== undefined) body = linked(body, url, task.id, links, options);
     tasksOut += `<g class="${classes}" data-id="${escText(task.id)}">${body}</g>`;
@@ -368,7 +368,7 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
     const top = plotTop - gridLead;
     const style = model.todayMarker ? resolveStyle(model.todayMarker.split(',')).line : '';
     today =
-      `<g class="pele-today"><path d="M${num(tx)},${num(top)}V${num(plotBottom)}" fill="none" stroke="var(--_c)" stroke-width="2"${style}/>` +
+      `<g class="pelers-today"><path d="M${num(tx)},${num(top)}V${num(plotBottom)}" fill="none" stroke="var(--_c)" stroke-width="2"${style}/>` +
       (style
         ? ''
         : `<path d="M${num(tx - 4)},${num(top - 5)}H${num(tx + 4)}L${num(tx)},${num(top + 1)}Z" fill="var(--_c)"/>`) +
@@ -379,18 +379,18 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
     `M${num(left)},${num(plotBottom)}H${num(right)}` +
     (topAxis ? `M${num(left)},${num(plotTop - gridLead)}H${num(right)}` : '');
   const content =
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    (bands ? `<g class="pele-sections">${bands}</g>` : '') +
-    (excluded ? `<g class="pele-excluded" fill="var(--_a)">${excluded}</g>` : '') +
-    `<g class="pele-grid" fill="none"><path d="${grid}" stroke="var(--_b)" stroke-dasharray="1 3"/><path d="${axisLine}" stroke="var(--_b)"/></g>` +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    (bands ? `<g class="pelers-sections">${bands}</g>` : '') +
+    (excluded ? `<g class="pelers-excluded" fill="var(--_a)">${excluded}</g>` : '') +
+    `<g class="pelers-grid" fill="none"><path d="${grid}" stroke="var(--_b)" stroke-dasharray="1 3"/><path d="${axisLine}" stroke="var(--_b)"/></g>` +
     (vertLines
-      ? `<g class="pele-verts" fill="none" stroke="var(--_l)" stroke-width="1.5" stroke-dasharray="4 3">${vertLines}</g>`
+      ? `<g class="pelers-verts" fill="none" stroke="var(--_l)" stroke-width="1.5" stroke-dasharray="4 3">${vertLines}</g>`
       : '') +
     today +
-    `<g class="pele-tasks" font-size="${num(labelSize)}">${tasksOut}</g>` +
-    `<g class="pele-section-labels" font-size="${num(sectionSize)}">${sectionOut}</g>` +
-    `<g class="pele-axis" font-size="${tickSize}" fill="var(--_m)">${axisBottom}${axisTop}</g>` +
-    (vertLabels ? `<g class="pele-vert-labels" font-size="${num(labelSize)}">${vertLabels}</g>` : '');
+    `<g class="pelers-tasks" font-size="${num(labelSize)}">${tasksOut}</g>` +
+    `<g class="pelers-section-labels" font-size="${num(sectionSize)}">${sectionOut}</g>` +
+    `<g class="pelers-axis" font-size="${tickSize}" fill="var(--_m)">${axisBottom}${axisTop}</g>` +
+    (vertLabels ? `<g class="pelers-vert-labels" font-size="${num(labelSize)}">${vertLabels}</g>` : '');
 
   return { svg: svgDocument('gantt', width, height, size, options, model, content), width, height, links };
 }

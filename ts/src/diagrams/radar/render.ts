@@ -114,7 +114,7 @@ function draw(
     // Each label hangs off its axis on the side away from the center.
     const cx = u.x * at + (u.x > 0.01 ? label.width / 2 : u.x < -0.01 ? -label.width / 2 : 0);
     const cy = u.y * at + (u.y > 0.01 ? label.height / 2 : u.y < -0.01 ? -label.height / 2 : 0);
-    labels += `<g class="pele-axis-label" data-id="${escText(axes[i].name)}">${labelSvg(label, cx, cy, '')}</g>`;
+    labels += `<g class="pelers-axis-label" data-id="${escText(axes[i].name)}">${labelSvg(label, cx, cy, '')}</g>`;
     x0 = Math.min(x0, cx - label.width / 2);
     x1 = Math.max(x1, cx + label.width / 2);
     y0 = Math.min(y0, cy - label.height / 2);
@@ -131,7 +131,7 @@ function draw(
       return { x: unit[i].x * safe, y: unit[i].y * safe };
     });
     const color = seriesColor(index);
-    const attrs = ` class="pele-curve" data-id="${escText(curve.name)}" fill="${color}" stroke="${color}"`;
+    const attrs = ` class="pelers-curve" data-id="${escText(curve.name)}" fill="${color}" stroke="${color}"`;
     shapes +=
       graticule === 'circle'
         ? `<path${attrs} d="${closedRoundCurve(points, tension)}"/>`
@@ -160,7 +160,7 @@ function draw(
     const y = legendTop + index * ROW + ROW / 2;
     const color = seriesColor(index);
     legendOut +=
-      `<g class="pele-legend-item" data-id="${escText(curves[index].name)}">` +
+      `<g class="pelers-legend-item" data-id="${escText(curves[index].name)}">` +
       `<rect x="${num(legendX)}" y="${num(y - SWATCH / 2)}" width="${SWATCH}" height="${SWATCH}" rx="2" fill="${color}" fill-opacity="0.4" stroke="${color}"/>` +
       labelSvg(label, legendX + SWATCH + 8 + label.width / 2, y, '') +
       '</g>';
@@ -174,15 +174,15 @@ function draw(
   const origin = `translate(${num(pad + (bodyWidth - (x1 - x0)) / 2 - x0)},${num(pad + titleHeight - y0)})`;
 
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     `<g transform="${origin}">` +
-    (grid ? `<g class="pele-graticule" fill="none" stroke="var(--_a)">${grid}</g>` : '') +
-    (spokes ? `<path class="pele-axes" d="${spokes}" fill="none" stroke="var(--_b)"/>` : '') +
+    (grid ? `<g class="pelers-graticule" fill="none" stroke="var(--_a)">${grid}</g>` : '') +
+    (spokes ? `<path class="pelers-axes" d="${spokes}" fill="none" stroke="var(--_b)"/>` : '') +
     (shapes
-      ? `<g class="pele-curves" fill-opacity="0.2" stroke-width="1.5" stroke-linejoin="round">${shapes}</g>`
+      ? `<g class="pelers-curves" fill-opacity="0.2" stroke-width="1.5" stroke-linejoin="round">${shapes}</g>`
       : '') +
-    (labels ? `<g class="pele-axis-labels" font-size="${small}">${labels}</g>` : '') +
-    (legendOut ? `<g class="pele-legend" font-size="${small}">${legendOut}</g>` : '') +
+    (labels ? `<g class="pelers-axis-labels" font-size="${small}">${labels}</g>` : '') +
+    (legendOut ? `<g class="pelers-legend" font-size="${small}">${legendOut}</g>` : '') +
     '</g>';
 
   return {

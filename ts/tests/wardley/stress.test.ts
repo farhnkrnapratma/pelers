@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 const N = 50000;
@@ -91,7 +91,7 @@ describe('wardley worst cases', () => {
         try {
           render(src, big);
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(2000);
       },

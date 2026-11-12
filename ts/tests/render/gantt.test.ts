@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports, type GanttModel } from '../../src/index.js';
+import { PelersError, parse, render, supports, type GanttModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { elements } from '../support/xml.js';
@@ -29,7 +29,7 @@ function count(svg: string, className: string): number {
 function bars(svg: string): Map<string, { x: number; width: number }> {
   const out = new Map<string, { x: number; width: number }>();
   for (const m of svg.matchAll(
-    /<g class="pele-task[^"]*" data-id="([^"]*)">(?:<a [^>]*>)?<rect x="([-\d.]+)" y="[-\d.]+" width="([-\d.]+)"/g
+    /<g class="pelers-task[^"]*" data-id="([^"]*)">(?:<a [^>]*>)?<rect x="([-\d.]+)" y="[-\d.]+" width="([-\d.]+)"/g
   )) {
     out.set(m[1], { x: Number(m[2]), width: Number(m[3]) });
   }
@@ -41,13 +41,13 @@ describe('gantt rendering', () => {
     const { svg, type, width, height } = render(BASIC, options);
     expect(type).toBe('gantt');
     expect(supports(BASIC)).toBe(true);
-    expect(count(svg, 'pele-task')).toBe(4);
-    expect(count(svg, 'pele-section')).toBe(2);
-    expect(count(svg, 'pele-section-label')).toBe(2);
+    expect(count(svg, 'pelers-task')).toBe(4);
+    expect(count(svg, 'pelers-section')).toBe(2);
+    expect(count(svg, 'pelers-section-label')).toBe(2);
     expect(svg).toContain('>A Gantt Diagram<');
     expect(svg).toContain('>Task in Another<');
     expect(svg).toContain('>2014-01-12<');
-    expect(svg).toContain('class="pele-grid"');
+    expect(svg).toContain('class="pelers-grid"');
     expect(width).toBe(800);
     expect(height).toBeGreaterThan(150);
   });
@@ -70,16 +70,16 @@ describe('gantt rendering', () => {
   });
 
   it('marks today only when it falls inside the chart, and never when switched off', () => {
-    expect(render(BASIC, options).svg).toContain('class="pele-today"');
-    expect(render(BASIC, { ...options, now: new Date(2020, 0, 1) }).svg).not.toContain('pele-today');
+    expect(render(BASIC, options).svg).toContain('class="pelers-today"');
+    expect(render(BASIC, { ...options, now: new Date(2020, 0, 1) }).svg).not.toContain('pelers-today');
     expect(render(BASIC.replace('dateFormat', 'todayMarker off\n  dateFormat'), options).svg).not.toContain(
-      'pele-today'
+      'pelers-today'
     );
   });
 
   it('moves the today marker with the injected time', () => {
     const at = (now: Date): number =>
-      Number(/class="pele-today"><path d="M([\d.]+),/.exec(render(BASIC, { ...options, now }).svg)![1]);
+      Number(/class="pelers-today"><path d="M([\d.]+),/.exec(render(BASIC, { ...options, now }).svg)![1]);
     expect(at(new Date(2014, 0, 20))).toBeGreaterThan(at(new Date(2014, 0, 10)));
   });
 
@@ -106,12 +106,12 @@ describe('gantt rendering', () => {
     expect(paint('p')).toBe('fill="var(--_c)" stroke="var(--_c)" style="rx:var(--_r)"');
     expect(paint('a')).toContain('fill-opacity="0.25"');
     expect(paint('d')).toContain('fill="var(--_a)"');
-    const red = 'var(--pele-critical,#e45756)';
+    const red = 'var(--pelers-critical,#e45756)';
     expect(paint('c')).toBe(`fill="${red}" stroke="${red}" style="rx:var(--_r)"`);
     expect(paint('cd')).toBe(`fill="var(--_a)" stroke="${red}" style="rx:var(--_r)"`);
     expect(paint('ca')).toBe(`fill="${red}" fill-opacity="0.25" stroke="${red}" style="rx:var(--_r)"`);
-    expect(svg).toContain('class="pele-task pele-done pele-crit"');
-    expect(svg).toContain('class="pele-task pele-active"');
+    expect(svg).toContain('class="pelers-task pelers-done pelers-crit"');
+    expect(svg).toContain('class="pelers-task pelers-active"');
   });
 
   it('draws a milestone as a diamond centered on the middle of its span', () => {
@@ -119,8 +119,8 @@ describe('gantt rendering', () => {
       'gantt\n dateFormat HH:mm\n axisFormat %H:%M\n M : milestone, m1, 17:49, 2m\n Task A : 10m',
       options
     );
-    expect(svg).toMatch(/class="pele-task pele-milestone" data-id="m1"><path d="M[\d.,]+L[\d.,]+L[\d.,]+L[\d.,]+Z"/);
-    expect(count(svg, 'pele-task')).toBe(2);
+    expect(svg).toMatch(/class="pelers-task pelers-milestone" data-id="m1"><path d="M[\d.,]+L[\d.,]+L[\d.,]+L[\d.,]+Z"/);
+    expect(count(svg, 'pelers-task')).toBe(2);
     expect(svg).toContain('>17:50<');
   });
 
@@ -130,8 +130,8 @@ describe('gantt rendering', () => {
       options
     );
     const without = render('gantt\n dateFormat YYYY-MM-DD\n A :a, 2024-01-01, 9d', options);
-    expect(count(withVert.svg, 'pele-vert')).toBe(1);
-    expect(count(withVert.svg, 'pele-task')).toBe(1);
+    expect(count(withVert.svg, 'pelers-vert')).toBe(1);
+    expect(count(withVert.svg, 'pelers-task')).toBe(1);
     expect(withVert.svg).toContain('>Deadline<');
     expect(withVert.height - without.height).toBeLessThan(30);
   });
@@ -167,9 +167,9 @@ describe('gantt rendering', () => {
       'gantt\n dateFormat YYYY-MM-DD\n excludes weekends\n A :a, 2024-01-05, 3d\n B :b, 2024-01-01, 2024-01-15',
       options
     );
-    expect(plain.svg).not.toContain('pele-excluded');
-    expect(excl.svg).toContain('class="pele-excluded"');
-    expect(excl.svg.match(/<g class="pele-excluded"[^>]*>(.*?)<\/g>/)![1].match(/<rect/g)!.length).toBe(2);
+    expect(plain.svg).not.toContain('pelers-excluded');
+    expect(excl.svg).toContain('class="pelers-excluded"');
+    expect(excl.svg.match(/<g class="pelers-excluded"[^>]*>(.*?)<\/g>/)![1].match(/<rect/g)!.length).toBe(2);
     expect(bars(excl.svg).get('a')!.width).toBeGreaterThan(bars(plain.svg).get('a')!.width * 1.5);
   });
 
@@ -210,9 +210,9 @@ describe('gantt rendering', () => {
     expect(
       render(config('    tickInterval: 1week\n    weekday: wednesday\n    axisFormat: "%a"\n'), options).svg
     ).toContain('>Wed<');
-    expect(render(config('    fontSize: 20\n'), options).svg).toContain('class="pele-tasks" font-size="20"');
+    expect(render(config('    fontSize: 20\n'), options).svg).toContain('class="pelers-tasks" font-size="20"');
     expect(render(config('    sectionFontSize: 22\n'), options).svg).toContain(
-      'class="pele-section-labels" font-size="22"'
+      'class="pelers-section-labels" font-size="22"'
     );
     expect(bars(render(config('    leftPadding: 300\n'), options).svg).get('a')!.x).toBeGreaterThan(300);
     expect(render(config('    barHeight: "tall"\n    fontSize: -5\n    useWidth: .inf\n'), options).svg).not.toContain(
@@ -224,11 +224,11 @@ describe('gantt rendering', () => {
     const src =
       'gantt\n dateFormat YYYY-MM-DD\n section A\n a :2024-01-01, 3d\n section B\n b :2d\n section C\n c :2d\n';
     const four = render(src, options).svg;
-    expect(four).toContain('pele-section-0');
-    expect(four).toContain('pele-section-2');
+    expect(four).toContain('pelers-section-0');
+    expect(four).toContain('pelers-section-2');
     const two = render(`---\nconfig:\n  gantt:\n    numberSectionStyles: 2\n---\n${src}`, options).svg;
-    expect(two).not.toContain('pele-section-2');
-    expect(two.match(/pele-section-0/g)!.length).toBe(2);
+    expect(two).not.toContain('pelers-section-2');
+    expect(two.match(/pelers-section-0/g)!.length).toBe(2);
   });
 
   it('packs tasks that do not overlap onto one row in compact mode', () => {
@@ -239,7 +239,7 @@ describe('gantt rendering', () => {
     const viaConfig = render('---\nconfig:\n  gantt:\n    displayMode: compact\n---\n' + src, options);
     expect(compact.height).toBeLessThan(plain.height);
     expect(viaConfig.height).toBe(compact.height);
-    expect(count(compact.svg, 'pele-task')).toBe(3);
+    expect(count(compact.svg, 'pelers-task')).toBe(3);
     expect((parse('---\ndisplayMode: compact\n---\n' + src) as GanttModel).displayMode).toBe('compact');
   });
 
@@ -251,7 +251,7 @@ describe('gantt rendering', () => {
     expect(links).toEqual([{ id: 'cl1', href: 'https://mermaidjs.github.io/', internal: false }]);
     expect(svg).toContain('<a href="https://mermaidjs.github.io/" rel="noopener">');
     expect(svg).not.toContain('printArguments');
-    expect(svg.match(/pele-clickable/g)!.length).toBe(2);
+    expect(svg.match(/pelers-clickable/g)!.length).toBe(2);
   });
 
   it('ignores a link to a task defined after the click statement, as Mermaid does', () => {
@@ -281,8 +281,8 @@ describe('gantt rendering', () => {
       'gantt\n accTitle: Plan\n accDescr: Tasks for Q4\n dateFormat YYYY-MM-DD\n A :a, 2014-01-07, 3d\n',
       options
     );
-    expect(svg).toContain('<title id="pele-title">Plan</title>');
-    expect(svg).toContain('<desc id="pele-desc">Tasks for Q4</desc>');
+    expect(svg).toContain('<title id="pelers-title">Plan</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Tasks for Q4</desc>');
   });
 
   it('breaks section names at <br> and keeps task names on one line', () => {
@@ -316,7 +316,7 @@ describe('gantt rendering', () => {
     ]) {
       const { svg } = render(src, options);
       expect(svg).not.toMatch(/NaN|Infinity|undefined/);
-      expect(count(svg, 'pele-task')).toBeGreaterThan(0);
+      expect(count(svg, 'pelers-task')).toBeGreaterThan(0);
     }
   });
 
@@ -326,7 +326,7 @@ describe('gantt rendering', () => {
       try {
         svg = render(src, options).svg;
       } catch (error) {
-        expect(error, src).toBeInstanceOf(PeleError);
+        expect(error, src).toBeInstanceOf(PelersError);
         continue;
       }
       expect(svg, src).not.toMatch(/NaN|Infinity|undefined/);
@@ -366,7 +366,7 @@ describe('gantt scheduling', () => {
     expect(tasks[0].startTime).toBeUndefined();
     expect(tasks[2].endTime).toEqual(new Date(2024, 0, 4));
     const { svg } = render(src, options);
-    expect(count(svg, 'pele-unscheduled')).toBe(2);
+    expect(count(svg, 'pelers-unscheduled')).toBe(2);
     expect(svg).not.toMatch(/NaN|undefined/);
   });
 
@@ -378,7 +378,7 @@ describe('gantt scheduling', () => {
         options
       )
     ).toThrow('Failed to find a valid date');
-    expect(() => render('gantt\n dateFormat YYYY-MM-DD\n A :a, not a date, 7d\n', options)).toThrow(PeleError);
+    expect(() => render('gantt\n dateFormat YYYY-MM-DD\n A :a, not a date, 7d\n', options)).toThrow(PelersError);
   });
 
   it('rejects task data Mermaid crashes on, and accepts topAxis, which Mermaid crashes on', () => {

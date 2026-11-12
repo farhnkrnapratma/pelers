@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, render, supports } from '../../src/index.js';
+import { PelersError, detectType, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed, elements } from '../support/xml.js';
@@ -14,7 +14,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -53,8 +53,8 @@ describe('class diagram rendering', () => {
         }
         expect(narrow.width).toBeLessThanOrEqual(maxWidth);
         expect(narrow.height).toBeGreaterThan(natural.height);
-        expect(count(narrow.svg, 'class="pele-node pele-class')).toBe(16);
-        expect(count(narrow.svg, 'class="pele-edge pele-relation')).toBe(8);
+        expect(count(narrow.svg, 'class="pelers-node pelers-class')).toBe(16);
+        expect(count(narrow.svg, 'class="pelers-edge pelers-relation')).toBe(8);
         for (const [a, b] of [
           ['A', 'B'],
           ['C', 'D'],
@@ -108,7 +108,7 @@ describe('class diagram rendering', () => {
     const narrow = draw(body, { maxWidth: 600 });
     expect(narrow).not.toBe(natural);
     expect(Number(/viewBox="0 0 ([\d.]+)/.exec(narrow)![1])).toBeLessThanOrEqual(600);
-    for (const token of ['pele-class', 'pele-namespace', 'pele-note', 'pele-cardinality', 'pele-marker'])
+    for (const token of ['pelers-class', 'pelers-namespace', 'pelers-note', 'pelers-cardinality', 'pelers-marker'])
       expect(count(narrow, token)).toBe(count(natural, token));
     expect(narrow).not.toMatch(/NaN|Infinity|undefined/);
     expect(() => assertWellFormed(narrow)).not.toThrow();
@@ -137,14 +137,14 @@ describe('class diagram rendering', () => {
       expect(supports(src)).toBe(true);
       const result = render(src, options);
       expect(result.type).toBe('class');
-      expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-class"/);
+      expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-class"/);
       expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     }
   });
 
   it('themes through custom properties, with no style element', () => {
     const svg = draw('class A {\n +x\n}\nA --> B : uses\nnote for A "n"');
-    for (const token of ['--pele-bg', '--pele-fg', '--pele-line', '--pele-surface', '--pele-border', '--pele-muted']) {
+    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-muted']) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');
@@ -175,12 +175,12 @@ describe('class diagram rendering', () => {
   it('draws a class as a box with a title, attributes and methods', () => {
     const svg = draw('class Duck {\n  +String beakColor\n  -int age\n  +swim()\n  +quack() bool\n}');
     const duck = group(svg, 'Duck');
-    expect(duck).toContain('class="pele-node pele-class"');
+    expect(duck).toContain('class="pelers-node pelers-class"');
     expect(count(duck, '<rect')).toBe(1);
-    expect(duck).toMatch(/<text class="pele-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Duck<\/tspan>/);
-    expect(duck).toMatch(/<path class="pele-divider" d="M[-\d.]+,[-\d.]+H[-\d.]+M[-\d.]+,[-\d.]+H[-\d.]+"/);
+    expect(duck).toMatch(/<text class="pelers-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Duck<\/tspan>/);
+    expect(duck).toMatch(/<path class="pelers-divider" d="M[-\d.]+,[-\d.]+H[-\d.]+M[-\d.]+,[-\d.]+H[-\d.]+"/);
     const texts = [
-      ...duck.matchAll(/<text class="pele-member pele-(attribute|method)"[^>]* y="([-\d.]+)">([^<]*)<\/text>/g),
+      ...duck.matchAll(/<text class="pelers-member pelers-(attribute|method)"[^>]* y="([-\d.]+)">([^<]*)<\/text>/g),
     ];
     expect(texts.map((m) => [m[1], m[3]])).toEqual([
       ['attribute', '+String beakColor'],
@@ -206,10 +206,10 @@ describe('class diagram rendering', () => {
 
   it('underlines static members and sets abstract ones in italics', () => {
     const svg = draw('class A {\n  +count()$ int\n  +draw()*\n  +String name$\n  +plain\n}');
-    expect(svg).toContain('<text class="pele-member pele-method pele-static" style="text-decoration:underline"');
-    expect(svg).toContain('<text class="pele-member pele-method pele-abstract" font-style="italic"');
-    expect(svg).toContain('<text class="pele-member pele-attribute pele-static" style="text-decoration:underline"');
-    expect(svg).toMatch(/<text class="pele-member pele-attribute" x="[-\d.]+" y="[-\d.]+">\+plain</);
+    expect(svg).toContain('<text class="pelers-member pelers-method pelers-static" style="text-decoration:underline"');
+    expect(svg).toContain('<text class="pelers-member pelers-method pelers-abstract" font-style="italic"');
+    expect(svg).toContain('<text class="pelers-member pelers-attribute pelers-static" style="text-decoration:underline"');
+    expect(svg).toMatch(/<text class="pelers-member pelers-attribute" x="[-\d.]+" y="[-\d.]+">\+plain</);
     expect(svg).toContain('>+count() : int<');
     expect(svg).toContain('>+draw()<');
   });
@@ -236,7 +236,7 @@ describe('class diagram rendering', () => {
       'class Shape {\n  <<interface>>\n  draw()\n}\nclass Color\n<<enumeration>> Color\nclass S <<Service>>'
     );
     const shape = group(svg, 'Shape');
-    const annotation = /<text class="pele-annotation"[^>]* y="([-\d.]+)"[^>]*>«interface»<\/text>/.exec(shape)!;
+    const annotation = /<text class="pelers-annotation"[^>]* y="([-\d.]+)"[^>]*>«interface»<\/text>/.exec(shape)!;
     const title = /<tspan x="0" y="([-\d.]+)"[^>]*>Shape</.exec(shape)!;
     expect(Number(annotation[1])).toBeLessThan(Number(title[1]));
     expect(group(svg, 'Color')).toContain('«enumeration»');
@@ -251,18 +251,18 @@ describe('class diagram rendering', () => {
       '---\nconfig:\n  class:\n    hideEmptyMembersBox: true\n---\nclassDiagram\nclass A\nclass B {\n +x\n}',
       options
     ).svg;
-    expect(group(shown, 'A')).toContain('pele-divider');
-    expect(group(hidden, 'A')).not.toContain('pele-divider');
-    expect(group(hidden, 'B')).toContain('pele-divider');
+    expect(group(shown, 'A')).toContain('pelers-divider');
+    expect(group(hidden, 'A')).not.toContain('pelers-divider');
+    expect(group(hidden, 'B')).toContain('pelers-divider');
     expect(height(hidden)).toBeLessThan(height(shown));
-    expect(draw('class A', { config: { class: { hideEmptyMembersBox: true } } })).not.toContain('pele-divider');
+    expect(draw('class A', { config: { class: { hideEmptyMembersBox: true } } })).not.toContain('pelers-divider');
   });
 
   it('measures members in the monospace font when monospace lists them', () => {
     const width = (svg: string): number => Number(/<rect[^>]* width="([\d.]+)"/.exec(group(svg, 'A'))![1]);
     const plain = draw('class A {\n  +title: string\n}');
     const mono = draw('class A {\n  +title: string\n}', { monospace: ['members'] });
-    expect(mono).toContain('<g class="pele-members" font-size="14" font-family="var(--_fm)">');
+    expect(mono).toContain('<g class="pelers-members" font-size="14" font-family="var(--_fm)">');
     expect(plain).not.toContain('font-family="var(--_fm)"');
     expect(width(mono)).toBeGreaterThan(width(plain));
   });
@@ -284,7 +284,7 @@ describe('class diagram rendering', () => {
     ]) {
       const src = `class A {\n  +title: string\n}\nclass B {\n  +title: string\n}\n${rule}`;
       const svg = draw(src, { monospace: ['members'] });
-      const members = (out: string): string => /<g class="pele-members".*?<\/g>/.exec(group(out, 'A'))![0];
+      const members = (out: string): string => /<g class="pelers-members".*?<\/g>/.exec(group(out, 'A'))![0];
       expect(members(svg)).toBe(members(draw(src)));
       expect(group(svg, 'B')).toContain('font-family="var(--_fm)"');
     }
@@ -300,7 +300,7 @@ describe('class diagram rendering', () => {
   it('draws each kind of relation end', () => {
     const markers = (relation: string): string[] => {
       const edge = group(draw(`A ${relation} B`), 'id_A_B_1');
-      return [...edge.matchAll(/<(path|circle) class="pele-marker"([^>]*)>/g)].map(
+      return [...edge.matchAll(/<(path|circle) class="pelers-marker"([^>]*)>/g)].map(
         (m) => m[1] + (/ fill="var\(--_l\)"/.test(m[2]) ? ' filled' : '')
       );
     };
@@ -323,7 +323,7 @@ describe('class diagram rendering', () => {
 
   it('gives each marker its own outline: triangle, diamond, arrowhead', () => {
     const corners = (relation: string): number => {
-      const d = /<path class="pele-marker" d="([^"]+)"/.exec(group(draw(`A ${relation} B`), 'id_A_B_1'))![1];
+      const d = /<path class="pelers-marker" d="([^"]+)"/.exec(group(draw(`A ${relation} B`), 'id_A_B_1'))![1];
       return count(d, 'L') + 1;
     };
     expect(corners('--|>')).toBe(3);
@@ -335,7 +335,7 @@ describe('class diagram rendering', () => {
   it('puts the marker at the end the source names, pointing into that class', () => {
     const svg = draw('Animal <|-- Duck');
     const edge = group(svg, 'id_Animal_Duck_1');
-    const tip = /<path class="pele-marker" d="M([-\d.]+),([-\d.]+)L/.exec(edge)!;
+    const tip = /<path class="pelers-marker" d="M([-\d.]+),([-\d.]+)L/.exec(edge)!;
     const [ax, ay] = translate(svg, 'Animal');
     const [, dy] = translate(svg, 'Duck');
     const half = Number(/<rect[^>]* height="([\d.]+)"/.exec(group(svg, 'Animal'))![1]) / 2;
@@ -360,17 +360,17 @@ describe('class diagram rendering', () => {
   it('dashes the line of a dotted relation only', () => {
     expect(group(draw('A ..> B'), 'id_A_B_1')).toMatch(/<path d="[^"]+" stroke-dasharray="6 4"\/>/);
     expect(group(draw('A --> B'), 'id_A_B_1')).not.toContain('stroke-dasharray');
-    expect(group(draw('A ..|> B'), 'id_A_B_1')).not.toMatch(/pele-marker[^>]*stroke-dasharray/);
+    expect(group(draw('A ..|> B'), 'id_A_B_1')).not.toMatch(/pelers-marker[^>]*stroke-dasharray/);
   });
 
   it('labels relations and writes the cardinality at each end', () => {
     const svg = draw('Customer "1" --> "0..*" Ticket : buys');
-    expect(group(svg, 'id_Customer_Ticket_1')).toContain('pele-relation');
-    const label = svg.slice(svg.indexOf('<g class="pele-edge-label"'));
+    expect(group(svg, 'id_Customer_Ticket_1')).toContain('pelers-relation');
+    const label = svg.slice(svg.indexOf('<g class="pelers-edge-label"'));
     expect(label).toContain('>buys<');
     const cards = [
       ...svg.matchAll(
-        /<text class="pele-cardinality" x="([-\d.]+)" y="([-\d.]+)" text-anchor="middle">([^<]*)<\/text>/g
+        /<text class="pelers-cardinality" x="([-\d.]+)" y="([-\d.]+)" text-anchor="middle">([^<]*)<\/text>/g
       ),
     ];
     expect(cards.map((m) => m[3])).toEqual(['1', '0..*']);
@@ -385,7 +385,7 @@ describe('class diagram rendering', () => {
 
   it('runs an end with text straight beside the text, which sits on the side the line then bends to', () => {
     const svg = draw('Hub "1" --> "a" A\nHub "2" --> "b" B');
-    const cards = [...svg.matchAll(/<text class="pele-cardinality" x="([-\d.]+)" y="([-\d.]+)"[^>]*>([^<]*)</g)];
+    const cards = [...svg.matchAll(/<text class="pelers-cardinality" x="([-\d.]+)" y="([-\d.]+)"[^>]*>([^<]*)</g)];
     const x = (text: string): number => Number(cards.find((m) => m[3] === text)![1]);
     for (const [id, own, far] of [
       ['id_Hub_A_1', '1', 'a'],
@@ -410,7 +410,7 @@ describe('class diagram rendering', () => {
     );
     expect(new Set(starts).size).toBe(3);
     expect([...starts].sort((a, b) => a - b)).toEqual(starts);
-    const cards = [...svg.matchAll(/<text class="pele-cardinality" x="([-\d.]+)" y="([-\d.]+)"/g)].map(
+    const cards = [...svg.matchAll(/<text class="pelers-cardinality" x="([-\d.]+)" y="([-\d.]+)"/g)].map(
       (m) => m[1] + ',' + m[2]
     );
     expect(new Set(cards).size).toBe(6);
@@ -420,33 +420,33 @@ describe('class diagram rendering', () => {
     const svg = draw('class Node\nNode "1" --> "0..1" Node : next');
     const edge = group(svg, 'id_Node_Node_1');
     expect(edge).toMatch(/<path d="M[-\d.]+,[-\d.]+C[^"]+"\/>/);
-    expect(count(edge, 'pele-marker')).toBe(1);
+    expect(count(edge, 'pelers-marker')).toBe(1);
     expect(svg).toContain('>next<');
-    expect(count(svg, 'pele-cardinality"')).toBe(2);
+    expect(count(svg, 'pelers-cardinality"')).toBe(2);
   });
 
   it('draws a lollipop interface as a ring with its name beside the class', () => {
     const svg = draw('bar ()-- foo\nfoo --() baz');
-    expect(group(svg, 'interface0')).toContain('pele-interface');
+    expect(group(svg, 'interface0')).toContain('pelers-interface');
     expect(group(svg, 'interface0')).toContain('>bar<');
     expect(group(svg, 'interface1')).toContain('>baz<');
     expect(group(svg, 'interface0')).not.toContain('<rect');
-    expect(count(group(svg, 'id_interface0_foo_1'), '<circle class="pele-marker"')).toBe(1);
-    expect(count(group(svg, 'id_foo_interface1_2'), '<circle class="pele-marker"')).toBe(1);
-    expect(count(svg, 'pele-class')).toBe(1 + 1);
+    expect(count(group(svg, 'id_interface0_foo_1'), '<circle class="pelers-marker"')).toBe(1);
+    expect(count(group(svg, 'id_foo_interface1_2'), '<circle class="pelers-marker"')).toBe(1);
+    expect(count(svg, 'pelers-class')).toBe(1 + 1);
   });
 
   it('draws notes, and joins a note for a class to it with a dotted line', () => {
     const svg = draw('class MyClass\nnote "General<br>note"\nnote for MyClass "About **it**"');
-    expect(group(svg, 'note0')).toContain('pele-note');
+    expect(group(svg, 'note0')).toContain('pelers-note');
     expect(group(svg, 'note0')).toMatch(/>General<\/tspan><tspan[^>]*>note</);
     expect(group(svg, 'note1')).toMatch(/<tspan font-weight="var\(--_w\)">it<\/tspan>/);
     const edge = group(svg, 'edgeNote1');
-    expect(edge).toContain('pele-note-edge');
+    expect(edge).toContain('pelers-note-edge');
     expect(edge).toContain('stroke-dasharray="2 4"');
-    expect(edge).not.toContain('pele-marker');
+    expect(edge).not.toContain('pelers-marker');
     expect(svg).not.toContain('data-id="edgeNote0"');
-    expect(draw('note for Missing "x"')).not.toContain('pele-edge');
+    expect(draw('note for Missing "x"')).not.toContain('pelers-edge');
   });
 
   it('draws namespaces as nested groups around their classes', () => {
@@ -463,7 +463,7 @@ describe('class diagram rendering', () => {
     };
     const outer = box('Outer');
     const inner = box('Outer.Inner');
-    expect(group(svg, 'Outer')).toContain('pele-cluster pele-namespace');
+    expect(group(svg, 'Outer')).toContain('pelers-cluster pelers-namespace');
     expect(group(svg, 'Outer')).toContain('>Outer<');
     expect(group(svg, 'Outer.Inner')).toContain('>In here<');
     expect(inner[0]).toBeGreaterThan(outer[0]);
@@ -474,17 +474,17 @@ describe('class diagram rendering', () => {
     expect(inside('A', inner)).toBe(false);
     expect(inside('B', inner)).toBe(true);
     expect(inside('C', outer)).toBe(false);
-    expect(svg.indexOf('pele-clusters')).toBeLessThan(svg.indexOf('pele-nodes'));
+    expect(svg.indexOf('pelers-clusters')).toBeLessThan(svg.indexOf('pelers-nodes'));
   });
 
   it('makes a namespace of each part of a dotted name, or one flat namespace in compact mode', () => {
     const src = 'namespace Company.Engineering {\n  class Dev\n}';
     const nested = draw(src);
-    expect(count(nested, 'pele-namespace')).toBe(2);
+    expect(count(nested, 'pelers-namespace')).toBe(2);
     expect(group(nested, 'Company')).toContain('>Company<');
     expect(group(nested, 'Company.Engineering')).toContain('>Engineering<');
     const flat = draw(src, { config: { class: { hierarchicalNamespaces: false } } });
-    expect(count(flat, 'pele-namespace')).toBe(1);
+    expect(count(flat, 'pelers-namespace')).toBe(1);
     expect(flat).toContain('>Company.Engineering<');
   });
 
@@ -509,7 +509,7 @@ describe('class diagram rendering', () => {
     expect(group(svg, 'B')).toContain('<a href="https://example.com/b" target="_self" rel="noopener">');
     expect(group(svg, 'C')).not.toContain('<a ');
     expect(group(svg, 'C')).toContain('<title>Tip C</title>');
-    expect(group(svg, 'C')).toContain('class="pele-node pele-class clickable"');
+    expect(group(svg, 'C')).toContain('class="pelers-node pelers-class clickable"');
     expect(links).toEqual([
       { id: 'A', href: 'https://example.com/a', internal: false },
       { id: 'B', href: 'https://example.com/b', internal: false },
@@ -521,30 +521,30 @@ describe('class diagram rendering', () => {
       'class A\nclass B:::hot\nclass C\nclass D {\n +x$\n}\nclassDef default stroke:#00f\nstyle A fill:#f9f,stroke:#333,stroke-width:4px\nclassDef hot fill:#fdd,color:#900\nclassDef cold fill:#ddf\ncssClass "C,D" cold\nstyle D color:#090'
     );
     expect(group(svg, 'A')).toMatch(/<rect[^>]* style="rx:var\(--_r\);stroke:#333;fill:#f9f;stroke-width:4px;"/);
-    expect(group(svg, 'A')).toContain('<path class="pele-divider"');
-    expect(group(svg, 'A')).toMatch(/pele-divider"[^>]* style="stroke:#333"/);
-    expect(group(svg, 'B')).toContain('class="pele-node pele-class hot"');
+    expect(group(svg, 'A')).toContain('<path class="pelers-divider"');
+    expect(group(svg, 'A')).toMatch(/pelers-divider"[^>]* style="stroke:#333"/);
+    expect(group(svg, 'B')).toContain('class="pelers-node pelers-class hot"');
     expect(group(svg, 'B')).toMatch(/<rect[^>]* style="rx:var\(--_r\);stroke:#00f;fill:#fdd;"/);
-    expect(group(svg, 'B')).toMatch(/<text class="pele-label" font-weight="var\(--_hw\)" style="fill:#900;"/);
-    expect(group(svg, 'C')).toContain('class="pele-node pele-class cold"');
+    expect(group(svg, 'B')).toMatch(/<text class="pelers-label" font-weight="var\(--_hw\)" style="fill:#900;"/);
+    expect(group(svg, 'C')).toContain('class="pelers-node pelers-class cold"');
     expect(group(svg, 'C')).toMatch(/<rect[^>]* style="rx:var\(--_r\);stroke:#00f;fill:#ddf;"/);
-    expect(group(svg, 'D')).toContain('pele-static" style="fill:#090;text-decoration:underline"');
+    expect(group(svg, 'D')).toContain('pelers-static" style="fill:#090;text-decoration:underline"');
   });
 
   it('picks a contrasting text color on fills a style sets', () => {
     const svg = draw(
       'class A {\n  <<interface>>\n  +id int\n  +run()\n}\nclass B {\n  +x\n}\nclass C\nclassDef dark fill:#1f3a5f\nclass A:::dark\nstyle B fill:lightyellow,color:#900'
     );
-    const dark = ' fill="var(--pele-fg-on-dark,#fff)"';
+    const dark = ' fill="var(--pelers-fg-on-dark,#fff)"';
     expect(group(svg, 'A')).toMatch(
-      /<text class="pele-annotation"[^>]* fill="var\(--pele-fg-on-dark,#fff\)">«interface»</
+      /<text class="pelers-annotation"[^>]* fill="var\(--pelers-fg-on-dark,#fff\)">«interface»</
     );
-    expect(group(svg, 'A')).toContain(`<text class="pele-label" font-weight="var(--_hw)"${dark}`);
-    expect(group(svg, 'A')).toMatch(/<g class="pele-members" font-size="\d+" fill="var\(--pele-fg-on-dark,#fff\)">/);
+    expect(group(svg, 'A')).toContain(`<text class="pelers-label" font-weight="var(--_hw)"${dark}`);
+    expect(group(svg, 'A')).toMatch(/<g class="pelers-members" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)">/);
     expect(count(group(svg, 'A'), dark)).toBe(3);
-    expect(group(svg, 'B')).not.toContain('--pele-fg-on');
-    expect(group(svg, 'B')).toContain('<text class="pele-label" font-weight="var(--_hw)" style="fill:#900;"');
-    expect(group(svg, 'C')).not.toContain('--pele-fg-on');
+    expect(group(svg, 'B')).not.toContain('--pelers-fg-on');
+    expect(group(svg, 'B')).toContain('<text class="pelers-label" font-weight="var(--_hw)" style="fill:#900;"');
+    expect(group(svg, 'C')).not.toContain('--pelers-fg-on');
   });
 
   it('lets the later of a style and a classDef win, as Mermaid does', () => {
@@ -558,21 +558,21 @@ describe('class diagram rendering', () => {
 
   it('carries accessible names', () => {
     const svg = draw('accTitle: The title\naccDescr: The description\nclass A');
-    expect(svg).toContain('<title id="pele-title">The title</title>');
-    expect(svg).toContain('<desc id="pele-desc">The description</desc>');
+    expect(svg).toContain('<title id="pelers-title">The title</title>');
+    expect(svg).toContain('<desc id="pelers-desc">The description</desc>');
   });
 
   it('gives every drawn thing a class and the id it has in the source', () => {
     const svg = draw('namespace N {\n class A\n}\nA "1" --> "2" B : x\nnote for A "n"\nfoo ()-- B');
     for (const name of [
-      'pele-clusters',
-      'pele-edges',
-      'pele-edge-labels',
-      'pele-cardinalities',
-      'pele-nodes',
-      'pele-cluster-label',
-      'pele-edge-label',
-      'pele-label',
+      'pelers-clusters',
+      'pelers-edges',
+      'pelers-edge-labels',
+      'pelers-cardinalities',
+      'pelers-nodes',
+      'pelers-cluster-label',
+      'pelers-edge-label',
+      'pelers-label',
     ]) {
       expect(svg).toContain(name);
     }
@@ -590,7 +590,7 @@ describe('class diagram rendering', () => {
       'direction RL\nA "x" <|-- "y" B\nA "z" --> "w" C',
     ]) {
       const result = render('classDiagram\n' + src, options);
-      for (const m of result.svg.matchAll(/<text class="pele-cardinality" x="([-\d.]+)" y="([-\d.]+)"/g)) {
+      for (const m of result.svg.matchAll(/<text class="pelers-cardinality" x="([-\d.]+)" y="([-\d.]+)"/g)) {
         expect(Number(m[1])).toBeGreaterThan(0);
         expect(Number(m[1])).toBeLessThan(result.width);
         expect(Number(m[2])).toBeGreaterThan(0);

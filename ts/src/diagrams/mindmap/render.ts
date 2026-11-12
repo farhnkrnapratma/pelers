@@ -34,7 +34,7 @@ const ROW_GAP = 10;
 
 // A label with each line starting at `left`, for an outline, where centered lines would look ragged.
 function leftLabel(label: Label, left: number, cy: number, icons: RenderOptions['icons']): string {
-  if (label.lines.length < 2) return labelSvg(label, left + label.width / 2, cy, ' class="pele-label"', icons);
+  if (label.lines.length < 2) return labelSvg(label, left + label.width / 2, cy, ' class="pelers-label"', icons);
   let out = '';
   const top = cy - label.height / 2;
   for (let k = 0; k < label.lines.length; k++) {
@@ -42,7 +42,7 @@ function leftLabel(label: Label, left: number, cy: number, icons: RenderOptions[
       labelLine(label, k),
       left + label.widths[k] / 2,
       top + lineMiddle(label, k),
-      ' class="pele-label"',
+      ' class="pelers-label"',
       icons
     );
   }
@@ -222,8 +222,8 @@ function draw(model: MindmapModel, config: Config, options: RenderOptions, down:
   const flush = (section: number | undefined): void => {
     if (body === '') return;
     out +=
-      `<g class="pele-branch pele-section-${section ?? 0}">` +
-      `<g class="pele-edges" fill="none" stroke="${color}" stroke-width="1.5">${edges}</g>${body}</g>`;
+      `<g class="pelers-branch pelers-section-${section ?? 0}">` +
+      `<g class="pelers-edges" fill="none" stroke="${color}" stroke-width="1.5">${edges}</g>${body}</g>`;
     edges = body = '';
   };
 
@@ -256,7 +256,7 @@ function draw(model: MindmapModel, config: Config, options: RenderOptions, down:
       const bend = Math.max(0, Math.min(BEND, x2 - x1, y2 - y1));
       // The next link carries on from where this one leaves the trunk, so the trunk has no gap.
       trunk[p] = y2 - bend;
-      edges += `<path class="pele-edge" d="M${num(x1)},${num(y1)}V${num(y2 - bend)}Q${num(x1)},${num(y2)} ${num(x1 + bend)},${num(y2)}H${num(x2)}"/>`;
+      edges += `<path class="pelers-edge" d="M${num(x1)},${num(y1)}V${num(y2 - bend)}Q${num(x1)},${num(y2)} ${num(x1 + bend)},${num(y2)}H${num(x2)}"/>`;
     } else if (i > 0) {
       if (parent[i] === 0) color = seriesColor(node.section ?? 0);
       const p = parent[i];
@@ -268,7 +268,7 @@ function draw(model: MindmapModel, config: Config, options: RenderOptions, down:
       const x2 = near + (shape ? dir * shapeInset(shape, w[i], h[i], 4 - from) : 0);
       const y2 = top + anchor[i];
       const mid = num((x1 + x2) / 2);
-      edges += `<path class="pele-edge" d="M${num(x1)},${num(y1)}C${mid},${num(y1)} ${mid},${num(y2)} ${num(x2)},${num(y2)}"/>`;
+      edges += `<path class="pelers-edge" d="M${num(x1)},${num(y1)}C${mid},${num(y1)} ${mid},${num(y2)} ${num(x2)},${num(y2)}"/>`;
     }
 
     const pill = !shape && node.children.length > 0;
@@ -290,13 +290,13 @@ function draw(model: MindmapModel, config: Config, options: RenderOptions, down:
       inner += iconSvg(node.icon, -shift - label.width / 2, dy[i] - glyph / 2, glyph, icons);
     }
     const group =
-      `<g class="pele-node pele-shape-${shape || (pill ? 'branch' : 'text')}${i > 0 ? '' : ' pele-root'}${classNames(node.class ?? '')}" data-id="${escText(
+      `<g class="pelers-node pelers-shape-${shape || (pill ? 'branch' : 'text')}${i > 0 ? '' : ' pelers-root'}${classNames(node.class ?? '')}" data-id="${escText(
         node.nodeId
       )}" transform="translate(${num(cx)},${num(top + h[i] / 2)})">` +
       inner +
       (down && !shape
         ? leftLabel(label, shift - label.width / 2, dy[i], icons)
-        : labelSvg(label, shift, dy[i], ' class="pele-label"', icons)) +
+        : labelSvg(label, shift, dy[i], ' class="pelers-label"', icons)) +
       '</g>';
     if (i > 0) body += group;
     else out += group;
@@ -308,7 +308,7 @@ function draw(model: MindmapModel, config: Config, options: RenderOptions, down:
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(maxY - minY + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     `<g transform="translate(${num(pad - minX + (width - maxX + minX) / 2)},${num(pad + titleHeight - minY)})">${out}</g>`;
 
   return {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed } from '../support/xml.js';
@@ -36,7 +36,7 @@ describe('requirement rendering', () => {
       try {
         svg = render(src, options).svg;
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
+        expect(error).toBeInstanceOf(PelersError);
         continue;
       }
       rendered++;
@@ -53,9 +53,9 @@ describe('requirement rendering', () => {
     const { svg, type } = render(BASIC, options);
     expect(type).toBe('requirement');
     expect(supports('requirementDiagram\n')).toBe(true);
-    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-requirement"/);
-    expect(count(svg, /class="pele-node pele-requirement"/g)).toBe(1);
-    expect(count(svg, /class="pele-node pele-element"/g)).toBe(1);
+    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-requirement"/);
+    expect(count(svg, /class="pelers-node pelers-requirement"/g)).toBe(1);
+    expect(count(svg, /class="pelers-node pelers-element"/g)).toBe(1);
     expect(svg).toContain('data-id="test_req"');
     expect(svg).toContain('>«Requirement»<');
     expect(svg).toContain('>«Element»<');
@@ -75,7 +75,7 @@ describe('requirement rendering', () => {
     ]) {
       expect(svg, text).toContain(`>${text}<`);
     }
-    expect(count(svg, /class="pele-divider"/g)).toBe(2);
+    expect(count(svg, /class="pelers-divider"/g)).toBe(2);
   });
 
   it('names each requirement type', () => {
@@ -97,7 +97,7 @@ describe('requirement rendering', () => {
     expect(svg).toContain('>ID<');
     expect(svg).not.toContain('>Text<');
     expect(svg).not.toContain('>Type<');
-    expect(count(svg, /class="pele-divider"/g)).toBe(1);
+    expect(count(svg, /class="pelers-divider"/g)).toBe(1);
   });
 
   it('draws contains with a circled plus at its source and the rest as dashed arrows', () => {
@@ -105,12 +105,12 @@ describe('requirement rendering', () => {
       'requirementDiagram\nrequirement a {\n}\nrequirement b {\n}\na - contains -> b\n',
       options
     ).svg;
-    expect(contains).toContain('class="pele-edge pele-relationship-contains" data-id="a-b-0"');
-    expect(count(contains, /<circle class="pele-marker"/g)).toBe(1);
+    expect(contains).toContain('class="pelers-edge pelers-relationship-contains" data-id="a-b-0"');
+    expect(count(contains, /<circle class="pelers-marker"/g)).toBe(1);
     expect(contains).not.toContain('stroke-dasharray');
     expect(contains).toContain('>«contains»<');
     // The mark sits under the source, which is the upper node.
-    const cy = Number(/<circle class="pele-marker" cx="[\d.]+" cy="([\d.]+)"/.exec(contains)![1]);
+    const cy = Number(/<circle class="pelers-marker" cx="[\d.]+" cy="([\d.]+)"/.exec(contains)![1]);
     const [ay, by] = ['a', 'b'].map((id) =>
       Number(new RegExp(`data-id="${id}" transform="translate\\([\\d.]+,([\\d.]+)\\)"`).exec(contains)![1])
     );
@@ -119,7 +119,7 @@ describe('requirement rendering', () => {
 
     for (const kind of ['copies', 'derives', 'satisfies', 'verifies', 'refines', 'traces']) {
       const svg = render(`requirementDiagram\nrequirement a {\n}\nrequirement b {\n}\na - ${kind} -> b\n`, options).svg;
-      expect(svg, kind).toContain('class="pele-edge pele-relationship-arrow"');
+      expect(svg, kind).toContain('class="pelers-edge pelers-relationship-arrow"');
       expect(svg, kind).toContain('stroke-dasharray="5 4"');
       expect(svg, kind).toContain(`>«${kind}»<`);
       expect(svg, kind).not.toContain('<circle');
@@ -150,8 +150,8 @@ describe('requirement rendering', () => {
       'requirementDiagram\nrequirement a {\n}\nrequirement b {\n}\na - contains -> a\na - traces -> b\na - refines -> b\n',
       options
     );
-    expect(count(svg, /class="pele-edge /g)).toBe(3);
-    expect(count(svg, /class="pele-edge-label"/g)).toBe(3);
+    expect(count(svg, /class="pelers-edge /g)).toBe(3);
+    expect(count(svg, /class="pelers-edge-label"/g)).toBe(3);
     expect(svg).toContain('data-id="a-a-0"');
   });
 
@@ -160,14 +160,14 @@ describe('requirement rendering', () => {
       'requirementDiagram\nrequirement a {\n}\nrequirement b {\n}\nrequirement c {\n}\na - contains -> b\na - contains -> c\n',
       options
     );
-    const xs = [...svg.matchAll(/<circle class="pele-marker" cx="([\d.]+)"/g)].map((m) => Number(m[1]));
+    const xs = [...svg.matchAll(/<circle class="pelers-marker" cx="([\d.]+)"/g)].map((m) => Number(m[1]));
     expect(xs.length).toBe(2);
     expect(Math.abs(xs[0] - xs[1])).toBeGreaterThan(12);
   });
 
   it('does not draw a relationship whose end is not defined', () => {
     const { svg } = render('requirementDiagram\nrequirement a {\n}\na - contains -> missing\n', options);
-    expect(svg).not.toContain('pele-edge');
+    expect(svg).not.toContain('pelers-edge');
     expect(svg).not.toContain('missing');
   });
 
@@ -191,15 +191,15 @@ style c stroke:#0a0
       options
     );
     expect(svg).toMatch(
-      /class="pele-node pele-requirement hot" data-id="a"[^>]*><rect[^>]*style="rx:var\(--_r\);fill:#f96;stroke:#333;stroke-width:4px;"/
+      /class="pelers-node pelers-requirement hot" data-id="a"[^>]*><rect[^>]*style="rx:var\(--_r\);fill:#f96;stroke:#333;stroke-width:4px;"/
     );
-    expect(svg).toMatch(/class="pele-node pele-element cold" data-id="b"/);
+    expect(svg).toMatch(/class="pelers-node pelers-element cold" data-id="b"/);
     expect(svg).toMatch(
-      /class="pele-node pele-element hot cold" data-id="c"[^>]*><rect[^>]*style="rx:var\(--_r\);fill:#f96;stroke:#0a0;stroke-width:4px;"/
+      /class="pelers-node pelers-element hot cold" data-id="c"[^>]*><rect[^>]*style="rx:var\(--_r\);fill:#f96;stroke:#0a0;stroke-width:4px;"/
     );
     expect(svg).toContain('style="fill:blue;"');
     // The divider takes the stroke but not the fill.
-    expect(svg).toMatch(/class="pele-divider"[^>]*style="stroke:#333;stroke-width:4px;"/);
+    expect(svg).toMatch(/class="pelers-divider"[^>]*style="stroke:#333;stroke-width:4px;"/);
   });
 
   it('picks a contrasting text color on fills a style sets', () => {
@@ -208,12 +208,12 @@ style c stroke:#0a0
       options
     );
     const node = (id: string): string => new RegExp(`data-id="${id}"[^>]*>(.*?)</g></g>`).exec(svg)![1];
-    for (const part of ['pele-stereotype', 'pele-label', 'pele-field', 'pele-value']) {
-      expect(node('a')).toMatch(new RegExp(`<text class="${part}"[^>]* fill="var\\(--pele-fg-on-dark,#fff\\)"`));
+    for (const part of ['pelers-stereotype', 'pelers-label', 'pelers-field', 'pelers-value']) {
+      expect(node('a')).toMatch(new RegExp(`<text class="${part}"[^>]* fill="var\\(--pelers-fg-on-dark,#fff\\)"`));
     }
-    expect(node('b')).toMatch(/<text class="pele-label"[^>]* style="fill:#eee;"/);
-    expect(node('b')).not.toContain('--pele-fg-on');
-    expect(node('c')).toMatch(/<text class="pele-stereotype"[^>]* fill="var\(--_m\)"/);
+    expect(node('b')).toMatch(/<text class="pelers-label"[^>]* style="fill:#eee;"/);
+    expect(node('b')).not.toContain('--pelers-fg-on');
+    expect(node('c')).toMatch(/<text class="pelers-stereotype"[^>]* fill="var\(--_m\)"/);
   });
 
   it('reads markdown emphasis in names and text', () => {
@@ -244,10 +244,10 @@ style c stroke:#0a0
       '---\ntitle: Checkout\n---\nrequirementDiagram\naccTitle: Short name\naccDescr: Longer text\nrequirement a {\n}\n',
       options
     );
-    expect(svg).toContain('class="pele-title"');
+    expect(svg).toContain('class="pelers-title"');
     expect(svg).toContain('>Checkout<');
-    expect(svg).toContain('<title id="pele-title">Short name</title>');
-    expect(svg).toContain('<desc id="pele-desc">Longer text</desc>');
+    expect(svg).toContain('<title id="pelers-title">Short name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Longer text</desc>');
   });
 
   it('exposes the model', () => {
@@ -283,7 +283,7 @@ style c stroke:#0a0
       'requirementDiagram\ntitle My diagram\n',
       'requirement a {\n}\n',
     ]) {
-      expect(() => render(src, options), src).toThrow(PeleError);
+      expect(() => render(src, options), src).toThrow(PelersError);
     }
     expect(() => render('requirementDiagram\nrequirement a {\nid: REQ-1\n}\n', options)).toThrow(
       /Expecting 'NEWLINE', got 'LINE'/

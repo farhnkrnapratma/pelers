@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 
 export interface Cell {
   children: Cell[];
@@ -51,10 +51,10 @@ export function cell(nw: number, nh: number, span = 1): Cell {
 
 export function calculateBlockPosition(columns: number, position: number): { px: number; py: number } {
   if (columns === 0 || !Number.isInteger(columns)) {
-    throw new PeleError('Columns must be an integer !== 0.', 'semantic', { type: 'block' });
+    throw new PelersError('Columns must be an integer !== 0.', 'semantic', { type: 'block' });
   }
   if (position < 0 || !Number.isInteger(position)) {
-    throw new PeleError('Position must be a non-negative integer.' + position, 'semantic', { type: 'block' });
+    throw new PelersError('Position must be a non-negative integer.' + position, 'semantic', { type: 'block' });
   }
   if (columns < 0) return { px: position, py: 0 };
   return { px: position % columns, py: Math.floor(position / columns) };

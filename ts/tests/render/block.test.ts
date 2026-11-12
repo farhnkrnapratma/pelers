@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertInert } from '../support/inert.js';
@@ -12,7 +12,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -28,14 +28,14 @@ interface Box {
 function boxes(svg: string): Map<string, Box> {
   const out = new Map<string, Box>();
   for (const m of svg.matchAll(
-    /class="pele-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"><(\w+)([^>]*)>/g
+    /class="pelers-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"><(\w+)([^>]*)>/g
   )) {
     const width = /width="([\d.]+)"/.exec(m[5]);
     const height = /height="([\d.]+)"/.exec(m[5]);
     out.set(m[1], { x: Number(m[2]), y: Number(m[3]), w: Number(width?.[1] ?? 0), h: Number(height?.[1] ?? 0) });
   }
   for (const m of svg.matchAll(
-    /class="pele-cluster[^"]*" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
+    /class="pelers-cluster[^"]*" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
   )) {
     const w = Number(m[4]);
     const h = Number(m[5]);
@@ -49,13 +49,13 @@ function layoutOf(src: string): Map<string, Box> {
 }
 
 function paths(svg: string): string[] {
-  return [...svg.matchAll(/class="pele-edge" data-id="[^"]*"><path d="([^"]*)"/g)].map((m) => m[1]);
+  return [...svg.matchAll(/class="pelers-edge" data-id="[^"]*"><path d="([^"]*)"/g)].map((m) => m[1]);
 }
 
 function labelBoxes(svg: string): Box[] {
   return [
     ...svg.matchAll(
-      /class="pele-edge-label" data-id="[^"]*"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
+      /class="pelers-edge-label" data-id="[^"]*"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
     ),
   ].map((m) => {
     const [x, y, w, h] = m.slice(1).map(Number);
@@ -65,8 +65,8 @@ function labelBoxes(svg: string): Box[] {
 
 function nodeLabel(svg: string, id: string): string[] {
   const at = svg.indexOf(`data-id="${id}"`);
-  const body = svg.slice(svg.lastIndexOf('<g class="pele-node', at), svg.indexOf('</g>', at));
-  const inner = /<text class="pele-label"[^>]*>([\s\S]*?)<\/text>/.exec(body)?.[1] ?? '';
+  const body = svg.slice(svg.lastIndexOf('<g class="pelers-node', at), svg.indexOf('</g>', at));
+  const inner = /<text class="pelers-label"[^>]*>([\s\S]*?)<\/text>/.exec(body)?.[1] ?? '';
   const lines = [...inner.matchAll(/<tspan(?:\s[^>]*)?>([\s\S]*?)<\/tspan>/g)].map((m) => m[1]);
   return lines.length > 0 ? lines : inner === '' ? [] : [inner];
 }
@@ -77,7 +77,7 @@ function expectSeparateLabels(src: string, count: number): void {
   if (model.type !== 'block') throw new Error('not a block model');
   const el = elements(result.svg);
   const labels = el.flatMap((element, index) => {
-    if (element.attrs.get('class') !== 'pele-edge-label') return [];
+    if (element.attrs.get('class') !== 'pelers-edge-label') return [];
     const rect = el[index + 1];
     expect(rect.name).toBe('rect');
     const w = Number(rect.attrs.get('width'));
@@ -136,7 +136,7 @@ describe('block rendering', () => {
     const result = render('block\n  a b c', options);
     expect(result.type).toBe('block');
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-block"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-block"/);
     expect(result.links).toEqual([]);
     expect(render('block-beta\n  a b c', options).svg).toBe(result.svg);
     expect(detectType('block-beta\n a')).toBe('block');
@@ -217,7 +217,7 @@ describe('block rendering', () => {
     const wide = layoutOf('block\n  ida space:3 idb idc');
     const step = wide.get('idc')!.x - wide.get('idb')!.x;
     expect(wide.get('idb')!.x - wide.get('ida')!.x).toBeCloseTo(4 * step, 1);
-    expect(render('block\n  a space b', options).svg.match(/class="pele-node /g)?.length).toBe(2);
+    expect(render('block\n  a space b', options).svg.match(/class="pelers-node /g)?.length).toBe(2);
   });
 
   it('sizes a composite from its children and lets it use its own columns', () => {
@@ -258,9 +258,9 @@ describe('block rendering', () => {
   it('draws a composite title above its children', () => {
     const { svg } = render('block\n  block:g["Group title"]\n    a b\n  end', options);
     const at = boxes(svg);
-    expect(svg).toContain('class="pele-cluster-label"');
+    expect(svg).toContain('class="pelers-cluster-label"');
     expect(svg).toContain('>Group title<');
-    const titleY = Number(/class="pele-cluster-label"[^>]* y="([\d.]+)"/.exec(svg)![1]);
+    const titleY = Number(/class="pelers-cluster-label"[^>]* y="([\d.]+)"/.exec(svg)![1]);
     expect(titleY).toBeLessThan(at.get('a')!.y - at.get('a')!.h / 2);
     const plain = layoutOf('block\n  block:g\n    a b\n  end');
     expect(at.get('g')!.h).toBeGreaterThan(plain.get('g')!.h);
@@ -293,7 +293,7 @@ describe('block rendering', () => {
       ['a("x"]', 'rect'],
     ];
     for (const [source, shape] of shapes) {
-      expect(render(`block\n  ${source}`, options).svg, source).toContain(`class="pele-node pele-shape-${shape}"`);
+      expect(render(`block\n  ${source}`, options).svg, source).toContain(`class="pelers-node pelers-shape-${shape}"`);
     }
   });
 
@@ -351,15 +351,15 @@ describe('block rendering', () => {
       'block\n  columns 3\n  a space b\n  c space d\n  a --> b\n  c --o d\n  a --x c\n  b <--> d\n  a == "thick" ==> b\n  c -. "dotted" .-> d\n  b --- d',
       options
     );
-    expect(svg.match(/class="pele-edge"/g)?.length).toBe(7);
-    expect(svg.match(/<path class="pele-marker" d="M[^"]*Z"/g)?.length).toBe(5);
-    expect(svg.match(/<path class="pele-marker" d="M[^"Z]*"/g)?.length).toBe(1);
-    expect(svg.match(/<circle class="pele-marker"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-edge"/g)?.length).toBe(7);
+    expect(svg.match(/<path class="pelers-marker" d="M[^"]*Z"/g)?.length).toBe(5);
+    expect(svg.match(/<path class="pelers-marker" d="M[^"Z]*"/g)?.length).toBe(1);
+    expect(svg.match(/<circle class="pelers-marker"/g)?.length).toBe(1);
     expect(svg).toContain('stroke-width="2.5"');
     expect(svg).toContain('stroke-dasharray="3 4"');
     expect(svg).toContain('>thick<');
     expect(svg).toContain('>dotted<');
-    expect(svg.match(/class="pele-edge-label"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-edge-label"/g)?.length).toBe(2);
   });
 
   it('spreads edges between the same two blocks', () => {
@@ -436,7 +436,7 @@ describe('block rendering', () => {
       'block\n  columns 1\n  b\n  space\n  block:g["Group"]\n    x\n  end\n  a\n  a -- "a long label" --> b\n  a -- "a long label" --> b\n  a -- "a long label" --> b',
       options
     );
-    const [, x, baseline] = /class="pele-cluster-label"[^>]* x="([\d.]+)" y="([\d.]+)"/.exec(svg)!.map(Number);
+    const [, x, baseline] = /class="pelers-cluster-label"[^>]* x="([\d.]+)" y="([\d.]+)"/.exec(svg)!.map(Number);
     for (const l of labelBoxes(svg))
       expect(Math.abs(l.x - x) >= l.w / 2 || Math.abs(l.y - (baseline - 6)) >= l.h / 2).toBe(true);
   });
@@ -446,7 +446,7 @@ describe('block rendering', () => {
       'block\n  columns 1\n  a\n  space\n  b\n  a -- "first label" --> b\n  a -- "second label" --> b\n  b -- "third label" --> a',
       options
     );
-    const tips = [...svg.matchAll(/class="pele-marker" d="([^"]*)"/g)].flatMap((m) =>
+    const tips = [...svg.matchAll(/class="pelers-marker" d="([^"]*)"/g)].flatMap((m) =>
       [...m[1].matchAll(/(-?[\d.]+),(-?[\d.]+)/g)].map((p) => [Number(p[1]), Number(p[2])])
     );
     expect(tips.length).toBeGreaterThan(0);
@@ -534,8 +534,8 @@ describe('block rendering', () => {
     );
     const el = elements(svg);
     const group = (id: string) => el.find((e) => e.attrs.get('data-id') === id)!;
-    expect(group('a').attrs.get('class')).toBe('pele-node pele-shape-rect hot');
-    expect(group('c').attrs.get('class')).toBe('pele-node pele-shape-rect hot');
+    expect(group('a').attrs.get('class')).toBe('pelers-node pelers-shape-rect hot');
+    expect(group('c').attrs.get('class')).toBe('pelers-node pelers-shape-rect hot');
     expect(svg).toContain('style="rx:var(--_r);fill:#f96;stroke:#333;"');
     expect(svg).toContain('style="rx:var(--_r);fill:red;stroke:blue;stroke-width:2px;"');
     expect(svg).toContain('style="fill:#400;"');
@@ -552,7 +552,7 @@ describe('block rendering', () => {
 
   it('styles a composite', () => {
     const { svg } = render('block\n  block:g\n    a\n  end\n  style g fill:#fee,stroke:#f00', options);
-    expect(svg).toMatch(/class="pele-cluster" data-id="g"><rect [^>]*style="rx:var\(--_r\);fill:#fee;stroke:#f00;"/);
+    expect(svg).toMatch(/class="pelers-cluster" data-id="g"><rect [^>]*style="rx:var\(--_r\);fill:#fee;stroke:#f00;"/);
   });
 
   it('draws a composite fill the author sets at full opacity', () => {
@@ -567,34 +567,34 @@ describe('block rendering', () => {
       options
     );
     expect(svg).toMatch(
-      /data-id="g">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>Group</
+      /data-id="g">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Group</
     );
     expect(svg).toMatch(
-      /data-id="a"[^>]*>.*?<text class="pele-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>Light</
+      /data-id="a"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Light</
     );
-    expect(svg).toMatch(/data-id="b"[^>]*>.*?<text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>Dark</);
-    expect(svg).toMatch(/data-id="c"[^>]*>.*?<text class="pele-label" style="fill:#eee;"[^>]*>Own</);
-    expect(svg).toMatch(/data-id="d"[^>]*>.*?<text class="pele-label" x=[^>]*>Plain</);
-    expect(svg).toMatch(/data-id="e"[^>]*>.*?<text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>Go</);
+    expect(svg).toMatch(/data-id="b"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</);
+    expect(svg).toMatch(/data-id="c"[^>]*>.*?<text class="pelers-label" style="fill:#eee;"[^>]*>Own</);
+    expect(svg).toMatch(/data-id="d"[^>]*>.*?<text class="pelers-label" x=[^>]*>Plain</);
+    expect(svg).toMatch(/data-id="e"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Go</);
   });
 
   it('cases edges that cross a composite fill a style sets and inks those inside it', () => {
     const src = 'block\n  block:g\n    a b\n  end\n  c\n  a --> b\n  b --> c\n  c --> c\n  style g fill:#BBDEFB';
     const { svg } = render(src, options);
-    const casings = /<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
-    const edges = [...svg.matchAll(/<g class="pele-edge" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
+    const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const edges = [...svg.matchAll(/<g class="pelers-edge" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
       m[1],
       m[2],
     ]);
     expect(edges).toHaveLength(3);
     expect(edges.map(([, d]) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false]);
-    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pele-fg-on-light,#1f1f1f)"', '', '']);
-    expect(render(src.replace('\n  style g fill:#BBDEFB', ''), options).svg).not.toMatch(/pele-casings|--pele-fg-on/);
+    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pelers-fg-on-light,#1f1f1f)"', '', '']);
+    expect(render(src.replace('\n  style g fill:#BBDEFB', ''), options).svg).not.toMatch(/pelers-casings|--pelers-fg-on/);
     // The second loop on a reaches out past the composite, so it is cased.
     const loops = render('block\n  block:g\n    a\n  end\n  a --> a\n  a --> a\n  style g fill:white', options).svg;
-    expect(loops).toMatch(/data-id="1-a-a" stroke="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(loops).toMatch(/<g class="pele-edge" data-id="2-a-a"><path d="([^"]+)"/);
-    expect(/<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(loops)![1]).toContain(
+    expect(loops).toMatch(/data-id="1-a-a" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(loops).toMatch(/<g class="pelers-edge" data-id="2-a-a"><path d="([^"]+)"/);
+    expect(/<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(loops)![1]).toContain(
       `<path d="${/data-id="2-a-a"><path d="([^"]+)"/.exec(loops)![1]}"/>`
     );
   });
@@ -602,7 +602,7 @@ describe('block rendering', () => {
   it('draws the front matter title', () => {
     const plain = render('block\n  a', options);
     const titled = render('---\ntitle: Systems\n---\nblock\n  a', options);
-    expect(titled.svg).toContain('class="pele-title" font-weight="var(--_tw)"');
+    expect(titled.svg).toContain('class="pelers-title" font-weight="var(--_tw)"');
     expect(titled.svg).toContain('>Systems<');
     expect(titled.height).toBeGreaterThan(plain.height);
   });
@@ -635,7 +635,7 @@ describe('block rendering', () => {
 
   it('rejects a column count of zero the way Mermaid does', () => {
     expect(() => render('block\n  columns 0\n  a b', options)).toThrow('Columns must be an integer !== 0.');
-    expect(() => render('block\n  columns 0\n  a b', options)).toThrow(PeleError);
+    expect(() => render('block\n  columns 0\n  a b', options)).toThrow(PelersError);
     expect(render('block\n  columns auto\n  a b', options).svg).toBe(render('block\n  a b', options).svg);
   });
 
@@ -650,7 +650,7 @@ describe('block rendering', () => {
       'block\n  default',
       'block\n  accTitle: t\n  a',
     ]) {
-      expect(() => parse(src), src).toThrow(PeleError);
+      expect(() => parse(src), src).toThrow(PelersError);
     }
     expect(() => parse('block\n  a - b')).toThrow(/Lexical error on line 2/);
     expect(() => parse('block\n  a\n  end')).toThrow(/Parse error on line 3:[\s\S]*got 'end'/);
@@ -659,7 +659,7 @@ describe('block rendering', () => {
   it('renders deep nesting without running out of stack', () => {
     const src = 'block\n' + 'block\n'.repeat(3000) + 'a\n' + 'end\n'.repeat(3000);
     const { svg } = render(src, { ...options, limit: Infinity });
-    expect(svg.match(/class="pele-cluster"/g)?.length).toBe(3000);
+    expect(svg.match(/class="pelers-cluster"/g)?.length).toBe(3000);
   });
 
   it('gives generated ids that do not change between runs', () => {

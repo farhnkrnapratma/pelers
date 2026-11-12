@@ -1,4 +1,4 @@
-import { PeleError, replacements, type Edit } from './errors.js';
+import { PelersError, replacements, type Edit } from './errors.js';
 import { parseYaml, type YamlValue } from './util/yaml.js';
 import { isSpace as isWhitespace } from './util/chars.js';
 
@@ -163,7 +163,7 @@ export function preprocess(source: string, steps?: Edit[][]): Preprocessed {
     try {
       parsed = parseYaml(body);
     } catch (error) {
-      throw new PeleError(`Front matter is not valid YAML. ${(error as Error).message}`, 'syntax');
+      throw new PelersError(`Front matter is not valid YAML. ${(error as Error).message}`, 'syntax');
     }
     if (isRecord(parsed)) {
       if (parsed.title) title = String(parsed.title);

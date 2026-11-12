@@ -51,27 +51,27 @@ export function frame(
   return { x: within(x, width, natural.width), y: within(y, height, natural.height), width, height };
 }
 
-const STEP = 1.25;
-const PAN = 48;
-const GAP = 4;
+export const STEP = 1.25;
+export const PAN = 48;
+export const GAP = 4;
 
-// The class `pele` lets a page's rule for `.pele` give the buttons the diagram's colors, and the
+// The class `pelers` lets a page's rule for `.pelers` give the buttons the diagram's colors, and the
 // variables let it move them: they sit over the diagram, where a page may have things of its own.
-const BAR_STYLE =
-  '--_bg:var(--pele-bg,#fff);--_fg:var(--pele-fg,#1f1f1f);--_b:var(--pele-border,#8a8a8a);' +
-  'position:absolute;top:var(--pele-zoom-top,8px);right:var(--pele-zoom-right,8px);' +
-  'bottom:var(--pele-zoom-bottom,auto);left:var(--pele-zoom-left,auto);display:flex;flex-direction:column;gap:2px;padding:2px;' +
-  'width:auto;max-width:none;border:1px solid var(--_b);border-radius:var(--pele-radius,4px);background:var(--_bg);color:var(--_fg);line-height:0';
-const BUTTON_STYLE =
+export const BAR_STYLE =
+  '--_bg:var(--pelers-bg,#fff);--_fg:var(--pelers-fg,#1f1f1f);--_b:var(--pelers-border,#8a8a8a);' +
+  'position:absolute;top:var(--pelers-zoom-top,8px);right:var(--pelers-zoom-right,8px);' +
+  'bottom:var(--pelers-zoom-bottom,auto);left:var(--pelers-zoom-left,auto);display:flex;flex-direction:column;gap:2px;padding:2px;' +
+  'width:auto;max-width:none;border:1px solid var(--_b);border-radius:var(--pelers-radius,4px);background:var(--_bg);color:var(--_fg);line-height:0';
+export const BUTTON_STYLE =
   'appearance:none;display:grid;place-items:center;width:24px;height:24px;margin:0;padding:0;border:0;' +
-  'border-radius:calc(var(--pele-radius,4px) - 1px);background:transparent;color:inherit;font:inherit;cursor:var(--pele-zoom-cursor,pointer)';
-const ICONS = {
+  'border-radius:calc(var(--pelers-radius,4px) - 1px);background:transparent;color:inherit;font:inherit;cursor:var(--pelers-zoom-cursor,pointer)';
+export const ICONS = {
   zoomIn: 'M5 12h14M12 5v14',
   zoomOut: 'M5 12h14',
   // Lucide's rotate-ccw. Its license is in the LICENSE file.
   reset: 'M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8M3 3v5h5',
 };
-const LABELS = { zoomIn: 'Zoom in', zoomOut: 'Zoom out', reset: 'Reset zoom' };
+export const LABELS = { zoomIn: 'Zoom in', zoomOut: 'Zoom out', reset: 'Reset zoom' };
 
 // Lets the drawing in an element be enlarged and moved about inside its own box: by pinching,
 // by the wheel with Ctrl or ⌘ held, by dragging, by a double click, and from the keyboard.
@@ -127,7 +127,7 @@ export function zoomWith(element: HTMLElement, options: ZoomOptions, observe: bo
       if (!can) return;
       const doc = element.ownerDocument;
       bar = doc.createElement('div');
-      bar.className = 'pele pele-zoom';
+      bar.className = 'pelers pelers-zoom';
       bar.setAttribute('style', BAR_STYLE);
       const act = {
         zoomIn: () => show((scale || fit()) * STEP * STEP),
@@ -138,7 +138,7 @@ export function zoomWith(element: HTMLElement, options: ZoomOptions, observe: bo
         const button = doc.createElement('button');
         const label = options.labels?.[name] ?? LABELS[name];
         button.type = 'button';
-        button.className = `pele-zoom-${name === 'zoomIn' ? 'in' : name === 'zoomOut' ? 'out' : 'reset'}`;
+        button.className = `pelers-zoom-${name === 'zoomIn' ? 'in' : name === 'zoomOut' ? 'out' : 'reset'}`;
         button.setAttribute('style', BUTTON_STYLE);
         button.setAttribute('aria-label', label);
         button.title = label;
@@ -160,7 +160,7 @@ export function zoomWith(element: HTMLElement, options: ZoomOptions, observe: bo
       if (!button) return;
       button.disabled = off;
       button.style.opacity = off ? '0.35' : '';
-      button.style.cursor = off ? 'default' : 'var(--pele-zoom-cursor,pointer)';
+      button.style.cursor = off ? 'default' : 'var(--pelers-zoom-cursor,pointer)';
     };
     dim(buttons.zoomIn, (scale || fit()) >= most() * 0.999);
     dim(buttons.zoomOut, scale === 0);

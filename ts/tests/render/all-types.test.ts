@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render } from '../../src/index.js';
+import { PelersError, detectType, parse, render } from '../../src/index.js';
 import { all } from '../../src/diagrams/registry.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -51,7 +51,7 @@ describe('every diagram type', () => {
         const { svg, width, height, type } = render(src, options);
         assertInert(svg, at);
         expect(svg, at).not.toMatch(/NaN|Infinity|undefined/);
-        expect(svg.startsWith(`<svg xmlns="http://www.w3.org/2000/svg" class="pele pele-${type}"`), at).toBe(true);
+        expect(svg.startsWith(`<svg xmlns="http://www.w3.org/2000/svg" class="pelers pelers-${type}"`), at).toBe(true);
         // An example that asks Mermaid for a fixed size gets one.
         const fit = /useMaxWidth: false/.test(src) ? '' : 'max-width:100%;height:auto;';
         expect(svg, at).toContain(
@@ -84,8 +84,8 @@ describe('every diagram type', () => {
 
   it('reads the limits and the configuration when the text is parsed', () => {
     const src = 'flowchart LR\n  A --> B --> C';
-    expect(() => parse(src, { maxEdges: 1 })).toThrow(PeleError);
-    expect(() => parse(src, { limit: 5 })).toThrow(PeleError);
+    expect(() => parse(src, { maxEdges: 1 })).toThrow(PelersError);
+    expect(() => parse(src, { limit: 5 })).toThrow(PelersError);
     expect(render(parse(src), { ...options, maxEdges: 1, limit: 5 }).type).toBe('flowchart');
     const config = { flowchart: { useMaxWidth: false } };
     expect(render(parse(src, { config }), options).svg).toBe(render(src, { ...options, config }).svg);
@@ -308,9 +308,9 @@ describe('every diagram type', () => {
     } catch (e) {
       error = e;
     }
-    expect(error).toBeInstanceOf(PeleError);
-    expect((error as PeleError).code).toBe('limit');
-    expect((error as PeleError).type).toBe('flowchart');
+    expect(error).toBeInstanceOf(PelersError);
+    expect((error as PelersError).code).toBe('limit');
+    expect((error as PelersError).type).toBe('flowchart');
     expect(() => render('mindmap\nroot\n' + ' a\n'.repeat(16000), options)).toThrow(/output is longer than the limit/);
   });
 
@@ -333,7 +333,7 @@ describe('every diagram type', () => {
           try {
             result = render(variant, options);
           } catch (error) {
-            if (error instanceof PeleError) continue;
+            if (error instanceof PelersError) continue;
             throw error;
           }
           rendered++;
@@ -379,17 +379,17 @@ describe('every diagram type', () => {
     ];
     for (const [name, withIcon, without] of cases) {
       const plain = render(withIcon, options);
-      expect(plain.svg, name).not.toContain('pele-icon');
+      expect(plain.svg, name).not.toContain('pelers-icon');
       expect(plain.svg, name).toBe(render(without, options).svg);
       expect(render(withIcon, { ...options, icons: () => null }).svg, name).toBe(plain.svg);
       expect(render(withIcon, { ...options, icons: () => '' }).svg, name).toBe(plain.svg);
       const drawn = render(withIcon, { ...options, icons: () => '<path d="M1,1H9"/>' });
-      expect(drawn.svg, name).toMatch(/<svg class="pele-icon" data-icon="[^"]+"[^>]*><path d="M1,1H9"\/><\/svg>/);
+      expect(drawn.svg, name).toMatch(/<svg class="pelers-icon" data-icon="[^"]+"[^>]*><path d="M1,1H9"\/><\/svg>/);
       expect(drawn.width, name).toBeGreaterThanOrEqual(plain.width);
       // It is drawn in the diagram's text color, not in whatever color the page gives the container.
       expect(drawn.svg, name).toMatch(/^<svg[^>]* style="[^"]*color:var\(--_fg\);/);
-      expect(drawn.svg, name).toMatch(/<svg class="pele-icon"[^>]* stroke="currentColor"/);
-      assertInert(drawn.svg.replace(/<svg class="pele-icon"[^>]*>.*?<\/svg>/g, ''), name);
+      expect(drawn.svg, name).toMatch(/<svg class="pelers-icon"[^>]* stroke="currentColor"/);
+      assertInert(drawn.svg.replace(/<svg class="pelers-icon"[^>]*>.*?<\/svg>/g, ''), name);
     }
   });
 
@@ -455,7 +455,7 @@ describe('every diagram type', () => {
             svg = result.svg;
             expect(Number.isFinite(result.width) && Number.isFinite(result.height), at).toBe(true);
           } catch (error) {
-            expect(error, at).toBeInstanceOf(PeleError);
+            expect(error, at).toBeInstanceOf(PelersError);
             continue;
           }
           expect(performance.now() - started, at).toBeLessThan(3000);
@@ -484,7 +484,7 @@ describe('every diagram type', () => {
             try {
               svg = render(variant, options).svg;
             } catch (error) {
-              if (error instanceof PeleError) continue;
+              if (error instanceof PelersError) continue;
               throw new Error(`${where(name, variant)}: ${(error as Error).name}: ${(error as Error).message}`);
             }
             assertInert(svg, where(name, variant));
@@ -514,7 +514,7 @@ describe('every diagram type', () => {
             try {
               svg = render(variant, options).svg;
             } catch (error) {
-              if (error instanceof PeleError) continue;
+              if (error instanceof PelersError) continue;
               throw new Error(`${where(name, variant)}: ${(error as Error).name}: ${(error as Error).message}`);
             }
             assertInert(svg, where(name, variant));

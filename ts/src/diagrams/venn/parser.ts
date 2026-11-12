@@ -1,4 +1,4 @@
-import { PeleError, syntaxError } from '../../errors.js';
+import { PelersError, syntaxError } from '../../errors.js';
 import type { VennDb } from './db.js';
 import { T, TOKEN_NAMES, VennLexer } from './lexer.js';
 
@@ -51,7 +51,7 @@ export function parseVenn(src: string, db: VennDb): void {
       size = parseFloat(expect(T.NUMERIC));
     }
     if (union) {
-      if (ids.length < 2) throw new PeleError('union requires multiple identifiers', 'semantic', { type: 'venn' });
+      if (ids.length < 2) throw new PelersError('union requires multiple identifiers', 'semantic', { type: 'venn' });
       db.validateUnionIdentifiers(ids);
     }
     db.addSubsetData(ids, label, size);
@@ -104,7 +104,7 @@ export function parseVenn(src: string, db: VennDb): void {
     } else if (statement === T.INDENT_TEXT) {
       text(() => {
         const current = db.getCurrentSets();
-        if (!current) throw new PeleError('text requires set', 'semantic', { type: 'venn' });
+        if (!current) throw new PelersError('text requires set', 'semantic', { type: 'venn' });
         return current;
       });
     } else if (statement === T.STYLE) style();

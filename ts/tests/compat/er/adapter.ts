@@ -8,7 +8,7 @@ export function setConfig(next: Record<string, unknown>): void {
   config = { ...config, ...next };
 }
 
-// Exposes Pele's ER model through the names Mermaid's specs call on ErDB.
+// Exposes Pelers's ER model through the names Mermaid's specs call on ErDB.
 export class ErDB extends ErDb {
   Cardinality = {
     ZERO_OR_ONE: 'ZERO_OR_ONE',

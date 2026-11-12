@@ -37,7 +37,7 @@ export function oracleTokens(src: string): Pair[] {
   return out;
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -48,7 +48,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseState(src, yy as unknown as StateBuilder);

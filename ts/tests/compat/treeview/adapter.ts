@@ -8,7 +8,7 @@ export { expectNoErrorsOrAlternatives } from '../../support/langium.js';
 export { isBoxDrawingFormat, preprocessBoxDrawing, remapErrorLines } from '../../../src/diagrams/treeview/boxDrawing.js';
 export { detectIcon, getNodeIcon } from '../../../src/diagrams/treeview/icons.js';
 
-// Mermaid's built-in icons as an Iconify pack; Pele keeps only the path data.
+// Mermaid's built-in icons as an Iconify pack; Pelers keeps only the path data.
 export const treeViewIcons = {
   prefix: BUILTIN_PACK,
   icons: Object.fromEntries([...GLYPHS].map(([name, d]) => [name, { body: `<path d="${d}"/>` }])),

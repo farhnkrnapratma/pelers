@@ -51,7 +51,7 @@ export function referenceTokens(src: string): Lexed {
   return { tokens: result.tokens.map((t) => [t.tokenType.name, t.image, t.startOffset]) };
 }
 
-export function peleTokens(src: string): Lexed {
+export function pelersTokens(src: string): Lexed {
   try {
     const { types, starts, ends } = tokenize(src);
     const tokens: Token[] = [];
@@ -127,7 +127,7 @@ export function modelSnapshot(model: UsecaseModel): unknown {
   };
 }
 
-export function peleParse(src: string): Parsed {
+export function pelersParse(src: string): Parsed {
   try {
     return { ok: true, model: modelSnapshot(parseUsecase(src)) };
   } catch (e) {

@@ -20,13 +20,13 @@ function recorder(
   return { asked, math };
 }
 
-const boxes = (svg: string): string[] => svg.match(/<(?:svg|foreignObject) class="pele-math"[^>]*>/g) ?? [];
+const boxes = (svg: string): string[] => svg.match(/<(?:svg|foreignObject) class="pelers-math"[^>]*>/g) ?? [];
 
 describe('math in labels', () => {
   it('leaves $$ as text without a resolver', () => {
     const { svg } = render('flowchart LR\n  A["$$x^2$$"]', options);
     expect(svg).toContain('$$x^2$$');
-    expect(svg).not.toContain('pele-math');
+    expect(svg).not.toContain('pelers-math');
   });
 
   it('draws the same as without a resolver when the resolver has nothing', () => {
@@ -57,7 +57,7 @@ describe('math in labels', () => {
     const drawn = render('flowchart LR\n  A["$$\\frac{a}{b}$$"]', { ...options, math });
     const plain = render('flowchart LR\n  A["x"]', options);
     expect(boxes(drawn.svg)).toEqual([
-      '<svg class="pele-math" x="-20" y="-25" width="40" height="50" overflow="visible">',
+      '<svg class="pelers-math" x="-20" y="-25" width="40" height="50" overflow="visible">',
     ]);
     expect(drawn.svg).toContain('overflow="visible"><path d="M1,1H9"/></svg>');
     expect(drawn.svg).not.toContain('$$');
@@ -69,7 +69,7 @@ describe('math in labels', () => {
     const { math } = recorder(() => ({ html: '<span class="katex">x<br></span>', width: 20, height: 18 }));
     const { svg } = render('flowchart LR\n  A["$$x$$"]', { ...options, math });
     expect(boxes(svg)).toEqual([
-      '<foreignObject class="pele-math" x="-10" y="-9" width="20" height="18" overflow="visible">',
+      '<foreignObject class="pelers-math" x="-10" y="-9" width="20" height="18" overflow="visible">',
     ]);
     expect(svg).toMatch(
       /<div xmlns="http:\/\/www.w3.org\/1999\/xhtml" style="[^"]*font-size:16px;[^"]*"><span class="katex">x<br><\/span><\/div><\/foreignObject>/
@@ -81,7 +81,7 @@ describe('math in labels', () => {
     const { svg } = render('flowchart LR\n  A["Total $$x$$ items<br/>last line"]', { ...options, math });
     const total = /<tspan x="([-\d.]+)" y="([-\d.]+)" text-anchor="start">Total <\/tspan>/.exec(svg)!;
     const items = /<tspan x="([-\d.]+)" y="([-\d.]+)" text-anchor="start"> items<\/tspan>/.exec(svg)!;
-    const box = /<svg class="pele-math" x="([-\d.]+)" y="([-\d.]+)" width="30" height="40"/.exec(svg)!;
+    const box = /<svg class="pelers-math" x="([-\d.]+)" y="([-\d.]+)" width="30" height="40"/.exec(svg)!;
     const last = /<tspan x="0" y="([-\d.]+)">last line<\/tspan>/.exec(svg)!;
     expect(Number(items[1]) - Number(box[1])).toBe(30);
     expect(total[2]).toBe(items[2]);
@@ -162,8 +162,8 @@ describe('math in labels', () => {
     const { math } = recorder((tex) => ({ svg: `<g id="${tex}"/>`, width: 10, height: 18 }));
     const { svg } = render('flowchart LR\n  A["<span title=$$a$$>hello</span> $$b$$ $$c$$"]', { ...options, math });
     expect(svg).not.toContain('<g id="a"/>');
-    const b = /<svg class="pele-math" x="([-\d.]+)"[^>]*><g id="b"\/>/.exec(svg)!;
-    const c = /<svg class="pele-math" x="([-\d.]+)"[^>]*><g id="c"\/>/.exec(svg)!;
+    const b = /<svg class="pelers-math" x="([-\d.]+)"[^>]*><g id="b"\/>/.exec(svg)!;
+    const c = /<svg class="pelers-math" x="([-\d.]+)"[^>]*><g id="c"\/>/.exec(svg)!;
     expect(Number(c[1])).toBeGreaterThan(Number(b[1]));
   });
 
@@ -190,7 +190,7 @@ describe('math in labels', () => {
     const { math } = recorder(() => ({ svg: '<g id="title"/>', width: 200, height: 18 }));
     const { svg } = render('flowchart TD\n  X --> A\n  subgraph S["$$x$$"]\n    A\n  end', { ...options, math });
     const title =
-      /<g class="pele-cluster-title"[^>]*>(.*?)<\/g><\/g>|<g class="pele-cluster-title"[^>]*>.*?(?=<g class="pele-node|$)/.exec(
+      /<g class="pelers-cluster-title"[^>]*>(.*?)<\/g><\/g>|<g class="pelers-cluster-title"[^>]*>.*?(?=<g class="pelers-node|$)/.exec(
         svg
       )?.[0] ?? '';
     expect(title).toMatch(/<rect x="[-\d.]+" y="[-\d.]+" width="200" height="18" rx="2" fill="color-mix\(/);
@@ -310,7 +310,7 @@ describe('math in other diagram types', () => {
     it(`puts the line after tall math below it in ${type} diagrams`, () => {
       const { math } = recorder(() => ({ svg: '', width: 30, height: 60 }));
       const { svg } = render(src, { ...options, math });
-      const box = /<svg class="pele-math" x="[-\d.]+" y="([-\d.]+)" width="30" height="60"/.exec(svg);
+      const box = /<svg class="pelers-math" x="[-\d.]+" y="([-\d.]+)" width="30" height="60"/.exec(svg);
       const after = /y="([-\d.]+)"[^>]*>after</.exec(svg);
       expect(box, type).not.toBeNull();
       expect(after, type).not.toBeNull();
@@ -319,7 +319,7 @@ describe('math in other diagram types', () => {
   }
 
   const spans = (svg: string): [number, number, number, number][] =>
-    [...svg.matchAll(/<svg class="pele-math" x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g)].map(
+    [...svg.matchAll(/<svg class="pelers-math" x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g)].map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4])]
     );
 

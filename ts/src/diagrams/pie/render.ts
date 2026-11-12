@@ -118,7 +118,7 @@ function draw(model: PieModel, config: Config, options: RenderOptions, radius: n
     const share = shares[index];
     if (share === 0) return;
     const end = angle + share * Math.PI * 2;
-    slices += `<path class="pele-slice" data-id="${escText(label)}" d="${slice(angle, end, radius, inner)}" fill="${seriesColor(index)}"/>`;
+    slices += `<path class="pelers-slice" data-id="${escText(label)}" d="${slice(angle, end, radius, inner)}" fill="${seriesColor(index)}"/>`;
     const mid = (angle + end) / 2;
     const text = (share * 100).toFixed(0) + '%';
     if (narrow[index]) {
@@ -136,7 +136,7 @@ function draw(model: PieModel, config: Config, options: RenderOptions, radius: n
     angle = end;
   });
   if (slices === '') {
-    slices = `<circle class="pele-slice" r="${radius}" fill="none" stroke="var(--_b)"/>`;
+    slices = `<circle class="pelers-slice" r="${radius}" fill="none" stroke="var(--_b)"/>`;
   }
 
   let legendOut = '';
@@ -158,7 +158,7 @@ function draw(model: PieModel, config: Config, options: RenderOptions, radius: n
   legend.forEach((label, index) => {
     const y = ly + index * ROW + ROW / 2;
     legendOut +=
-      `<g class="pele-legend-item" data-id="${escText(entries[index][0])}">` +
+      `<g class="pelers-legend-item" data-id="${escText(entries[index][0])}">` +
       `<rect x="${num(lx)}" y="${num(y - SWATCH / 2)}" width="${SWATCH}" height="${SWATCH}" rx="2" fill="${seriesColor(index)}"/>` +
       labelSvg(label, lx + SWATCH + 8 + label.width / 2, y, '') +
       '</g>';
@@ -167,15 +167,15 @@ function draw(model: PieModel, config: Config, options: RenderOptions, radius: n
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(height + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    `<g class="pele-slices" transform="translate(${num(cx)},${num(cy)})" stroke="var(--_bg)" stroke-width="1" stroke-linejoin="round">${slices}</g>` +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    `<g class="pelers-slices" transform="translate(${num(cx)},${num(cy)})" stroke="var(--_bg)" stroke-width="1" stroke-linejoin="round">${slices}</g>` +
     (labels
-      ? `<g class="pele-slice-labels" transform="translate(${num(cx)},${num(cy)})" font-size="${small}" text-anchor="middle" fill="var(--_bg)">${labels}</g>`
+      ? `<g class="pelers-slice-labels" transform="translate(${num(cx)},${num(cy)})" font-size="${small}" text-anchor="middle" fill="var(--_bg)">${labels}</g>`
       : '') +
     (outside
-      ? `<g class="pele-slice-labels" transform="translate(${num(cx)},${num(cy)})" font-size="${small}" text-anchor="middle">${outside}</g>`
+      ? `<g class="pelers-slice-labels" transform="translate(${num(cx)},${num(cy)})" font-size="${small}" text-anchor="middle">${outside}</g>`
       : '') +
-    (legendOut ? `<g class="pele-legend" font-size="${small}">${legendOut}</g>` : '');
+    (legendOut ? `<g class="pelers-legend" font-size="${small}">${legendOut}</g>` : '');
 
   return {
     svg: svgDocument('pie', totalWidth, totalHeight, size, options, model, content),

@@ -1,5 +1,5 @@
 import { detectDiagram, type Detected, type DiagramType, type MermaidType } from './detect.js';
-import { inputOffset, locatingIn, PeleError, type Edit } from './errors.js';
+import { inputOffset, locatingIn, PelersError, type Edit } from './errors.js';
 import { decodeEntities, writtenCodes } from './text/entities.js';
 import { withIcons } from './text/icons.js';
 import { withMath } from './text/math.js';
@@ -9,8 +9,8 @@ import { palette, withPalette } from './svg/palette.js';
 import { mountWith, type MountOptions, type Mounted } from './mount.js';
 import type { Diagram, RenderOptions, RenderResult } from './types.js';
 
-export { PeleError } from './errors.js';
-export type { PeleErrorCode } from './errors.js';
+export { PelersError } from './errors.js';
+export type { PelersErrorCode } from './errors.js';
 export type { DiagramType, MermaidType } from './detect.js';
 export type { TextMeasurer } from './text/measurer.js';
 export type {
@@ -45,7 +45,7 @@ const DEFAULT_LIMIT = 50000;
 // Mermaid has no limit on its output. A source within the limit can still describe a drawing
 // of many megabytes, which would stall the page it is put into.
 const DEFAULT_OUTPUT_LIMIT = 4_000_000;
-// Mermaid stops at 500. Pele draws 5,000 edges in tens of milliseconds, and `A & B --> C & D`
+// Mermaid stops at 500. Pelers draws 5,000 edges in tens of milliseconds, and `A & B --> C & D`
 // multiplies: without a limit, a few kilobytes of source ask for millions of edges.
 const DEFAULT_MAX_EDGES = 5000;
 
@@ -54,7 +54,7 @@ function guarded<T>(run: () => T): T {
   try {
     return run();
   } catch (error) {
-    if (error instanceof RangeError) throw new PeleError('Diagram is nested too deeply.', 'limit');
+    if (error instanceof RangeError) throw new PelersError('Diagram is nested too deeply.', 'limit');
     throw error;
   }
 }
@@ -63,8 +63,8 @@ function tagErrors<T>(found: Detected, run: () => T): T {
   try {
     return run();
   } catch (error) {
-    if (error instanceof RangeError) throw new PeleError('Diagram is nested too deeply.', 'limit', found);
-    if (error instanceof PeleError) {
+    if (error instanceof RangeError) throw new PelersError('Diagram is nested too deeply.', 'limit', found);
+    if (error instanceof PelersError) {
       error.type ??= found.type;
       error.mermaidType ??= found.mermaidType;
       const message = writtenCodes(error.message);
@@ -95,16 +95,16 @@ function parseSource(
   extra: Config | undefined
 ): Parsed {
   if (text.length > limit) {
-    throw new PeleError(`Diagram source is longer than the limit of ${limit} characters.`, 'limit');
+    throw new PelersError(`Diagram source is longer than the limit of ${limit} characters.`, 'limit');
   }
   const pre = preprocess(text);
   const found = detectDiagram(pre.text);
   if (found === null) {
-    throw new PeleError('No diagram type detected for the given text.', 'unsupported-diagram');
+    throw new PelersError('No diagram type detected for the given text.', 'unsupported-diagram');
   }
   const diagram = diagrams.get(found.type);
   if (diagram === undefined) {
-    throw new PeleError(`Diagram type "${found.type}" is not supported yet.`, 'unsupported-diagram', found);
+    throw new PelersError(`Diagram type "${found.type}" is not supported yet.`, 'unsupported-diagram', found);
   }
   const config = extra ? { ...extra, ...pre.config } : pre.config;
   const keepComments = diagram.keepComments === true;
@@ -187,7 +187,7 @@ export function render(source: string | DiagramModel, options: RenderOptions = {
     );
     const outputLimit = options.outputLimit ?? DEFAULT_OUTPUT_LIMIT;
     if (rendered.svg.length > outputLimit) {
-      throw new PeleError(`Diagram output is longer than the limit of ${outputLimit} characters.`, 'limit', {
+      throw new PelersError(`Diagram output is longer than the limit of ${outputLimit} characters.`, 'limit', {
         type,
         mermaidType,
       });

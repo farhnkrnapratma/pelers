@@ -55,7 +55,7 @@ function safeColor(value: unknown): string | undefined {
     if (!FUNCTIONS.has(name.toLowerCase())) return undefined;
   }
   for (const [, name] of color.matchAll(RE_VAR)) {
-    if (!name.startsWith('--pele-')) return undefined;
+    if (!name.startsWith('--pelers-')) return undefined;
   }
   return color;
 }
@@ -99,7 +99,7 @@ export interface Palette {
 
 const NONE: Palette = { style: '', inks: [] };
 
-// The --pele-series-* declarations for the palette a diagram's theme variables set. An entry
+// The --pelers-series-* declarations for the palette a diagram's theme variables set. An entry
 // that isn't a usable color leaves its series in the theme's color.
 export function palette(type: DiagramType, config: Config): Palette {
   const found = entries(type, record(config.themeVariables));
@@ -111,7 +111,7 @@ export function palette(type: DiagramType, config: Config): Palette {
     if (!repeat && i >= list.length) break;
     const color = safeColor(list[i % list.length]);
     if (color === undefined) continue;
-    style += `;--pele-series-${i + 1}:${color}`;
+    style += `;--pelers-series-${i + 1}:${color}`;
     inks[i] = ink(`;fill:${color}`);
   }
   return style === '' ? NONE : { style: esc(style), inks };

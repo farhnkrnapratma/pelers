@@ -1,23 +1,23 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render } from '../../src/index.js';
+import { PelersError, detectType, parse, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 const options = { measurer: metricsMeasurer };
 const railroad = JSON.parse(readFileSync('tests/corpus/railroad-docs.json', 'utf8')) as string[];
 const railroadWith = (header: string): string => railroad.find((src) => src.startsWith(header + '\n'))!;
 
-const thrown = (run: () => unknown): PeleError => {
+const thrown = (run: () => unknown): PelersError => {
   try {
     run();
   } catch (error) {
-    if (error instanceof PeleError) return error;
+    if (error instanceof PelersError) return error;
     throw error;
   }
-  throw new Error('Expected a PeleError.');
+  throw new Error('Expected a PelersError.');
 };
 
-// [source, Pele's type, what Mermaid 12.1's detectType() returns]
+// [source, Pelers's type, what Mermaid 12.1's detectType() returns]
 const CASES: [string, string, string][] = [
   ['graph TD\n  A --> B', 'flowchart', 'flowchart-v2'],
   ['flowchart LR\n  A --> B', 'flowchart', 'flowchart-v2'],
@@ -35,7 +35,7 @@ const CASES: [string, string, string][] = [
 ];
 
 describe('mermaidType', () => {
-  it.each(CASES)('reports Mermaid’s type beside Pele’s for %j', (src, type, mermaidType) => {
+  it.each(CASES)('reports Mermaid’s type beside Pelers’s for %j', (src, type, mermaidType) => {
     expect(detectType(src)).toBe(type);
     expect(render(src, options)).toMatchObject({ type, mermaidType });
     const model = parse(src);
@@ -49,9 +49,9 @@ describe('mermaidType', () => {
     expect(render('%% note\nstateDiagram-v2\n  [*] --> A', options).mermaidType).toBe('stateDiagram');
   });
 
-  it('leaves the SVG named by Pele’s type', () => {
+  it('leaves the SVG named by Pelers’s type', () => {
     const { svg } = render('graph TD\n  A --> B', options);
-    expect(svg).toContain('class="pele pele-flowchart"');
+    expect(svg).toContain('class="pelers pelers-flowchart"');
     expect(svg).toContain('aria-roledescription="flowchart"');
   });
 

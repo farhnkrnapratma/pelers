@@ -23,37 +23,37 @@ describe('radar rendering', () => {
     const { svg, type } = render(BASIC, options);
     expect(type).toBe('radar');
     expect(supports('radar-beta\naxis A')).toBe(true);
-    expect(count(svg, 'circle', 'pele-graticule')).toBe(5);
-    expect(svg.match(/class="pele-axis-label"/g)?.length).toBe(4);
-    expect(svg.match(/<path class="pele-curve"/g)?.length).toBe(2);
-    expect(svg.match(/class="pele-legend-item"/g)?.length).toBe(2);
+    expect(count(svg, 'circle', 'pelers-graticule')).toBe(5);
+    expect(svg.match(/class="pelers-axis-label"/g)?.length).toBe(4);
+    expect(svg.match(/<path class="pelers-curve"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-legend-item"/g)?.length).toBe(2);
     expect(svg).toContain('>First<');
     expect(svg).toContain('>two<');
-    expect(svg).toContain('data-id="one" fill="var(--pele-series-1,');
-    expect(svg).toContain('data-id="two" fill="var(--pele-series-2,');
+    expect(svg).toContain('data-id="one" fill="var(--pelers-series-1,');
+    expect(svg).toContain('data-id="two" fill="var(--pelers-series-2,');
     expect(svg).toContain('fill-opacity="0.2"');
-    expect(svg.match(/class="pele-axes" d="([^"]*)"/)![1].match(/M0,0L/g)?.length).toBe(4);
+    expect(svg.match(/class="pelers-axes" d="([^"]*)"/)![1].match(/M0,0L/g)?.length).toBe(4);
   });
 
   it('draws polygons for a polygon graticule, with the given number of ticks', () => {
     const { svg } = render(BASIC + '\n  graticule polygon\n  ticks 3', options);
-    expect(count(svg, 'polygon', 'pele-graticule')).toBe(3);
-    expect(count(svg, 'circle', 'pele-graticule')).toBe(0);
-    expect(svg.match(/<polygon class="pele-curve"/g)?.length).toBe(2);
-    expect(svg).not.toContain('<path class="pele-curve"');
+    expect(count(svg, 'polygon', 'pelers-graticule')).toBe(3);
+    expect(count(svg, 'circle', 'pelers-graticule')).toBe(0);
+    expect(svg.match(/<polygon class="pelers-curve"/g)?.length).toBe(2);
+    expect(svg).not.toContain('<path class="pelers-curve"');
   });
 
   it('hides the legend with showLegend false', () => {
     const shown = render(BASIC, options);
     const hidden = render(BASIC + '\n  showLegend false', options);
-    expect(hidden.svg).not.toContain('pele-legend');
+    expect(hidden.svg).not.toContain('pelers-legend');
     expect(hidden.width).toBeLessThan(shown.width);
   });
 
   it('scales values between min and max', () => {
     const top = (src: string): number => {
       const { svg } = render(src + '\n graticule polygon', options);
-      return Number(svg.match(/<polygon class="pele-curve"[^>]* points="0,(-?[\d.]+) /)![1]);
+      return Number(svg.match(/<polygon class="pelers-curve"[^>]* points="0,(-?[\d.]+) /)![1]);
     };
     const body = 'radar-beta\n axis A, B, C\n curve c{50, 0, 0}';
     expect(top(body)).toBe(-160);
@@ -92,8 +92,8 @@ describe('radar rendering', () => {
 
   it('leaves out a curve without a value for every axis, but keeps it in the legend', () => {
     const { svg } = render('radar-beta\n axis A, B, C\n curve full{1,2,3}\n curve short{1,2}', options);
-    expect(svg.match(/class="pele-curve"/g)?.length).toBe(1);
-    expect(svg.match(/class="pele-legend-item"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-curve"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-legend-item"/g)?.length).toBe(2);
   });
 
   it('orders named entries by axis, and rejects a missing one', () => {
@@ -162,7 +162,7 @@ describe('radar rendering', () => {
     const huge = ['1' + '0'.repeat(308), '5' + '0'.repeat(307), '25' + '0'.repeat(306)].join(',');
     const curve = (values: string): string | undefined =>
       render(`radar-beta\n axis A, B, C\n curve c{${values}}\n graticule polygon`, options).svg.match(
-        /<polygon class="pele-curve"[^>]* points="([^"]*)"/
+        /<polygon class="pelers-curve"[^>]* points="([^"]*)"/
       )?.[1];
     expect(curve(huge)).toBe(curve('4,2,1'));
   });
@@ -189,7 +189,7 @@ describe('radar rendering', () => {
 
   it('writes accessible names', () => {
     const { svg } = render(BASIC + '\n accTitle: Name\n accDescr: Text', options);
-    expect(svg).toContain('<title id="pele-title">Name</title>');
-    expect(svg).toContain('<desc id="pele-desc">Text</desc>');
+    expect(svg).toContain('<title id="pelers-title">Name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Text</desc>');
   });
 });

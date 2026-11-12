@@ -34,7 +34,7 @@ describe('the browser script', () => {
     );
     runInContext(bundle.outputFiles[0].text, context);
     const draw = runInContext(
-      '(source, maxWidth) => { try { return pele.render(source, { maxWidth }).svg; } catch (error) { return "error: " + error.message; } }',
+      '(source, maxWidth) => { try { return pelers.render(source, { maxWidth }).svg; } catch (error) { return "error: " + error.message; } }',
       context
     ) as (source: string, maxWidth?: number) => string;
     let drawn = 0;

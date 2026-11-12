@@ -30,7 +30,7 @@ function applied(marked: string, label: string): string {
 }
 
 describe('playground completions', () => {
-  it('offers a declaration that Pele draws for every diagram type', () => {
+  it('offers a declaration that Pelers draws for every diagram type', () => {
     const offered = new Set<string>();
     for (const [label] of declarations) {
       const type = detectType(label);

@@ -117,18 +117,18 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
     box(x, y, colW, h, ` fill="${color}"`) +
     labelSvg(periodLabels[i], x + colW / 2, y + h / 2, onColor(seriesOf(group, i)));
   const event = (label: Label, color: string, x: number, y: number, h: number): string =>
-    '<g class="pele-node pele-event">' +
+    '<g class="pelers-node pelers-event">' +
     box(x, y, eventW, h, ` fill="${color}" fill-opacity="0.16"`) +
     labelSvg(label, x + eventW / 2, y + h / 2, ` font-size="${small}"`) +
     '</g>';
   const dot = (x: number, y: number, color: string): string =>
-    `<circle class="pele-dot" cx="${num(x)}" cy="${num(y)}" r="4" fill="${color}" stroke="var(--_bg)" stroke-width="2"/>`;
+    `<circle class="pelers-dot" cx="${num(x)}" cy="${num(y)}" r="4" fill="${color}" stroke="var(--_bg)" stroke-width="2"/>`;
   const open = (group: Group): string =>
     group.section >= 0
-      ? `<g class="pele-cluster pele-section" data-id="${escText(model.sections[group.section].trim())}">`
+      ? `<g class="pelers-cluster pelers-section" data-id="${escText(model.sections[group.section].trim())}">`
       : '';
   const openPeriod = (i: number): string =>
-    `<g class="pele-node pele-period" data-id="${escText(periods[i].text.trim())}">`;
+    `<g class="pelers-node pelers-period" data-id="${escText(periods[i].text.trim())}">`;
 
   let body = '';
   let height: number;
@@ -167,7 +167,7 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
         body +=
           openPeriod(i) +
           period(i, group, color, left, cy - h / 2, h) +
-          `<path class="pele-edge" d="${d}"${LINE}/>` +
+          `<path class="pelers-edge" d="${d}"${LINE}/>` +
           dot(axisX, cy, color) +
           cards +
           '</g>';
@@ -180,7 +180,7 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
     if (drawn) {
       const tip = y + TAIL + ARROW;
       body =
-        `<path class="pele-axis" d="M${num(axisX)},${num(top)}V${num(tip - ARROW + 1)}" fill="none" stroke="var(--_l)"/>` +
+        `<path class="pelers-axis" d="M${num(axisX)},${num(top)}V${num(tip - ARROW + 1)}" fill="none" stroke="var(--_l)"/>` +
         marker('arrow_point', axisX, tip, 0, 1, 'var(--_l)') +
         body;
       y = tip;
@@ -224,7 +224,7 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
         body +=
           openPeriod(i) +
           period(i, group, color, x, periodsY, chipH) +
-          `<path class="pele-edge" d="${d}"${LINE}/>` +
+          `<path class="pelers-edge" d="${d}"${LINE}/>` +
           dot(cx, axisY, color) +
           cards +
           '</g>';
@@ -235,7 +235,7 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
     if (drawn) {
       const tip = left + bodyW;
       body =
-        `<path class="pele-axis" d="M${num(left)},${num(axisY)}H${num(tip - ARROW + 1)}" fill="none" stroke="var(--_l)"/>` +
+        `<path class="pelers-axis" d="M${num(left)},${num(axisY)}H${num(tip - ARROW + 1)}" fill="none" stroke="var(--_l)"/>` +
         marker('arrow_point', tip, axisY, 1, 0, 'var(--_l)') +
         body;
     }
@@ -245,7 +245,7 @@ function draw(model: TimelineModel, config: Config, options: RenderOptions, vert
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(Math.max(height, pad * 2));
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') + body;
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') + body;
   return {
     svg: svgDocument('timeline', totalWidth, totalHeight, size, options, model, content),
     width: totalWidth,

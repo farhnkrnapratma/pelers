@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { TREEVIEW_TOKENS, parseTreeView } from '../../src/diagrams/treeview/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
-import { peleLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
 import { patchTitle, patchTokens } from '../support/token-patch.js';
 
 patchTokens('TreeViewModule', (tokens) => patchTitle(tokens, String.raw`(?!%%)[^\n\r]`));
@@ -93,15 +93,15 @@ const corpus = [...loadCorpus('treeview', /treeView-beta/), ...VALID, ...INVALID
 
 async function compare(src: string): Promise<void> {
   const expected = await referenceAst('treeView', src);
-  const actual = peleAst(parseTreeView, src);
+  const actual = pelersAst(parseTreeView, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('treeView parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(TREEVIEW_TOKENS)).toEqual(referenceTokens('createTreeViewServices', 'TreeView'));
-    expect(peleLongerAlts(TREEVIEW_TOKENS)).toEqual(referenceLongerAlts('createTreeViewServices', 'TreeView'));
+    expect(pelersTokens(TREEVIEW_TOKENS)).toEqual(referenceTokens('createTreeViewServices', 'TreeView'));
+    expect(pelersLongerAlts(TREEVIEW_TOKENS)).toEqual(referenceLongerAlts('createTreeViewServices', 'TreeView'));
   });
 
   it('agrees on every spec and documentation input', async () => {

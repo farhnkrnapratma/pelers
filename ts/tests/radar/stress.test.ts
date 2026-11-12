@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { parseRadar } from '../../src/diagrams/radar/parser.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -73,7 +73,7 @@ describe('radar worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },

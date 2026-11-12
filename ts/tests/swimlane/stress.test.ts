@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 const options = { measurer: metricsMeasurer, limit: Infinity };
@@ -12,7 +12,7 @@ function timed(name: string, src: string): void {
       const { svg } = render(src, options);
       expect(svg).not.toMatch(/NaN|Infinity/);
     } catch (error) {
-      if (!(error instanceof PeleError)) throw error;
+      if (!(error instanceof PelersError)) throw error;
     }
     expect(performance.now() - started).toBeLessThan(LIMIT);
   });

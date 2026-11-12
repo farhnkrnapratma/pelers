@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import type { RenderOptions } from '../../src/types.js';
 
@@ -14,8 +14,8 @@ describe('treeView rendering', () => {
     const { svg, type } = render(TREE, options);
     expect(type).toBe('treeView');
     expect(supports(TREE)).toBe(true);
-    expect(count(svg, /class="pele-node pele-tree-(dir|file)"/g)).toBe(5);
-    expect(count(svg, /class="pele-node pele-tree-dir"/g)).toBe(2);
+    expect(count(svg, /class="pelers-node pelers-tree-(dir|file)"/g)).toBe(5);
+    expect(count(svg, /class="pelers-node pelers-tree-dir"/g)).toBe(2);
     expect(svg).toContain('font-weight="var(--_hw)" xml:space="preserve">my-project</text>');
     expect(svg).toContain('xml:space="preserve">index.js</text>');
     expect(count(svg, /<path d="M/g)).toBe(2);
@@ -50,9 +50,9 @@ describe('treeView rendering', () => {
       render(src, options);
       expect.unreachable();
     } catch (error) {
-      expect(error).toBeInstanceOf(PeleError);
-      expect((error as PeleError).line).toBe(5);
-      expect((error as PeleError).message).toContain('line 5');
+      expect(error).toBeInstanceOf(PelersError);
+      expect((error as PelersError).line).toBe(5);
+      expect((error as PelersError).message).toContain('line 5');
     }
     expect(() => render('treeView-beta\n├── \n', options)).toThrow('Line 2: Empty node');
     expect(() => render('treeView-beta\n├── a\n   b\n', options)).toThrow('Line 3: Unexpected indentation');
@@ -81,23 +81,23 @@ describe('treeView rendering', () => {
       'treeView-beta\n    src/\n        App.tsx :::highlight ## main\n        index.js :::mine ## entry point\n',
       options
     );
-    expect(count(svg, /class="pele-tree-highlight"/g)).toBe(1);
-    expect(svg).toContain('class="pele-node pele-tree-file highlight"');
-    expect(svg).toContain('class="pele-node pele-tree-file mine"');
-    const xs = [...svg.matchAll(/class="pele-tree-description" x="([\d.]+)"/g)].map((m) => m[1]);
+    expect(count(svg, /class="pelers-tree-highlight"/g)).toBe(1);
+    expect(svg).toContain('class="pelers-node pelers-tree-file highlight"');
+    expect(svg).toContain('class="pelers-node pelers-tree-file mine"');
+    const xs = [...svg.matchAll(/class="pelers-tree-description" x="([\d.]+)"/g)].map((m) => m[1]);
     expect(xs).toHaveLength(2);
     expect(xs[0]).toBe(xs[1]);
   });
 
   it('measures names in the monospace font when monospace lists files', () => {
     const src = 'treeView-beta\n    src/\n        App.tsx ## main\n';
-    const descX = (svg: string): number => Number(/class="pele-tree-description" x="([\d.]+)"/.exec(svg)![1]);
+    const descX = (svg: string): number => Number(/class="pelers-tree-description" x="([\d.]+)"/.exec(svg)![1]);
     const plain = render(src, options).svg;
     for (const maxWidth of [undefined, 90]) {
       const svg = render(src, { ...options, maxWidth, monospace: ['files'] }).svg;
-      expect(count(svg, /<text class="pele-label"[^>]* font-family="var\(--_fm\)"/g)).toBe(maxWidth ? 3 : 2);
-      expect(svg).toMatch(/<text class="pele-label"[^>]* font-weight="var\(--_hw\)"[^>]*>src</);
-      expect(svg).not.toMatch(/<text class="pele-tree-description"[^>]* font-family=/);
+      expect(count(svg, /<text class="pelers-label"[^>]* font-family="var\(--_fm\)"/g)).toBe(maxWidth ? 3 : 2);
+      expect(svg).toMatch(/<text class="pelers-label"[^>]* font-weight="var\(--_hw\)"[^>]*>src</);
+      expect(svg).not.toMatch(/<text class="pelers-tree-description"[^>]* font-family=/);
     }
     expect(plain).not.toContain('font-family="');
     expect(descX(render(src, { ...options, monospace: ['files'] }).svg)).toBeGreaterThan(descX(plain));
@@ -107,9 +107,9 @@ describe('treeView rendering', () => {
   });
 
   it('shows icons only when asked, and offers each icon name to the host', () => {
-    expect(render(TREE, options).svg).not.toContain('pele-icon');
+    expect(render(TREE, options).svg).not.toContain('pelers-icon');
     const shown = render('---\nconfig:\n  treeView:\n    showIcons: true\n---\n' + TREE, options).svg;
-    expect(count(shown, /class="pele-icon"/g)).toBe(5);
+    expect(count(shown, /class="pelers-icon"/g)).toBe(5);
     expect(shown).toContain('data-icon="mermaid-treeview:folder"');
     expect(shown).toContain('data-icon="mermaid-treeview:file"');
 
@@ -121,7 +121,7 @@ describe('treeView rendering', () => {
     expect(asked).toEqual(['logos:react', 'mermaid-treeview:rust']);
     expect(custom).toContain('data-icon="logos:react"');
     expect(custom).toContain('<circle r="4"/>');
-    expect(count(custom, /class="pele-icon"/g)).toBe(2);
+    expect(count(custom, /class="pelers-icon"/g)).toBe(2);
   });
 
   it('maps file names and extensions to icons from config', () => {
@@ -133,7 +133,7 @@ describe('treeView rendering', () => {
     expect(svg).toContain('data-icon="material:docker"');
     expect(count(svg, /data-icon="mermaid-treeview:file"/g)).toBe(1);
     expect(count(svg, /data-icon="mermaid-treeview:folder"/g)).toBe(1);
-    expect(count(svg, /class="pele-icon"/g)).toBe(4);
+    expect(count(svg, /class="pelers-icon"/g)).toBe(4);
   });
 
   it('keeps names as written', () => {
@@ -164,8 +164,8 @@ describe('treeView rendering', () => {
   it('draws titles and accessible names', () => {
     const { svg } = render('---\ntitle: Front\n---\ntreeView-beta\naccTitle: Acc\naccDescr: Described\n  a\n', options);
     expect(svg).toContain('>Front<');
-    expect(svg).toContain('<title id="pele-title">Acc</title>');
-    expect(svg).toContain('<desc id="pele-desc">Described</desc>');
+    expect(svg).toContain('<title id="pelers-title">Acc</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Described</desc>');
     expect(render('---\ntitle: Front\n---\ntreeView-beta\ntitle Own\n  a\n', options).svg).toContain('>Own<');
   });
 
@@ -192,7 +192,7 @@ describe('treeView rendering', () => {
       'treeView-beta\n  \n  a',
       'treeView-beta\n :::x',
     ]) {
-      expect(() => render(src, options), src).toThrow(PeleError);
+      expect(() => render(src, options), src).toThrow(PelersError);
     }
   });
 });

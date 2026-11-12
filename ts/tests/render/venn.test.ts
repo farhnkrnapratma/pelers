@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import {
   distanceForOverlap,
   findSpot,
@@ -19,7 +19,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -30,7 +30,7 @@ const count = (svg: string, needle: string): number => svg.split(needle).length 
 function circlesOf(svg: string): Map<string, Circle> {
   const out = new Map<string, Circle>();
   for (const m of svg.matchAll(
-    /<circle class="pele-venn-set" data-id="([^"]*)" cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g
+    /<circle class="pelers-venn-set" data-id="([^"]*)" cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"/g
   )) {
     out.set(m[1], { id: m[1], x: Number(m[2]), y: Number(m[3]), r: Number(m[4]) });
   }
@@ -40,7 +40,7 @@ function circlesOf(svg: string): Map<string, Circle> {
 // Where the first line of a region is written.
 function labelAt(svg: string, id: string): { x: number; y: number; text: string } {
   const m = new RegExp(
-    `<g class="pele-venn-region" data-id="${id.replace(/\|/g, '\\|')}"><text[^>]* x="([-\\d.]+)" y="([-\\d.]+)"[^>]*>([^<]*)<`
+    `<g class="pelers-venn-region" data-id="${id.replace(/\|/g, '\\|')}"><text[^>]* x="([-\\d.]+)" y="([-\\d.]+)"[^>]*>([^<]*)<`
   ).exec(svg);
   if (!m) throw new Error(`no region ${id}`);
   return { x: Number(m[1]), y: Number(m[2]), text: m[3] };
@@ -73,7 +73,7 @@ describe('venn diagram rendering', () => {
     expect(supports(src)).toBe(true);
     const result = render(src, options);
     expect(result.type).toBe('venn');
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-venn"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-venn"/);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     const model = parse(src);
     expect(model.type).toBe('venn');
@@ -96,14 +96,14 @@ describe('venn diagram rendering', () => {
     expect(label.x).toBeCloseTo(c.x, 0);
     expect(Math.abs(label.y - c.y)).toBeLessThan(8);
     expect(svg).toContain(
-      'fill="var(--pele-series-1,#4c78a8)" fill-opacity="0.2" stroke="var(--pele-series-1,#4c78a8)"'
+      'fill="var(--pelers-series-1,#4c78a8)" fill-opacity="0.2" stroke="var(--pelers-series-1,#4c78a8)"'
     );
   });
 
   it('gives each set the next series color', () => {
     const svg = svgOf('set A\nset B\nset C');
     expect(svg).toContain('data-id="A" cx');
-    for (const k of [1, 2, 3]) expect(count(svg, `fill="var(--pele-series-${k},`)).toBe(1);
+    for (const k of [1, 2, 3]) expect(count(svg, `fill="var(--pelers-series-${k},`)).toBe(1);
   });
 
   it('keeps sets that share nothing apart', () => {
@@ -222,15 +222,15 @@ describe('venn diagram rendering', () => {
     const svg = svgOf(
       'set A["Frontend"]\n  text A1["React"]\n  text A2\nset B\nunion A,B["Shared"]\n  text AB1["OpenAPI"]'
     );
-    const region = /<g class="pele-venn-region" data-id="A">(.*?)<\/g>/.exec(svg)![1];
+    const region = /<g class="pelers-venn-region" data-id="A">(.*?)<\/g>/.exec(svg)![1];
     const ys = [...region.matchAll(/ y="([-\d.]+)"/g)].map((m) => Number(m[1]));
     expect(ys).toHaveLength(3);
     expect(ys[0]).toBeLessThan(ys[1]);
     expect(ys[1]).toBeLessThan(ys[2]);
-    expect(region).toContain('<text class="pele-venn-text" data-id="A1" font-size="13" fill="var(--_m)"');
+    expect(region).toContain('<text class="pelers-venn-text" data-id="A1" font-size="13" fill="var(--_m)"');
     expect(region).toContain('>React</text>');
     expect(region).toContain('>A2</text>');
-    expect(/<g class="pele-venn-region" data-id="A\|B">(.*?)<\/g>/.exec(svg)![1]).toContain('>OpenAPI</text>');
+    expect(/<g class="pelers-venn-region" data-id="A\|B">(.*?)<\/g>/.exec(svg)![1]).toContain('>OpenAPI</text>');
   });
 
   it('leaves out a text whose sets were never stated together', () => {
@@ -244,7 +244,7 @@ describe('venn diagram rendering', () => {
       'venn-beta\nset A["A very long label for a set that goes on and on"]\nset B\nunion A,B["An intersection with a long label"]',
       options
     );
-    const region = /<g class="pele-venn-region" data-id="A">(.*?)<\/g>/.exec(result.svg)![1];
+    const region = /<g class="pelers-venn-region" data-id="A">(.*?)<\/g>/.exec(result.svg)![1];
     expect(count(region, '<tspan')).toBeGreaterThan(1);
     for (const m of result.svg.matchAll(/<tspan x="([-\d.]+)" y="([-\d.]+)"[^>]*>([^<]*)</g)) {
       const half = metricsMeasurer.width(m[3], 16, 0) / 2;
@@ -261,33 +261,33 @@ describe('venn diagram rendering', () => {
       /data-id="A" cx="[-\d.]+" cy="[-\d.]+" r="[\d.]+" fill="[^"]+" fill-opacity="0.2" stroke="[^"]+" style="fill:#ff6b6b;stroke-width:3;stroke:black;"\/>/
     );
     expect(svg).toMatch(/data-id="B" [^>]* style="fill-opacity:0.5;"\/>/);
-    expect(svg).toContain('<text class="pele-label" font-size="14" style="fill:#333;"');
+    expect(svg).toContain('<text class="pelers-label" font-size="14" style="fill:#333;"');
     expect(svg).toContain('data-id="A1" font-size="13" fill="var(--_m)" style="fill:red;"');
     // A text color on an overlap does not draw the overlap.
-    expect(svg).not.toContain('pele-venn-overlap');
+    expect(svg).not.toContain('pelers-venn-overlap');
   });
 
   it('picks a contrasting text color on an overlap a style fills', () => {
     const svg = svgOf(
       'set A\nset B\nset C\nunion A,B["ab"]\n  text T["note"]\nunion B,C["bc"]\nstyle A,B fill:#1f3a5f\nstyle A fill:navy\nstyle B,C fill:#1f3a5f,color:#eee'
     );
-    expect(svg).toMatch(/<text class="pele-label" font-size="\d+" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>ab</);
+    expect(svg).toMatch(/<text class="pelers-label" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>ab</);
     expect(svg).toMatch(
-      /<text class="pele-venn-text" data-id="T" font-size="\d+" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>note</
+      /<text class="pelers-venn-text" data-id="T" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>note</
     );
-    expect(svg).toMatch(/<text class="pele-label" font-size="\d+" style="fill:#eee;"[^>]*>bc</);
+    expect(svg).toMatch(/<text class="pelers-label" font-size="\d+" style="fill:#eee;"[^>]*>bc</);
     // A set's own fill is drawn faint, so its label keeps the theme's color.
-    expect(svg).toMatch(/<text class="pele-label" x=[^>]*>A</);
+    expect(svg).toMatch(/<text class="pelers-label" x=[^>]*>A</);
   });
 
   it('reads the fill under the text from what is drawn last there', () => {
     const covered = svgOf(
       'set A: 100\nset B: 100\nset C: 100\nunion A,B,C["triple"]: 50\nunion A,B["ab"]: 70\nunion A,C["ac"]: 70\nunion B,C["bc"]: 70\nstyle A,B,C fill:black\nstyle A,B fill:white'
     );
-    expect(covered).toMatch(/fill="var\(--pele-fg-on-light,#1f1f1f\)"[^>]*>triple</);
-    expect(svgOf('set A\nstyle A fill:black,fill-opacity:1')).toMatch(/fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>A</);
+    expect(covered).toMatch(/fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>triple</);
+    expect(svgOf('set A\nstyle A fill:black,fill-opacity:1')).toMatch(/fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>A</);
     expect(svgOf('set A: 100\nset B: 100\nunion A,B["x"]: 5\nstyle A,B fill:black')).toMatch(
-      /fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>x</
+      /fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>x</
     );
   });
 
@@ -297,7 +297,7 @@ describe('venn diagram rendering', () => {
     );
     const circles = [...circlesOf(svg).values()];
     const paths = [
-      ...svg.matchAll(/<path class="pele-venn-overlap" data-id="([^"]*)" d="([^"]+)" fill="none" style="([^"]*)"\/>/g),
+      ...svg.matchAll(/<path class="pelers-venn-overlap" data-id="([^"]*)" d="([^"]+)" fill="none" style="([^"]*)"\/>/g),
     ];
     expect(paths.map((m) => [m[1], m[3]])).toEqual([
       ['A|B', 'fill:gold;'],
@@ -316,7 +316,7 @@ describe('venn diagram rendering', () => {
 
   it('draws the title above, without the quotes it may be written in', () => {
     const quoted = render('venn-beta\ntitle "Team overlap"\nset A', options).svg;
-    expect(quoted).toContain('<text class="pele-title" font-weight="var(--_tw)"');
+    expect(quoted).toContain('<text class="pelers-title" font-weight="var(--_tw)"');
     expect(quoted).toContain('>Team overlap</tspan>');
     const front = render('---\ntitle: From the front matter\n---\nvenn-beta\nset A', options).svg;
     expect(front).toContain('>From the front matter</tspan>');
@@ -369,7 +369,7 @@ describe('venn diagram rendering', () => {
 
   it('draws nothing but the frame when there are no sets', () => {
     const result = render('venn-beta\n', options);
-    expect(result.svg).toContain('<g class="pele-venn-sets"></g>');
+    expect(result.svg).toContain('<g class="pelers-venn-sets"></g>');
     expect(result.width).toBeGreaterThan(0);
     expect(result.height).toBeGreaterThan(0);
   });
@@ -379,7 +379,7 @@ describe('venn diagram rendering', () => {
       try {
         render(src, options);
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
+        expect(error).toBeInstanceOf(PelersError);
         return (error as Error).message;
       }
       return 'no error';

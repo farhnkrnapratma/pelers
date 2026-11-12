@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { WardleyBuilder, type Flow, type SourceStrategy, type WardleyBuildResult } from './builder.js';
 import type { LabelAst, WardleyAst } from './parser.js';
 
@@ -13,7 +13,7 @@ export interface WardleyModel extends WardleyBuildResult {
 function toPercent(value: number, context: string): number {
   const normalized = value <= 1 ? value * 100 : value;
   if (normalized < 0 || normalized > 100) {
-    throw new PeleError(
+    throw new PelersError(
       `${context} must be between 0-1 (decimal) or 0-100 (percentage). Received: ${value}`,
       'semantic',
       {
@@ -92,7 +92,7 @@ export function populate(ast: WardleyAst, db: WardleyBuilder): void {
   for (const pipeline of ast.pipelines) {
     const parent = db.getNode(pipeline.parent);
     if (!parent || typeof parent.y !== 'number') {
-      throw new PeleError(
+      throw new PelersError(
         `Pipeline "${pipeline.parent}" must reference an existing component with coordinates.`,
         'semantic',
         {

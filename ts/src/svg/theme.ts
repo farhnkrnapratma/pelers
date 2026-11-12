@@ -1,15 +1,15 @@
 import { RE_INVALID_XML, esc } from './builder.js';
 
 // Private aliases set once on the root element, so each use is short and the public
-// --pele-* tokens keep their fallbacks. The text color is set as well: an icon is drawn in
+// --pelers-* tokens keep their fallbacks. The text color is set as well: an icon is drawn in
 // currentColor, which would otherwise be whatever color the page gives the diagram's container.
 export const ROOT_STYLE =
-  '--_bg:var(--pele-bg,#fff);--_fg:var(--pele-fg,#1f1f1f);--_m:var(--pele-muted,#6e6e6e);' +
-  '--_l:var(--pele-line,#1f1f1f);--_s:var(--pele-surface,#f3f3f3);--_a:var(--pele-surface-alt,#e6e6e6);' +
-  '--_b:var(--pele-border,#8a8a8a);--_c:var(--pele-accent,#5b7bd5);color:var(--_fg)';
+  '--_bg:var(--pelers-bg,#fff);--_fg:var(--pelers-fg,#1f1f1f);--_m:var(--pelers-muted,#6e6e6e);' +
+  '--_l:var(--pelers-line,#1f1f1f);--_s:var(--pelers-surface,#f3f3f3);--_a:var(--pelers-surface-alt,#e6e6e6);' +
+  '--_b:var(--pelers-border,#8a8a8a);--_c:var(--pelers-accent,#5b7bd5);color:var(--_fg)';
 
 export const FONT_MONO = 'var(--_fm)';
-export const RADIUS = 'var(--pele-radius,4px)';
+export const RADIUS = 'var(--pelers-radius,4px)';
 
 // Use CSS for rx variables to support older browsers. Put the default first so
 // diagram styles can override it.
@@ -26,7 +26,7 @@ export function rounded(attrs: string): string {
 }
 // The color of what a diagram marks as critical. It is not one of the series colors, as a theme
 // may put those in any order.
-export const CRITICAL = 'var(--pele-critical,#e45756)';
+export const CRITICAL = 'var(--pelers-critical,#e45756)';
 
 // A list of font names, quoted or not, and nothing that could end the declaration it is put in.
 const FAMILY = String.raw`(?:"[^"'\\\n<>{}();:@]*"|'[^"'\\\n<>{}();:@]*'|[\p{L}\p{N}_-][\p{L}\p{N}_ .-]*)`;
@@ -40,9 +40,9 @@ function families(list: string | undefined, generic: string): string {
 // others. The rest of what text inherits is pinned, as none of it was measured.
 export function fontStyle(size: number, family: string | undefined, mono: string | undefined): string {
   return (
-    `;--_fm:var(--pele-font-mono,${families(mono, 'monospace')});font:${size}px sans-serif;` +
+    `;--_fm:var(--pelers-font-mono,${families(mono, 'monospace')});font:${size}px sans-serif;` +
     'letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;' +
-    `font-family:var(--pele-font,${families(family, 'sans-serif')})`
+    `font-family:var(--pelers-font,${families(family, 'sans-serif')})`
   );
 }
 
@@ -147,5 +147,5 @@ const SERIES = ['#4c78a8', '#f58518', '#54a24b', '#e45756', '#72b7b2', '#eeca3b'
 // Color for the nth data series in a chart, cycling through eight tokens.
 export function seriesColor(index: number): string {
   const k = ((index % 8) + 8) % 8;
-  return `var(--pele-series-${k + 1},${SERIES[k]})`;
+  return `var(--pelers-series-${k + 1},${SERIES[k]})`;
 }

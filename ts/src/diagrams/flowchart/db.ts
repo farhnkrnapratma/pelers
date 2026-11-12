@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { safeUrl } from '../../util/url.js';
 import { parseYaml, type YamlValue } from '../../util/yaml.js';
 import { isValidShape } from './shapes.js';
@@ -141,7 +141,7 @@ export class FlowDb implements FlowchartModel {
       try {
         parsed = parseYaml(yaml);
       } catch (error) {
-        throw new PeleError(`Metadata of "${id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
+        throw new PelersError(`Metadata of "${id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
           type: 'flowchart',
         });
       }
@@ -191,12 +191,12 @@ export class FlowDb implements FlowchartModel {
     if (doc.shape) {
       const shape = String(doc.shape);
       if (shape !== shape.toLowerCase() || shape.includes('_')) {
-        throw new PeleError(`No such shape: ${shape}. Shape names should be lowercase.`, 'semantic', {
+        throw new PelersError(`No such shape: ${shape}. Shape names should be lowercase.`, 'semantic', {
           type: 'flowchart',
         });
       }
       if (!isValidShape(shape)) {
-        throw new PeleError(`No such shape: ${shape}.`, 'semantic', { type: 'flowchart' });
+        throw new PelersError(`No such shape: ${shape}.`, 'semantic', { type: 'flowchart' });
       }
       vertex.type = shape;
     }
@@ -252,7 +252,7 @@ export class FlowDb implements FlowchartModel {
 
     const max = this.options.maxEdges;
     if (max !== undefined && this.edges.length >= max) {
-      throw new PeleError(`Edge limit exceeded. The limit is ${max}.`, 'limit', { type: 'flowchart' });
+      throw new PelersError(`Edge limit exceeded. The limit is ${max}.`, 'limit', { type: 'flowchart' });
     }
     this.edges.push(edge);
     this.pairCount.set(pair, count + 1);
@@ -292,7 +292,7 @@ export class FlowDb implements FlowchartModel {
   private edgeAt(pos: string | number): FlowEdge {
     const edge = this.edges[Number(pos)];
     if (edge === undefined) {
-      throw new PeleError(
+      throw new PelersError(
         `The index ${pos} for linkStyle is out of bounds. Valid indices for linkStyle are between 0 and ${
           this.edges.length - 1
         }. (Help: Ensure that the index is within the range of existing edges.)`,

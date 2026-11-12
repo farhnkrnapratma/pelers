@@ -35,7 +35,7 @@ function options(): FlowDbOptions {
   };
 }
 
-// Exposes Pele's flowchart model through the method names Mermaid's specs call on FlowDB.
+// Exposes Pelers's flowchart model through the method names Mermaid's specs call on FlowDB.
 export class FlowDB extends FlowDb {
   constructor() {
     super(options());

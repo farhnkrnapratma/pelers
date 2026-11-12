@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { parseYaml, type YamlValue } from '../../util/yaml.js';
 import { getType } from '../common/outline.js';
 
@@ -42,7 +42,7 @@ export class KanbanDb implements KanbanModel {
       try {
         doc = parseYaml(yaml);
       } catch (error) {
-        throw new PeleError(`Metadata of "${node.id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
+        throw new PelersError(`Metadata of "${node.id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
           type: 'kanban',
         });
       }
@@ -50,7 +50,7 @@ export class KanbanDb implements KanbanModel {
       if (doc !== null && typeof doc === 'object' && !Array.isArray(doc)) {
         const shape = doc.shape ? String(doc.shape) : '';
         if (shape !== shape.toLowerCase() || shape.includes('_')) {
-          throw new PeleError(`No such shape: ${shape}. Shape names should be lowercase.`, 'semantic', {
+          throw new PelersError(`No such shape: ${shape}. Shape names should be lowercase.`, 'semantic', {
             type: 'kanban',
           });
         }
@@ -64,7 +64,7 @@ export class KanbanDb implements KanbanModel {
 
     // A node indented less than the first column becomes a card, and Mermaid rejects whatever follows it.
     if (this.misplaced) {
-      throw new PeleError(`Items without section detected, found section ("${this.misplaced.label}")`, 'semantic', {
+      throw new PelersError(`Items without section detected, found section ("${this.misplaced.label}")`, 'semantic', {
         type: 'kanban',
       });
     }

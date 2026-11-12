@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Block, BlockClassDef, BlockModel, Statement } from './types.js';
 
 export interface BlockDbOptions {
@@ -228,7 +228,7 @@ export class BlockDb implements BlockModel {
       if (block.type === 'space') {
         const width = block.width ?? 1;
         if (!(width <= MAX_SPACES - this.spaces)) {
-          throw new PeleError(`A block diagram can hold at most ${MAX_SPACES} space blocks.`, 'limit', {
+          throw new PelersError(`A block diagram can hold at most ${MAX_SPACES} space blocks.`, 'limit', {
             type: 'block',
           });
         }

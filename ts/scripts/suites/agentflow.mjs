@@ -10,12 +10,12 @@ const FIXTURES = [
 ];
 
 const CSS =
-  'Tests the CSS Mermaid generates for its color themes. Pele writes no stylesheet; colors are presentation attributes.';
+  'Tests the CSS Mermaid generates for its color themes. Pelers writes no stylesheet; colors are presentation attributes.';
 const YAML =
-  "Asserts js-yaml's own message text, mark and excerpt for a YAML error. Pele has its own YAML reader, so the error gives the position of the metadata block instead of the failing character.";
+  "Asserts js-yaml's own message text, mark and excerpt for a YAML error. Pelers has its own YAML reader, so the error gives the position of the metadata block instead of the failing character.";
 
 const LENIENT =
-  "Needs js-yaml to reject the block. Pele's YAML reader has no anchors or aliases and reads `*name` and a lone `:` as text, so it accepts the block. The positioned error itself is covered in tests/render/agentflow.test.ts.";
+  "Needs js-yaml to reject the block. Pelers's YAML reader has no anchors or aliases and reads `*name` and a lone `:` as text, so it accepts the block. The positioned error itself is covered in tests/render/agentflow.test.ts.";
 
 export default {
   files: [
@@ -87,7 +87,7 @@ export default {
   notPorted: [
     [
       'agentflow-max-text-size.spec.ts',
-      "Tests Mermaid's maxTextSize plumbing through mermaidAPI under jsdom. Pele checks its limit on the whole source before preprocessing, so the comment-preserving text is never longer than the limit.",
+      "Tests Mermaid's maxTextSize plumbing through mermaidAPI under jsdom. Pelers checks its limit on the whole source before preprocessing, so the comment-preserving text is never longer than the limit.",
     ],
     [
       'agentflow-render-positions.spec.ts',
@@ -95,7 +95,7 @@ export default {
     ],
     [
       'renderer.spec.ts',
-      "Mocks Mermaid's unified renderer to check that draw() hands the SVG element id to the DB. Pele writes no element ids.",
+      "Mocks Mermaid's unified renderer to check that draw() hands the SVG element id to the DB. Pelers writes no element ids.",
     ],
   ],
   rewrite: [

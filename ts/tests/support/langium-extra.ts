@@ -2,7 +2,7 @@ import * as reference from '@mermaid-js/parser';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import type { TokenType, Tokens } from '../../src/diagrams/common/tokens.js';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 
 // Additions to langium.ts and corpus.ts for the grammars that need them.
 
@@ -24,7 +24,7 @@ export function referenceLongerAlts(create: string, key: string): [string, strin
   return out;
 }
 
-export function peleLongerAlts(types: readonly TokenType[]): [string, string[]][] {
+export function pelersLongerAlts(types: readonly TokenType[]): [string, string[]][] {
   return types.filter((t) => t.longer !== undefined).map((t) => [t.name, t.longer!.map((alt) => alt.name)]);
 }
 
@@ -44,14 +44,14 @@ export function referenceLexer(create: string, key: string): (src: string) => st
   };
 }
 
-// The same for one of Pele's token tables, with null for a lexical error.
-export function peleLexer(types: readonly TokenType[], lex: (src: string) => Tokens): (src: string) => string | null {
+// The same for one of Pelers's token tables, with null for a lexical error.
+export function pelersLexer(types: readonly TokenType[], lex: (src: string) => Tokens): (src: string) => string | null {
   return (src) => {
     let tokens: Tokens;
     try {
       tokens = lex(src);
     } catch (e) {
-      if (!(e instanceof PeleError)) throw e;
+      if (!(e instanceof PelersError)) throw e;
       return null;
     }
     const out: string[] = [];

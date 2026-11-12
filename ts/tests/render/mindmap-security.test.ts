@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -12,7 +12,7 @@ function check(src: string, extra: object = {}): boolean {
   try {
     svg = render(src, { ...options, ...extra }).svg;
   } catch (error) {
-    if (error instanceof PeleError) return false;
+    if (error instanceof PelersError) return false;
     throw new Error(
       `Unexpected ${(error as Error).name} for ${JSON.stringify(src).slice(0, 200)}: ${(error as Error).message}`
     );
@@ -67,7 +67,7 @@ describe('inert mindmap output', () => {
     const { svg } = render('mindmap\n  a<b>"&[<i onload=x>"&]\n  ::icon(x" onload="y)\n  :::a"b <c> d=e', options);
     expect(svg).toContain('data-id="a&lt;b&gt;&quot;&amp;"');
     expect(svg).toContain('data-icon="x&quot; onload=&quot;y"');
-    expect(svg).toContain('class="pele-node pele-shape-rect pele-root a b c d e"');
+    expect(svg).toContain('class="pelers-node pelers-shape-rect pelers-root a b c d e"');
     expect(svg).not.toContain('<i');
   });
 

@@ -286,10 +286,10 @@ function draw(
       const titleY = y - c.h / 2 + 8 + view.label.height / 2;
       const struck = titleCrossed(c, view.label.width, titleX, crossings);
       // A title drawn over the edges sits on a halo in the theme's colors.
-      const titleAttrs = ` class="pele-cluster-label"${struck ? ' fill="var(--_m)"' : inkFill(view.style, 'var(--_m)')}${view.style.text}`;
+      const titleAttrs = ` class="pelers-cluster-label"${struck ? ' fill="var(--_m)"' : inkFill(view.style, 'var(--_m)')}${view.style.text}`;
       if (struck) struckTitles += struckTitle(view.label, titleX, titleY, titleAttrs, id, cnodes, i, icons);
       clusters +=
-        `<g class="pele-cluster${classes}" data-id="${id}">` +
+        `<g class="pelers-cluster${classes}" data-id="${id}">` +
         `<rect x="${num(x - c.w / 2)}" y="${num(y - c.h / 2)}" width="${num(c.w)}" height="${num(c.h)}" fill="var(--_a)"${setsFill(view.style.shape) ? '' : ' fill-opacity="0.5"'} stroke="var(--_b)"${rounded(view.style.shape)}/>` +
         (struck ? '' : labelSvg(view.label, titleX, titleY, titleAttrs, icons)) +
         '</g>';
@@ -325,7 +325,7 @@ function draw(
       const glyph = box * 0.6;
       inner =
         frame +
-        `<svg class="pele-icon" data-icon="${escText(node.icon)}" x="${num(-glyph / 2)}" y="${num(
+        `<svg class="pelers-icon" data-icon="${escText(node.icon)}" x="${num(-glyph / 2)}" y="${num(
           top + (box - glyph) / 2
         )}" width="${num(glyph)}" height="${num(glyph)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${
           icons?.(node.icon) ?? ''
@@ -335,7 +335,7 @@ function draw(
       if (shapeFilled(view.shape)) ink = inkFill(view.style);
     }
 
-    let text = labelSvg(view.label, 0, view.dy, ` class="pele-label"${ink}${view.style.text}`, icons);
+    let text = labelSvg(view.label, 0, view.dy, ` class="pelers-label"${ink}${view.style.text}`, icons);
     const internal = / internal-link(?: |$)/.test(classes + ' ');
     if (internal && node.label && options.links !== false) {
       // The label is a note name, but it still ends up in an href, so it gets the same check as a URL.
@@ -356,7 +356,7 @@ function draw(
         options,
         node.linkTarget ? ` target="${esc(node.linkTarget)}"` : ''
       );
-    nodesOut += `<g class="pele-node pele-shape-${view.shape}${classes}" data-id="${id}" transform="translate(${num(
+    nodesOut += `<g class="pelers-node pelers-shape-${view.shape}${classes}" data-id="${id}" transform="translate(${num(
       x
     )},${num(y)})">${body}</g>`;
   }
@@ -406,7 +406,7 @@ function draw(
       const classes = classNames(edge.classes.replace(/edge-thickness-normal|edge-pattern-solid|flowchart-link/g, ''));
       if (over === '') casings += edgeCasing(path, startType, endType, style?.line, edge.thickness === 'thick');
       edgesOut +=
-        `<g class="pele-edge${classes}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
+        `<g class="pelers-edge${classes}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
         `<path d="${path.d}"${attrs}/>` +
         marker(startType, path.sx, path.sy, path.sdx, path.sdy, color) +
         marker(endType, path.ex, path.ey, path.edx, path.edy, color) +
@@ -426,13 +426,13 @@ function draw(
     size,
     options,
     db,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (struckTitles ? `<g class="pele-cluster-titles">${struckTitles}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${edgeSize}">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (struckTitles ? `<g class="pelers-cluster-titles">${struckTitles}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${edgeSize}">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
 
   return { svg, width, height, links };

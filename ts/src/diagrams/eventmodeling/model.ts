@@ -1,4 +1,4 @@
-import { PeleError, locate } from '../../errors.js';
+import { PelersError, locate } from '../../errors.js';
 import { accDescrValue, accTitleValue, titleValue } from '../common/tokens.js';
 import type { EmFrame, EventModelAst } from './parser.js';
 
@@ -105,7 +105,7 @@ export function buildEventModel(ast: EventModelAst, title: string | undefined): 
   for (const frame of ast.frames) {
     if (ids.has(frame.name)) {
       const line = locate(ast.$source, frame.$offset).line;
-      throw new PeleError(`Duplicate event modeling frame ID "${frame.name}" on line ${line}`, 'semantic', {
+      throw new PelersError(`Duplicate event modeling frame ID "${frame.name}" on line ${line}`, 'semantic', {
         type: 'eventmodeling',
         line,
       });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { elements } from '../support/xml.js';
 
@@ -29,7 +29,7 @@ const count = (svg: string, text: string): number => svg.split(text).length - 1;
 // Centers of the commit symbols, in drawing order, which is the order the commits were made in.
 function commitCenters(svg: string): { x: number; y: number }[] {
   const out: { x: number; y: number }[] = [];
-  for (const group of svg.split('<g class="pele-commit ').slice(1)) {
+  for (const group of svg.split('<g class="pelers-commit ').slice(1)) {
     const circle = /<circle cx="([-\d.]+)" cy="([-\d.]+)"/.exec(group);
     const rect = /^[^>]*>(?:<title>[^<]*<\/title>)?<rect x="([-\d.]+)" y="([-\d.]+)"/.exec(group);
     if (rect) out.push({ x: Number(rect[1]) + 8, y: Number(rect[2]) + 8 });
@@ -43,25 +43,25 @@ describe('git graph rendering', () => {
     const { svg, type } = render('gitGraph\n' + FLOW, options);
     expect(type).toBe('gitGraph');
     expect(supports('gitGraph\n commit')).toBe(true);
-    expect(svg).toContain('class="pele pele-gitGraph"');
-    expect(count(svg, 'class="pele-branch"')).toBe(3);
-    expect(count(svg, 'class="pele-lane"')).toBe(3);
-    expect(count(svg, '<g class="pele-commit ')).toBe(10);
+    expect(svg).toContain('class="pelers pelers-gitGraph"');
+    expect(count(svg, 'class="pelers-branch"')).toBe(3);
+    expect(count(svg, 'class="pelers-lane"')).toBe(3);
+    expect(count(svg, '<g class="pelers-commit ')).toBe(10);
     expect(svg).toContain('data-id="develop"');
     expect(svg).toContain('>hotfix<');
-    for (const k of [1, 2, 3]) expect(svg).toContain(`var(--pele-series-${k},`);
+    for (const k of [1, 2, 3]) expect(svg).toContain(`var(--pelers-series-${k},`);
   });
 
   it('gives each commit type its own symbol', () => {
     const { svg } = render('gitGraph\n' + FLOW, options);
-    expect(count(svg, 'pele-commit-normal"')).toBe(5);
-    expect(count(svg, 'pele-commit-reverse"')).toBe(1);
-    expect(count(svg, 'pele-commit-highlight"')).toBe(1);
-    expect(count(svg, 'pele-commit-merge"')).toBe(2);
-    expect(count(svg, 'pele-commit-cherry-pick"')).toBe(1);
-    const highlight = svg.split('pele-commit-highlight"')[1].split('</g>')[0];
+    expect(count(svg, 'pelers-commit-normal"')).toBe(5);
+    expect(count(svg, 'pelers-commit-reverse"')).toBe(1);
+    expect(count(svg, 'pelers-commit-highlight"')).toBe(1);
+    expect(count(svg, 'pelers-commit-merge"')).toBe(2);
+    expect(count(svg, 'pelers-commit-cherry-pick"')).toBe(1);
+    const highlight = svg.split('pelers-commit-highlight"')[1].split('</g>')[0];
     expect(highlight).toContain('<rect');
-    const merge = svg.split('pele-commit-merge"')[1].split('</g>')[0];
+    const merge = svg.split('pelers-commit-merge"')[1].split('</g>')[0];
     expect(count(merge, '<circle')).toBe(2);
   });
 
@@ -70,17 +70,17 @@ describe('git graph rendering', () => {
       'gitGraph\n commit\n branch b\n commit\n checkout main\n commit\n merge b type: REVERSE',
       options
     );
-    expect(svg).toContain('class="pele-commit pele-commit-reverse pele-commit-merge"');
+    expect(svg).toContain('class="pelers-commit pelers-commit-reverse pelers-commit-merge"');
   });
 
   it('labels commits with their ids, except unnamed merges and cherry-picks', () => {
     const { svg } = render('gitGraph\n' + FLOW, options);
     expect(svg).toContain('>init<');
     expect(svg).toContain('>merged<');
-    expect(count(svg, 'class="pele-commit-label"')).toBe(8);
+    expect(count(svg, 'class="pelers-commit-label"')).toBe(8);
     expect(count(svg, 'rotate(-45 ')).toBe(8);
     const hidden = render(withConfig('    showCommitLabel: false', 'gitGraph\n' + FLOW), options).svg;
-    expect(hidden).not.toContain('pele-commit-label');
+    expect(hidden).not.toContain('pelers-commit-label');
     expect(hidden).toContain('>v0.1<');
   });
 
@@ -95,25 +95,25 @@ describe('git graph rendering', () => {
 
   it('draws tags, the default cherry-pick tag, and no empty tag', () => {
     const { svg } = render('gitGraph\n' + FLOW, options);
-    expect(count(svg, 'class="pele-tag"')).toBe(5);
+    expect(count(svg, 'class="pelers-tag"')).toBe(5);
     expect(svg).toContain('>cherry-pick:fix<');
     const none = render(
       'gitGraph\n commit id:"a" tag:""\n branch b\n commit id:"c"\n checkout main\n commit\n cherry-pick id:"c" tag:""',
       options
     ).svg;
-    expect(none).not.toContain('pele-tag');
+    expect(none).not.toContain('pelers-tag');
   });
 
   it('connects commits: straight along a lane, curved between lanes, dashed for a cherry-pick', () => {
     const { svg } = render('gitGraph\n' + FLOW, options);
-    expect(count(svg, 'class="pele-edge"')).toBe(9);
-    expect(count(svg, 'class="pele-edge pele-edge-merge"')).toBe(2);
-    expect(count(svg, 'class="pele-edge pele-edge-cherry-pick"')).toBe(1);
-    const cherry = svg.split('pele-edge-cherry-pick"')[1].split('/>')[0];
+    expect(count(svg, 'class="pelers-edge"')).toBe(9);
+    expect(count(svg, 'class="pelers-edge pelers-edge-merge"')).toBe(2);
+    expect(count(svg, 'class="pelers-edge pelers-edge-cherry-pick"')).toBe(1);
+    const cherry = svg.split('pelers-edge-cherry-pick"')[1].split('/>')[0];
     expect(cherry).toContain('stroke-dasharray');
-    const merge = svg.split('pele-edge-merge"')[1].split('/>')[0];
+    const merge = svg.split('pelers-edge-merge"')[1].split('/>')[0];
     expect(merge).toMatch(/d="M[^"]*C[^"]*"/);
-    expect(merge).toContain('var(--pele-series-2,');
+    expect(merge).toContain('var(--pelers-series-2,');
   });
 
   it('writes ids, tags, and branch names as plain text, with entity codes decoded and <br> as a line break', () => {
@@ -166,9 +166,9 @@ describe('git graph rendering', () => {
 
   it('hides branch names and lane lines when showBranches is off', () => {
     const { svg } = render(withConfig('    showBranches: false', 'gitGraph\n' + FLOW), options);
-    expect(svg).not.toContain('pele-branch');
+    expect(svg).not.toContain('pelers-branch');
     expect(svg).not.toContain('>develop<');
-    expect(count(svg, '<g class="pele-commit ')).toBe(10);
+    expect(count(svg, '<g class="pelers-commit ')).toBe(10);
   });
 
   it('names and orders the main branch from config, and orders branches by `order`', () => {
@@ -204,8 +204,8 @@ describe('git graph rendering', () => {
 
   it('writes the accessible title and description', () => {
     const { svg } = render('gitGraph\n accTitle: History\n accDescr: Two branches\n commit', options);
-    expect(svg).toContain('<title id="pele-title">History</title>');
-    expect(svg).toContain('<desc id="pele-desc">Two branches</desc>');
+    expect(svg).toContain('<title id="pelers-title">History</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Two branches</desc>');
   });
 
   it("generates the same commit ids every time, in Mermaid's shape", () => {
@@ -238,7 +238,7 @@ describe('git graph rendering', () => {
     expect(model.commits.get('a')?.seq).toBe(2);
     expect(model.warnings).toEqual(['Commit ID a already exists']);
     expect(render('gitGraph\n commit id:"a"\n commit id:"a"\n branch b\n commit id:"a"', options).svg).toContain(
-      'pele-commit'
+      'pelers-commit'
     );
   });
 
@@ -300,16 +300,16 @@ describe('git graph rendering', () => {
       } catch (e) {
         error = e;
       }
-      expect(error, src).toBeInstanceOf(PeleError);
-      expect((error as PeleError).message, src).toBe(message);
-      expect((error as PeleError).code, src).toBe('semantic');
+      expect(error, src).toBeInstanceOf(PelersError);
+      expect((error as PelersError).message, src).toBe(message);
+      expect((error as PelersError).code, src).toBe('semantic');
     }
   });
 
   it('draws a graph with no commits, and one with only branches', () => {
     expect(render('gitGraph', options).svg).toContain('>main<');
     const { svg } = render('gitGraph\n branch a\n branch "b c"', options);
-    expect(count(svg, 'class="pele-branch"')).toBe(3);
+    expect(count(svg, 'class="pelers-branch"')).toBe(3);
     expect(svg).toContain('>b c<');
     expect(svg).not.toContain('NaN');
   });

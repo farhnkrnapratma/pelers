@@ -33,7 +33,7 @@ function rank(values: number[]): Map<number, number> {
 
 function iconSlot(name: string, x: number, y: number, side: number, icons: IconResolver | undefined): string {
   return (
-    `<svg class="pele-icon" data-icon="${escText(name)}" x="${num(x)}" y="${num(y)}" width="${num(side)}" height="${num(side)}"` +
+    `<svg class="pelers-icon" data-icon="${escText(name)}" x="${num(x)}" y="${num(y)}" width="${num(side)}" height="${num(side)}"` +
     ` viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${
       icons?.(name) ?? builtinIcon(name)
     }</svg>`
@@ -458,7 +458,7 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
     if (points.length < 4) continue;
     const id = escText(`${edge.lhsId}-${edge.rhsId}`);
     edgesOut +=
-      `<g class="pele-edge" data-id="${id}">` +
+      `<g class="pelers-edge" data-id="${id}">` +
       `<path d="${pathData(points, edge.lhsInto && !s.wire ? trimLength + s.gap : 0, edge.rhsInto && !e.wire ? trimLength + e.gap : 0)}"/>` +
       (edge.lhsInto ? marker('arrow_point', s.x + s.dx * s.gap, s.y + s.dy * s.gap, -s.dx, -s.dy, 'var(--_l)') : '') +
       (edge.rhsInto ? marker('arrow_point', e.x + e.dx * e.gap, e.y + e.dy * e.gap, -e.dx, -e.dy, 'var(--_l)') : '') +
@@ -538,10 +538,10 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
         head += iconSlot(group.icon, start, cy - badge / 2, badge, icons);
         textX += badge + 6;
       }
-      head += labelSvg(label, textX + label.width / 2, cy, ' class="pele-cluster-label" fill="var(--_m)"', icons);
+      head += labelSvg(label, textX + label.width / 2, cy, ' class="pelers-cluster-label" fill="var(--_m)"', icons);
     }
     clusters +=
-      `<g class="pele-cluster" data-id="${escText(group.id)}">` +
+      `<g class="pelers-cluster" data-id="${escText(group.id)}">` +
       `<rect x="${num(x)}" y="${num(y)}" width="${num(w)}" height="${num(bottom(g) - y)}" fill="var(--_a)" fill-opacity="0.5" stroke="var(--_b)"${ROUNDED}/>` +
       head +
       '</g>';
@@ -554,7 +554,7 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
     const node = nodes[i];
     const at = `data-id="${escText(node.id)}" transform="translate(${num(centerX(i))},${num(Y[nodeRow[i]])})"`;
     if (node.type === 'junction') {
-      nodesOut += `<g class="pele-node pele-junction" ${at}><circle cy="${num(half)}" r="${DOT}" fill="var(--_l)"/></g>`;
+      nodesOut += `<g class="pelers-node pelers-junction" ${at}><circle cy="${num(half)}" r="${DOT}" fill="var(--_l)"/></g>`;
       continue;
     }
     let inner = '';
@@ -567,15 +567,15 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
         fit(text, iconSize - 8, lines, measurer),
         0,
         half,
-        ` class="pele-icon-text" font-size="${textSize}"`,
+        ` class="pelers-icon-text" font-size="${textSize}"`,
         icons
       );
     }
     nodesOut +=
-      `<g class="pele-node pele-service" ${at}>` +
+      `<g class="pelers-node pelers-service" ${at}>` +
       `<rect x="${num(-half)}" width="${num(iconSize)}" height="${num(iconSize)}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>` +
       inner +
-      labelSvg(labels[i], 0, iconSize + LABEL_GAP + labels[i].height / 2, ' class="pele-label"', icons) +
+      labelSvg(labels[i], 0, iconSize + LABEL_GAP + labels[i].height / 2, ' class="pelers-label"', icons) +
       '</g>';
   }
 
@@ -586,12 +586,12 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
   const ox = Math.round((width - (maxX - minX)) / 2 - minX);
   const oy = Math.round(pad + titleHeight - minY);
   const body =
-    (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
     (edgesOut
-      ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round" stroke-linejoin="round">${edgesOut}</g>`
+      ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round" stroke-linejoin="round">${edgesOut}</g>`
       : '') +
-    (labelsOut ? `<g class="pele-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
-    (nodesOut ? `<g class="pele-nodes">${nodesOut}</g>` : '');
+    (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
+    (nodesOut ? `<g class="pelers-nodes">${nodesOut}</g>` : '');
   const svg = svgDocument(
     'architecture',
     width,
@@ -599,7 +599,7 @@ function draw(model: ArchitectureModel, config: Config, options: RenderOptions, 
     size,
     options,
     model,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       (body ? `<g transform="translate(${ox},${oy})">${body}</g>` : '')
   );
   return { svg, width, height, links: [] };

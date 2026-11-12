@@ -1,7 +1,7 @@
 {
   "name": "pelers-ts",
   "version": "1.0.0-alpha2",
-  "description": "The TypeScript Pele renderer, kept as the oracle for the Rust port (not published).",
+  "description": "The TypeScript Pelers renderer, kept as the oracle for the Rust port (not published).",
   "license": "MIT OR Apache-2.0",
   "author": "Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>",
   "repository": {
@@ -9,14 +9,14 @@
     "url": "git+https://github.com/farhnkrnapratma/pelers.git"
   },
   "type": "module",
-  "main": "./dist/pele.js",
-  "module": "./dist/pele.js",
+  "main": "./dist/pelers.js",
+  "module": "./dist/pelers.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/pele.js",
-      "default": "./dist/pele.js"
+      "import": "./dist/pelers.js",
+      "default": "./dist/pelers.js"
     },
     "./core": {
       "types": "./dist/core.d.ts",
@@ -33,7 +33,7 @@
       "import": "./dist/esm/diagrams/*.js",
       "default": "./dist/esm/diagrams/*.js"
     },
-    "./global": "./dist/pele.global.js",
+    "./global": "./dist/pelers.global.js",
     "./package.json": "./package.json"
   },
   "scripts": {

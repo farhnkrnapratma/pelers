@@ -69,15 +69,15 @@ const KINDS = new Map<string | undefined, K>([
 ]);
 
 const CLASSES = [
-  'pele-node pele-state',
-  'pele-node pele-state',
-  'pele-node pele-state-start',
-  'pele-node pele-state-end',
-  'pele-node pele-state-choice',
-  'pele-node pele-state-fork',
-  'pele-node pele-state-join',
-  'pele-note',
-  'pele-cluster pele-state-composite',
+  'pelers-node pelers-state',
+  'pelers-node pelers-state',
+  'pelers-node pelers-state-start',
+  'pelers-node pelers-state-end',
+  'pelers-node pelers-state-choice',
+  'pelers-node pelers-state-fork',
+  'pelers-node pelers-state-join',
+  'pelers-note',
+  'pelers-cluster pelers-state-composite',
 ];
 
 interface View {
@@ -475,14 +475,14 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
       if (!apart) continue;
       for (let k = 1; k < sorted.length; k++) {
         const at = num((hi(sorted[k - 1], x) + lo(sorted[k], x)) / 2 + pad);
-        dividers += `<path class="pele-divider" d="M${x ? `${at},${num(top)}V${num(bottom)}` : `${num(left)},${at}H${num(right)}`}"/>`;
+        dividers += `<path class="pelers-divider" d="M${x ? `${at},${num(top)}V${num(bottom)}` : `${num(left)},${at}H${num(right)}`}"/>`;
       }
       return;
     }
     // Regions that sit neither side by side nor in a stack each get an outline.
     for (const i of regions) {
       const c = cnodes[i];
-      dividers += rect(c.x - c.w / 2 + pad, c.y - c.h / 2 + pad, c.w, c.h, ` class="pele-divider" rx="${CORNER}"`);
+      dividers += rect(c.x - c.w / 2 + pad, c.y - c.h / 2 + pad, c.w, c.h, ` class="pelers-divider" rx="${CORNER}"`);
     }
   };
   divide(roots, pad / 2, pad / 2, width - pad / 2, height - pad / 2);
@@ -498,7 +498,7 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
     const w = view.w;
     const h = view.h;
     const ink = inkFill(style);
-    const labelAttrs = ` class="pele-label"${ink}${style.text}`;
+    const labelAttrs = ` class="pelers-label"${ink}${style.text}`;
     let body: string;
 
     switch (view.kind) {
@@ -520,7 +520,7 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
               view.label,
               titleX(c, view.label.width, crossings) + pad,
               top + view.titleH / 2,
-              ` class="pele-cluster-label"${ink}${style.text}`,
+              ` class="pelers-cluster-label"${ink}${style.text}`,
               icons
             );
         }
@@ -548,7 +548,7 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
         body =
           `<path d="M-${r},-${b}H${fold}L${r},${corner}V${b}H-${r}Z" fill="var(--_bg)" stroke="var(--_b)"/>` +
           `<path d="M${fold},-${b}V${corner}H${r}"${RULE}/>` +
-          labelSvg(view.label, 0, 0, ` class="pele-label" font-size="${small}" fill="var(--_m)"`, icons);
+          labelSvg(view.label, 0, 0, ` class="pelers-label" font-size="${small}" fill="var(--_m)"`, icons);
         break;
       }
       default: {
@@ -567,7 +567,7 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
             line,
             0,
             at + line.height / 2,
-            ` class="pele-state-description" font-size="${small}"${ink}${style.text}`,
+            ` class="pelers-state-description" font-size="${small}"${ink}${style.text}`,
             icons
           );
           at += line.height;
@@ -693,12 +693,12 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
     const over = overFills(path.d, [path.ex, path.ey], fills, '', path.tokens);
     if (over === '') casings += edgeCasing(path, 'none', endType);
     const kind = note
-      ? `pele-note-edge" stroke="${over || 'var(--_b)'}" stroke-dasharray="3 4`
+      ? `pelers-note-edge" stroke="${over || 'var(--_b)'}" stroke-dasharray="3 4`
       : over
-        ? `pele-transition" stroke="${over}`
-        : 'pele-transition';
+        ? `pelers-transition" stroke="${over}`
+        : 'pelers-transition';
     edgesOut +=
-      `<g class="pele-edge ${kind}" data-id="${escText(edge.id)}">` +
+      `<g class="pelers-edge ${kind}" data-id="${escText(edge.id)}">` +
       `<path d="${path.d}"/>` +
       marker(endType, path.ex, path.ey, path.edx, path.edy, over || 'var(--_l)') +
       '</g>';
@@ -716,12 +716,12 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
     pad,
     width,
     height,
-    (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
-      (dividers ? `<g class="pele-dividers" stroke-dasharray="4 4"${RULE}>${dividers}</g>` : '') +
+    (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
+      (dividers ? `<g class="pelers-dividers" stroke-dasharray="4 4"${RULE}>${dividers}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}${notesOut}</g>`
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}${notesOut}</g>`
   );
   const svg = svgDocument('state', titled.width, titled.height, size, options, db, titled.content);
 

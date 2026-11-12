@@ -26,7 +26,7 @@ export function svgDocument(
   acc: Accessible,
   content: string
 ): string {
-  const prefix = esc(options.idPrefix ?? 'pele');
+  const prefix = esc(options.idPrefix ?? 'pelers');
   let head = '';
   let aria = '';
   if (acc.accTitle) {
@@ -45,10 +45,10 @@ export function svgDocument(
   }
   let weights = used.has('r') ? `;--_r:${RADIUS}` : '';
   for (const [alias, name] of WEIGHTS) {
-    if (used.has(alias)) weights += `;--_${alias}:var(--pele-${name}-weight,bold)`;
+    if (used.has(alias)) weights += `;--_${alias}:var(--pelers-${name}-weight,bold)`;
   }
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" class="pele pele-${type}" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" style="${fit}${ROOT_STYLE}${weights}${esc(fontStyle(fontSize, options.fontFamily, options.fontFamilyMono))}${paletteStyle()}" fill="var(--_fg)" role="graphics-document document" aria-roledescription="${type}"${aria}>` +
+    `<svg xmlns="http://www.w3.org/2000/svg" class="pelers pelers-${type}" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" style="${fit}${ROOT_STYLE}${weights}${esc(fontStyle(fontSize, options.fontFamily, options.fontFamilyMono))}${paletteStyle()}" fill="var(--_fg)" role="graphics-document document" aria-roledescription="${type}"${aria}>` +
     head +
     content +
     '</svg>'

@@ -4,11 +4,11 @@ import { prepareTextForParsing } from '../../src/diagrams/sankey/parser.js';
 import { cleanupComments } from '../../src/preprocess.js';
 import { decodeEntities } from '../../src/text/entities.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/sankey-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/sankey-oracle.js';
 
-// Compares Pele's sankey lexer and parser with the parser Mermaid generates from sankey.jison:
-// the same tokens and model calls for ASCII inputs. Pele additionally rejects decoded names
-// forbidden in XML and non-finite values. Rendering tests cover Pele's Unicode extension.
+// Compares Pelers's sankey lexer and parser with the parser Mermaid generates from sankey.jison:
+// the same tokens and model calls for ASCII inputs. Pelers additionally rejects decoded names
+// forbidden in XML and non-finite values. Rendering tests cover Pelers's Unicode extension.
 // Set FUZZ to raise the number of mutated inputs.
 
 const FRAGMENTS = [
@@ -92,9 +92,9 @@ const corpus = [...new Set([...raw, ...raw.map(reference)])];
 
 function compare(src: string): void {
   const tokens = oracleTokens(src);
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(tokens);
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(tokens);
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   const invalidName = expected.calls.some(
     ([method, name]) =>
       method === 'findOrCreateNode' &&

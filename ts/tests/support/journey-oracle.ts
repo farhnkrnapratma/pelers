@@ -6,13 +6,13 @@ import { createOracle, recordingYy, type Outcome, type Pair } from './oracle.js'
 
 export const oracle = createOracle(resolve('tests/compat/journey/upstream/journey.jison'));
 
-// Match Pele: comments leave the preceding character intact.
+// Match Pelers: comments leave the preceding character intact.
 const rules = (oracle.parser.lexer as unknown as { rules: RegExp[] }).rules;
 const comments = rules.filter((rule) => rule.source === String.raw`^(?:[^\}]%%[^\n]*)`);
 if (comments.length !== 1) throw new Error('Expected one journey preceding-character comment rule');
 rules[rules.indexOf(comments[0])] = /(?!)/;
 
-// Match Pele: keep titles on one line.
+// Match Pelers: keep titles on one line.
 const titles = rules.filter((rule) => rule.source === String.raw`^(?:title\s[^#\n;]+)`);
 if (titles.length !== 1) throw new Error('Expected one journey title rule');
 rules[rules.indexOf(titles[0])] = new RegExp(
@@ -29,7 +29,7 @@ export function oracleTokens(src: string): Pair[] {
   return oracle.tokens(src, recordingYy(oracle.methods).yy);
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -40,7 +40,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recordingYy(oracle.methods);
   try {
     parseJourney(src, yy as unknown as JourneyDb);

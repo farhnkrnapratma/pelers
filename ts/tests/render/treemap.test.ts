@@ -196,21 +196,21 @@ describe('treemap rendering', () => {
     expect(type).toBe('treemap');
     expect(supports('treemap\n"a": 1')).toBe(true);
     expect([width, height]).toEqual([656, 416]);
-    expect(svg.match(/class="pele-node pele-section"/g)?.length).toBe(2);
-    expect(svg.match(/class="pele-node pele-leaf"/g)?.length).toBe(4);
+    expect(svg.match(/class="pelers-node pelers-section"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-node pelers-leaf"/g)?.length).toBe(4);
     expect(svg).toContain('font-weight="var(--_hw)">Category A<');
     expect(svg).toContain('>Item B2<');
     expect(svg).toContain('>25<');
     // The value of a section is the sum of its leaves.
-    expect(svg).toMatch(/class="pele-value"[^>]*>40</);
+    expect(svg).toMatch(/class="pelers-value"[^>]*>40</);
   });
 
   it('colors each top-level section and what is inside it with one series color', () => {
     const all = rects(render(BASIC, options).svg);
     const fill = (id: string): string => all.find((r) => r.id === id)!.attrs.get('fill')!;
-    expect(fill('Category A')).toContain('--pele-series-1');
+    expect(fill('Category A')).toContain('--pelers-series-1');
     expect(fill('Item A1')).toBe(fill('Category A'));
-    expect(fill('Category B')).toContain('--pele-series-2');
+    expect(fill('Category B')).toContain('--pelers-series-2');
     expect(fill('Item B2')).toBe(fill('Category B'));
     expect(all.find((r) => r.id === 'Category A')!.attrs.get('fill-opacity')).toBe('0.12');
     expect(all.find((r) => r.id === 'Item A1')!.attrs.has('fill-opacity')).toBe(false);
@@ -249,14 +249,14 @@ describe('treemap rendering', () => {
       'treemap\n"S":::frame\n  "a": 1:::hot\n  "b": 2\nclassDef hot fill:red,color:blue,stroke:#FFD600;\nclassDef frame fill:#eee,stroke-width:2px',
       options
     );
-    expect(svg).toContain('class="pele-node pele-leaf hot" data-id="a"');
+    expect(svg).toContain('class="pelers-node pelers-leaf hot" data-id="a"');
     expect(svg).toMatch(
       /data-id="a"><rect[^>]* style="rx:var\(--_r\);fill:red;stroke:#FFD600;"\/><text[^>]* style="fill:blue;">a</
     );
     const frame = rects(svg).find((r) => r.id === 'S')!;
     expect(frame.attrs.get('style')).toBe('rx:var(--_r);fill:#eee;stroke-width:2px;');
     expect(frame.attrs.has('fill-opacity')).toBe(false);
-    expect(svg).toContain('class="pele-node pele-section frame"');
+    expect(svg).toContain('class="pelers-node pelers-section frame"');
   });
 
   it('picks a contrasting text color on fills a style sets', () => {
@@ -266,24 +266,24 @@ describe('treemap rendering', () => {
     );
     const group = (id: string): string => new RegExp(`data-id="${id}">(.*?)</g>`).exec(svg)![1];
     expect(group('Section')).toMatch(
-      /<text[^>]* font-weight="var\(--_hw\)" fill="var\(--pele-fg-on-light,#1f1f1f\)">Section</
+      /<text[^>]* font-weight="var\(--_hw\)" fill="var\(--pelers-fg-on-light,#1f1f1f\)">Section</
     );
-    expect(group('Section')).toMatch(/<text class="pele-value"[^>]* fill="var\(--pele-fg-on-light,#1f1f1f\)">/);
-    expect(group('a')).toMatch(/<text[^>]* fill="var\(--pele-fg-on-dark,#fff\)">a</);
-    expect(group('b')).not.toContain('--pele-fg-on');
-    expect(group('c')).not.toContain('--pele-fg-on');
+    expect(group('Section')).toMatch(/<text class="pelers-value"[^>]* fill="var\(--pelers-fg-on-light,#1f1f1f\)">/);
+    expect(group('a')).toMatch(/<text[^>]* fill="var\(--pelers-fg-on-dark,#fff\)">a</);
+    expect(group('b')).not.toContain('--pelers-fg-on');
+    expect(group('c')).not.toContain('--pelers-fg-on');
   });
 
   it('reads class names that start with title', () => {
     const { svg } = render('treemap\n"S":::titles\n  "a": 1:::title_2\nclassDef title_2 fill:red', options);
-    expect(svg).toContain('class="pele-node pele-section titles"');
-    expect(svg).toContain('class="pele-node pele-leaf title_2" data-id="a"');
+    expect(svg).toContain('class="pelers-node pelers-section titles"');
+    expect(svg).toContain('class="pelers-node pelers-leaf title_2" data-id="a"');
   });
 
   it('honours showValues, padding, nodeWidth, nodeHeight, diagramPadding and valueFormat', () => {
     const base = render(BASIC, options);
     const bare = render(config('    showValues: false', BASIC), options).svg;
-    expect(bare).not.toContain('pele-value');
+    expect(bare).not.toContain('pelers-value');
     expect(bare).toContain('>Item A1<');
 
     const sized = render(config('    nodeWidth: 30\n    nodeHeight: 20', BASIC), options);
@@ -347,8 +347,8 @@ describe('treemap rendering', () => {
       }
     }
     const { svg } = render(src, options);
-    expect(svg.match(/class="pele-node pele-leaf"/g)?.length).toBe(leaves);
-    expect(svg.match(/class="pele-node pele-section"/g)?.length).toBe(sections);
+    expect(svg.match(/class="pelers-node pelers-leaf"/g)?.length).toBe(leaves);
+    expect(svg.match(/class="pelers-node pelers-section"/g)?.length).toBe(sections);
   });
 
   it('spaces a crowded treemap more tightly, with one gap throughout', () => {
@@ -413,7 +413,7 @@ describe('treemap rendering', () => {
       'treemap\n"A section with a long name":::head\n  "A leaf with a fairly long name": 30:::big\n  "Another leaf with a long name": 20:::big\n  "rest": 400\nclassDef big font-size:20px\nclassDef head font-size:18px',
       options
     );
-    const groups = [...svg.matchAll(/<g class="pele-node pele-(leaf|section) (big|head)"[^>]*>(.*?)<\/g>/g)];
+    const groups = [...svg.matchAll(/<g class="pelers-node pelers-(leaf|section) (big|head)"[^>]*>(.*?)<\/g>/g)];
     expect(groups.length).toBe(3);
     for (const [, kind, , body] of groups) {
       const w = Number(/<rect[^>]* width="([\d.]+)"/.exec(body)![1]);
@@ -464,14 +464,14 @@ describe('treemap rendering', () => {
     ]) {
       const { svg } = render(src, options);
       expect(svg, src).toContain('<svg');
-      expect(svg, src).not.toMatch(/NaN|Infinity|pele-node/);
+      expect(svg, src).not.toMatch(/NaN|Infinity|pelers-node/);
     }
   });
 
   it('writes accessible names and ignores unusable config', () => {
     const { svg } = render('treemap\naccTitle: Name\naccDescr: Text\n"a": 1', options);
-    expect(svg).toContain('<title id="pele-title">Name</title>');
-    expect(svg).toContain('<desc id="pele-desc">Text</desc>');
+    expect(svg).toContain('<title id="pelers-title">Name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Text</desc>');
     const odd = render(
       config('    nodeWidth: -3\n    nodeHeight: "x"\n    padding: 100000\n    valueFormat: 7', BASIC),
       options

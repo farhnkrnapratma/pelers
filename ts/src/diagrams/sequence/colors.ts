@@ -1,4 +1,4 @@
-// Mermaid asks the browser whether the first word of a box title is a color. Pele has no browser,
+// Mermaid asks the browser whether the first word of a box title is a color. Pelers has no browser,
 // so it knows the color keywords and the rgb() and hsl() notations. Other functions, such as calc()
 // and var(), are not recognized.
 const KEYWORDS =

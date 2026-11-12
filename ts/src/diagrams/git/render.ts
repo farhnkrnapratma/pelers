@@ -227,13 +227,13 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
       grow(px(-LABEL_GAP, c), py(-LABEL_GAP, c), px(-LABEL_GAP, c), py(-LABEL_GAP, c));
       grow(px(end + TAIL, c), py(end + TAIL, c), px(end + TAIL, c), py(end + TAIL, c));
       branches +=
-        `<g class="pele-branch" data-id="${escText(model.lanes[i])}">` +
-        `<path class="pele-lane" d="M${point(-LABEL_GAP, c)}L${point(end + TAIL, c)}" stroke="${color}" stroke-dasharray="2 4"/>`;
+        `<g class="pelers-branch" data-id="${escText(model.lanes[i])}">` +
+        `<path class="pelers-lane" d="M${point(-LABEL_GAP, c)}L${point(end + TAIL, c)}" stroke="${color}" stroke-dasharray="2 4"/>`;
       if (name.lines.length > 0) {
         grow(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2);
         branches +=
           `<rect x="${num(cx - w / 2)}" y="${num(cy - h / 2)}" width="${num(w)}" height="${num(h)}" fill="${color}"${ROUNDED}/>` +
-          labelSvg(name, cx, cy, ' class="pele-label"' + (seriesInkFill(i) || ' fill="var(--_bg)"'));
+          labelSvg(name, cx, cy, ' class="pelers-label"' + (seriesInkFill(i) || ' fill="var(--_bg)"'));
       }
       branches += '</g>';
     }
@@ -267,7 +267,7 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
       const c1 = cross[parent.lane];
       const m1 = parent.m;
       if (parent.lane === view.lane) {
-        lines += `<path class="pele-edge" d="M${point(m1, c1)}L${point(m2, c2)}" stroke="${seriesColor(view.lane)}"/>`;
+        lines += `<path class="pelers-edge" d="M${point(m1, c1)}L${point(m2, c2)}" stroke="${seriesColor(view.lane)}"/>`;
         continue;
       }
       const merged = j > 0 && commit.type === commitType.MERGE;
@@ -296,7 +296,7 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
         if (to < m2) d += `L${point(m2, c2)}`;
       }
       curves +=
-        `<path class="pele-edge${merged ? ' pele-edge-merge' : picked ? ' pele-edge-cherry-pick' : ''}" d="${d}" ` +
+        `<path class="pelers-edge${merged ? ' pelers-edge-merge' : picked ? ' pelers-edge-cherry-pick' : ''}" d="${d}" ` +
         `stroke="${seriesColor(merged ? parent.lane : view.lane)}"${picked ? ' stroke-dasharray="4 3"' : ''}/>`;
     }
   }
@@ -326,7 +326,7 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
         const reach = HALF * w + k;
         grow(ax - reach, flip ? ay - reach : ay - k, ax + k, flip ? ay + k : ay + reach);
         body +=
-          `<g class="pele-commit-label" transform="rotate(${flip ? 45 : -45} ${num(ax)} ${num(ay)})">` +
+          `<g class="pelers-commit-label" transform="rotate(${flip ? 45 : -45} ${num(ax)} ${num(ay)})">` +
           back(ax - w / 2, ay) +
           labelSvg(label, ax - w / 2, ay, '') +
           '</g>';
@@ -334,7 +334,7 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
         const cx = vertical ? x - DOT - 6 - w / 2 : x;
         const cy = vertical ? y : y + DOT + 6 + h / 2;
         grow(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2);
-        body += `<g class="pele-commit-label">${back(cx, cy)}${labelSvg(label, cx, cy, '')}</g>`;
+        body += `<g class="pelers-commit-label">${back(cx, cy)}${labelSvg(label, cx, cy, '')}</g>`;
       }
     }
 
@@ -349,15 +349,15 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
       offset += vertical ? w + 4 : h + 3;
       grow(left, cy - h / 2, left + w, cy + h / 2);
       body +=
-        '<g class="pele-tag">' +
+        '<g class="pelers-tag">' +
         `<path d="M${num(left)},${num(cy)}L${num(left + NOTCH)},${num(cy - h / 2)}H${num(left + w)}V${num(cy + h / 2)}H${num(left + NOTCH)}Z" fill="var(--_s)" stroke="var(--_b)" stroke-linejoin="round"/>` +
         `<circle cx="${num(left + NOTCH)}" cy="${num(cy)}" r="1.5" fill="var(--_b)"/>` +
         labelSvg(tag, left + NOTCH + 4 + tag.width / 2, cy, ' fill="var(--_fg)"') +
         '</g>';
     }
 
-    const merge = commit.type === commitType.MERGE && type !== commitType.MERGE ? ' pele-commit-merge' : '';
-    commits += `<g class="pele-commit pele-commit-${CLASSES[type] ?? CLASSES[0]}${merge}" data-id="${escText(commit.id)}">${body}</g>`;
+    const merge = commit.type === commitType.MERGE && type !== commitType.MERGE ? ' pelers-commit-merge' : '';
+    commits += `<g class="pelers-commit pelers-commit-${CLASSES[type] ?? CLASSES[0]}${merge}" data-id="${escText(commit.id)}">${body}</g>`;
   }
 
   if (minX > maxX) grow(0, 0, 0, 0);
@@ -370,13 +370,13 @@ function draw(model: GitModel, config: Config, options: RenderOptions, direction
   const dy = pad + titleHeight - minY;
 
   const content =
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     `<g transform="translate(${num(dx)},${num(dy)})">` +
-    (branches ? `<g class="pele-branches" fill="none" font-size="${medium}">${branches}</g>` : '') +
+    (branches ? `<g class="pelers-branches" fill="none" font-size="${medium}">${branches}</g>` : '') +
     (curves || lines
-      ? `<g class="pele-edges" fill="none" stroke-width="2" stroke-linecap="round">${curves}${lines}</g>`
+      ? `<g class="pelers-edges" fill="none" stroke-width="2" stroke-linecap="round">${curves}${lines}</g>`
       : '') +
-    (commits ? `<g class="pele-commits" font-size="${small}" fill="var(--_m)">${commits}</g>` : '') +
+    (commits ? `<g class="pelers-commits" font-size="${small}" fill="var(--_m)">${commits}</g>` : '') +
     '</g>';
 
   return {

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/c4-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/c4-oracle.js';
 
-// Compares Pele's C4 lexer and parser with the parser Mermaid generates from c4Diagram.jison:
+// Compares Pelers's C4 lexer and parser with the parser Mermaid generates from c4Diagram.jison:
 // the same tokens, the same accept or reject decision, and the same calls into the model.
 // Set FUZZ to raise the number of mutated inputs.
 
@@ -178,9 +178,9 @@ function generator(rnd: () => number): () => string {
 const corpus = loadCorpus('c4', /C4(?:Context|Container|Component|Dynamic|Deployment)/);
 
 function compare(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
 }

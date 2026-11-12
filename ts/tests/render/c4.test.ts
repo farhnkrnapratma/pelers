@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports, type C4Model } from '../../src/index.js';
+import { PelersError, parse, render, supports, type C4Model } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertInert } from '../support/inert.js';
@@ -33,12 +33,12 @@ function box(svg: string, id: string): { x: number; y: number; w: number; h: num
 
 const labelX = (svg: string, id: string): number =>
   Number(
-    new RegExp(`class="pele-edge-label" data-id="${id}">(?:<title>[^<]*</title>)?<rect x="([-\\d.]+)"`).exec(svg)![1]
+    new RegExp(`class="pelers-edge-label" data-id="${id}">(?:<title>[^<]*</title>)?<rect x="([-\\d.]+)"`).exec(svg)![1]
   );
 const labelY = (svg: string, id: string): number =>
   Number(
     new RegExp(
-      `class="pele-edge-label" data-id="${id}">(?:<title>[^<]*</title>)?<rect x="[-\\d.]+" y="([-\\d.]+)"`
+      `class="pelers-edge-label" data-id="${id}">(?:<title>[^<]*</title>)?<rect x="[-\\d.]+" y="([-\\d.]+)"`
     ).exec(svg)![1]
   );
 
@@ -55,12 +55,12 @@ Rel(user, app, "Uses", "HTTPS")
 BiRel(app, ledger, "Syncs")`);
     expect(type).toBe('c4');
     expect(supports('C4Context\nPerson(a, "A")')).toBe(true);
-    expect(svg).toContain('class="pele pele-c4"');
-    expect(count(svg, 'class="pele-node ')).toBe(3);
-    expect(count(svg, 'class="pele-cluster ')).toBe(1);
-    expect(count(svg, 'class="pele-edge"')).toBe(2);
-    expect(count(svg, 'class="pele-edge-label"')).toBe(2);
-    expect(count(svg, 'class="pele-marker"')).toBe(3);
+    expect(svg).toContain('class="pelers pelers-c4"');
+    expect(count(svg, 'class="pelers-node ')).toBe(3);
+    expect(count(svg, 'class="pelers-cluster ')).toBe(1);
+    expect(count(svg, 'class="pelers-edge"')).toBe(2);
+    expect(count(svg, 'class="pelers-edge-label"')).toBe(2);
+    expect(count(svg, 'class="pelers-marker"')).toBe(3);
     expect(svg).toContain('>System Context<');
     expect(svg).toContain('«person»');
     expect(svg).toContain('«external system db»');
@@ -86,13 +86,13 @@ SystemQueue(sq, "SQ")
 Container_Ext(ce, "CE", "Go")
 ContainerDb_Ext(cde, "CDE")
 ComponentQueue_Ext(cqe, "CQE")`);
-    expect(svg).toMatch(/pele-shape-person pele-c4-person" data-id="p"[^>]*><rect[^>]*><circle/);
-    expect(svg).toContain('pele-shape-person pele-c4-external_person pele-c4-external" data-id="pe"');
-    expect(svg).toContain('pele-shape-rect pele-c4-system" data-id="s"');
-    expect(svg).toContain('pele-shape-cyl pele-c4-system_db" data-id="sd"');
-    expect(svg).toContain('pele-shape-h-cyl pele-c4-system_queue" data-id="sq"');
-    expect(svg).toContain('pele-shape-cyl pele-c4-external_container_db pele-c4-external" data-id="cde"');
-    expect(svg).toContain('pele-shape-h-cyl pele-c4-external_component_queue pele-c4-external" data-id="cqe"');
+    expect(svg).toMatch(/pelers-shape-person pelers-c4-person" data-id="p"[^>]*><rect[^>]*><circle/);
+    expect(svg).toContain('pelers-shape-person pelers-c4-external_person pelers-c4-external" data-id="pe"');
+    expect(svg).toContain('pelers-shape-rect pelers-c4-system" data-id="s"');
+    expect(svg).toContain('pelers-shape-cyl pelers-c4-system_db" data-id="sd"');
+    expect(svg).toContain('pelers-shape-h-cyl pelers-c4-system_queue" data-id="sq"');
+    expect(svg).toContain('pelers-shape-cyl pelers-c4-external_container_db pelers-c4-external" data-id="cde"');
+    expect(svg).toContain('pelers-shape-h-cyl pelers-c4-external_component_queue pelers-c4-external" data-id="cqe"');
     // External elements are hollow with a dashed border; the rest are filled.
     expect(svg).toMatch(/data-id="ce"[^>]*><rect[^>]*fill="var\(--_bg\)" stroke="var\(--_b\)" stroke-dasharray="4 3"/);
     expect(svg).toMatch(/data-id="s"[^>]*><rect[^>]*fill="var\(--_s\)" stroke="var\(--_b\)" style="rx:var\(--_r\)"\/>/);
@@ -105,16 +105,16 @@ System(b, "B", $sprite="queue")
 System(c, "C")
 UpdateElementStyle(c, $shape="Person")
 System(d, "D", $tags="constructor")`);
-    expect(svg).toContain('pele-shape-cyl pele-c4-system" data-id="a"');
-    expect(svg).toContain('pele-shape-h-cyl pele-c4-system" data-id="b"');
-    expect(svg).toContain('pele-shape-person pele-c4-system" data-id="c"');
-    expect(svg).toContain('pele-shape-rect pele-c4-system" data-id="d"');
+    expect(svg).toContain('pelers-shape-cyl pelers-c4-system" data-id="a"');
+    expect(svg).toContain('pelers-shape-h-cyl pelers-c4-system" data-id="b"');
+    expect(svg).toContain('pelers-shape-person pelers-c4-system" data-id="c"');
+    expect(svg).toContain('pelers-shape-rect pelers-c4-system" data-id="d"');
   });
 
   it('writes the type, name, technology, and description of a shape', () => {
     const { svg } = draw('C4Container\nContainer(api, "API", "Node.js", "Serves <b>requests</b><br/>all day")');
     expect(svg).toContain('«container»');
-    expect(svg).toMatch(/class="pele-label" font-weight="var\(--_hw\)"[^>]*>(<tspan[^>]*>)?API</);
+    expect(svg).toMatch(/class="pelers-label" font-weight="var\(--_hw\)"[^>]*>(<tspan[^>]*>)?API</);
     expect(svg).toContain('>[Node.js]<');
     expect(svg).toContain('font-weight="var(--_w)">requests</tspan>');
     expect(svg).toContain('all day');
@@ -186,10 +186,10 @@ Deployment_Node(outer, "Outer", "Linux", "A machine") {
     expect(svg).toContain('>[node]<');
     // Deployment nodes have a solid border; other boundaries are dashed.
     expect(svg).toMatch(
-      /class="pele-cluster pele-c4-node" data-id="outer"><rect[^>]*stroke="var\(--_b\)" style="rx:var\(--_r\)"\/>/
+      /class="pelers-cluster pelers-c4-node" data-id="outer"><rect[^>]*stroke="var\(--_b\)" style="rx:var\(--_r\)"\/>/
     );
     expect(draw('C4Context\nBoundary(b, "B") {\nSystem(s, "S")\n}').svg).toMatch(
-      /class="pele-cluster pele-c4-boundary" data-id="b"><rect[^>]*stroke-dasharray="6 4" style="rx:var\(--_r\)"\/>/
+      /class="pelers-cluster pelers-c4-boundary" data-id="b"><rect[^>]*stroke-dasharray="6 4" style="rx:var\(--_r\)"\/>/
     );
   });
 
@@ -211,7 +211,7 @@ Enterprise_Boundary(e, "E") {
 
   it('draws an arrowhead for each end a relation points at', () => {
     const markers = (rel: string): number =>
-      count(draw(`C4Context\nSystem(a, "A")\nSystem(b, "B")\n${rel}`).svg, 'pele-marker');
+      count(draw(`C4Context\nSystem(a, "A")\nSystem(b, "B")\n${rel}`).svg, 'pelers-marker');
     for (const name of ['Rel', 'Rel_U', 'Rel_Up', 'Rel_D', 'Rel_Down', 'Rel_L', 'Rel_Left', 'Rel_R', 'Rel_Right']) {
       expect(markers(`${name}(a, b, "x")`)).toBe(1);
     }
@@ -219,7 +219,7 @@ Enterprise_Boundary(e, "E") {
     expect(markers('Rel_Back(a, b, "x")')).toBe(1);
     const forward = draw('C4Context\nSystem(a, "A")\nSystem(b, "B")\nRel(a, b, "x")').svg;
     const back = draw('C4Context\nSystem(a, "A")\nSystem(b, "B")\nRel_Back(a, b, "x")').svg;
-    const tip = (svg: string): number => Number(/class="pele-marker" d="M([\d.]+),/.exec(svg)![1]);
+    const tip = (svg: string): number => Number(/class="pelers-marker" d="M([\d.]+),/.exec(svg)![1]);
     expect(tip(forward)).toBe(box(forward, 'b').x);
     expect(tip(back)).toBe(box(back, 'a').x + box(back, 'a').w);
   });
@@ -242,7 +242,7 @@ Enterprise_Boundary(e, "E") {
     const { svg } = draw('C4Context\nSystem(a, "A")\nSystem(b, "B")\nRel(a, b, "x")');
     const a = box(svg, 'a');
     const b = box(svg, 'b');
-    const d = /class="pele-edge" data-id="a-b"><path d="M([\d.]+),([\d.]+)L([\d.]+),([\d.]+)"/.exec(svg)!;
+    const d = /class="pelers-edge" data-id="a-b"><path d="M([\d.]+),([\d.]+)L([\d.]+),([\d.]+)"/.exec(svg)!;
     expect(Number(d[1])).toBe(a.x + a.w);
     expect(Number(d[2])).toBe(a.y + a.h / 2);
     expect(Number(d[3])).toBeCloseTo(b.x - 7, 5);
@@ -307,7 +307,7 @@ Rel(d, q, "y")`);
 
   const corners = (svg: string): Map<string, number[]> => {
     const out = new Map<string, number[]>();
-    for (const [, id, d] of svg.matchAll(/class="pele-edge" data-id="([^"]+)"[^>]*><path d="([^"]+)"/g)) {
+    for (const [, id, d] of svg.matchAll(/class="pelers-edge" data-id="([^"]+)"[^>]*><path d="([^"]+)"/g)) {
       if (d.includes('C')) continue;
       const points: number[] = [];
       for (const [, op, args] of d.matchAll(/([MLHVQ])([^MLHVQ]+)/g)) {
@@ -340,7 +340,7 @@ Rel(d, q, "y")`);
         // A cylinder is a path; its box here leaves out the bulge of its caps.
         const shapes = [
           ...svg.matchAll(
-            /class="pele-node[^"]*" data-id="([^"]+)" transform="translate\(([-\d.]+),([-\d.]+)\)">(?:<a [^>]*>)?<(rect|path d="M([-\d.]+),([-\d.]+)([HV])([-\d.]+))/g
+            /class="pelers-node[^"]*" data-id="([^"]+)" transform="translate\(([-\d.]+),([-\d.]+)\)">(?:<a [^>]*>)?<(rect|path d="M([-\d.]+),([-\d.]+)([HV])([-\d.]+))/g
           ),
         ].map((match) => {
           if (match[4] === 'rect') return [match[1], box(svg, match[1])] as const;
@@ -435,9 +435,9 @@ Rel(b, in, "into")`);
 
   it('rejects a relation to something that does not exist, as Mermaid does', () => {
     const attempt = (): unknown => draw('C4Context\nSystem(a, "A")\nRel(a, missing, "x")');
-    expect(attempt).toThrow(PeleError);
+    expect(attempt).toThrow(PelersError);
     expect(attempt).toThrow('C4 rel "a" -> "missing" references an unknown shape or boundary');
-    expect(() => draw('C4Context\nSystem(a, "A")\nRel($x="y", a, "x")')).toThrow(PeleError);
+    expect(() => draw('C4Context\nSystem(a, "A")\nRel($x="y", a, "x")')).toThrow(PelersError);
   });
 
   it('applies UpdateElementStyle to shapes and boundaries', () => {
@@ -453,7 +453,7 @@ UpdateElementStyle(nobody, "red")`);
     expect(svg).toMatch(/data-id="a"[^>]*>.*?<circle[^>]*style="fill:grey;stroke:blue;"/);
     expect(count(svg, 'style="fill:red;"')).toBe(3);
     expect(svg).toMatch(/data-id="b"><rect[^>]*style="rx:var\(--_r\);fill:#eee;stroke:orange;"/);
-    expect(svg).toMatch(/class="pele-cluster-label"[^>]*style="fill:green;"/);
+    expect(svg).toMatch(/class="pelers-cluster-label"[^>]*style="fill:green;"/);
   });
 
   it('picks a contrasting text color on fills a style sets', () => {
@@ -467,13 +467,13 @@ UpdateElementStyle(b, $bgColor="lightyellow")
 UpdateElementStyle(c, $bgColor="navy")
 UpdateElementStyle(d, $bgColor="navy", $fontColor="#ddd")`);
     const group = (id: string): string => new RegExp(`data-id="${id}"[^>]*>(.*?)</g>`).exec(svg)![1];
-    expect(count(group('c'), 'fill="var(--pele-fg-on-dark,#fff)"')).toBe(3);
+    expect(count(group('c'), 'fill="var(--pelers-fg-on-dark,#fff)"')).toBe(3);
     expect(group('b')).toContain(
-      '<text class="pele-cluster-label" font-weight="var(--_hw)" fill="var(--pele-fg-on-light,#1f1f1f)"'
+      '<text class="pelers-cluster-label" font-weight="var(--_hw)" fill="var(--pelers-fg-on-light,#1f1f1f)"'
     );
-    expect(group('b')).toMatch(/class="pele-c4-type"[^>]* fill="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(group('d')).not.toContain('--pele-fg-on');
-    expect(group('e')).not.toContain('--pele-fg-on');
+    expect(group('b')).toMatch(/class="pelers-c4-type"[^>]* fill="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(group('d')).not.toContain('--pelers-fg-on');
+    expect(group('e')).not.toContain('--pelers-fg-on');
   });
 
   it('cases relations that cross a boundary fill a style sets and inks those inside it', () => {
@@ -489,22 +489,22 @@ Rel(y, z, "out")
 Rel(z, w, "away")
 UpdateElementStyle(b, $bgColor="lightyellow")`;
     const { svg } = draw(src);
-    const casings = /<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
     const edge = (id: string): string => new RegExp(`data-id="${id}"[^>]*><path d="([^"]+)"`).exec(svg)![1];
     // x --> y lies inside the boundary and takes its ink; y --> z crosses out of it.
     expect(casings).not.toContain(`<path d="${edge('x-y')}"/>`);
     expect(svg).toMatch(
-      /data-id="x-y" stroke="var\(--pele-fg-on-light,#1f1f1f\)"><path [^>]*\/><path class="pele-marker"[^>]* fill="var\(--pele-fg-on-light,#1f1f1f\)"/
+      /data-id="x-y" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"><path [^>]*\/><path class="pelers-marker"[^>]* fill="var\(--pelers-fg-on-light,#1f1f1f\)"/
     );
     expect(casings).toContain(`<path d="${edge('y-z')}"/>`);
     expect(casings).not.toContain(`<path d="${edge('z-w')}"/>`);
     expect(draw(src.replace('UpdateElementStyle(b, $bgColor="lightyellow")', '')).svg).not.toMatch(
-      /pele-casings|stroke="var\(--pele-fg-on/
+      /pelers-casings|stroke="var\(--pelers-fg-on/
     );
     const loop = draw(
       'C4Context\nBoundary(S, "S") {\n  System(A, "A")\n}\nRel(A, A, "self")\nUpdateElementStyle(S, $bgColor="white")'
     ).svg;
-    expect(loop).toMatch(/data-id="A-A" stroke="var\(--pele-fg-on-light,#1f1f1f\)"/);
+    expect(loop).toMatch(/data-id="A-A" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"/);
   });
 
   it('applies UpdateRelStyle colours and offsets', () => {
@@ -513,9 +513,9 @@ UpdateElementStyle(b, $bgColor="lightyellow")`;
     const styled = draw(
       base + 'UpdateRelStyle(a, b, $textColor="red", $lineColor="blue", $offsetX="30", $offsetY="-10")'
     ).svg;
-    expect(styled).toContain('<g class="pele-edge" data-id="a-b" style="stroke:blue;">');
-    expect(styled).toMatch(/class="pele-marker"[^>]*fill="blue"/);
-    expect(styled).toMatch(/class="pele-edge-label" data-id="a-b"><rect[^>]*><text style="fill:red;"/);
+    expect(styled).toContain('<g class="pelers-edge" data-id="a-b" style="stroke:blue;">');
+    expect(styled).toMatch(/class="pelers-marker"[^>]*fill="blue"/);
+    expect(styled).toMatch(/class="pelers-edge-label" data-id="a-b"><rect[^>]*><text style="fill:red;"/);
     expect(labelX(styled, 'a-b')).toBe(labelX(plain, 'a-b') + 30);
     expect(labelY(styled, 'a-b')).toBe(labelY(plain, 'a-b') - 10);
     const positional = draw(base + 'UpdateRelStyle(a, b, "red", "blue", "30", "-10")').svg;
@@ -575,11 +575,11 @@ Boundary(b, "Boundary name") {
   System(other, "Other")
 }
 Rel(top, in, "x")`);
-    const heading = Number(/class="pele-cluster-label".*?x="([\d.]+)"/.exec(svg)![1]);
+    const heading = Number(/class="pelers-cluster-label".*?x="([\d.]+)"/.exec(svg)![1]);
     const line = Number(/data-id="top-in"><path d="M([\d.]+),/.exec(svg)![1]);
     expect(Math.abs(heading - line)).toBeGreaterThan(20);
     const alone = draw('C4Context\nBoundary(b, "Boundary name") {\n System(in, "In")\n System(other, "Other")\n}').svg;
-    expect(Number(/class="pele-cluster-label".*?x="([\d.]+)"/.exec(alone)![1])).toBeLessThan(heading);
+    expect(Number(/class="pelers-cluster-label".*?x="([\d.]+)"/.exec(alone)![1])).toBeLessThan(heading);
   });
 
   it('wraps a shape, a boundary heading, or a relation label in a link', () => {
@@ -591,7 +591,7 @@ Boundary(b, "B", $link="https://example.com/b") {
 Rel(a, c, "x", $link="https://example.com/rel")`);
     expect(svg).toMatch(/data-id="a" transform="[^"]*"><a href="https:\/\/example.com\/a" rel="noopener"><rect/);
     expect(svg).toMatch(/data-id="b"><rect[^>]*><a href="https:\/\/example.com\/b" rel="noopener"><text/);
-    expect(svg).toMatch(/class="pele-edge-label" data-id="a-c"><rect[^>]*><a href="https:\/\/example.com\/rel"/);
+    expect(svg).toMatch(/class="pelers-edge-label" data-id="a-c"><rect[^>]*><a href="https:\/\/example.com\/rel"/);
     expect(svg).not.toContain('javascript');
     expect(links).toEqual([
       { id: 'a-c', href: 'https://example.com/rel', internal: false },
@@ -625,7 +625,7 @@ Rel(a, c, "x", $link="https://example.com/rel")`);
 
   it('takes the title from the diagram, then from front matter', () => {
     expect(draw('C4Context\ntitle Own title\nSystem(a, "A")').svg).toContain(
-      'class="pele-title" font-weight="var(--_tw)"'
+      'class="pelers-title" font-weight="var(--_tw)"'
     );
     expect(draw('C4Context\ntitle Own title\nSystem(a, "A")').svg).toContain('Own title');
     expect(draw('---\ntitle: From front matter\n---\nC4Context\nSystem(a, "A")').svg).toContain('From front matter');
@@ -646,7 +646,7 @@ Rel(a, c, "x", $link="https://example.com/rel")`);
   it('treats accTitle as the title, as the grammar does, and accDescr as the description', () => {
     const { svg } = draw('C4Context\naccTitle: Shown on top\naccDescr: For screen readers\nSystem(a, "A")');
     expect(svg).toContain('Shown on top</t');
-    expect(svg).toContain('<desc id="pele-desc">For screen readers</desc>');
+    expect(svg).toContain('<desc id="pelers-desc">For screen readers</desc>');
     expect(svg).not.toContain('<title');
     expect(model('C4Context\naccDescr {\n  two\n  lines\n}\nSystem(a, "A")').accDescr).toBe('two\nlines');
     expect(model('C4Context\naccDescription one line\nSystem(a, "A")').accDescr).toBe('one line');
@@ -717,11 +717,11 @@ Boundary(a, "A") {
   });
 
   it('reports syntax errors the way Jison words them', () => {
-    const fail = (src: string): PeleError => {
+    const fail = (src: string): PelersError => {
       try {
         draw(src);
       } catch (error) {
-        return error as PeleError;
+        return error as PelersError;
       }
       throw new Error('Expected an error');
     };

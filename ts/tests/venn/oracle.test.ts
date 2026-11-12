@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/venn-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/venn-oracle.js';
 
-// Compares Pele's venn lexer and parser with the parser Mermaid generates from venn.jison:
+// Compares Pelers's venn lexer and parser with the parser Mermaid generates from venn.jison:
 // the same tokens, the same accept or reject decision, and the same calls into the model,
 // including the ones the lexer makes to ask about indentation.
 // Set FUZZ to raise the number of generated inputs and SEED to change them.
@@ -176,12 +176,12 @@ const corpus = [...new Set([...loadCorpus('venn', /venn-beta/), ...SEEDS])];
 
 function compare(src: string): boolean {
   for (const indent of [false, true]) {
-    expect(peleTokens(src, indent), `tokens of ${JSON.stringify(src)} with indent ${indent}`).toEqual(
+    expect(pelersTokens(src, indent), `tokens of ${JSON.stringify(src)} with indent ${indent}`).toEqual(
       oracleTokens(src, indent)
     );
   }
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
   return expected.ok;

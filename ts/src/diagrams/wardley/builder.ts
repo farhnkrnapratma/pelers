@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 
 export type SourceStrategy = 'build' | 'buy' | 'outsource' | 'market';
 export type Flow = 'forward' | 'backward' | 'bidirectional';
@@ -172,7 +172,7 @@ export class WardleyBuilder {
     const nodes: WardleyNode[] = [];
     for (const node of this.nodes.values()) {
       if (typeof node.x !== 'number' || typeof node.y !== 'number') {
-        throw new PeleError(`Node "${node.label}" is missing coordinates`, 'semantic', { type: 'wardley' });
+        throw new PelersError(`Node "${node.label}" is missing coordinates`, 'semantic', { type: 'wardley' });
       }
       nodes.push(node);
     }

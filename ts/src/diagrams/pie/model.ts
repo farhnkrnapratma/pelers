@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { PieAst } from './parser.js';
 
 export interface PieModel {
@@ -14,7 +14,7 @@ export function buildPie(ast: PieAst, title: string | undefined): PieModel {
   const sections = new Map<string, number>();
   for (const { label, value } of ast.sections) {
     if (value < 0) {
-      throw new PeleError(
+      throw new PelersError(
         `"${label}" has invalid value: ${value}. Negative values are not allowed in pie charts. All slice values must be >= 0.`,
         'semantic',
         { type: 'pie' }

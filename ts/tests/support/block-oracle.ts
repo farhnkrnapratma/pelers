@@ -24,7 +24,7 @@ export function oracleTokens(src: string): Pair[] {
   return oracle.tokens(src, recorder().yy).map(([name, text]) => [name, String(text)]);
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -33,7 +33,7 @@ type Item = Record<string, unknown>;
 
 // What Mermaid's grammar makes of a statement with more than one link: its left-recursive rule reads
 // the id of the list built so far, so only the last link survives, and it starts at `undefined`.
-// Pele keeps every link; this is the one place the two trees differ.
+// Pelers keeps every link; this is the one place the two trees differ.
 function collapse(chain: Item[]): Item[] {
   if (chain.length <= 3) return chain;
   const edge = chain[chain.length - 2];
@@ -70,7 +70,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseBlock(src, yy as unknown as BlockBuilder);

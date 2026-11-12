@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { StateClassDef, StateStmt, Stmt } from './types.js';
 
 export interface StateNode {
@@ -176,7 +176,7 @@ export function buildStateGraph(
       insert(node);
       return;
     }
-    // Mermaid puts each note in a group of its own, named after the state. Pele keeps that
+    // Mermaid puts each note in a group of its own, named after the state. Pelers keeps that
     // group in the model and lays the note out beside its state instead.
     const aside = (asideId: string, shape: string, cssClasses: string, isGroup: boolean): StateNode => ({
       id: asideId,
@@ -237,7 +237,7 @@ export function buildStateGraph(
 
   for (const node of nodes) {
     if (node.isGroup && node.description.length > 0) {
-      throw new PeleError(
+      throw new PelersError(
         `Group nodes can only have label. Remove the additional description for node [${node.id}]`,
         'semantic',
         { type: 'state' }

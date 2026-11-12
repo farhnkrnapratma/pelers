@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 const options = { measurer: metricsMeasurer };
@@ -16,21 +16,21 @@ describe('eventmodeling rendering', () => {
     const { svg, type } = render(BASIC, options);
     expect(type).toBe('eventmodeling');
     expect(supports(BASIC)).toBe(true);
-    expect(count(svg, /class="pele-cluster pele-em-lane"/g)).toBe(3);
+    expect(count(svg, /class="pelers-cluster pelers-em-lane"/g)).toBe(3);
     for (const label of ['UI/Automation', 'Command/Read Model', 'Events', 'CartUI', 'AddItem', 'ItemAdded'])
       expect(svg).toContain(`>${label}<`);
-    expect(svg).toContain('class="pele-node pele-em-ui" data-id="01"');
-    expect(svg).toContain('class="pele-node pele-em-command" data-id="02"');
-    expect(svg).toContain('class="pele-node pele-em-event" data-id="03"');
-    expect(count(svg, /class="pele-edge"/g)).toBe(2);
-    expect(count(svg, /class="pele-marker"/g)).toBe(2);
+    expect(svg).toContain('class="pelers-node pelers-em-ui" data-id="01"');
+    expect(svg).toContain('class="pelers-node pelers-em-command" data-id="02"');
+    expect(svg).toContain('class="pelers-node pelers-em-event" data-id="03"');
+    expect(count(svg, /class="pelers-edge"/g)).toBe(2);
+    expect(count(svg, /class="pelers-marker"/g)).toBe(2);
     expect(svg).toContain('data-id="01-02"');
     expect(svg).not.toContain('NaN');
   });
 
   it('colors each kind from its own series slot and leaves a UI plain', () => {
     const { svg } = render('eventmodeling\ntf 01 ui A\ntf 02 cmd B\ntf 03 evt C\ntf 04 rmo D\ntf 05 pcr E\n', options);
-    for (const slot of [1, 2, 3, 7]) expect(svg).toContain(`var(--pele-series-${slot},`);
+    for (const slot of [1, 2, 3, 7]) expect(svg).toContain(`var(--pelers-series-${slot},`);
     expect(count(svg, /fill-opacity="0.22"/g)).toBe(4);
   });
 
@@ -90,7 +90,7 @@ describe('eventmodeling rendering', () => {
       ['Plain', 200],
       ['a.b.c', 200],
     ]);
-    expect(count(render(src, options).svg, /class="pele-cluster pele-em-lane"/g)).toBe(4);
+    expect(count(render(src, options).svg, /class="pelers-cluster pelers-em-lane"/g)).toBe(4);
   });
 
   it('shows inline data and data blocks, a block winning over inline data', () => {
@@ -110,7 +110,7 @@ describe('eventmodeling rendering', () => {
     expect(svg).toContain('>productId: 7</tspan>');
     expect(svg).toContain('>  nested: true</tspan>');
     expect(svg).not.toContain('ignored');
-    expect(count(svg, /class="pele-em-data"/g)).toBe(4);
+    expect(count(svg, /class="pelers-em-data"/g)).toBe(4);
   });
 
   it('wraps long data lines without splitting emoji', () => {
@@ -133,8 +133,8 @@ describe('eventmodeling rendering', () => {
       'eventmodeling\ntf 01 cmd Update\ntf 02 evt Updated\nentity Updated\nnote 02 `md` {\n  first line\n  second line\n}\n' +
       'gwt 01\n given\n  evt Updated\n  evt Other\n when\n  cmd Update\n then\n  evt Updated\ngwt 02 given evt A then evt B\n';
     const { svg } = render(src, options);
-    expect(count(svg, /class="pele-em-note"/g)).toBe(1);
-    expect(count(svg, /class="pele-em-specification"/g)).toBe(2);
+    expect(count(svg, /class="pelers-em-note"/g)).toBe(1);
+    expect(count(svg, /class="pelers-em-specification"/g)).toBe(2);
     expect(svg).toContain('Note · 02 Updated');
     expect(svg).toContain('>second line</tspan>');
     expect(svg).toContain('>Given  Updated, Other</tspan>');
@@ -152,8 +152,8 @@ describe('eventmodeling rendering', () => {
       options
     );
     expect(svg).toContain('>Checkout<');
-    expect(svg).toContain('<title id="pele-title">Acc</title>');
-    expect(svg).toContain('<desc id="pele-desc">Described</desc>');
+    expect(svg).toContain('<title id="pelers-title">Acc</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Described</desc>');
     expect(render('---\ntitle: Front\n---\neventmodeling\ntf 01 ui A\n', options).svg).toContain('>Front<');
   });
 
@@ -176,9 +176,9 @@ describe('eventmodeling rendering', () => {
       render('eventmodeling\n  tf 01 ui UI\n  %% a comment line\n  rf 01 evt Event\n', options);
       expect.unreachable();
     } catch (error) {
-      expect(error).toBeInstanceOf(PeleError);
-      expect((error as PeleError).message).toBe('Duplicate event modeling frame ID "01" on line 4');
-      expect((error as PeleError).line).toBe(4);
+      expect(error).toBeInstanceOf(PelersError);
+      expect((error as PelersError).message).toBe('Duplicate event modeling frame ID "01" on line 4');
+      expect((error as PelersError).line).toBe(4);
     }
     expect(() => render('eventmodeling\ntf 01 cmd\n%% a comment line\n\n', options)).toThrow(
       expect.objectContaining({ line: 2, column: 10 })
@@ -189,7 +189,7 @@ describe('eventmodeling rendering', () => {
       'eventmodeling\ntf 01 evt A {\n',
       'eventmodeling\ntf 1234 evt A\n',
     ]) {
-      expect(() => render(src, options), src).toThrow(PeleError);
+      expect(() => render(src, options), src).toThrow(PelersError);
     }
   });
 });

@@ -238,12 +238,12 @@ export function marker(
     const bx = x - dx * ARROW;
     const by = y - dy * ARROW;
     const half = ARROW * 0.42;
-    return `<path class="pele-marker" d="M${num(x)},${num(y)}L${num(bx + nx * half)},${num(by + ny * half)}L${num(
+    return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${num(bx + nx * half)},${num(by + ny * half)}L${num(
       bx - nx * half
     )},${num(by - ny * half)}Z" fill="${color}" stroke="${stroke}"/>`;
   }
   if (type === 'arrow_circle') {
-    return `<circle class="pele-marker" cx="${num(x - dx * 4)}" cy="${num(y - dy * 4)}" r="3.5" fill="${color}" stroke="${stroke}"/>`;
+    return `<circle class="pelers-marker" cx="${num(x - dx * 4)}" cy="${num(y - dy * 4)}" r="3.5" fill="${color}" stroke="${stroke}"/>`;
   }
   if (type === 'arrow_cross') {
     const cx = x - dx * 4;
@@ -253,7 +253,7 @@ export function marker(
     const uy = (dy + ny) * a;
     const vx = (dx - nx) * a;
     const vy = (dy - ny) * a;
-    return `<path class="pele-marker" d="M${num(cx - ux)},${num(cy - uy)}L${num(cx + ux)},${num(cy + uy)}M${num(
+    return `<path class="pelers-marker" d="M${num(cx - ux)},${num(cy - uy)}L${num(cx + ux)},${num(cy + uy)}M${num(
       cx - vx
     )},${num(cy - vy)}L${num(cx + vx)},${num(cy + vy)}"/>`;
   }
@@ -527,7 +527,7 @@ export function casing(d: string, markers: string, line = '', thick = false): st
     const value = decl(prop);
     if (value !== undefined) style += `${prop}:${value};`;
   }
-  const body = `<path d="${d}"/>` + markers.replace(/ class="pele-marker"/g, '');
+  const body = `<path d="${d}"/>` + markers.replace(/ class="pelers-marker"/g, '');
   return attrs || style ? `<g${attrs}${style ? ` style="${style}"` : ''}>${body}</g>` : body;
 }
 
@@ -543,7 +543,7 @@ export function edgeCasing(path: EdgePath, startType: string, endType: string, l
 
 export function casingsSvg(casings: string): string {
   return casings
-    ? `<g class="pele-casings" fill="none" stroke="var(--_bg)" stroke-width="${1 + CASE}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">${casings}</g>`
+    ? `<g class="pelers-casings" fill="none" stroke="var(--_bg)" stroke-width="${1 + CASE}" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">${casings}</g>`
     : '';
 }
 
@@ -559,7 +559,7 @@ export function edgeLabelSvg(
   const w = label.width + 8;
   const h = label.height;
   return (
-    `<g class="pele-edge-label" data-id="${escText(id)}">` +
+    `<g class="pelers-edge-label" data-id="${escText(id)}">` +
     `<rect x="${num(x - w / 2)}" y="${num(y - h / 2)}" width="${num(w)}" height="${num(h)}" rx="3" fill="var(--_bg)"/>` +
     labelSvg(label, x, y, attrs, icons) +
     '</g>'

@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Config } from '../../preprocess.js';
 import { esc, escText, labelSvg, num } from '../../svg/builder.js';
 import { svgDocument } from '../../svg/root.js';
@@ -56,7 +56,7 @@ function aligned(label: Label, x: number, y: number, anchor: 'start' | 'middle' 
 
 export function renderXyChart(model: XyChartModel, config: Config, options: RenderOptions): Rendered {
   if (model.plots.length === 0) {
-    throw new PeleError('No Plot to render, please provide a plot with some data', 'semantic', { type: 'xychart' });
+    throw new PelersError('No Plot to render, please provide a plot with some data', 'semantic', { type: 'xychart' });
   }
   const chart = record(config.xyChart);
   const size = options.fontSize ?? 16;
@@ -333,7 +333,7 @@ export function renderXyChart(model: XyChartModel, config: Config, options: Rend
         }
         outside += `<text x="${num(tx)}" y="${num(ty + tiny * 0.35)}" text-anchor="${anchor}">${label}</text>`;
       }
-      series += `<g class="pele-series pele-bars"${id} fill="${color}">${rects}</g>`;
+      series += `<g class="pelers-series pelers-bars"${id} fill="${color}">${rects}</g>`;
       return;
     }
 
@@ -392,7 +392,7 @@ export function renderXyChart(model: XyChartModel, config: Config, options: Rend
       }
     }
     lines +=
-      `<g class="pele-series pele-line"${id} fill="${color}">` +
+      `<g class="pelers-series pelers-line"${id} fill="${color}">` +
       (d
         ? `<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
         : '') +
@@ -417,7 +417,7 @@ export function renderXyChart(model: XyChartModel, config: Config, options: Rend
     const y = ly + row / 2;
     const color = seriesColor(index);
     legendOut +=
-      `<g class="pele-legend-item" data-id="${escText(plots[index].title)}">` +
+      `<g class="pelers-legend-item" data-id="${escText(plots[index].title)}">` +
       (plots[index].type === 'bar'
         ? `<rect x="${num(lx)}" y="${num(y - SWATCH / 2)}" width="${SWATCH}" height="${SWATCH}" rx="2" fill="${color}"/>`
         : `<path d="M${num(lx)},${num(y)}h${SWATCH}" stroke="${color}" stroke-width="2" stroke-linecap="round"/>`) +
@@ -427,15 +427,15 @@ export function renderXyChart(model: XyChartModel, config: Config, options: Rend
   }
 
   const content =
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    (grid ? `<path class="pele-grid" d="${grid}" stroke="var(--_a)"/>` : '') +
-    `<g class="pele-plot">${series}${lines}</g>` +
-    (axis ? `<path class="pele-axis" d="${axis}" fill="none" stroke="var(--_b)"/>` : '') +
-    (labels ? `<g class="pele-axis-labels" font-size="${small}" fill="var(--_m)">${labels}</g>` : '') +
-    (titles ? `<g class="pele-axis-titles" font-size="${small}">${titles}</g>` : '') +
-    (outside ? `<g class="pele-data-labels" font-size="${tiny}">${outside}</g>` : '') +
-    (pointLabels ? `<g class="pele-point-labels" font-size="${tiny}">${pointLabels}</g>` : '') +
-    (legendOut ? `<g class="pele-legend" font-size="${small}">${legendOut}</g>` : '');
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    (grid ? `<path class="pelers-grid" d="${grid}" stroke="var(--_a)"/>` : '') +
+    `<g class="pelers-plot">${series}${lines}</g>` +
+    (axis ? `<path class="pelers-axis" d="${axis}" fill="none" stroke="var(--_b)"/>` : '') +
+    (labels ? `<g class="pelers-axis-labels" font-size="${small}" fill="var(--_m)">${labels}</g>` : '') +
+    (titles ? `<g class="pelers-axis-titles" font-size="${small}">${titles}</g>` : '') +
+    (outside ? `<g class="pelers-data-labels" font-size="${tiny}">${outside}</g>` : '') +
+    (pointLabels ? `<g class="pelers-point-labels" font-size="${tiny}">${pointLabels}</g>` : '') +
+    (legendOut ? `<g class="pelers-legend" font-size="${small}">${legendOut}</g>` : '');
 
   return {
     svg: svgDocument('xychart', width, height, size, options, model, content),

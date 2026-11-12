@@ -31,7 +31,7 @@ function actorView(actor: SeqActor): ActorView {
   return { ...actor, links: Object.fromEntries(actor.links), properties: Object.fromEntries(actor.properties) };
 }
 
-// Exposes Pele's sequence model through the method names Mermaid's specs call on SequenceDB.
+// Exposes Pelers's sequence model through the method names Mermaid's specs call on SequenceDB.
 // Mermaid keeps participant links and properties in plain objects; the views here do the same.
 export class SequenceDB extends SeqDb {
   readonly LINETYPE = LINETYPE;
@@ -102,7 +102,7 @@ export class SequenceDB extends SeqDb {
 }
 
 // Mermaid's renderer numbers the messages while it draws and leaves the result on the model.
-// Here Pele's renderer runs, and the numbers it would draw are copied to where the specs look.
+// Here Pelers's renderer runs, and the numbers it would draw are copied to where the specs look.
 const renderer = {
   draw(_text: string, _id: string, _version: string, diagram: { db: SequenceDB }): void {
     const db = diagram.db;
@@ -144,7 +144,7 @@ export const mermaidAPI = {
   getConfig(): Config {
     return config;
   },
-  // The whole of Pele's pipeline: front matter, directives, comments, then the parser.
+  // The whole of Pelers's pipeline: front matter, directives, comments, then the parser.
   async parse(text: string): Promise<{ diagramType: string }> {
     const pre = preprocess(text);
     if (detect(pre.text) !== 'sequence') throw new Error('Not a sequence diagram.');

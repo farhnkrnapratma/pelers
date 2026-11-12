@@ -15,8 +15,8 @@ export type MonospacePart = 'members' | 'attributes' | 'files' | 'messages';
 
 export interface RenderOptions {
   measurer?: TextMeasurer;
-  // The fonts labels are measured in, and drawn in where the page sets no --pele-font or
-  // --pele-font-mono.
+  // The fonts labels are measured in, and drawn in where the page sets no --pelers-font or
+  // --pelers-font-mono.
   fontFamily?: string;
   fontFamilyMono?: string;
   monospace?: readonly MonospacePart[];

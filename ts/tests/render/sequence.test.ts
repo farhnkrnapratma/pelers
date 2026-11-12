@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports, type SequenceModel } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports, type SequenceModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertInert } from '../support/inert.js';
@@ -13,7 +13,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -34,7 +34,7 @@ function count(svg: string, needle: string): number {
 
 function lifelines(svg: string): Map<string, number> {
   const out = new Map<string, number>();
-  for (const m of svg.matchAll(/<path class="pele-lifeline" data-id="([^"]*)" d="M(-?[\d.]+),/g))
+  for (const m of svg.matchAll(/<path class="pelers-lifeline" data-id="([^"]*)" d="M(-?[\d.]+),/g))
     out.set(m[1], Number(m[2]));
   return out;
 }
@@ -63,7 +63,7 @@ describe('sequence rendering', () => {
     expect(result.height).toBeGreaterThan(100);
     expect(result.links).toEqual([]);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-sequence"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-sequence"/);
   });
 
   it('is detected, supported, and parsed to a sequence model', () => {
@@ -79,12 +79,12 @@ describe('sequence rendering', () => {
   it('renders an empty diagram and a lone participant', () => {
     expect(render('sequenceDiagram', options).width).toBeGreaterThan(0);
     const { svg } = render('sequenceDiagram\n participant Solo', options);
-    expect(count(svg, 'class="pele-node pele-actor')).toBe(2);
+    expect(count(svg, 'class="pelers-node pelers-actor')).toBe(2);
   });
 
   it('themes through custom properties with fallbacks and no style element', () => {
     const svg = svgOf('sequenceDiagram\n  Alice->>+Bob: Hi\n  Note over Alice: n\n  Bob-->>-Alice: Yo');
-    for (const token of ['--pele-bg', '--pele-fg', '--pele-line', '--pele-surface', '--pele-border', '--pele-font']) {
+    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-font']) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');
@@ -96,12 +96,12 @@ describe('sequence rendering', () => {
     const src = 'sequenceDiagram\n  Alice->>Bob: Hi';
     const mirrored = render(src, options);
     const single = render(src, { ...options, config: { sequence: { mirrorActors: false } } });
-    expect(count(mirrored.svg, 'class="pele-node pele-actor')).toBe(4);
-    expect(count(mirrored.svg, 'pele-actor-footer')).toBe(2);
-    expect(count(single.svg, 'class="pele-node pele-actor')).toBe(2);
+    expect(count(mirrored.svg, 'class="pelers-node pelers-actor')).toBe(4);
+    expect(count(mirrored.svg, 'pelers-actor-footer')).toBe(2);
+    expect(count(single.svg, 'class="pelers-node pelers-actor')).toBe(2);
     expect(single.height).toBeLessThan(mirrored.height);
     const directive = svgOf(`%%{init: {"sequence": {"mirrorActors": false}}}%%\n${src}`);
-    expect(count(directive, 'pele-actor-footer')).toBe(0);
+    expect(count(directive, 'pelers-actor-footer')).toBe(0);
   });
 
   it('keeps participants in order of appearance and spaces them by their text', () => {
@@ -138,26 +138,26 @@ describe('sequence rendering', () => {
 
   it('draws each arrow type with its line and heads', () => {
     const one = (arrow: string): string =>
-      svgOf(`sequenceDiagram\n  A${arrow}B: x`).match(/<g class="pele-edge pele-message"[^>]*>(.*?)<\/g>/)![1];
-    expect(one('->')).not.toContain('pele-marker');
+      svgOf(`sequenceDiagram\n  A${arrow}B: x`).match(/<g class="pelers-edge pelers-message"[^>]*>(.*?)<\/g>/)![1];
+    expect(one('->')).not.toContain('pelers-marker');
     expect(one('->')).not.toContain('stroke-dasharray');
     expect(one('-->')).toContain('stroke-dasharray');
-    expect(count(one('->>'), 'pele-marker')).toBe(1);
+    expect(count(one('->>'), 'pelers-marker')).toBe(1);
     expect(one('-->>')).toContain('stroke-dasharray');
-    expect(count(one('<<->>'), 'pele-marker')).toBe(2);
-    expect(count(one('<<-->>'), 'pele-marker')).toBe(2);
-    expect(one('-x')).toMatch(/pele-marker" d="M[^"]*M/);
+    expect(count(one('<<->>'), 'pelers-marker')).toBe(2);
+    expect(count(one('<<-->>'), 'pelers-marker')).toBe(2);
+    expect(one('-x')).toMatch(/pelers-marker" d="M[^"]*M/);
     expect(one('-)')).toContain('stroke-linejoin="round"');
     expect(one('-)')).not.toContain('fill="var(--_l)"');
     for (const half of ['-|\\', '-|/', '-\\\\', '-//', '/|-', '\\|-', '//-', '\\\\-']) {
-      expect(count(one(half), 'pele-marker'), half).toBe(1);
+      expect(count(one(half), 'pelers-marker'), half).toBe(1);
       expect(one(half.replace('-', '--')), half).toContain('stroke-dasharray');
     }
   });
 
   it('puts a half head above or below the line as its name says', () => {
     const head = (arrow: string): number[] => {
-      const d = svgOf(`sequenceDiagram\n  A${arrow}B: x`).match(/pele-marker" d="([^"]*)"/)![1];
+      const d = svgOf(`sequenceDiagram\n  A${arrow}B: x`).match(/pelers-marker" d="([^"]*)"/)![1];
       return [...d.matchAll(/,(-?[\d.]+)/g)].map((m) => Number(m[1]));
     };
     const top = head('-|\\');
@@ -173,7 +173,7 @@ describe('sequence rendering', () => {
     const x = lifelines(svg);
     const paths = [
       ...svg.matchAll(
-        /<g class="pele-edge pele-message" data-id="i(\d+)"><path d="M(-?[\d.]+),(-?[\d.]+)H(-?[\d.]+)"/g
+        /<g class="pelers-edge pelers-message" data-id="i(\d+)"><path d="M(-?[\d.]+),(-?[\d.]+)H(-?[\d.]+)"/g
       ),
     ];
     expect(paths.map((p) => p[1])).toEqual(['0', '1']);
@@ -196,7 +196,7 @@ describe('sequence rendering', () => {
 
   it('starts the next row below a message to self whose label is taller than its loop', () => {
     const baselines = (svg: string, id: string): number[] => {
-      const label = svg.match(new RegExp(`<g class="pele-edge-label" data-id="${id}">(.*?)</g>`))![1];
+      const label = svg.match(new RegExp(`<g class="pelers-edge-label" data-id="${id}">(.*?)</g>`))![1];
       return [...label.matchAll(/ y="([\d.]+)"/g)].map((m) => Number(m[1]));
     };
     const step = (svg: string): number => {
@@ -215,7 +215,7 @@ describe('sequence rendering', () => {
 
   it('widens gaps within maxWidth before wrapping a message', () => {
     const lines = (svg: string, id: string): number =>
-      svg.match(new RegExp(`<g class="pele-edge-label" data-id="${id}">(.*?)</g>`))![1].match(/<tspan/g)?.length ?? 1;
+      svg.match(new RegExp(`<g class="pelers-edge-label" data-id="${id}">(.*?)</g>`))![1].match(/<tspan/g)?.length ?? 1;
     const reported =
       'sequenceDiagram\n  participant U as UE\n  participant M as MeNB (LTE anchor)\n  participant S as SgNB (5G, NR leg)\n' +
       '  M->>S: SgNB Addition Request (DRB-ID, CG-ConfigInfo)\n  M->>U: RRCConnectionReconfiguration (carries the NR SCG config)\n  U->>M: RRCConnectionReconfigurationComplete';
@@ -252,7 +252,7 @@ describe('sequence rendering', () => {
       'sequenceDiagram\n  A->>B: a message in the monospace font\n  B->>B: a message to itself\n  Note over A,B: a note';
     const plain = svgOf(src);
     const mono = svgOf(src, { monospace: ['messages'] });
-    expect(mono).toContain('<g class="pele-edge-labels" font-size="14" font-family="var(--_fm)">');
+    expect(mono).toContain('<g class="pelers-edge-labels" font-size="14" font-family="var(--_fm)">');
     expect(plain).not.toContain('font-family="var(--_fm)"');
     expect(count(mono, 'font-family="var(--_fm)"')).toBe(1);
     const gap = (svg: string): number => lifelines(svg).get('B')! - lifelines(svg).get('A')!;
@@ -277,7 +277,7 @@ describe('sequence rendering', () => {
     const x = lifelines(svg);
     const rects = [
       ...svg.matchAll(
-        /<rect class="pele-activation" data-id="B" x="(-?[\d.]+)" y="(-?[\d.]+)" width="10" height="([\d.]+)"/g
+        /<rect class="pelers-activation" data-id="B" x="(-?[\d.]+)" y="(-?[\d.]+)" width="10" height="([\d.]+)"/g
       ),
     ];
     expect(rects).toHaveLength(2);
@@ -294,16 +294,16 @@ describe('sequence rendering', () => {
 
   it('accepts explicit activate and deactivate, and keeps an unclosed activation to the end', () => {
     const closed = svgOf('sequenceDiagram\n  A->>B: go\n  activate B\n  B-->>A: done\n  deactivate B');
-    expect(count(closed, 'pele-activation"')).toBe(1);
+    expect(count(closed, 'pelers-activation"')).toBe(1);
     const open = svgOf('sequenceDiagram\n  activate A\n  A->>B: go');
-    expect(count(open, 'pele-activation"')).toBe(1);
+    expect(count(open, 'pelers-activation"')).toBe(1);
   });
 
   it('rejects deactivating a participant that is not active', () => {
     expect(() => render('sequenceDiagram\n  A->>B: go\n  deactivate B', options)).toThrow(
       /inactivate an inactive participant \(B\)/
     );
-    expect(() => render('sequenceDiagram\n  A->>-B: go', options)).toThrow(PeleError);
+    expect(() => render('sequenceDiagram\n  A->>-B: go', options)).toThrow(PelersError);
   });
 
   it('places notes left of, right of, and over participants', () => {
@@ -312,7 +312,7 @@ describe('sequence rendering', () => {
     );
     const x = lifelines(svg);
     const notes = [
-      ...svg.matchAll(/<g class="pele-note" data-id="i(\d+)"><rect x="(-?[\d.]+)" y="(-?[\d.]+)" width="([\d.]+)"/g),
+      ...svg.matchAll(/<g class="pelers-note" data-id="i(\d+)"><rect x="(-?[\d.]+)" y="(-?[\d.]+)" width="([\d.]+)"/g),
     ].map((m) => ({
       left: Number(m[2]),
       right: Number(m[2]) + Number(m[4]),
@@ -337,10 +337,10 @@ describe('sequence rendering', () => {
         '  critical must\n  A->>B: i\n  option fail\n  A->>B: j\n  end\n  break stop\n  A->>B: k\n  end'
     );
     for (const kind of ['loop', 'alt', 'opt', 'par', 'critical', 'break']) {
-      expect(svg, kind).toContain(`class="pele-frame pele-frame-${kind}"`);
+      expect(svg, kind).toContain(`class="pelers-frame pelers-frame-${kind}"`);
       expect(svg, kind).toContain(`>${kind}</text>`);
     }
-    expect(count(svg, 'class="pele-frame pele-frame-par"')).toBe(2);
+    expect(count(svg, 'class="pelers-frame pelers-frame-par"')).toBe(2);
     for (const title of [
       '[Every minute]',
       '[ok]',
@@ -355,7 +355,7 @@ describe('sequence rendering', () => {
     ]) {
       expect(svg, title).toContain(`>${title}</text>`);
     }
-    const alt = svg.match(/<g class="pele-frame pele-frame-alt">(.*?)<\/g>/)![1];
+    const alt = svg.match(/<g class="pelers-frame pelers-frame-alt">(.*?)<\/g>/)![1];
     expect(count(alt, 'stroke-dasharray')).toBe(2);
   });
 
@@ -364,7 +364,7 @@ describe('sequence rendering', () => {
     const box = (kind: string): number[] =>
       svg
         .match(
-          new RegExp(`pele-frame-${kind}"><rect x="(-?[\\d.]+)" y="(-?[\\d.]+)" width="([\\d.]+)" height="([\\d.]+)"`)
+          new RegExp(`pelers-frame-${kind}"><rect x="(-?[\\d.]+)" y="(-?[\\d.]+)" width="([\\d.]+)" height="([\\d.]+)"`)
         )!
         .slice(1)
         .map(Number);
@@ -380,13 +380,13 @@ describe('sequence rendering', () => {
     const svg = svgOf(
       'sequenceDiagram\n  rect rgb(191, 223, 255)\n  A->>B: x\n  rect rgba(0, 0, 255, .1)\n  B->>A: y\n  end\n  end\n  rect\n  A->>B: z\n  end'
     );
-    const rects = [...svg.matchAll(/<rect class="pele-rect"[^>]*>/g)].map((m) => m[0]);
+    const rects = [...svg.matchAll(/<rect class="pelers-rect"[^>]*>/g)].map((m) => m[0]);
     expect(rects).toHaveLength(3);
     expect(rects.some((r) => r.includes('style="rx:var(--_r);fill:rgb(191, 223, 255);"'))).toBe(true);
     expect(rects.some((r) => r.includes('style="rx:var(--_r);fill:rgba(0, 0, 255, .1);"'))).toBe(true);
     expect(rects.filter((r) => !r.includes('fill:')).length).toBe(1);
     expect(svg.indexOf('rgb(191, 223, 255)')).toBeLessThan(svg.indexOf('rgba(0, 0, 255, .1)'));
-    expect(svg.indexOf('class="pele-rects"')).toBeLessThan(svg.indexOf('class="pele-lifelines"'));
+    expect(svg.indexOf('class="pelers-rects"')).toBeLessThan(svg.indexOf('class="pelers-lifelines"'));
   });
 
   it('picks a contrasting text color for labels on a rect or box fill', () => {
@@ -395,14 +395,14 @@ describe('sequence rendering', () => {
         '  A->>B: boxed\n  C->>D: open\n  rect rgb(191, 223, 255)\n  C->>D: light\n  C->>C: self\n  loop Often\n  D->>C: looped\n  end\n  rect black\n  C->>D: dark\n  end\n  rect rgba(0, 0, 0, .2)\n  C->>D: faint\n  end\n  A->>D: crossing two of the lifelines\n  end'
     );
     const label = (text: string): string => new RegExp(`<text[^>]*>(?:\\[)?${text}(?:\\])?</text>`).exec(svg)![0];
-    const light = 'fill="var(--pele-fg-on-light,#1f1f1f)"';
-    const dark = 'fill="var(--pele-fg-on-dark,#fff)"';
+    const light = 'fill="var(--pelers-fg-on-light,#1f1f1f)"';
+    const dark = 'fill="var(--pelers-fg-on-dark,#fff)"';
     expect(label('boxed')).toContain(dark);
-    expect(svg).toContain(`<text class="pele-cluster-label" ${dark}`);
+    expect(svg).toContain(`<text class="pelers-cluster-label" ${dark}`);
     expect(label('open')).not.toContain('fill=');
     expect(label('light')).toContain(light);
     expect(label('self')).toContain(light);
-    expect(label('Often')).toContain(`class="pele-frame-label" ${light} stroke="none"`);
+    expect(label('Often')).toContain(`class="pelers-frame-label" ${light} stroke="none"`);
     expect(label('looped')).toContain(light);
     expect(label('dark')).toContain(dark);
     expect(label('faint')).not.toContain('fill=');
@@ -416,36 +416,36 @@ describe('sequence rendering', () => {
     );
     const message = (text: string): string => {
       const id = new RegExp(`data-id="(i\\d+)">(?:<rect[^>]*/>)?<text[^>]*>${text}<`).exec(svg)![1];
-      return new RegExp(`<g class="pele-edge pele-message" data-id="${id}"[^>]*>.*?</g>`).exec(svg)![0];
+      return new RegExp(`<g class="pelers-edge pelers-message" data-id="${id}"[^>]*>.*?</g>`).exec(svg)![0];
     };
-    expect(message('boxed')).toMatch(/^<g [^>]* stroke="var\(--pele-fg-on-dark,#fff\)">/);
-    expect(message('boxed')).toContain('class="pele-marker"');
-    expect(message('boxed')).toMatch(/class="pele-marker"[^>]* fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(message('open')).not.toContain('--pele-fg-on');
+    expect(message('boxed')).toMatch(/^<g [^>]* stroke="var\(--pelers-fg-on-dark,#fff\)">/);
+    expect(message('boxed')).toContain('class="pelers-marker"');
+    expect(message('boxed')).toMatch(/class="pelers-marker"[^>]* fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(message('open')).not.toContain('--pelers-fg-on');
     expect(message('light')).toMatch(
-      /^<g [^>]* stroke="var\(--pele-fg-on-light,#1f1f1f\)"><path [^>]*stroke-dasharray/
+      /^<g [^>]* stroke="var\(--pelers-fg-on-light,#1f1f1f\)"><path [^>]*stroke-dasharray/
     );
-    expect(message('self')).toMatch(/^<g [^>]* stroke="var\(--pele-fg-on-light,#1f1f1f\)">/);
+    expect(message('self')).toMatch(/^<g [^>]* stroke="var\(--pelers-fg-on-light,#1f1f1f\)">/);
     expect(message('self')).not.toContain('var(--_l)');
-    expect(message('solid')).toMatch(/class="pele-marker" d="[^"]+Z" fill="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(message('stick')).toMatch(/^<g [^>]* stroke="var\(--pele-fg-on-light,#1f1f1f\)">/);
+    expect(message('solid')).toMatch(/class="pelers-marker" d="[^"]+Z" fill="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(message('stick')).toMatch(/^<g [^>]* stroke="var\(--pelers-fg-on-light,#1f1f1f\)">/);
     expect(message('stick')).not.toContain('var(--_l)');
-    expect(svg).not.toMatch(/class="pele-lifeline"[^>]*--pele-fg-on/);
+    expect(svg).not.toMatch(/class="pelers-lifeline"[^>]*--pelers-fg-on/);
   });
 
   it('keeps the theme color for a self-message that reaches past its box', () => {
     const svg = svgOf('sequenceDiagram\n  autonumber 1000\n  box black\n  participant A\n  end\n  A->>A: x');
-    expect(svg).not.toMatch(/class="pele-edge pele-message"[^>]* stroke=/);
+    expect(svg).not.toMatch(/class="pelers-edge pelers-message"[^>]* stroke=/);
   });
 
   it('picks a contrasting name color for figures in a box', () => {
     const svg = svgOf(
       'sequenceDiagram\n  box black Group\n  actor A\n  participant B\n  end\n  actor C\n  A->>B: hi\n  B->>C: yo'
     );
-    expect(count(svg, '<text class="pele-label" fill="var(--pele-fg-on-dark,#fff)"')).toBe(2);
-    expect(svg).toMatch(/data-id="A">.*?<text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(svg).toMatch(/data-id="B">.*?<text class="pele-label" x=/);
-    expect(svg).toMatch(/data-id="C">.*?<text class="pele-label" x=/);
+    expect(count(svg, '<text class="pelers-label" fill="var(--pelers-fg-on-dark,#fff)"')).toBe(2);
+    expect(svg).toMatch(/data-id="A">.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(svg).toMatch(/data-id="B">.*?<text class="pelers-label" x=/);
+    expect(svg).toMatch(/data-id="C">.*?<text class="pelers-label" x=/);
   });
 
   it('groups participants in boxes, with color and title', () => {
@@ -458,7 +458,7 @@ describe('sequence rendering', () => {
       [undefined, 'rgb(1, 2, 3)', ['D']],
     ]);
     const svg = svgOf(src);
-    expect(count(svg, 'class="pele-cluster pele-box"')).toBe(3);
+    expect(count(svg, 'class="pelers-cluster pelers-box"')).toBe(3);
     expect(svg).toContain('style="rx:var(--_r);fill:Aqua;"');
     expect(svg).toContain('>Group One</text>');
     expect(svg).toContain('>Group Two</text>');
@@ -493,7 +493,7 @@ describe('sequence rendering', () => {
 
   it('numbers messages with autonumber, its start and step, and the config switch', () => {
     const numbers = (svg: string): string[] =>
-      [...svg.matchAll(/<g class="pele-sequence-number">.*?<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
+      [...svg.matchAll(/<g class="pelers-sequence-number">.*?<text[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
     const src = 'sequenceDiagram\n  A->>B: one\n  B-->>A: two\n  A->>A: three';
     expect(numbers(svgOf(src))).toEqual([]);
     expect(numbers(svgOf(src.replace('\n', '\n  autonumber\n')))).toEqual(['1', '2', '3']);
@@ -507,7 +507,7 @@ describe('sequence rendering', () => {
         )
       )
     ).toEqual(['1', '3']);
-    expect(() => render('sequenceDiagram\n  autonumber 10.001\n  A->>B: one', options)).toThrow(PeleError);
+    expect(() => render('sequenceDiagram\n  autonumber 10.001\n  A->>B: one', options)).toThrow(PelersError);
   });
 
   it('draws each participant kind, with figures above their labels', () => {
@@ -517,8 +517,8 @@ describe('sequence rendering', () => {
     const m = model(src);
     expect([...m.actors.values()].map((a) => a.type)).toEqual(['participant', ...kinds]);
     const svg = svgOf(src, { config: { sequence: { mirrorActors: false } } });
-    for (const kind of ['participant', ...kinds]) expect(count(svg, `pele-actor-${kind}"`), kind).toBe(1);
-    expect(svgOf('sequenceDiagram\n  participant X@{ "type": "nonsense" }')).toContain('pele-actor-participant"');
+    for (const kind of ['participant', ...kinds]) expect(count(svg, `pelers-actor-${kind}"`), kind).toBe(1);
+    expect(svgOf('sequenceDiagram\n  participant X@{ "type": "nonsense" }')).toContain('pelers-actor-participant"');
   });
 
   it('takes aliases from `as` and from the config object, `as` first', () => {
@@ -531,9 +531,9 @@ describe('sequence rendering', () => {
 
   it('rejects a config object that is not valid YAML', () => {
     expect(() => render('sequenceDiagram\n  participant C@{ "type" "control" }\n  C->>C: x', options)).toThrow(
-      PeleError
+      PelersError
     );
-    expect(() => render('sequenceDiagram\n  participant C@{ "type: "control" }', options)).toThrow(PeleError);
+    expect(() => render('sequenceDiagram\n  participant C@{ "type: "control" }', options)).toThrow(PelersError);
   });
 
   it('creates a participant at its first message and ends a destroyed one with a cross', () => {
@@ -544,14 +544,14 @@ describe('sequence rendering', () => {
     expect(m.destroyedActors.get('C')).toBe(2);
     const svg = svgOf(src);
     const top = (id: string): number =>
-      Number(svg.match(new RegExp(`pele-actor-participant" data-id="${id}"><rect x="[-\\d.]+" y="([-\\d.]+)"`))![1]);
+      Number(svg.match(new RegExp(`pelers-actor-participant" data-id="${id}"><rect x="[-\\d.]+" y="([-\\d.]+)"`))![1]);
     expect(top('C')).toBeGreaterThan(top('A') + 40);
-    expect(count(svg, 'class="pele-destroy" data-id="C"')).toBe(1);
-    expect(count(svg, 'pele-actor-footer" data-id="C"')).toBe(0);
-    expect(count(svg, 'pele-actor-footer" data-id="A"')).toBe(1);
-    const life = svg.match(/pele-lifeline" data-id="C" d="M[\d.]+,([\d.]+)V([\d.]+)"/)!;
+    expect(count(svg, 'class="pelers-destroy" data-id="C"')).toBe(1);
+    expect(count(svg, 'pelers-actor-footer" data-id="C"')).toBe(0);
+    expect(count(svg, 'pelers-actor-footer" data-id="A"')).toBe(1);
+    const life = svg.match(/pelers-lifeline" data-id="C" d="M[\d.]+,([\d.]+)V([\d.]+)"/)!;
     expect(Number(life[1])).toBeGreaterThan(top('C'));
-    const lifeA = svg.match(/pele-lifeline" data-id="A" d="M[\d.]+,([\d.]+)V([\d.]+)"/)!;
+    const lifeA = svg.match(/pelers-lifeline" data-id="A" d="M[\d.]+,([\d.]+)V([\d.]+)"/)!;
     expect(Number(life[2])).toBeLessThan(Number(lifeA[2]));
   });
 
@@ -570,8 +570,8 @@ describe('sequence rendering', () => {
   it('marks central connections with a circle on the lifeline', () => {
     const svg = svgOf('sequenceDiagram\n  A->>()B: to\n  A()->>B: from\n  A()->>()B: both');
     const circles = [...svg.matchAll(/data-id="i(\d+)">(.*?)<\/g>/g)]
-      .filter((m) => m[2].includes('pele-central'))
-      .map((m) => [m[1], count(m[2], 'pele-central')]);
+      .filter((m) => m[2].includes('pelers-central'))
+      .map((m) => [m[1], count(m[2], 'pelers-central')]);
     expect(circles).toEqual([
       ['0', 1],
       ['2', 1],
@@ -587,7 +587,7 @@ describe('sequence rendering', () => {
 
   it('breaks lines at <br> and wraps only when asked', () => {
     const lines = (svg: string, id: number): number => {
-      const g = svg.match(new RegExp(`<g class="pele-edge-label" data-id="i${id}">(.*?)</g>`))![1];
+      const g = svg.match(new RegExp(`<g class="pelers-edge-label" data-id="i${id}">(.*?)</g>`))![1];
       return Math.max(1, count(g, '<tspan x='));
     };
     const long = 'a message long enough that it would be wrapped if wrapping were switched on for it';
@@ -647,7 +647,7 @@ describe('sequence rendering', () => {
     const svg = svgOf(src);
     expect(svg).not.toContain('<a');
     expect(svg).not.toContain('example.com');
-    expect(svg).toContain('pele-actor-participant external svc" data-id="B"');
+    expect(svg).toContain('pelers-actor-participant external svc" data-id="B"');
   });
 
   it('ignores menu statements whose text is not valid JSON', () => {
@@ -662,7 +662,7 @@ describe('sequence rendering', () => {
     expect(model('---\ntitle: From front matter\n---\nsequenceDiagram\n  A->>B: x').title).toBe('From front matter');
     const svg = svgOf('sequenceDiagram\n  title My title\n  A->>B: x');
     expect(svg).toMatch(
-      /<text class="pele-title" font-weight="var\(--_tw\)"[^>]*><tspan[^>]*>My title<\/tspan><\/text>/
+      /<text class="pelers-title" font-weight="var\(--_tw\)"[^>]*><tspan[^>]*>My title<\/tspan><\/text>/
     );
     expect(render('sequenceDiagram\n  title My title\n  A->>B: x', options).height).toBeGreaterThan(
       render('sequenceDiagram\n  A->>B: x', options).height
@@ -686,8 +686,8 @@ describe('sequence rendering', () => {
 
   it('writes accessible title and description', () => {
     const svg = svgOf('sequenceDiagram\n  accTitle: A title\n  accDescr: A description\n  A->>B: x');
-    expect(svg).toContain('<title id="pele-title">A title</title>');
-    expect(svg).toContain('<desc id="pele-desc">A description</desc>');
+    expect(svg).toContain('<title id="pelers-title">A title</title>');
+    expect(svg).toContain('<desc id="pelers-desc">A description</desc>');
     const multi = model('sequenceDiagram\n  accDescr {\n    Two\n    lines\n  }\n  A->>B: x');
     expect(multi.accDescr).toBe('Two\nlines');
   });
@@ -762,7 +762,7 @@ describe('sequence rendering', () => {
 
   it('keeps the character before a comment', () => {
     expect(model('sequenceDiagram\n  A->>B:%% comment').messages.map((m) => m.message)).toEqual(['%% comment']);
-    expect(() => model('sequenceDiagram\n  autonumber 5%% comment')).toThrow(PeleError);
+    expect(() => model('sequenceDiagram\n  autonumber 5%% comment')).toThrow(PelersError);
   });
 
   it('throws structured errors', () => {
@@ -770,14 +770,14 @@ describe('sequence rendering', () => {
       try {
         render('sequenceDiagram\n  Alice->>Bob\n', options);
       } catch (e) {
-        return e as PeleError;
+        return e as PelersError;
       }
     })();
-    expect(error).toBeInstanceOf(PeleError);
+    expect(error).toBeInstanceOf(PelersError);
     expect(error?.code).toBe('syntax');
     expect(error?.line).toBe(2);
     expect(error?.message).toMatch(/Expecting 'TXT', got 'NEWLINE'/);
     expect(() => render('sequenceDiagram\n  participant\n', options)).toThrow(/Lexical error on line 2/);
-    expect(() => render('sequenceDiagram\n  loop x\n  A->>B: y', options)).toThrow(PeleError);
+    expect(() => render('sequenceDiagram\n  loop x\n  A->>B: y', options)).toThrow(PelersError);
   });
 });

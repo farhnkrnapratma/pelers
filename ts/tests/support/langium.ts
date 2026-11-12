@@ -1,10 +1,10 @@
 import * as reference from '@mermaid-js/parser';
 import { expect } from 'vitest';
 import type { TokenType } from '../../src/diagrams/common/tokens.js';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 
 // Helpers for the diagram types Mermaid parses with Langium. `@mermaid-js/parser` is the reference:
-// its lexer definitions check Pele's token tables, and its syntax trees check Pele's parsers.
+// its lexer definitions check Pelers's token tables, and its syntax trees check Pelers's parsers.
 
 interface ReferenceToken {
   name: string;
@@ -30,7 +30,7 @@ export function referenceTokens(create: string, key: string): TableRow[] {
   }));
 }
 
-export function peleTokens(types: readonly TokenType[]): TableRow[] {
+export function pelersTokens(types: readonly TokenType[]): TableRow[] {
   return types.map((t) => ({
     name: t.name,
     pattern: typeof t.pattern === 'string' ? t.pattern : t.pattern.source,
@@ -59,11 +59,11 @@ export async function referenceAst(type: string, src: string): Promise<{ ok: boo
   }
 }
 
-export function peleAst(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
+export function pelersAst(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
   try {
     return { ok: true, ast: plain(parse(src)) };
   } catch (e) {
-    if (!(e instanceof PeleError)) throw e;
+    if (!(e instanceof PelersError)) throw e;
     return { ok: false, error: e.message };
   }
 }
@@ -79,7 +79,7 @@ export function toResult<T>(parse: (src: string) => T, src: string): ParseResult
   try {
     return { value: parse(src), lexerErrors: [], parserErrors: [] };
   } catch (e) {
-    if (!(e instanceof PeleError)) throw e;
+    if (!(e instanceof PelersError)) throw e;
     const lexical = e.message.startsWith('Lexical error');
     return { value: {} as T, lexerErrors: lexical ? [e] : [], parserErrors: lexical ? [] : [e] };
   }

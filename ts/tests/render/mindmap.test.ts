@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import type { MindmapModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { random } from '../support/corpus.js';
@@ -17,7 +17,7 @@ interface Box {
 // Every node here is drawn as a rectangle, so its group and rect give its bounding box.
 function boxes(svg: string): Box[] {
   const re =
-    /<g class="pele-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"><rect x="[-\d.]+" y="[-\d.]+" width="([\d.]+)" height="([\d.]+)"/g;
+    /<g class="pelers-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"><rect x="[-\d.]+" y="[-\d.]+" width="([\d.]+)" height="([\d.]+)"/g;
   return [...svg.matchAll(re)].map((m) => ({ id: m[1], x: +m[2], y: +m[3], w: +m[4], h: +m[5] }));
 }
 
@@ -31,8 +31,8 @@ describe('mindmap rendering', () => {
     expect(type).toBe('mindmap');
     expect(supports('mindmap\n  root')).toBe(true);
     expect(links).toEqual([]);
-    expect(svg.match(/class="pele-node/g)?.length).toBe(5);
-    expect(svg.match(/class="pele-edge"/g)?.length).toBe(4);
+    expect(svg.match(/class="pelers-node/g)?.length).toBe(5);
+    expect(svg.match(/class="pelers-edge"/g)?.length).toBe(4);
     for (const text of ['Center', 'A', 'A1', 'A2', 'B']) expect(svg).toContain(`>${text}</text>`);
     expect(svg).toContain('data-id="root"');
   });
@@ -42,8 +42,8 @@ describe('mindmap rendering', () => {
       'mindmap\n  root\n    a[Square]\n    b(Rounded)\n    c((Circle))\n    d))Bang((\n    e)Cloud(\n    f{{Hexagon}}\n    Plain',
       options
     );
-    for (const shape of ['stadium pele-root', 'rect', 'rounded', 'circle', 'bang', 'cloud', 'hex', 'text']) {
-      expect(svg, shape).toContain(`class="pele-node pele-shape-${shape}"`);
+    for (const shape of ['stadium pelers-root', 'rect', 'rounded', 'circle', 'bang', 'cloud', 'hex', 'text']) {
+      expect(svg, shape).toContain(`class="pelers-node pelers-shape-${shape}"`);
     }
     const nodes = model('mindmap\n  root\n    a[x)\n    b(x]\n    c(-x-)\n    -)x(-').nodes;
     expect(nodes.map((node) => node.type)).toEqual([0, 2, 4, 0, 0]);
@@ -51,23 +51,23 @@ describe('mindmap rendering', () => {
 
   it('colors each first-level branch and keeps the root neutral', () => {
     const { svg } = render('mindmap\n  [root]\n    [a]\n      [a1]\n    [b]\n    [c]', options);
-    expect(svg).toMatch(/pele-root" data-id="root"[^>]*><rect[^>]*stroke="var\(--_b\)"/);
+    expect(svg).toMatch(/pelers-root" data-id="root"[^>]*><rect[^>]*stroke="var\(--_b\)"/);
     expect(svg).toMatch(
-      /class="pele-branch pele-section-0"><g class="pele-edges" fill="none" stroke="var\(--pele-series-1,/
+      /class="pelers-branch pelers-section-0"><g class="pelers-edges" fill="none" stroke="var\(--pelers-series-1,/
     );
     // A shaped node is filled with a tint of its branch's color, as a pill is, and outlined in that color.
     expect(svg).toMatch(
-      /data-id="a1"[^>]*><rect[^>]*fill="var\(--pele-series-1,[^"]*\)" fill-opacity="0.22" stroke="var\(--pele-series-1,/
+      /data-id="a1"[^>]*><rect[^>]*fill="var\(--pelers-series-1,[^"]*\)" fill-opacity="0.22" stroke="var\(--pelers-series-1,/
     );
     expect(svg).toMatch(
-      /data-id="b"[^>]*><rect[^>]*fill="var\(--pele-series-2,[^"]*\)" fill-opacity="0.22" stroke="var\(--pele-series-2,/
+      /data-id="b"[^>]*><rect[^>]*fill="var\(--pelers-series-2,[^"]*\)" fill-opacity="0.22" stroke="var\(--pelers-series-2,/
     );
     expect(svg).toMatch(
-      /data-id="c"[^>]*><rect[^>]*fill="var\(--pele-series-3,[^"]*\)" fill-opacity="0.22" stroke="var\(--pele-series-3,/
+      /data-id="c"[^>]*><rect[^>]*fill="var\(--pelers-series-3,[^"]*\)" fill-opacity="0.22" stroke="var\(--pelers-series-3,/
     );
     // So is a pill, which the source gave no shape.
     expect(render('mindmap\n  root\n    a\n      b', options).svg).toMatch(
-      /pele-shape-branch" data-id="a"[^>]*><rect[^>]*fill-opacity="0.22" stroke="var\(--pele-series-1,/
+      /pelers-shape-branch" data-id="a"[^>]*><rect[^>]*fill-opacity="0.22" stroke="var\(--pelers-series-1,/
     );
   });
 
@@ -149,7 +149,7 @@ describe('mindmap rendering', () => {
 
   it("rejects a second root with Mermaid's message", () => {
     const second = (): unknown => render('mindmap\n  root\n  other', options);
-    expect(second).toThrow(PeleError);
+    expect(second).toThrow(PelersError);
     expect(second).toThrow('There can be only one root. No parent could be found for ("other")');
     expect(() => render('mindmap\n    root\n  shallower', options)).toThrow(/only one root/);
   });
@@ -161,11 +161,11 @@ describe('mindmap rendering', () => {
   it('draws icons and applies classes', () => {
     const src = 'mindmap\n  root\n    A\n    ::icon(fa fa-book)\n    :::urgent large\n    B';
     const plain = render(src, options);
-    expect(plain.svg).toContain('class="pele-node pele-shape-text urgent large" data-id="A"');
-    expect(plain.svg).not.toContain('pele-icon');
+    expect(plain.svg).toContain('class="pelers-node pelers-shape-text urgent large" data-id="A"');
+    expect(plain.svg).not.toContain('pelers-icon');
     expect(plain.width).toBe(render('mindmap\n  root\n    A\n    B', options).width);
     const drawn = render(src, { ...options, icons: (name) => (name === 'fa fa-book' ? '<path d="M0,0H24"/>' : null) });
-    expect(drawn.svg).toContain('<svg class="pele-icon" data-icon="fa fa-book"');
+    expect(drawn.svg).toContain('<svg class="pelers-icon" data-icon="fa fa-book"');
     expect(drawn.svg).toContain('stroke-linejoin="round"><path d="M0,0H24"/></svg>');
     expect(drawn.width).toBeGreaterThan(plain.width);
   });
@@ -198,14 +198,14 @@ describe('mindmap rendering', () => {
   it('draws the front matter title', () => {
     const plain = render('mindmap\n  root\n    A', options);
     const titled = render('---\ntitle: Plans\n---\nmindmap\n  root\n    A', options);
-    expect(titled.svg).toContain('class="pele-title" font-weight="var(--_tw)"');
+    expect(titled.svg).toContain('class="pelers-title" font-weight="var(--_tw)"');
     expect(titled.svg).toContain('>Plans<');
     expect(titled.height).toBeGreaterThan(plain.height);
   });
 
   it('renders a mindmap with no nodes and one with only a root', () => {
     expect(render('mindmap\n\n', options).svg).toContain('<svg');
-    expect(render('mindmap\nroot', options).svg.match(/class="pele-node/g)?.length).toBe(1);
+    expect(render('mindmap\nroot', options).svg.match(/class="pelers-node/g)?.length).toBe(1);
   });
 
   it('sets the levels apart: a pill for a node that branches, plain text for one that ends a branch', () => {
@@ -214,16 +214,16 @@ describe('mindmap rendering', () => {
       options
     );
     const kinds = new Map(
-      [...svg.matchAll(/class="pele-node pele-shape-(\w+)[^"]*" data-id="([^"]*)"/g)].map((m) => [m[2], m[1]])
+      [...svg.matchAll(/class="pelers-node pelers-shape-(\w+)[^"]*" data-id="([^"]*)"/g)].map((m) => [m[2], m[1]])
     );
     expect(kinds.get('Plan')).toBe('branch');
     expect(kinds.get('Research')).toBe('branch');
     for (const leaf of ['Read', 'Ask', 'Build', 'Ship']) expect(kinds.get(leaf), leaf).toBe('text');
     expect(svg).toMatch(
-      /pele-shape-branch" data-id="Plan"[^>]*><rect[^>]* fill="var\(--pele-series-\d,[^"]*\)" fill-opacity="0.22" stroke="var\(--pele-series-\d,[^"]*\)"\/>/
+      /pelers-shape-branch" data-id="Plan"[^>]*><rect[^>]* fill="var\(--pelers-series-\d,[^"]*\)" fill-opacity="0.22" stroke="var\(--pelers-series-\d,[^"]*\)"\/>/
     );
-    expect(svg).toMatch(/pele-shape-text" data-id="Read"[^>]*><text/);
-    expect(svg).not.toContain('pele-marker');
+    expect(svg).toMatch(/pelers-shape-text" data-id="Read"[^>]*><text/);
+    expect(svg).not.toContain('pelers-marker');
     // Nodes on one level start at the same place, whatever their length.
     const box = new Map(
       [...svg.matchAll(/data-id="([^"]*)" transform="translate\((-?[\d.]+),[^)]*\)">(?:<rect x="(-?[\d.]+)")?/g)].map(

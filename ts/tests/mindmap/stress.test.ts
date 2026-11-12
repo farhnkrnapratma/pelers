@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/mindmap/parser.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -63,7 +63,7 @@ describe('mindmap worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -74,8 +74,8 @@ describe('mindmap worst cases', () => {
   it('lays out wide and deep trees without overflow', () => {
     const wide = render('mindmap\nroot\n' + ' a\n'.repeat(16000), big);
     expect(Number.isFinite(wide.height)).toBe(true);
-    expect(wide.svg.match(/class="pele-edge"/g)?.length).toBe(16000);
+    expect(wide.svg.match(/class="pelers-edge"/g)?.length).toBe(16000);
     const deep = render('mindmap\n' + repeat(3000, (i) => ' '.repeat(i) + 'n\n'), big);
-    expect(deep.svg.match(/class="pele-node/g)?.length).toBe(3000);
+    expect(deep.svg.match(/class="pelers-node/g)?.length).toBe(3000);
   });
 });

@@ -2,7 +2,7 @@ import { load, JSON_SCHEMA } from 'js-yaml';
 import { describe, expect, it } from 'vitest';
 import { parseYaml } from '../../src/util/yaml.js';
 
-// Pele's YAML reader only has to agree with js-yaml on what Mermaid passes it:
+// Pelers's YAML reader only has to agree with js-yaml on what Mermaid passes it:
 // node metadata (`@{ ... }`) and front matter.
 const CASES = [
   '{\n shape: rounded \n}',

@@ -123,26 +123,26 @@ function draw(
     const end = custom ? clamp(boundaries[index], 0, 1) : (index + 1) / stages.length;
     previous = end;
     if (index > 0) {
-      frame += `<path class="pele-wardley-stage" d="M${num(start * plotW)},0V${num(plotH)}" stroke="var(--_b)" stroke-dasharray="4 4"/>`;
+      frame += `<path class="pelers-wardley-stage" d="M${num(start * plotW)},0V${num(plotH)}" stroke="var(--_b)" stroke-dasharray="4 4"/>`;
     }
     const label = text(stage, small, Math.max(48, Math.abs(end - start) * plotW - 12));
     stageLabels += centered(
       label,
       ((start + end) / 2) * plotW,
       plotH + 8 + label.height / 2,
-      ` class="pele-wardley-stage-label" font-size="${small}" fill="var(--_m)"`
+      ` class="pelers-wardley-stage-label" font-size="${small}" fill="var(--_m)"`
     );
     stageBottom = Math.max(stageBottom, plotH + 8 + label.height);
   });
   if (showGrid) {
     for (let i = 1; i < 4; i++) {
-      frame += `<path class="pele-wardley-grid" d="M${num((plotW * i) / 4)},0V${num(plotH)}M0,${num((plotH * i) / 4)}H${num(plotW)}" stroke="var(--_b)" stroke-dasharray="2 6"/>`;
+      frame += `<path class="pelers-wardley-grid" d="M${num((plotW * i) / 4)},0V${num(plotH)}M0,${num((plotH * i) / 4)}H${num(plotW)}" stroke="var(--_b)" stroke-dasharray="2 6"/>`;
     }
   }
-  frame += `<path class="pele-wardley-axis" d="M0,0V${num(plotH)}H${num(plotW)}" stroke="${LINE}"/>`;
+  frame += `<path class="pelers-wardley-axis" d="M0,0V${num(plotH)}H${num(plotW)}" stroke="${LINE}"/>`;
   const xTitle = text(model.axes.xLabel ?? 'Evolution', small);
   const yTitle = text(model.axes.yLabel ?? 'Visibility', small);
-  const axisAttrs = ` class="pele-wardley-axis-label" font-size="${small}" font-weight="var(--_hw)"`;
+  const axisAttrs = ` class="pelers-wardley-axis-label" font-size="${small}" font-weight="var(--_hw)"`;
   const axisLabels =
     centered(xTitle, plotW / 2, stageBottom + 6 + xTitle.height / 2, axisAttrs) +
     labelSvg(yTitle, -16, plotH / 2, `${axisAttrs} transform="rotate(-90 -16 ${num(plotH / 2)})"`);
@@ -175,7 +175,7 @@ function draw(
     }
     grow(left - PIPELINE_PAD, top, right + PIPELINE_PAD, top + 4 * R);
     pipelines +=
-      `<g class="pele-wardley-pipeline" data-id="${escText(pipeline.nodeId)}">` +
+      `<g class="pelers-wardley-pipeline" data-id="${escText(pipeline.nodeId)}">` +
       `<rect x="${num(left - PIPELINE_PAD)}" y="${num(top)}" width="${num(right - left + 2 * PIPELINE_PAD)}" height="${num(
         4 * R
       )}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>` +
@@ -251,11 +251,11 @@ function draw(
         label,
         (from.x + to.x) / 2 + px * away,
         (from.y + to.y) / 2 + py * away,
-        ` class="pele-edge-label" font-size="${tiny + 1}" fill="var(--_m)"`
+        ` class="pelers-edge-label" font-size="${tiny + 1}" fill="var(--_m)"`
       );
     }
     links +=
-      `<g class="pele-edge${link.dashed ? ' pele-wardley-dashed' : ''}" data-id="${escText(link.source)}-${escText(link.target)}">` +
+      `<g class="pelers-edge${link.dashed ? ' pelers-wardley-dashed' : ''}" data-id="${escText(link.source)}-${escText(link.target)}">` +
       `<path d="M${num(x1)},${num(y1)}L${num(x2)},${num(y2)}" stroke="${LINE}"${link.dashed ? ' stroke-dasharray="6 6"' : ''}/>` +
       heads +
       caption +
@@ -286,7 +286,7 @@ function draw(
     }
     grow(tx - R, ty - R, tx + R, ty + R);
     trends +=
-      `<g class="pele-wardley-trend" data-id="${escText(trend.nodeId)}">${arrow}` +
+      `<g class="pelers-wardley-trend" data-id="${escText(trend.nodeId)}">${arrow}` +
       `<circle cx="${num(tx)}" cy="${num(ty)}" r="${R}" fill="var(--_bg)" stroke="${ACCENT}"/></g>`;
   }
 
@@ -308,7 +308,7 @@ function draw(
             : strategy === 'build'
               ? 'var(--_s)'
               : 'var(--_bg)';
-      shape += `<circle class="pele-wardley-${strategy}" cx="${num(x)}" cy="${num(y)}" r="${2 * R}" fill="${fill}" stroke="${LINE}"/>`;
+      shape += `<circle class="pelers-wardley-${strategy}" cx="${num(x)}" cy="${num(y)}" r="${2 * R}" fill="${fill}" stroke="${LINE}"/>`;
     }
     if (strategy === 'market') {
       const bx = tri * Math.cos(Math.PI / 6);
@@ -328,7 +328,7 @@ function draw(
     }
     if (node.inertia === true) {
       const offset = (node.isPipelineParent ? SQUARE / 2 : R) + 10 + (strategy ? R + 4 : 0);
-      shape += `<rect class="pele-wardley-inertia" x="${num(x + offset)}" y="${num(y - R)}" width="4" height="${2 * R}" fill="${LINE}"/>`;
+      shape += `<rect class="pelers-wardley-inertia" x="${num(x + offset)}" y="${num(y - R)}" width="4" height="${2 * R}" fill="${LINE}"/>`;
     }
     const ox = node.labelOffsetX === undefined ? undefined : clamp(node.labelOffsetX, -5000, 5000);
     const oy = node.labelOffsetY === undefined ? undefined : clamp(node.labelOffsetY, -5000, 5000);
@@ -340,11 +340,11 @@ function draw(
         label,
         x + (ox ?? 0),
         y + (oy ?? -3),
-        ` class="pele-label" font-size="${small}" font-weight="var(--_hw)"`
+        ` class="pelers-label" font-size="${small}" font-weight="var(--_hw)"`
       );
     } else {
       const label = text(node.label, small);
-      const attrs = ` class="pele-label" font-size="${small}"`;
+      const attrs = ` class="pelers-label" font-size="${small}"`;
       const lift = LABEL_OFFSET + (strategy ? 10 : 0);
       if (ox !== undefined || oy !== undefined) {
         caption = starting(label, x + (ox ?? lift), y + (oy ?? -lift), attrs);
@@ -365,7 +365,7 @@ function draw(
       }
     }
     grow(x - 2 * R, y - 2 * R, x + 2 * R + 20, y + 2 * R);
-    nodes += `<g class="pele-node pele-wardley-${anchor ? 'anchor' : node.isPipelineParent ? 'pipeline-parent' : node.inPipeline ? 'pipeline-component' : 'component'}" data-id="${escText(
+    nodes += `<g class="pelers-node pelers-wardley-${anchor ? 'anchor' : node.isPipelineParent ? 'pipeline-parent' : node.inPipeline ? 'pipeline-component' : 'component'}" data-id="${escText(
       node.id
     )}">${shape}${caption}</g>`;
   }
@@ -383,7 +383,7 @@ function draw(
         `<circle cx="${num(x)}" cy="${num(y)}" r="${num(r)}" fill="var(--_bg)" stroke="${LINE}"/>` +
         labelSvg(label, x, y, ` font-size="${tiny}" font-weight="var(--_hw)"`);
     }
-    annotations += `<g class="pele-wardley-annotation" data-id="${escText(String(annotation.number))}">${marks}</g>`;
+    annotations += `<g class="pelers-wardley-annotation" data-id="${escText(String(annotation.number))}">${marks}</g>`;
   }
   const listed = model.annotations.filter((a) => a.text).sort((a, b) => a.number - b.number);
   if (listed.length > 0) {
@@ -407,7 +407,7 @@ function draw(
       rows += startLabel(line, bx + 10, y + line.lineHeight / 2 + small * 0.35, ` font-size="${small}"`);
       y += line.height;
     }
-    annotations += `<g class="pele-wardley-annotations"><rect x="${num(bx)}" y="${num(by)}" width="${num(width)}" height="${num(
+    annotations += `<g class="pelers-wardley-annotations"><rect x="${num(bx)}" y="${num(by)}" width="${num(width)}" height="${num(
       height
     )}" fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>${rows}</g>`;
   }
@@ -418,7 +418,7 @@ function draw(
       text(note.text, small, Math.min(360, plotW * 0.6), Style.Bold),
       projectX(note.x),
       projectY(note.y),
-      ` class="pele-wardley-note" font-size="${small}" font-weight="var(--_hw)"`
+      ` class="pelers-wardley-note" font-size="${small}" font-weight="var(--_hw)"`
     );
   }
 
@@ -434,7 +434,7 @@ function draw(
     const d = `M${num(tail)},${num(y - half)}H${num(neck)}V${num(y - half - 8)}L${num(tip)},${num(y)}L${num(neck)},${num(y + half + 8)}V${num(y + half)}H${num(tail)}Z`;
     grow(x, y - half - 8, x + FORCE_WIDTH, y + half + 8);
     forces +=
-      `<g class="pele-wardley-${forward ? 'accelerator' : 'deaccelerator'}" data-id="${escText(name)}">` +
+      `<g class="pelers-wardley-${forward ? 'accelerator' : 'deaccelerator'}" data-id="${escText(name)}">` +
       `<path d="${d}" fill="var(--_s)" stroke="${LINE}"/>` +
       centered(
         text(name, tiny + 1, 160, Style.Bold),
@@ -456,14 +456,14 @@ function draw(
   const totalWidth = Math.ceil(right - left + 2 * pad);
   const totalHeight = Math.ceil(maxY - minY + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, tx + plotW / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, tx + plotW / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     `<g transform="translate(${num(tx)},${num(ty)})">` +
-    `<g class="pele-wardley-frame" fill="none">${frame}</g>` +
+    `<g class="pelers-wardley-frame" fill="none">${frame}</g>` +
     stageLabels +
     axisLabels +
     pipelines +
-    (links ? `<g class="pele-edges" fill="none">${links}</g>` : '') +
-    (trends ? `<g class="pele-wardley-trends" fill="none">${trends}</g>` : '') +
+    (links ? `<g class="pelers-edges" fill="none">${links}</g>` : '') +
+    (trends ? `<g class="pelers-wardley-trends" fill="none">${trends}</g>` : '') +
     nodes +
     annotations +
     notes +

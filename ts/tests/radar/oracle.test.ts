@@ -1,13 +1,13 @@
 import * as reference from '@mermaid-js/parser';
 import { describe, expect, it } from 'vitest';
 import { RADAR_TOKENS, lexRadar, parseRadar } from '../../src/diagrams/radar/parser.js';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleTokens, referenceTokens } from '../support/langium.js';
+import { pelersTokens, referenceTokens } from '../support/langium.js';
 import {
   loadTestStrings,
-  peleLexer,
-  peleLongerAlts,
+  pelersLexer,
+  pelersLongerAlts,
   referenceLexer,
   referenceLongerAlts,
 } from '../support/langium-extra.js';
@@ -185,10 +185,10 @@ function tree(node: unknown): unknown {
 }
 
 const referenceLex = referenceLexer('createRadarServices', 'Radar');
-const peleLex = peleLexer(RADAR_TOKENS, lexRadar);
+const pelersLex = pelersLexer(RADAR_TOKENS, lexRadar);
 
 async function compare(src: string): Promise<void> {
-  expect(peleLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
+  expect(pelersLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
   let expected: unknown;
   let expectedError: string | undefined;
   try {
@@ -201,7 +201,7 @@ async function compare(src: string): Promise<void> {
   try {
     actual = tree(parseRadar(src));
   } catch (e) {
-    if (!(e instanceof PeleError)) throw e;
+    if (!(e instanceof PelersError)) throw e;
     actualError = e.message;
   }
   expect(actualError === undefined, `acceptance of ${JSON.stringify(src)}: ${expectedError ?? actualError}`).toBe(
@@ -212,8 +212,8 @@ async function compare(src: string): Promise<void> {
 
 describe('radar parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(RADAR_TOKENS)).toEqual(referenceTokens('createRadarServices', 'Radar'));
-    expect(peleLongerAlts(RADAR_TOKENS)).toEqual(referenceLongerAlts('createRadarServices', 'Radar'));
+    expect(pelersTokens(RADAR_TOKENS)).toEqual(referenceTokens('createRadarServices', 'Radar'));
+    expect(pelersLongerAlts(RADAR_TOKENS)).toEqual(referenceLongerAlts('createRadarServices', 'Radar'));
   });
 
   it('agrees on every spec and documentation input', async () => {

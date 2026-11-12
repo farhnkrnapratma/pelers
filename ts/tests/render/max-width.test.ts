@@ -95,8 +95,8 @@ describe('the maxWidth option', () => {
     expect(across.width).toBeGreaterThan(PHONE);
     expect(outline.width).toBeLessThanOrEqual(PHONE);
     expect(outline.height).toBeGreaterThan(across.height);
-    expect(outline.svg.match(/class="pele-node/g)?.length).toBe(across.svg.match(/class="pele-node/g)?.length);
-    expect(outline.svg.match(/class="pele-edge"/g)?.length).toBe(across.svg.match(/class="pele-edge"/g)?.length);
+    expect(outline.svg.match(/class="pelers-node/g)?.length).toBe(across.svg.match(/class="pelers-node/g)?.length);
+    expect(outline.svg.match(/class="pelers-edge"/g)?.length).toBe(across.svg.match(/class="pelers-edge"/g)?.length);
     // Every node starts further right than its parent, by the same step for each level.
     const lefts = [...outline.svg.matchAll(/data-id="([^"]*)" transform="translate\(([\d.]+),/g)].map((m) => m[1]);
     expect(lefts.length).toBeGreaterThan(5);
@@ -104,13 +104,13 @@ describe('the maxWidth option', () => {
     expect(render(map, { ...options, maxWidth: 700 }).svg).toBe(across.svg);
     assertInert(outline.svg, 'mindmap');
     // The root heads the outline as a pill, whatever round shape the source gave it. A box stays a box.
-    expect(across.svg).toMatch(/pele-shape-circle pele-root/);
-    expect(outline.svg).toMatch(/pele-shape-stadium pele-root/);
+    expect(across.svg).toMatch(/pelers-shape-circle pelers-root/);
+    expect(outline.svg).toMatch(/pelers-shape-stadium pelers-root/);
     expect(render(map.replace('root((Plan))', 'root)Plan('), { ...options, maxWidth: PHONE }).svg).toMatch(
-      /pele-shape-stadium pele-root/
+      /pelers-shape-stadium pelers-root/
     );
     expect(render(map.replace('root((Plan))', 'root[Plan]'), { ...options, maxWidth: PHONE }).svg).toMatch(
-      /pele-shape-rect pele-root/
+      /pelers-shape-rect pelers-root/
     );
     // A deep map keeps to the width by wrapping its labels.
     const deep =
@@ -128,7 +128,7 @@ describe('the maxWidth option', () => {
     const wide = render(board, options);
     const tops = (svg: string): number[] =>
       [
-        ...svg.matchAll(/class="pele-cluster pele-column" data-id="[^"]*" transform="translate\([\d.]+,([\d.]+)\)"/g),
+        ...svg.matchAll(/class="pelers-cluster pelers-column" data-id="[^"]*" transform="translate\([\d.]+,([\d.]+)\)"/g),
       ].map((m) => Number(m[1]));
     expect(new Set(tops(wide.svg)).size).toBe(1);
     const phone = render(board, { ...options, maxWidth: PHONE });
@@ -221,9 +221,9 @@ describe('the maxWidth option', () => {
     expect(loose.width).toBeGreaterThan(700);
     expect(tight.width).toBeLessThan(loose.width * 0.7);
     // The names that the arrows now run through are drawn over them.
-    expect(loose.svg).not.toContain('pele-cluster-title"');
-    expect(tight.svg.match(/class="pele-cluster-title"/g)?.length).toBe(2);
-    expect(tight.svg.indexOf('pele-cluster-titles')).toBeGreaterThan(tight.svg.indexOf('class="pele-edges"'));
+    expect(loose.svg).not.toContain('pelers-cluster-title"');
+    expect(tight.svg.match(/class="pelers-cluster-title"/g)?.length).toBe(2);
+    expect(tight.svg.indexOf('pelers-cluster-titles')).toBeGreaterThan(tight.svg.indexOf('class="pelers-edges"'));
     assertInert(tight.svg, 'class');
 
     const wide =
@@ -232,7 +232,7 @@ describe('the maxWidth option', () => {
     const closer = render(wide, { ...options, maxWidth: 700 });
     expect(natural.width).toBeGreaterThan(700);
     expect(closer.width).toBeLessThan(natural.width);
-    expect(closer.svg.match(/class="pele-node/g)?.length).toBe(natural.svg.match(/class="pele-node/g)?.length);
+    expect(closer.svg.match(/class="pelers-node/g)?.length).toBe(natural.svg.match(/class="pelers-node/g)?.length);
   });
 
   it('ignores a width that is not a positive number, and survives a tiny one', { timeout: 120000 }, () => {

@@ -764,13 +764,13 @@ function draw(model: BlockModel, config: Config, options: RenderOptions, tight: 
       if (paints(v.style.shape))
         fills.push({ box: [v.x - v.w / 2, top, v.x + v.w / 2, top + v.h], shape: v.style.shape });
       clusters +=
-        `<g class="pele-cluster${classes}" data-id="${id}">` +
+        `<g class="pelers-cluster${classes}" data-id="${id}">` +
         `<rect x="${num(v.x - v.w / 2)}" y="${num(top)}" width="${num(v.w)}" height="${num(v.h)}" fill="var(--_a)"${setsFill(v.style.shape) ? '' : ' fill-opacity="0.5"'} stroke="var(--_b)"${rounded(v.style.shape)}/>` +
         labelSvg(
           v.label,
           v.x,
           top + (v.head + gap) / 2 + 2,
-          ` class="pele-cluster-label"${inkFill(v.style, 'var(--_m)')}${v.style.text}`,
+          ` class="pelers-cluster-label"${inkFill(v.style, 'var(--_m)')}${v.style.text}`,
           icons
         ) +
         '</g>';
@@ -785,7 +785,7 @@ function draw(model: BlockModel, config: Config, options: RenderOptions, tight: 
       label = layoutLabel(v.block.label, false, measurer, v.label.size, room, textStyle);
     }
     nodes +=
-      `<g class="pele-node pele-shape-${arrow ? 'block-arrow' : v.shape}${classes}" data-id="${id}" transform="translate(${num(v.x)},${num(v.y)})">` +
+      `<g class="pelers-node pelers-shape-${arrow ? 'block-arrow' : v.shape}${classes}" data-id="${id}" transform="translate(${num(v.x)},${num(v.y)})">` +
       (arrow
         ? drawArrow(v.mask, v.bw, v.bh, SHAPE_ATTRS + v.style.shape)
         : drawShape(v.shape, v.bw, v.bh, SHAPE_ATTRS + v.style.shape, LINE_ATTRS + v.style.line)) +
@@ -793,7 +793,7 @@ function draw(model: BlockModel, config: Config, options: RenderOptions, tight: 
         label,
         v.dx,
         v.dy,
-        ` class="pele-label"${arrow || shapeFilled(v.shape) ? inkFill(v.style) : ''}${v.style.text}`,
+        ` class="pelers-label"${arrow || shapeFilled(v.shape) ? inkFill(v.style) : ''}${v.style.text}`,
         icons
       ) +
       '</g>';
@@ -820,7 +820,7 @@ function draw(model: BlockModel, config: Config, options: RenderOptions, tight: 
     if (over === '') casings += edgeCasing(path, startType, endType, '', edge.thickness === 'thick');
     const id = escText(edge.id);
     edges +=
-      `<g class="pele-edge" data-id="${id}"${over ? ` stroke="${over}"` : ''}>` +
+      `<g class="pelers-edge" data-id="${id}"${over ? ` stroke="${over}"` : ''}>` +
       `<path d="${path.d}"${edge.thickness === 'thick' ? ' stroke-width="2.5"' : ''}${edge.pattern === 'dotted' ? ' stroke-dasharray="3 4"' : ''}/>` +
       marker(startType, path.sx, path.sy, path.sdx, path.sdy, over || 'var(--_l)') +
       marker(endType, path.ex, path.ey, path.edx, path.edy, over || 'var(--_l)') +
@@ -839,12 +839,12 @@ function draw(model: BlockModel, config: Config, options: RenderOptions, tight: 
     size,
     options,
     model,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edges ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edges}</g>` : '') +
-      `<g class="pele-nodes">${nodes}</g>` +
-      (labels ? `<g class="pele-edge-labels" font-size="${edgeSize}">${labels}</g>` : '')
+      (edges ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edges}</g>` : '') +
+      `<g class="pelers-nodes">${nodes}</g>` +
+      (labels ? `<g class="pelers-edge-labels" font-size="${edgeSize}">${labels}</g>` : '')
   );
 
   return { svg, width, height, links: [] };

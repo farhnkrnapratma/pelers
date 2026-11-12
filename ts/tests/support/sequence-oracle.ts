@@ -23,7 +23,7 @@ export function oracleTokens(src: string): Pair[] {
   return oracle.tokens(src, recorder().yy);
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -38,7 +38,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls: snapshot(calls), error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseSequence(src, yy as unknown as SeqBuilder);
@@ -48,7 +48,7 @@ export function peleParse(src: string): Outcome {
   }
 }
 
-// Match Pele: comments leave the preceding character intact.
+// Match Pelers: comments leave the preceding character intact.
 {
   const rules = (oracle.parser.lexer as unknown as { rules: RegExp[] }).rules;
   const comments = rules.filter((rule) => rule.source === String.raw`^(?:[^\}]%%[^\n]*)`);
@@ -56,7 +56,7 @@ export function peleParse(src: string): Outcome {
   rules[rules.indexOf(comments[0])] = /(?!)/;
 }
 
-// Match Pele: titles stay on one line; bare titles are ignored.
+// Match Pelers: titles stay on one line; bare titles are ignored.
 {
   const lexer = oracle.parser.lexer as unknown as {
     rules: RegExp[];

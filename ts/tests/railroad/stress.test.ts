@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/common/tokens.js';
 import { ABNF_TOKENS } from '../../src/diagrams/railroad/abnf.js';
 import { EBNF_TOKENS } from '../../src/diagrams/railroad/ebnf.js';
@@ -129,7 +129,7 @@ describe('railroad worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },

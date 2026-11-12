@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SankeyModel } from '../../src/diagrams/sankey/db.js';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed } from '../support/xml.js';
@@ -22,7 +22,7 @@ function count(svg: string, pattern: RegExp): number {
 }
 
 function attr(svg: string, id: string, name: string): string {
-  return new RegExp(`class="pele-sankey-node" data-id="${id}"[^>]* ${name}="([^"]*)"`).exec(svg)![1];
+  return new RegExp(`class="pelers-sankey-node" data-id="${id}"[^>]* ${name}="([^"]*)"`).exec(svg)![1];
 }
 
 describe('sankey rendering', () => {
@@ -33,7 +33,7 @@ describe('sankey rendering', () => {
       try {
         svg = render(src, options).svg;
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
+        expect(error).toBeInstanceOf(PelersError);
         continue;
       }
       rendered++;
@@ -52,19 +52,19 @@ describe('sankey rendering', () => {
     expect(type).toBe('sankey');
     expect(supports('sankey\na,b,1')).toBe(true);
     expect(supports('sankey-beta\na,b,1')).toBe(true);
-    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-sankey"/);
-    expect(count(svg, /class="pele-sankey-node"/g)).toBe(4);
-    expect(count(svg, /class="pele-sankey-link"/g)).toBe(4);
-    expect(count(svg, /class="pele-label"/g)).toBe(4);
+    expect(svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-sankey"/);
+    expect(count(svg, /class="pelers-sankey-node"/g)).toBe(4);
+    expect(count(svg, /class="pelers-sankey-link"/g)).toBe(4);
+    expect(count(svg, /class="pelers-label"/g)).toBe(4);
     expect(svg).toContain('data-id="a-&gt;b"');
     expect(svg).toContain('<title>a → b: 5</title>');
   });
 
   it('colors bars by series, in the order nodes first appear', () => {
     const { svg } = render(BASIC, options);
-    expect(attr(svg, 'a', 'fill')).toBe('var(--pele-series-1,#4c78a8)');
-    expect(attr(svg, 'b', 'fill')).toBe('var(--pele-series-2,#f58518)');
-    expect(attr(svg, 'd', 'fill')).toBe('var(--pele-series-4,#e45756)');
+    expect(attr(svg, 'a', 'fill')).toBe('var(--pelers-series-1,#4c78a8)');
+    expect(attr(svg, 'b', 'fill')).toBe('var(--pelers-series-2,#f58518)');
+    expect(attr(svg, 'd', 'fill')).toBe('var(--pelers-series-4,#e45756)');
   });
 
   it('has the default size of 600 by 400 plus padding', () => {
@@ -82,7 +82,7 @@ describe('sankey rendering', () => {
 
   it('shows values with two decimals, a prefix and a suffix, unless showValues is off', () => {
     const shown = render(BASIC, options).svg;
-    expect(shown).toContain('>a <tspan class="pele-sankey-value" fill="var(--_m)">8</tspan><');
+    expect(shown).toContain('>a <tspan class="pelers-sankey-value" fill="var(--_m)">8</tspan><');
     expect(shown).toContain('>5.24</tspan>');
     const money = render(configured('prefix: "$"\nsuffix: " M"'), options).svg;
     expect(money).toContain('>$8 M</tspan>');
@@ -91,7 +91,7 @@ describe('sankey rendering', () => {
     expect(coded).toContain('>€8 &amp;lt;</tspan>');
     expect(coded).toContain('<title>a → b: €5 &amp;lt;</title>');
     const hidden = render(configured('showValues: false'), options).svg;
-    expect(hidden).not.toContain('pele-sankey-value');
+    expect(hidden).not.toContain('pelers-sankey-value');
     expect(hidden).toContain('>a</text>');
   });
 
@@ -118,18 +118,18 @@ describe('sankey rendering', () => {
   });
 
   it('honours linkColor', () => {
-    const link = (svg: string): string => /class="pele-sankey-link" data-id="a-&gt;b"[^>]*/.exec(svg)![0];
+    const link = (svg: string): string => /class="pelers-sankey-link" data-id="a-&gt;b"[^>]*/.exec(svg)![0];
     // Without an idPrefix, gradient links take their source's colour.
-    expect(link(render(BASIC, options).svg)).toContain('fill="var(--pele-series-1,#4c78a8)"');
+    expect(link(render(BASIC, options).svg)).toContain('fill="var(--pelers-series-1,#4c78a8)"');
     expect(link(render(configured('linkColor: gradient'), options).svg)).toContain(
-      'fill="var(--pele-series-1,#4c78a8)"'
+      'fill="var(--pelers-series-1,#4c78a8)"'
     );
-    expect(link(render(configured('linkColor: source'), options).svg)).toContain('fill="var(--pele-series-1,#4c78a8)"');
-    expect(link(render(configured('linkColor: target'), options).svg)).toContain('fill="var(--pele-series-2,#f58518)"');
+    expect(link(render(configured('linkColor: source'), options).svg)).toContain('fill="var(--pelers-series-1,#4c78a8)"');
+    expect(link(render(configured('linkColor: target'), options).svg)).toContain('fill="var(--pelers-series-2,#f58518)"');
     expect(link(render(configured('linkColor: "#a1a1a1"'), options).svg)).toContain('style="fill:#a1a1a1;"');
     expect(link(render(configured('linkColor: "url(#x)"'), options).svg)).not.toContain('style=');
     expect(render(BASIC, options).svg).not.toMatch(/<defs|<linearGradient|url\(/);
-    expect(render(BASIC, options).svg).toContain('class="pele-sankey-links" fill-opacity="0.4"');
+    expect(render(BASIC, options).svg).toContain('class="pelers-sankey-links" fill-opacity="0.4"');
   });
 
   it('fills links with gradients when there is an idPrefix', () => {
@@ -137,12 +137,12 @@ describe('sankey rendering', () => {
     assertWellFormed(svg);
     expect(count(svg, /<linearGradient /g)).toBe(4);
     const ab =
-      /class="pele-sankey-link" data-id="a-&gt;b"[^>]* fill="url\(#(p1-sankey-[a-z0-9]+)\) var\(--pele-series-1,#4c78a8\)"/.exec(
+      /class="pelers-sankey-link" data-id="a-&gt;b"[^>]* fill="url\(#(p1-sankey-[a-z0-9]+)\) var\(--pelers-series-1,#4c78a8\)"/.exec(
         svg
       )!;
     expect(svg).toMatch(
       new RegExp(
-        `<linearGradient id="${ab[1]}" gradientUnits="userSpaceOnUse" x1="[\\d.]+" x2="[\\d.]+"><stop offset="0" stop-color="var\\(--pele-series-1,#4c78a8\\)"/><stop offset="1" stop-color="var\\(--pele-series-2,#f58518\\)"/></linearGradient>`
+        `<linearGradient id="${ab[1]}" gradientUnits="userSpaceOnUse" x1="[\\d.]+" x2="[\\d.]+"><stop offset="0" stop-color="var\\(--pelers-series-1,#4c78a8\\)"/><stop offset="1" stop-color="var\\(--pelers-series-2,#f58518\\)"/></linearGradient>`
       )
     );
     expect(render(BASIC, { ...options, idPrefix: 'p1' }).svg).toBe(svg);
@@ -158,7 +158,7 @@ describe('sankey rendering', () => {
     const { svg } = render(configured('nodeColors:\n  a: "#123456"\n  b: "url(#x)"'), { ...options, idPrefix: 'p_1' });
     assertWellFormed(svg);
     expect(svg).toContain(
-      '<stop offset="0" stop-color="#123456"/><stop offset="1" stop-color="var(--pele-series-2,#f58518)"/>'
+      '<stop offset="0" stop-color="#123456"/><stop offset="1" stop-color="var(--pelers-series-2,#f58518)"/>'
     );
     expect(svg).toMatch(/data-id="a-&gt;b"[^>]* fill="url\(#p_1-sankey-[a-z0-9]+\) #123456"/);
     expect(svg).not.toContain('url(#x)');
@@ -175,7 +175,7 @@ describe('sankey rendering', () => {
     for (const idPrefix of ['p"1', 'p)1', 'p 1', '']) {
       const { svg } = render(BASIC, { ...options, idPrefix });
       expect(svg, idPrefix).not.toMatch(/<defs|url\(/);
-      expect(svg, idPrefix).toMatch(/data-id="a-&gt;b"[^>]* fill="var\(--pele-series-1,#4c78a8\)"/);
+      expect(svg, idPrefix).toMatch(/data-id="a-&gt;b"[^>]* fill="var\(--pelers-series-1,#4c78a8\)"/);
     }
   });
 
@@ -185,8 +185,8 @@ describe('sankey rendering', () => {
       configured('linkColor: source\nnodeColors:\n  a: "#123456"\n  d: "url(#x)"\n  __proto__: red'),
       options
     ).svg;
-    expect(colored).toMatch(/class="pele-sankey-node" data-id="a"[^>]*style="fill:#123456;"/);
-    expect(colored).toMatch(/class="pele-sankey-link" data-id="a-&gt;b"[^>]*style="fill:#123456;"/);
+    expect(colored).toMatch(/class="pelers-sankey-node" data-id="a"[^>]*style="fill:#123456;"/);
+    expect(colored).toMatch(/class="pelers-sankey-link" data-id="a-&gt;b"[^>]*style="fill:#123456;"/);
     expect(colored).not.toContain('url(');
     const legacy = render(BASIC, options).svg;
     const outlined = render(configured('labelStyle: outlined'), options);
@@ -226,8 +226,8 @@ Upgraded to Pro,Stayed on Pro,284`;
       expect(a[1] <= b[0] || b[1] <= a[0] || Math.abs(a[2] - b[2]) >= Math.round(fontSize * 0.875) * 1.5).toBe(true);
       expect(svg).toContain('>1450</tspan>');
       const hidden = render(configured('showValues: false', source), { ...options, fontSize }).svg;
-      expect([...svg.matchAll(/class="pele-sankey-node"[^>]* x="([^"]+)"/g)].map((m) => m[1])).toEqual(
-        [...hidden.matchAll(/class="pele-sankey-node"[^>]* x="([^"]+)"/g)].map((m) => m[1])
+      expect([...svg.matchAll(/class="pelers-sankey-node"[^>]* x="([^"]+)"/g)].map((m) => m[1])).toEqual(
+        [...hidden.matchAll(/class="pelers-sankey-node"[^>]* x="([^"]+)"/g)].map((m) => m[1])
       );
     }
   });
@@ -240,7 +240,7 @@ Upgraded to Pro,Stayed on Pro,284`;
     const label = Number(/data-id="E"><text x="[\d.]+" y="([\d.]+)"/.exec(svg)![1]) - Math.round(16 * 0.875) * 0.35;
     const bar = (id: string): [number, number] => {
       const m = new RegExp(
-        `class="pele-sankey-node" data-id="${id}" x="[^"]+" y="([^"]+)" width="[^"]+" height="([^"]+)"`
+        `class="pelers-sankey-node" data-id="${id}" x="[^"]+" y="([^"]+)" width="[^"]+" height="([^"]+)"`
       ).exec(svg)!;
       return [Number(m[1]), Number(m[1]) + Number(m[2])];
     };
@@ -249,7 +249,7 @@ Upgraded to Pro,Stayed on Pro,284`;
   });
 
   it('shrinks labels in narrow or crowded charts, down to 10px', () => {
-    const labelSize = (svg: string): number => Number(/class="pele-labels" font-size="(\d+)"/.exec(svg)![1]);
+    const labelSize = (svg: string): number => Number(/class="pelers-labels" font-size="(\d+)"/.exec(svg)![1]);
     const fan = (n: number): string => 'sankey\n' + Array.from({ length: n }, (_, i) => `s${i},t,1\n`).join('');
     expect(labelSize(render(BASIC, options).svg)).toBe(14);
     expect(labelSize(render(fan(20), options).svg)).toBe(11);
@@ -346,14 +346,14 @@ Upgraded to Pro,Stayed on Pro,284`;
 
     it(`rejects malformed CSV containing Unicode names in ${keyword}`, () => {
       for (const row of ['Доход,Расходы', 'Доход,Расходы,1,2', '"Доход,Расходы,1', '"Доход"x,Расходы,1', 'Доход,,1']) {
-        expect(() => parse(`${keyword}\n${row}\n`), row).toThrow(PeleError);
+        expect(() => parse(`${keyword}\n${row}\n`), row).toThrow(PelersError);
       }
     });
 
     it(`rejects control characters and invalid Unicode in names in ${keyword}`, () => {
       for (const c of ['\x00', '\x01', '\t', '\x1f', '\x7f', '\x80', '\x9f', '\ud800', '\udfff', '\ufffe', '\uffff']) {
         for (const name of [`a${c}b`, `"a${c}b"`]) {
-          expect(() => parse(`${keyword}\n${name},c,1\n`), JSON.stringify(name)).toThrow(PeleError);
+          expect(() => parse(`${keyword}\n${name},c,1\n`), JSON.stringify(name)).toThrow(PelersError);
         }
       }
     });
@@ -365,7 +365,7 @@ Upgraded to Pro,Stayed on Pro,284`;
             const src = `${keyword}\n${row}\n`;
             expect(() => parse(src), src).toThrow(/Invalid XML character in node name/);
             for (const labelStyle of ['normal', 'outlined']) {
-              expect(() => render(configured(`labelStyle: ${labelStyle}`, src), options), src).toThrow(PeleError);
+              expect(() => render(configured(`labelStyle: ${labelStyle}`, src), options), src).toThrow(PelersError);
             }
           }
         }
@@ -401,14 +401,14 @@ Upgraded to Pro,Stayed on Pro,284`;
   it('draws the front matter title', () => {
     const plain = render(BASIC, options);
     const titled = render(`---\ntitle: Energy flows\n---\n${BASIC}`, options);
-    expect(titled.svg).toContain('class="pele-title"');
+    expect(titled.svg).toContain('class="pelers-title"');
     expect(titled.svg).toContain('>Energy flows<');
     expect(titled.height).toBeGreaterThan(plain.height);
   });
 
   it('rejects circular links at render time, as d3-sankey fails on them', () => {
     expect(() => render('sankey\na,b,1\nb,c,1\nc,a,1\n', options)).toThrow(/circular links.*"[abc]" is part of one/);
-    expect(() => render('sankey\na,a,1\n', options)).toThrow(PeleError);
+    expect(() => render('sankey\na,a,1\n', options)).toThrow(PelersError);
     expect(parse('sankey\na,b,1\nb,a,1\n').type).toBe('sankey');
   });
 
@@ -421,7 +421,7 @@ Upgraded to Pro,Stayed on Pro,284`;
       'sankey\n"",b,1\n',
       'sankey x\na,b,1\n',
     ]) {
-      expect(() => render(src, options), src).toThrow(PeleError);
+      expect(() => render(src, options), src).toThrow(PelersError);
     }
     expect(() => render('sankey\na,b\n', options)).toThrow(
       /Expecting 'COMMA', 'NEWLINE', 'EOF', got 'EOF'|Expecting 'COMMA'/
@@ -463,7 +463,7 @@ Upgraded to Pro,Stayed on Pro,284`;
   it('draws non-positive values as empty flows', () => {
     const { svg } = render('sankey\na,b,0\na,c,-3\nb,d,0\nc,d,2\n', options);
     expect(svg).not.toContain('NaN');
-    expect(count(svg, /class="pele-sankey-link"/g)).toBe(4);
+    expect(count(svg, /class="pelers-sankey-link"/g)).toBe(4);
     expect(svg).toContain('<title>a → b: 0</title>');
   });
 });

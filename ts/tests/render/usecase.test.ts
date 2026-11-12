@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed } from '../support/xml.js';
@@ -11,7 +11,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -22,7 +22,7 @@ const count = (svg: string, needle: string): number => svg.split(needle).length 
 // Where a node was put, from the translate of its group.
 function at(svg: string, id: string): { x: number; y: number } {
   const m = new RegExp(
-    `<g class="pele-node [^"]*" data-id="${id}" transform="translate\\(([-\\d.]+),([-\\d.]+)\\)"`
+    `<g class="pelers-node [^"]*" data-id="${id}" transform="translate\\(([-\\d.]+),([-\\d.]+)\\)"`
   ).exec(svg);
   if (!m) throw new Error(`no node ${id}`);
   return { x: Number(m[1]), y: Number(m[2]) };
@@ -31,7 +31,7 @@ function at(svg: string, id: string): { x: number; y: number } {
 function nodeGroup(svg: string, id: string): string {
   const start = svg.indexOf(`data-id="${id}" transform=`);
   if (start === -1) throw new Error(`no node ${id}`);
-  return svg.slice(svg.lastIndexOf('<g class="pele-node', start), svg.indexOf('<g class="pele-node', start + 1) >>> 0);
+  return svg.slice(svg.lastIndexOf('<g class="pelers-node', start), svg.indexOf('<g class="pelers-node', start + 1) >>> 0);
 }
 
 function ellipse(svg: string, id: string): { x: number; y: number; rx: number; ry: number } {
@@ -43,7 +43,7 @@ function ellipse(svg: string, id: string): { x: number; y: number; rx: number; r
 // The rectangles of a boundary: its body, and before it the title tab of a package.
 function boundary(svg: string, id: string): { x: number; y: number; w: number; h: number }[] {
   const tag = svg.indexOf(`data-id="${id}">`);
-  const group = svg.slice(svg.lastIndexOf('<g class="pele-cluster', tag), svg.indexOf('</g>', tag));
+  const group = svg.slice(svg.lastIndexOf('<g class="pelers-cluster', tag), svg.indexOf('</g>', tag));
   return [...group.matchAll(/<rect[^>]*? x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g)].map(
     (m) => ({
       x: Number(m[1]),
@@ -56,7 +56,7 @@ function boundary(svg: string, id: string): { x: number; y: number; w: number; h
 
 function edges(svg: string): { id: string; classes: string; d: string; body: string }[] {
   return [
-    ...svg.matchAll(/<g class="pele-edge ([^"]*)" data-id="([^"]*)"[^>]*><path d="([^"]+)"([^>]*)\/>(.*?)<\/g>/g),
+    ...svg.matchAll(/<g class="pelers-edge ([^"]*)" data-id="([^"]*)"[^>]*><path d="([^"]+)"([^>]*)\/>(.*?)<\/g>/g),
   ].map((m) => ({
     classes: m[1],
     id: m[2],
@@ -93,7 +93,7 @@ describe('use case diagram rendering', () => {
     expect(supports(src)).toBe(true);
     const result = render(src, options);
     expect(result.type).toBe('usecase');
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-usecase"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-usecase"/);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     expect(result.links).toEqual([]);
     const model = parse(src);
@@ -125,12 +125,12 @@ describe('use case diagram rendering', () => {
       'actor N("Normal one")\nactor H@{ type: hollow }\nactor W@{ type: awesome }\nactor I@{ icon: "fa:user" }'
     );
     const normal = nodeGroup(svg, 'N');
-    expect(normal).toContain('class="pele-node pele-actor usecase-actor usecase-actor-normal"');
+    expect(normal).toContain('class="pelers-node pelers-actor usecase-actor usecase-actor-normal"');
     expect(normal).toContain('<circle cy="-21" r="9"');
     expect(normal).toContain('M0,-12V10M-14,-3H14M0,10L-12,30M0,10L12,30');
     expect(normal).toContain('>Normal one</text>');
-    const figureY = Number(/pele-actor-figure" transform="translate\(0,([-\d.]+)\)/.exec(normal)![1]);
-    const labelY = Number(/<text class="pele-label" x="0" y="([-\d.]+)"/.exec(normal)![1]);
+    const figureY = Number(/pelers-actor-figure" transform="translate\(0,([-\d.]+)\)/.exec(normal)![1]);
+    const labelY = Number(/<text class="pelers-label" x="0" y="([-\d.]+)"/.exec(normal)![1]);
     expect(labelY).toBeGreaterThan(figureY + 30);
 
     const hollow = nodeGroup(svg, 'H');
@@ -140,7 +140,7 @@ describe('use case diagram rendering', () => {
     expect(awesome).toContain('fill="var(--_b)"');
     expect(awesome).not.toContain('<circle');
     const icon = nodeGroup(svg, 'I');
-    expect(icon).toContain('<svg class="pele-icon" data-icon="fa:user"');
+    expect(icon).toContain('<svg class="pelers-icon" data-icon="fa:user"');
     expect(icon).toContain('<rect x="-22" y="-26" width="44" height="44"');
   });
 
@@ -157,13 +157,13 @@ describe('use case diagram rendering', () => {
     const svg = svgOf(
       'actor A@{ business: true }\nactor B@{ type: hollow, business: true }\nU(Use)@{ business: true }\nV(Plain)'
     );
-    expect(count(nodeGroup(svg, 'A'), 'class="pele-business"')).toBe(1);
-    expect(count(nodeGroup(svg, 'B'), 'class="pele-business"')).toBe(1);
-    expect(count(nodeGroup(svg, 'U'), 'class="pele-business"')).toBe(1);
-    expect(count(nodeGroup(svg, 'V'), 'class="pele-business"')).toBe(0);
+    expect(count(nodeGroup(svg, 'A'), 'class="pelers-business"')).toBe(1);
+    expect(count(nodeGroup(svg, 'B'), 'class="pelers-business"')).toBe(1);
+    expect(count(nodeGroup(svg, 'U'), 'class="pelers-business"')).toBe(1);
+    expect(count(nodeGroup(svg, 'V'), 'class="pelers-business"')).toBe(0);
     // The slash of a use case runs between two points on its oval.
     const { rx, ry } = ellipse(svg, 'U');
-    const [x1, y1, x2, y2] = ends(/class="pele-business" d="([^"]+)"/.exec(nodeGroup(svg, 'U'))![1]);
+    const [x1, y1, x2, y2] = ends(/class="pelers-business" d="([^"]+)"/.exec(nodeGroup(svg, 'U'))![1]);
     for (const [x, y] of [
       [x1, y1],
       [x2, y2],
@@ -176,7 +176,7 @@ describe('use case diagram rendering', () => {
   it('draws use cases as ovals, and as boxes when written with brackets', () => {
     const svg = svgOf('Login("Sign in")\nReport[Generate report]\n"Reset password"');
     const oval = nodeGroup(svg, 'Login');
-    expect(oval).toContain('class="pele-node pele-usecase usecase-element usecase-ellipse"');
+    expect(oval).toContain('class="pelers-node pelers-usecase usecase-element usecase-ellipse"');
     expect(count(oval, '<ellipse')).toBe(1);
     expect(oval).toContain('>Sign in</text>');
     const box = nodeGroup(svg, 'Report');
@@ -195,17 +195,17 @@ describe('use case diagram rendering', () => {
     const y = (group: string, cls: string): number =>
       Number(new RegExp(`<text class="${cls}"[^>]* y="([-\\d.]+)"`).exec(group)![1]);
     expect(useCase).toContain('>«Core»</text>');
-    expect(y(useCase, 'pele-stereotype')).toBeLessThan(y(useCase, 'pele-label'));
+    expect(y(useCase, 'pelers-stereotype')).toBeLessThan(y(useCase, 'pelers-label'));
     const actor = nodeGroup(svg, 'A');
     expect(actor).toContain('>«Human»</text>');
-    expect(y(actor, 'pele-stereotype')).toBeLessThan(y(actor, 'pele-label'));
-    expect(y(actor, 'pele-stereotype')).toBeGreaterThan(0);
+    expect(y(actor, 'pelers-stereotype')).toBeLessThan(y(actor, 'pelers-label'));
+    expect(y(actor, 'pelers-stereotype')).toBeGreaterThan(0);
   });
 
   it('draws a boundary around its members and leaves the rest outside', () => {
     const svg = svgOf('actor User\nsystemBoundary Shop["The shop"]\n  Browse\n  actor Clerk\nend\nUser --> Browse');
     const [box] = boundary(svg, 'Shop');
-    expect(svg).toContain('<g class="pele-cluster pele-boundary system-boundary system-boundary-rect" data-id="Shop">');
+    expect(svg).toContain('<g class="pelers-cluster pelers-boundary system-boundary system-boundary-rect" data-id="Shop">');
     expect(svg).toContain('>The shop</text>');
     const inside = (id: string): boolean => {
       const p = at(svg, id);
@@ -234,34 +234,34 @@ describe('use case diagram rendering', () => {
       'actor A <<Human>>\nU(Use) <<Core>>\nW(Own)\nX(Plain)\njson J@{ "k": "v" }\nsystemBoundary S\n  V\nend\nstyle U fill:#1f3a5f\nstyle A fill:#1f3a5f\nstyle W fill:#1f3a5f,color:#eee\nstyle J fill:navy\nstyle S fill:#FFF9C4'
     );
     const node = (id: string): string => new RegExp(`data-id="${id}"[^>]*>(.*?)</g>(?:<g|</g>)`).exec(svg)![1];
-    expect(node('U')).toMatch(/<text class="pele-stereotype"[^>]* fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(node('U')).toMatch(/<text class="pele-label" fill="var\(--pele-fg-on-dark,#fff\)"[^>]*>Use</);
-    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pele-stereotype"[^>]* fill="var\(--_m\)"/);
-    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pele-label" x=[^>]*>A</);
-    expect(node('W')).not.toContain('--pele-fg-on');
-    expect(node('J')).toMatch(/<text class="pele-json-key" fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(node('J')).toMatch(/<text class="pele-json-value" fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(svg).toMatch(/data-id="S">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(node('X')).not.toContain('--pele-fg-on');
+    expect(node('U')).toMatch(/<text class="pelers-stereotype"[^>]* fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(node('U')).toMatch(/<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Use</);
+    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pelers-stereotype"[^>]* fill="var\(--_m\)"/);
+    expect(svg).toMatch(/data-id="A"[^>]*>.*?<text class="pelers-label" x=[^>]*>A</);
+    expect(node('W')).not.toContain('--pelers-fg-on');
+    expect(node('J')).toMatch(/<text class="pelers-json-key" fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(node('J')).toMatch(/<text class="pelers-json-value" fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(svg).toMatch(/data-id="S">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(node('X')).not.toContain('--pelers-fg-on');
   });
 
   it('cases edges that cross a boundary fill a style sets and inks those inside it', () => {
     const src =
       'actor User\nsystemBoundary S\n  Pay\n  Ship\nend\nPay --> Ship\nUser --> Pay\nUser --> Other\nstyle S fill:#BBDEFB';
     const svg = svgOf(src);
-    const casings = /<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
-    const edges = [...svg.matchAll(/class="pele-edge [^"]*" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
+    const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const edges = [...svg.matchAll(/class="pelers-edge [^"]*" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
       m[1],
       m[2],
     ]);
     expect(edges).toHaveLength(3);
     // Pay --> Ship lies inside the boundary and takes its ink; User --> Pay crosses into it.
     expect(edges.map(([, d]) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false]);
-    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pele-fg-on-light,#1f1f1f)"', '', '']);
-    expect(svgOf(src.replace('\nstyle S fill:#BBDEFB', ''))).not.toMatch(/pele-casings|stroke="var\(--pele-fg-on/);
+    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pelers-fg-on-light,#1f1f1f)"', '', '']);
+    expect(svgOf(src.replace('\nstyle S fill:#BBDEFB', ''))).not.toMatch(/pelers-casings|stroke="var\(--pelers-fg-on/);
     // A hollow triangle keeps the fill's color inside it.
     const hollow = svgOf('systemBoundary S\n  Pay\n  Ship\nend\nPay --|> Ship\nstyle S fill:black');
-    expect(hollow).toMatch(/class="pele-marker"[^>]* fill="black" stroke="var\(--pele-fg-on-dark,#fff\)"/);
+    expect(hollow).toMatch(/class="pelers-marker"[^>]* fill="black" stroke="var\(--pelers-fg-on-dark,#fff\)"/);
   });
 
   it('puts an actor that is pointed at on the far side of the boundary', () => {
@@ -275,11 +275,11 @@ describe('use case diagram rendering', () => {
     const svg = svgOf('systemBoundary P["Payments"]@{ type: package }\n  Pay\nend');
     const [tab, body] = boundary(svg, 'P');
     expect(svg).toContain('system-boundary-package');
-    expect(svg).toContain('class="pele-boundary-tab"');
+    expect(svg).toContain('class="pelers-boundary-tab"');
     expect(tab.x).toBe(body.x);
     expect(tab.y + tab.h).toBeCloseTo(body.y, 1);
     expect(tab.w).toBeLessThan(body.w);
-    const title = /<text class="pele-cluster-label"[^>]* x="([-\d.]+)" y="([-\d.]+)"/.exec(svg)!;
+    const title = /<text class="pelers-cluster-label"[^>]* x="([-\d.]+)" y="([-\d.]+)"/.exec(svg)!;
     expect(Number(title[1])).toBeGreaterThan(tab.x);
     expect(Number(title[1])).toBeLessThan(tab.x + tab.w);
     expect(Number(title[2])).toBeLessThan(body.y);
@@ -290,7 +290,7 @@ describe('use case diagram rendering', () => {
     const svg = svgOf('A a@--> B\nA b@<-- B\nA c@-- B\nA d@--o B\nA e@o-- B\nA f@--x B\nA g@x-- B');
     const byId = new Map(edges(svg).map((e) => [e.id, e.body]));
     const kinds = (id: string): string[] =>
-      [...byId.get(id)!.matchAll(/<(path|circle) class="pele-marker"/g)].map((m) => m[1]);
+      [...byId.get(id)!.matchAll(/<(path|circle) class="pelers-marker"/g)].map((m) => m[1]);
     expect(kinds('a')).toEqual(['path']);
     expect(kinds('b')).toEqual(['path']);
     expect(kinds('c')).toEqual([]);
@@ -308,7 +308,7 @@ describe('use case diagram rendering', () => {
     const svg = svgOf('A a@--> B\nC b@<-- D');
     const tip = (id: string): number => {
       const body = edges(svg).find((e) => e.id === id)!.body;
-      return Number(/class="pele-marker" d="M([-\d.]+),/.exec(body)![1]);
+      return Number(/class="pelers-marker" d="M([-\d.]+),/.exec(body)![1]);
     };
     expect(Math.abs(tip('a') - at(svg, 'B').x)).toBeLessThan(Math.abs(tip('a') - at(svg, 'A').x));
     expect(Math.abs(tip('b') - at(svg, 'C').x)).toBeLessThan(Math.abs(tip('b') - at(svg, 'D').x));
@@ -317,35 +317,35 @@ describe('use case diagram rendering', () => {
   it('draws include and extend dashed, with an arrow and their name in guillemets', () => {
     const svg = svgOf('A i@..> : include B\nC e@..> : EXTEND D');
     const [include, extend] = edges(svg);
-    expect(include.classes).toBe('pele-include');
-    expect(extend.classes).toBe('pele-extend');
+    expect(include.classes).toBe('pelers-include');
+    expect(extend.classes).toBe('pelers-extend');
     for (const edge of [include, extend]) {
       expect(edge.body).toContain('stroke-dasharray="5 4"');
-      expect(count(edge.body, 'class="pele-marker"')).toBe(1);
+      expect(count(edge.body, 'class="pelers-marker"')).toBe(1);
     }
     expect(svg).toContain('>«include»</text>');
     expect(svg).toContain('>«extend»</text>');
-    expect(count(svg, 'class="pele-edge-label"')).toBe(2);
+    expect(count(svg, 'class="pelers-edge-label"')).toBe(2);
   });
 
   it('draws a generalization as a solid line with a hollow triangle', () => {
     const svg = svgOf('actor Admin\nactor Person\nAdmin --|> Person');
     const [edge] = edges(svg);
-    expect(edge.classes).toBe('pele-generalization');
+    expect(edge.classes).toBe('pelers-generalization');
     expect(edge.body).not.toContain('stroke-dasharray');
     expect(edge.body).toMatch(
-      /<path class="pele-marker" d="M[-\d.]+,[-\d.]+L[-\d.]+,[-\d.]+L[-\d.]+,[-\d.]+Z" fill="var\(--_bg\)" stroke="var\(--_l\)"/
+      /<path class="pelers-marker" d="M[-\d.]+,[-\d.]+L[-\d.]+,[-\d.]+L[-\d.]+,[-\d.]+Z" fill="var\(--_bg\)" stroke="var\(--_l\)"/
     );
     // The line stops at the base of the triangle, not at its tip.
     const [, , ex] = ends(edge.d);
-    const tip = Number(/class="pele-marker" d="M([-\d.]+),/.exec(edge.body)![1]);
+    const tip = Number(/class="pelers-marker" d="M([-\d.]+),/.exec(edge.body)![1]);
     expect(tip - ex).toBeCloseTo(12, 0);
   });
 
   it('labels an association and keeps the label off the nodes', () => {
     const svg = svgOf('actor User\nUser -- "starts a session" --> Login');
     expect(svg).toContain('>starts a session</text>');
-    const m = /<g class="pele-edge-label" data-id="edge-0"><rect x="([-\d.]+)" y="[-\d.]+" width="([\d.]+)"/.exec(svg)!;
+    const m = /<g class="pelers-edge-label" data-id="edge-0"><rect x="([-\d.]+)" y="[-\d.]+" width="([\d.]+)"/.exec(svg)!;
     const left = Number(m[1]);
     const right = left + Number(m[2]);
     const login = ellipse(svg, 'Login');
@@ -393,7 +393,7 @@ describe('use case diagram rendering', () => {
       const [edge] = edges(svg);
       expect(edge.d).toMatch(/^M[-\d.,]+C[-\d., ]+$/);
       const { x, y, rx, ry } = ellipse(svg, 'Login');
-      const label = /<g class="pele-edge-label" data-id="loop"><rect x="([-\d.]+)" y="([-\d.]+)"/.exec(svg)!;
+      const label = /<g class="pelers-edge-label" data-id="loop"><rect x="([-\d.]+)" y="([-\d.]+)"/.exec(svg)!;
       if (dir === 'LR') expect(Number(label[2])).toBeGreaterThan(y + ry);
       else expect(Number(label[1])).toBeGreaterThan(x + rx);
       expect(svg).not.toContain('NaN');
@@ -404,14 +404,14 @@ describe('use case diagram rendering', () => {
     const svg = svgOf(
       'actor User\nnote for User "Starts the workflow"\nnote for Login "`Needs a **session**`"\nUser --> Login'
     );
-    expect(count(svg, 'class="pele-node pele-note usecase-note"')).toBe(2);
+    expect(count(svg, 'class="pelers-node pelers-note usecase-note"')).toBe(2);
     expect(svg).toContain('>Starts the workflow</text>');
     expect(svg).toContain('<tspan font-weight="var(--_w)">session</tspan>');
-    const connectors = edges(svg).filter((e) => e.classes === 'pele-note');
+    const connectors = edges(svg).filter((e) => e.classes === 'pelers-note');
     expect(connectors.map((e) => e.id)).toEqual(['note-0-edge', 'note-1-edge']);
     for (const connector of connectors) {
       expect(connector.body).toContain('stroke-dasharray="2 3"');
-      expect(connector.body).not.toContain('pele-marker');
+      expect(connector.body).not.toContain('pelers-marker');
     }
   });
 
@@ -420,19 +420,19 @@ describe('use case diagram rendering', () => {
       'json Payload@{\n  "2": "second",\n  "1": "first",\n  "colors": ["Red", "Green"],\n  "address": { "city": "Oslo" },\n  "none": null,\n  "empty": {}\n}'
     );
     const table = nodeGroup(svg, 'Payload');
-    expect(table).toContain('class="pele-node pele-json usecase-json-table"');
+    expect(table).toContain('class="pelers-node pelers-json usecase-json-table"');
     expect(table).toMatch(
-      /<text class="pele-label" font-weight="var\(--_hw\)"[^>]*><tspan x="0" y="-95.9">Payload<\/tspan>/
+      /<text class="pelers-label" font-weight="var\(--_hw\)"[^>]*><tspan x="0" y="-95.9">Payload<\/tspan>/
     );
-    const keys = [...table.matchAll(/<text class="pele-json-key"[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
-    const values = [...table.matchAll(/<text class="pele-json-value"[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
+    const keys = [...table.matchAll(/<text class="pelers-json-key"[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
+    const values = [...table.matchAll(/<text class="pelers-json-value"[^>]*>([^<]*)<\/text>/g)].map((m) => m[1]);
     // The second value of an array has no key of its own.
     expect(keys).toEqual(['2', '1', 'colors', 'address.city', 'none', 'empty']);
     expect(values).toEqual(['second', 'first', 'Red', 'Green', 'Oslo', 'null', '{}']);
     // Keys line up in one column and values in another.
     const xs = (cls: string): number[] =>
       [...table.matchAll(new RegExp(`<text class="${cls}"[^>]* x="([-\\d.]+)"`, 'g'))].map((m) => Number(m[1]));
-    const valueX = xs('pele-json-value');
+    const valueX = xs('pelers-json-value');
     const lefts = valueX.map((x, i) => x - metricsMeasurer.width(values[i], 14, 0) / 2);
     for (const left of lefts) expect(left).toBeCloseTo(lefts[0], 1);
   });
@@ -470,10 +470,10 @@ describe('use case diagram rendering', () => {
       '<ellipse rx="44" ry="26" fill="var(--_s)" stroke="var(--_b)" style="stroke-width:2px;fill:#fee;stroke:#06c;"/>'
     );
     expect(svg).toMatch(
-      /<g class="pele-cluster pele-boundary system-boundary system-boundary-rect hot" data-id="S"><rect[^>]* style="rx:var\(--_r\);stroke-width:2px;fill:#fee;stroke:#c33;"/
+      /<g class="pelers-cluster pelers-boundary system-boundary system-boundary-rect hot" data-id="S"><rect[^>]* style="rx:var\(--_r\);stroke-width:2px;fill:#fee;stroke:#c33;"/
     );
     expect(svg).toContain(
-      '<g class="pele-edge pele-association hot" data-id="e" style="stroke-width:4px;stroke:#c33;">'
+      '<g class="pelers-edge pelers-association hot" data-id="e" style="stroke-width:4px;stroke:#c33;">'
     );
     expect(edges(svg)[0].body).toContain('fill="#c33" stroke="none"');
   });
@@ -481,7 +481,7 @@ describe('use case diagram rendering', () => {
   it('keeps the dashes of an animated relationship, without motion', () => {
     const svg = svgOf('A e@--> B\ne@{ animation: slow }\nA f@--> B\nf@{ animate: false }');
     const [animated, still] = edges(svg);
-    expect(animated.classes).toBe('pele-association edge-animation-slow');
+    expect(animated.classes).toBe('pelers-association edge-animation-slow');
     expect(animated.body).toContain('stroke-dasharray="9 5"');
     expect(still.body).not.toContain('stroke-dasharray');
   });
@@ -491,15 +491,15 @@ describe('use case diagram rendering', () => {
       '---\ntitle: Ordering\n---\nusecase-beta\naccTitle: Online ordering\naccDescr {\n  A customer orders.\n   Staff review.\n}\nactor A',
       options
     );
-    expect(svg).toContain('<text class="pele-title" font-weight="var(--_tw)"');
+    expect(svg).toContain('<text class="pelers-title" font-weight="var(--_tw)"');
     expect(svg).toContain('>Ordering</tspan>');
-    expect(svg).toContain('<title id="pele-title">Online ordering</title>');
-    expect(svg).toContain('<desc id="pele-desc">A customer orders.\nStaff review.</desc>');
+    expect(svg).toContain('<title id="pelers-title">Online ordering</title>');
+    expect(svg).toContain('<desc id="pelers-desc">A customer orders.\nStaff review.</desc>');
   });
 
   it('draws nothing but the frame for a diagram with no statements', () => {
     const result = render('usecase-beta', options);
-    expect(result.svg).toContain('<g class="pele-nodes"></g>');
+    expect(result.svg).toContain('<g class="pelers-nodes"></g>');
     expect(result.width).toBeGreaterThan(0);
   });
 
@@ -508,8 +508,8 @@ describe('use case diagram rendering', () => {
       try {
         render(src, options);
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
-        return (error as PeleError).code + ': ' + (error as Error).message;
+        expect(error).toBeInstanceOf(PelersError);
+        return (error as PelersError).code + ': ' + (error as Error).message;
       }
       return 'no error';
     };
@@ -536,7 +536,7 @@ describe('use case diagram rendering', () => {
       try {
         render('usecase-beta\nactor A\nA --> B\nstyle Z fill:red', options);
       } catch (error) {
-        return error as PeleError;
+        return error as PelersError;
       }
       return undefined;
     })();

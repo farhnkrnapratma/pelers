@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { TREEMAP_TOKENS, parseTreemap } from '../../src/diagrams/treemap/parser.js';
 import { tokenize } from '../../src/diagrams/common/tokens.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 import {
   loadTestStrings,
-  peleLexer,
-  peleLongerAlts,
+  pelersLexer,
+  pelersLongerAlts,
   referenceLexer,
   referenceLongerAlts,
 } from '../support/langium-extra.js';
@@ -134,20 +134,20 @@ const corpus = [
 ];
 
 const referenceLex = referenceLexer('createTreemapServices', 'Treemap');
-const peleLex = peleLexer(TREEMAP_TOKENS, (src) => tokenize(src, TREEMAP_TOKENS, 'treemap'));
+const pelersLex = pelersLexer(TREEMAP_TOKENS, (src) => tokenize(src, TREEMAP_TOKENS, 'treemap'));
 
 async function compare(src: string): Promise<void> {
-  expect(peleLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
+  expect(pelersLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
   const expected = await referenceAst('treemap', src);
-  const actual = peleAst(parseTreemap, src);
+  const actual = pelersAst(parseTreemap, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('treemap parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(TREEMAP_TOKENS)).toEqual(referenceTokens('createTreemapServices', 'Treemap'));
-    expect(peleLongerAlts(TREEMAP_TOKENS)).toEqual(referenceLongerAlts('createTreemapServices', 'Treemap'));
+    expect(pelersTokens(TREEMAP_TOKENS)).toEqual(referenceTokens('createTreemapServices', 'Treemap'));
+    expect(pelersLongerAlts(TREEMAP_TOKENS)).toEqual(referenceLongerAlts('createTreemapServices', 'Treemap'));
   });
 
   it('agrees on every spec and documentation input', async () => {

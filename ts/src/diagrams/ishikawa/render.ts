@@ -207,25 +207,25 @@ function draw(model: IshikawaModel, _config: Config, options: RenderOptions, dow
       minY = Math.min(minY, boxY - category.boxH / 2);
       maxY = Math.max(maxY, boxY + category.boxH / 2);
       groups +=
-        `<g class="pele-ishikawa-category" data-id="${escText(category.node.text)}">` +
-        `<path class="pele-ishikawa-bones" d="${d}" fill="none" stroke="var(--_l)"/>` +
+        `<g class="pelers-ishikawa-category" data-id="${escText(category.node.text)}">` +
+        `<path class="pelers-ishikawa-bones" d="${d}" fill="none" stroke="var(--_l)"/>` +
         marker('arrow_point', ax, 0, SLANT / LENGTH, -sign / LENGTH, 'var(--_l)') +
         `<rect x="${num(endX - category.boxW / 2)}" y="${num(boxY - category.boxH / 2)}" width="${num(category.boxW)}" height="${num(
           category.boxH
         )}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>` +
-        labelSvg(category.label, endX, boxY, ' class="pele-label"') +
-        (texts ? `<g class="pele-ishikawa-causes" font-size="${small}">${texts}</g>` : '') +
+        labelSvg(category.label, endX, boxY, ' class="pelers-label"') +
+        (texts ? `<g class="pelers-ishikawa-causes" font-size="${small}">${texts}</g>` : '') +
         '</g>';
     });
 
     const r = headH / 2;
     body =
-      `<path class="pele-ishikawa-spine" d="M${num(tail)},0H${num(-(ARROW - 1))}" fill="none" stroke="var(--_l)"/>` +
+      `<path class="pelers-ishikawa-spine" d="M${num(tail)},0H${num(-(ARROW - 1))}" fill="none" stroke="var(--_l)"/>` +
       marker('arrow_point', 0, 0, 1, 0, 'var(--_l)') +
       groups +
-      `<g class="pele-ishikawa-head" data-id="${escText(root.text)}">` +
+      `<g class="pelers-ishikawa-head" data-id="${escText(root.text)}">` +
       `<path d="M0,${num(-r)}H${num(headW - r)}A${num(r)},${num(r)} 0 0 1 ${num(headW - r)},${num(r)}H0Z" fill="var(--_s)" stroke="var(--_b)" stroke-linejoin="round"/>` +
-      labelSvg(head, 12 + head.width / 2, 0, ' class="pele-label" font-weight="var(--_hw)"') +
+      labelSvg(head, 12 + head.width / 2, 0, ' class="pelers-label" font-weight="var(--_hw)"') +
       '</g>';
   }
 
@@ -241,7 +241,7 @@ function draw(model: IshikawaModel, _config: Config, options: RenderOptions, dow
     size,
     options,
     {},
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       (body ? `<g transform="translate(${num(ox)},${num(oy)})">${body}</g>` : '')
   );
   return { svg, width, height, links: [] };
@@ -301,7 +301,7 @@ function verticalCauses(model: IshikawaModel, options: RenderOptions): Rendered 
     width = Math.max(width, entry.x - pad + entry.w);
     const framed = entry.depth < 2;
     nodes +=
-      `<g class="pele-node ${entry.depth === 0 ? 'pele-ishikawa-head' : entry.depth === 1 ? 'pele-ishikawa-category' : 'pele-ishikawa-cause'}" data-id="${escText(entry.node.text)}">` +
+      `<g class="pelers-node ${entry.depth === 0 ? 'pelers-ishikawa-head' : entry.depth === 1 ? 'pelers-ishikawa-category' : 'pelers-ishikawa-cause'}" data-id="${escText(entry.node.text)}">` +
       (framed
         ? `<rect x="${num(entry.x)}" y="${num(entry.y)}" width="${num(entry.w)}" height="${num(entry.h)}" rx="${entry.depth === 0 ? 12 : 4}" fill="var(--_s)" stroke="var(--_b)"/>`
         : '') +
@@ -309,19 +309,19 @@ function verticalCauses(model: IshikawaModel, options: RenderOptions): Rendered 
         entry.label,
         entry.x + entry.w / 2,
         entry.y + entry.h / 2,
-        ` class="pele-label"${entry.depth < 2 ? ' font-weight="var(--_hw)"' : ''}${entry.depth > 1 ? ` font-size="${small}"` : ''}`
+        ` class="pelers-label"${entry.depth < 2 ? ' font-weight="var(--_hw)"' : ''}${entry.depth > 1 ? ` font-size="${small}"` : ''}`
       ) +
       '</g>';
     if (entry.parent >= 0) {
       const parent = order[entry.parent];
       const gx = parent.x + indent / 2;
-      edges += `<path class="pele-edge" d="M${num(gx)},${num(parent.y + parent.h)}V${num(entry.y + entry.h / 2)}H${num(entry.x)}" fill="none" stroke="var(--_b)"/>`;
+      edges += `<path class="pelers-edge" d="M${num(gx)},${num(parent.y + parent.h)}V${num(entry.y + entry.h / 2)}H${num(entry.x)}" fill="none" stroke="var(--_b)"/>`;
     }
   }
   const totalWidth = Math.ceil(width + 2 * pad),
     height = Math.ceil(Math.max(pad + title.height, y - 12) + pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     edges +
     nodes;
   return {

@@ -34,7 +34,7 @@ const DIGIT_SYMBOLS = new Map([
   ['9', 'NEWLINE'],
 ]);
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => {
     if (t === T.END || t === T.ERROR) return [TOKEN_NAMES[t], ''] as Pair;
@@ -49,7 +49,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseEr(src, yy as unknown as ErDb);

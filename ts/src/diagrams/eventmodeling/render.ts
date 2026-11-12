@@ -138,13 +138,13 @@ function draw(model: EventModelingModel, _config: Config, options: RenderOptions
     band.y = y;
     band.h += 2 * LANE_PAD;
     lanes +=
-      `<g class="pele-cluster pele-em-lane" data-id="${escText(band.lane.label)}">` +
+      `<g class="pelers-cluster pelers-em-lane" data-id="${escText(band.lane.label)}">` +
       `<rect x="${num(left)}" y="${num(y)}" width="${num(laneWidth)}" height="${num(band.h)}" fill="var(--_s)"${ROUNDED}/>` +
       labelSvg(
         band.label,
         left + LANE_PAD + band.label.width / 2,
         y + band.h / 2,
-        ` class="pele-cluster-label" font-size="${small}" font-weight="var(--_hw)" fill="var(--_m)"`
+        ` class="pelers-cluster-label" font-size="${small}" font-weight="var(--_hw)" fill="var(--_m)"`
       ) +
       '</g>';
     y += band.h + LANE_GAP;
@@ -168,16 +168,16 @@ function draw(model: EventModelingModel, _config: Config, options: RenderOptions
         item.name,
         item.x + item.w / 2,
         nameY,
-        ` class="pele-label" font-size="${nameSize}" font-weight="var(--_hw)"`
+        ` class="pelers-label" font-size="${nameSize}" font-weight="var(--_hw)"`
       ) +
       lines(
         item.data,
         item.x + BOX_PAD_X,
         item.y + BOX_PAD_Y + item.name.height + 6 + monoStep / 2 + mono * 0.35,
         monoStep,
-        ` class="pele-em-data" font-family="${FONT_MONO}" font-size="${mono}"`
+        ` class="pelers-em-data" font-family="${FONT_MONO}" font-size="${mono}"`
       );
-    nodes += `<g class="pele-node pele-em-${item.box.kind}${item.box.reset ? ' pele-em-reset' : ''}" data-id="${escText(item.box.id)}">${shape}${text}</g>`;
+    nodes += `<g class="pelers-node pelers-em-${item.box.kind}${item.box.reset ? ' pelers-em-reset' : ''}" data-id="${escText(item.box.id)}">${shape}${text}</g>`;
   }
 
   let edges = '';
@@ -217,7 +217,7 @@ function draw(model: EventModelingModel, _config: Config, options: RenderOptions
           : `M${num(sx)},${num(sy)}C${num(sx)},${num(mid)} ${num(tx)},${num(mid)} ${num(tx)},${num(end)}`;
       head = marker('arrow_point', tx, ty, 0, dir, 'var(--_l)');
     }
-    edges += `<g class="pele-edge" data-id="${escText(relation.source.id)}-${escText(relation.target.id)}"><path d="${d}" fill="none" stroke="var(--_l)"/>${head}</g>`;
+    edges += `<g class="pelers-edge" data-id="${escText(relation.source.id)}-${escText(relation.target.id)}"><path d="${d}" fill="none" stroke="var(--_l)"/>${head}</g>`;
   }
 
   // Notes and given/when/then specifications, listed under the lanes with the frame they belong to.
@@ -238,7 +238,7 @@ function draw(model: EventModelingModel, _config: Config, options: RenderOptions
     const h = 2 * BOX_PAD_Y + head.height + rows.length * smallStep;
     const cy = bottom + (cards === '' && bands.size === 0 ? 0 : CARD_GAP);
     cards +=
-      `<g class="pele-em-${kind}" data-id="${escText(frame)}">` +
+      `<g class="pelers-em-${kind}" data-id="${escText(frame)}">` +
       `<rect x="${num(left)}" y="${num(cy)}" width="${num(w)}" height="${num(h)}" fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>` +
       labelSvg(
         head,
@@ -274,7 +274,7 @@ function draw(model: EventModelingModel, _config: Config, options: RenderOptions
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(bottom + pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     lanes +
     edges +
     nodes +
@@ -363,14 +363,14 @@ function verticalEventModel(model: EventModelingModel, options: RenderOptions): 
     const cy = y + headH;
     const frame = `x="${num(pad)}" y="${num(cy)}" width="${num(w)}" height="${num(h)}"`;
     nodes +=
-      `<g class="pele-cluster pele-em-lane" data-id="${escText(box.lane.label)}">` +
+      `<g class="pelers-cluster pelers-em-lane" data-id="${escText(box.lane.label)}">` +
       leftLabelSvg(
         lane,
         pad + BOX_PAD_X,
         y,
-        ` class="pele-cluster-label" font-size="${small}" font-weight="var(--_hw)" fill="var(--_m)"`
+        ` class="pelers-cluster-label" font-size="${small}" font-weight="var(--_hw)" fill="var(--_m)"`
       ) +
-      `<g class="pele-node pele-em-${box.kind}${box.reset ? ' pele-em-reset' : ''}" data-id="${escText(box.id)}"><rect ${frame} fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>` +
+      `<g class="pelers-node pelers-em-${box.kind}${box.reset ? ' pelers-em-reset' : ''}" data-id="${escText(box.id)}"><rect ${frame} fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>` +
       (series === undefined
         ? ''
         : `<rect ${frame} fill="${seriesColor(series)}" fill-opacity="0.22" stroke="${seriesColor(series)}"${ROUNDED}/>`) +
@@ -378,16 +378,16 @@ function verticalEventModel(model: EventModelingModel, options: RenderOptions): 
         name,
         pad + BOX_PAD_X + name.width / 2,
         cy + BOX_PAD_Y + name.height / 2,
-        ` class="pele-label" font-size="${small}" font-weight="var(--_hw)"`
+        ` class="pelers-label" font-size="${small}" font-weight="var(--_hw)"`
       ) +
-      `<text class="pele-em-frame" x="${num(pad + w - BOX_PAD_X)}" y="${num(cy + BOX_PAD_Y + small)}" text-anchor="end" font-size="${mono}" fill="var(--_m)">${esc(box.id)}</text>` +
+      `<text class="pelers-em-frame" x="${num(pad + w - BOX_PAD_X)}" y="${num(cy + BOX_PAD_Y + small)}" text-anchor="end" font-size="${mono}" fill="var(--_m)">${esc(box.id)}</text>` +
       (data
         ? lines(
             data.lines.map((line) => line.map((span) => span.text).join('')),
             pad + BOX_PAD_X,
             cy + BOX_PAD_Y + name.height + 6 + data.lineHeight / 2 + mono * 0.35,
             data.lineHeight,
-            ` class="pele-em-data" font-family="${FONT_MONO}" font-size="${mono}"`
+            ` class="pelers-em-data" font-family="${FONT_MONO}" font-size="${mono}"`
           )
         : '') +
       '</g></g>';
@@ -418,7 +418,7 @@ function verticalEventModel(model: EventModelingModel, options: RenderOptions): 
       d = `M${num(pad + s.w)},${num(from)}H${num(rail)}V${num(to)}H${num(pad + t.w + markerTrim('arrow_point'))}`;
       head = marker('arrow_point', pad + t.w, to, -1, 0, 'var(--_l)');
     }
-    edges += `<g class="pele-edge" data-id="${escText(relation.source.id)}-${escText(relation.target.id)}"><path d="${d}" fill="none" stroke="var(--_l)"/>${head}</g>`;
+    edges += `<g class="pelers-edge" data-id="${escText(relation.source.id)}-${escText(relation.target.id)}"><path d="${d}" fill="none" stroke="var(--_l)"/>${head}</g>`;
   }
   const names = new Map(model.boxes.map((box) => [box.id, box.name]));
   const card = (kind: string, heading: string, frame: string, raw: string): void => {
@@ -434,7 +434,7 @@ function verticalEventModel(model: EventModelingModel, options: RenderOptions): 
     const w = Math.max(cardWidth, head.width + 2 * BOX_PAD_X, body.width + 2 * BOX_PAD_X);
     const h = 2 * BOX_PAD_Y + head.height + body.height;
     cards +=
-      `<g class="pele-em-${kind}" data-id="${escText(frame)}"><rect x="${num(pad)}" y="${num(y)}" width="${num(w)}" height="${num(h)}" fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>` +
+      `<g class="pelers-em-${kind}" data-id="${escText(frame)}"><rect x="${num(pad)}" y="${num(y)}" width="${num(w)}" height="${num(h)}" fill="var(--_bg)" stroke="var(--_b)"${ROUNDED}/>` +
       labelSvg(
         head,
         pad + BOX_PAD_X + head.width / 2,
@@ -463,7 +463,7 @@ function verticalEventModel(model: EventModelingModel, options: RenderOptions): 
   const totalWidth = Math.ceil(width + 2 * pad),
     height = Math.ceil(bottom + pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     edges +
     nodes +
     cards;

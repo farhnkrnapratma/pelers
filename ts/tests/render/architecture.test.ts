@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { random } from '../support/corpus.js';
 
@@ -16,10 +16,10 @@ interface Box {
 
 // Icon squares of the services and junctions, by id.
 function nodeBoxes(svg: string): Map<string, Box> {
-  const size = Number(/class="pele-node pele-service"[^>]*><rect x="[-\d.]+" width="([\d.]+)"/.exec(svg)?.[1] ?? 48);
+  const size = Number(/class="pelers-node pelers-service"[^>]*><rect x="[-\d.]+" width="([\d.]+)"/.exec(svg)?.[1] ?? 48);
   const out = new Map<string, Box>();
   for (const m of svg.matchAll(
-    /class="pele-node pele-(?:service|junction)" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"/g
+    /class="pelers-node pelers-(?:service|junction)" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"/g
   )) {
     out.set(m[1], { x: Number(m[2]) - size / 2, y: Number(m[3]), w: size, h: size });
   }
@@ -29,7 +29,7 @@ function nodeBoxes(svg: string): Map<string, Box> {
 function clusterBoxes(svg: string): Map<string, Box> {
   const out = new Map<string, Box>();
   for (const m of svg.matchAll(
-    /class="pele-cluster" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([-\d.]+)" height="([-\d.]+)"/g
+    /class="pelers-cluster" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([-\d.]+)" height="([-\d.]+)"/g
   )) {
     out.set(m[1], { x: Number(m[2]), y: Number(m[3]), w: Number(m[4]), h: Number(m[5]) });
   }
@@ -49,9 +49,9 @@ describe('architecture rendering', () => {
     const { svg, type, width, height } = render(docs[0], options);
     expect(type).toBe('architecture');
     expect(supports(docs[0])).toBe(true);
-    expect(svg.match(/class="pele-node pele-service"/g)?.length).toBe(4);
-    expect(svg.match(/class="pele-cluster"/g)?.length).toBe(1);
-    expect(svg.match(/class="pele-edge"/g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-node pelers-service"/g)?.length).toBe(4);
+    expect(svg.match(/class="pelers-cluster"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-edge"/g)?.length).toBe(3);
     expect(svg).toContain('>Database<');
     expect(svg).toContain('data-icon="database"');
     expect(width).toBeGreaterThan(100);
@@ -198,7 +198,7 @@ describe('architecture rendering', () => {
 
   it('draws arrowheads only where the edge has them', () => {
     const count = (edge: string): number =>
-      render(`architecture-beta\nservice a\nservice b\n${edge}`, options).svg.match(/class="pele-marker"/g)?.length ??
+      render(`architecture-beta\nservice a\nservice b\n${edge}`, options).svg.match(/class="pelers-marker"/g)?.length ??
       0;
     expect(count('a:R -- L:b')).toBe(0);
     expect(count('a:R --> L:b')).toBe(1);
@@ -208,7 +208,7 @@ describe('architecture rendering', () => {
 
   it('draws straight, bent, and looping edges as orthogonal paths', () => {
     const path = (body: string): string =>
-      /class="pele-edge"[^>]*><path d="([^"]*)"/.exec(render('architecture-beta\n' + body, options).svg)![1];
+      /class="pelers-edge"[^>]*><path d="([^"]*)"/.exec(render('architecture-beta\n' + body, options).svg)![1];
     expect(path('service a\nservice b\na:R -- L:b')).toMatch(/^M[-\d.]+,[-\d.]+L[-\d.]+,[-\d.]+$/);
     expect(path('service a\nservice b\na:R -- T:b').match(/Q/g)?.length).toBe(1);
     expect(path('service a\nservice b\na:R -- R:b').match(/Q/g)?.length).toBe(2);
@@ -220,9 +220,9 @@ describe('architecture rendering', () => {
       'architecture-beta\ntitle Platform\nservice a[Alpha]\nservice b[Beta]\njunction j\na:R -[calls]- L:j\nj:R --> L:b',
       options
     );
-    expect(svg).toContain('class="pele-edge-label"');
+    expect(svg).toContain('class="pelers-edge-label"');
     expect(svg).toContain('>calls<');
-    expect(svg.match(/class="pele-node pele-junction"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-node pelers-junction"/g)?.length).toBe(1);
     expect(svg).toContain('>Platform<');
     expect(render('---\ntitle: From front matter\n---\narchitecture-beta\nservice a', options).svg).toContain(
       'From front matter'
@@ -239,7 +239,7 @@ describe('architecture rendering', () => {
     const clusters = clusterBoxes(svg);
     const one = clusters.get('one')!;
     const two = clusters.get('two')!;
-    const [, y0, y1] = /class="pele-edge"[^>]*><path d="M[-\d.]+,([-\d.]+)L[-\d.]+,([-\d.]+)"/.exec(svg)!;
+    const [, y0, y1] = /class="pelers-edge"[^>]*><path d="M[-\d.]+,([-\d.]+)L[-\d.]+,([-\d.]+)"/.exec(svg)!;
     expect(Number(y0)).toBeCloseTo(one.y + one.h, 1);
     expect(Number(y1)).toBeCloseTo(two.y - 7, 1);
   });
@@ -249,17 +249,17 @@ describe('architecture rendering', () => {
       'architecture-beta\ngroup one\ngroup two\njunction a in one\njunction b in two\na{group}:R --> L:b{group}';
     const { svg } = render(src, options);
     const nodes = nodeBoxes(svg);
-    const [, x0, x1] = /class="pele-edge"[^>]*><path d="M([-\d.]+),[-\d.]+L([-\d.]+),[-\d.]+"/.exec(svg)!;
+    const [, x0, x1] = /class="pelers-edge"[^>]*><path d="M([-\d.]+),[-\d.]+L([-\d.]+),[-\d.]+"/.exec(svg)!;
     expect(Number(x0)).toBeCloseTo(nodes.get('a')!.x + 24, 1);
     expect(Number(x1)).toBeCloseTo(nodes.get('b')!.x + 24, 1);
-    expect(svg.match(/class="pele-marker"/g)?.length).toBe(1);
+    expect(svg.match(/class="pelers-marker"/g)?.length).toBe(1);
   });
 
   it('fills icon slots from the resolver, then from the built-in outlines', () => {
     const src =
       'architecture-beta\ngroup g(cloud)[G]\nservice a(database)[A] in g\nservice b(logos:aws-lambda)[B] in g\nservice c "S3"[C]\nservice d';
     const plain = render(src, options).svg;
-    expect(plain.match(/class="pele-icon"/g)?.length).toBe(3);
+    expect(plain.match(/class="pelers-icon"/g)?.length).toBe(3);
     expect(plain).toMatch(/data-icon="database"[^>]*><path /);
     expect(plain).toMatch(/data-icon="logos:aws-lambda"[^>]*><\/svg>/);
     expect(plain).toContain('>S3<');
@@ -290,7 +290,7 @@ describe('architecture rendering', () => {
   it('rejects what Mermaid rejects, with its messages', () => {
     const fails = (body: string, message: RegExp | string): void => {
       expect(() => render('architecture-beta\n' + body, options)).toThrow(message);
-      expect(() => render('architecture-beta\n' + body, options)).toThrow(PeleError);
+      expect(() => render('architecture-beta\n' + body, options)).toThrow(PelersError);
     };
     fails('service a\nservice a', 'The service id [a] is already in use by another node');
     fails('group a\njunction a', 'The junction id [a] is already in use by another group');
@@ -316,9 +316,9 @@ describe('architecture rendering', () => {
   });
 
   it('reads the header and ids the way Mermaid 12.1 does', () => {
-    expect(() => render('architecture\nservice a', options)).toThrow(PeleError);
+    expect(() => render('architecture\nservice a', options)).toThrow(PelersError);
     // Mermaid lexes a leading L, R, T or B as an edge direction, so such ids do not parse.
-    expect(() => render('architecture-beta\nservice Lambda', options)).toThrow(PeleError);
+    expect(() => render('architecture-beta\nservice Lambda', options)).toThrow(PelersError);
     expect(render('architecture-beta\nservice lambda', options).svg).toContain('data-id="lambda"');
   });
 

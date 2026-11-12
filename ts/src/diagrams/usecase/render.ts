@@ -164,7 +164,7 @@ function extension(x: number, y: number, dx: number, dy: number, color: string):
   const bx = x - dx * EXTENSION;
   const by = y - dy * EXTENSION;
   const half = EXTENSION * 0.5;
-  return `<path class="pele-marker" d="M${num(x)},${num(y)}L${num(bx - dy * half)},${num(by + dx * half)}L${num(
+  return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${num(bx - dy * half)},${num(by + dx * half)}L${num(
     bx + dy * half
   )},${num(by - dx * half)}Z" fill="var(--_bg)" stroke="${color}" stroke-linejoin="round"/>`;
 }
@@ -196,7 +196,7 @@ function figure(view: View, icons: IconResolver | undefined): string {
     radius = 12;
     out =
       `<rect x="-22" y="-26" width="44" height="44"${rounded(SHAPE_ATTRS + shape)}/>` +
-      `<svg class="pele-icon" data-icon="${escText(node.icon ?? '')}" x="-14" y="-18" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${
+      `<svg class="pelers-icon" data-icon="${escText(node.icon ?? '')}" x="-14" y="-18" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${
         icons?.(node.icon ?? '') ?? ''
       }</svg>`;
   } else {
@@ -204,7 +204,7 @@ function figure(view: View, icons: IconResolver | undefined): string {
   }
   if (node.business) {
     // The slash of a business actor: a chord across the lower right of the head.
-    out += `<path class="pele-business" d="M${num(0.12 * radius)},${num(head + 0.99 * radius)}L${num(0.92 * radius)},${num(
+    out += `<path class="pelers-business" d="M${num(0.12 * radius)},${num(head + 0.99 * radius)}L${num(0.92 * radius)},${num(
       head - 0.39 * radius
     )}"${line}/>`;
   }
@@ -390,13 +390,13 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
       const y = c.y - c.h / 2;
       if (paints(shape)) fills.push({ box: [x, y, x + c.w, y + c.h], shape });
       const box = ` fill="var(--_a)"${setsFill(shape) ? '' : ' fill-opacity="0.5"'} stroke="var(--_b)"${shape}`;
-      const titleAttrs = ` class="pele-cluster-label"${muted}${textAttrs}`;
+      const titleAttrs = ` class="pelers-cluster-label"${muted}${textAttrs}`;
       let body: string;
       if (node.boundaryType === 'package') {
         const tabW = Math.min(view.label.width + 2 * TAB_PAD + 8, c.w);
         const tabH = view.label.height + 2 * TAB_PAD;
         body =
-          `<rect class="pele-boundary-tab" x="${num(x)}" y="${num(y)}" width="${num(tabW)}" height="${num(tabH)}"${box}/>` +
+          `<rect class="pelers-boundary-tab" x="${num(x)}" y="${num(y)}" width="${num(tabW)}" height="${num(tabH)}"${box}/>` +
           `<rect x="${num(x)}" y="${num(y + tabH)}" width="${num(c.w)}" height="${num(c.h - tabH)}"${box}/>` +
           labelSvg(view.label, x + tabW / 2, y + tabH / 2, titleAttrs, icons);
       } else {
@@ -410,28 +410,28 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
             icons
           );
       }
-      clusters += `<g class="pele-cluster pele-boundary${classes}" data-id="${id}">${body}</g>`;
+      clusters += `<g class="pelers-cluster pelers-boundary${classes}" data-id="${id}">${body}</g>`;
       continue;
     }
 
     let body: string;
     let kind: string;
     if (view.kind === Kind.Actor) {
-      kind = 'pele-actor';
+      kind = 'pelers-actor';
       const top = -h / 2;
       const stereotypeY = top + FIGURE_H + FIGURE_GAP + view.stereotype.height / 2;
       body =
-        `<g class="pele-actor-figure" transform="translate(0,${num(top + FIGURE_H / 2)})">${figure(view, icons)}</g>` +
+        `<g class="pelers-actor-figure" transform="translate(0,${num(top + FIGURE_H / 2)})">${figure(view, icons)}</g>` +
         labelSvg(
           view.stereotype,
           0,
           stereotypeY,
-          ` class="pele-stereotype" font-size="${tiny}" fill="var(--_m)"`,
+          ` class="pelers-stereotype" font-size="${tiny}" fill="var(--_m)"`,
           icons
         ) +
-        labelSvg(view.label, 0, h / 2 - view.label.height / 2, ` class="pele-label"${textAttrs}`, icons);
+        labelSvg(view.label, 0, h / 2 - view.label.height / 2, ` class="pelers-label"${textAttrs}`, icons);
     } else if (view.kind === Kind.Json) {
-      kind = 'pele-json';
+      kind = 'pelers-json';
       const x0 = -w / 2;
       let y = -h / 2 + view.headH;
       let cells = '';
@@ -440,24 +440,24 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
       for (const [key, value] of view.rows) {
         const rowH = Math.max(key.height, value.height, Math.round(small * 1.5)) + ROW_PAD;
         cells +=
-          labelSvg(key, x0 + CELL_PAD + key.width / 2, y + rowH / 2, ` class="pele-json-key"${muted}`, icons) +
+          labelSvg(key, x0 + CELL_PAD + key.width / 2, y + rowH / 2, ` class="pelers-json-key"${muted}`, icons) +
           leftLabel(
             value,
             x0 + view.keyW + CELL_PAD,
             y + rowH / 2,
-            ` class="pele-json-value"${color}${textAttrs}`,
+            ` class="pelers-json-value"${color}${textAttrs}`,
             icons
           );
         y += rowH;
       }
       body =
         `<rect x="${num(x0)}" y="${num(-h / 2)}" width="${num(w)}" height="${num(h)}"${rounded(SHAPE_ATTRS + shape)}/>` +
-        `<path class="pele-json-lines" d="${lines}" fill="none" stroke="var(--_b)"${view.style.line}/>` +
+        `<path class="pelers-json-lines" d="${lines}" fill="none" stroke="var(--_b)"${view.style.line}/>` +
         labelSvg(
           view.label,
           0,
           -h / 2 + view.headH / 2,
-          ` class="pele-label" font-weight="var(--_hw)"${color}${textAttrs}`,
+          ` class="pelers-label" font-weight="var(--_hw)"${color}${textAttrs}`,
           icons
         ) +
         `<g font-size="${small}">${cells}</g>`;
@@ -465,24 +465,24 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
       const labelY = view.stereotype.height / 2;
       let outline: string;
       if (view.kind === Kind.Ellipse) {
-        kind = 'pele-usecase';
+        kind = 'pelers-usecase';
         outline = `<ellipse rx="${num(w / 2)}" ry="${num(h / 2)}"${SHAPE_ATTRS}${shape}/>`;
         if (node.business) {
           // The slash of a business use case, cutting off the right end of the oval beside the text.
           const from = w / 2 - 15;
           const to = w / 2 - 5;
           const arc = (at: number): number => (h / 2) * Math.sqrt(1 - (at / (w / 2)) ** 2);
-          outline += `<path class="pele-business" d="M${num(from)},${num(arc(from))}L${num(to)},${num(-arc(to))}" fill="none" stroke="var(--_b)"${view.style.line}/>`;
+          outline += `<path class="pelers-business" d="M${num(from)},${num(arc(from))}L${num(to)},${num(-arc(to))}" fill="none" stroke="var(--_b)"${view.style.line}/>`;
         }
       } else if (node.shape === 'note') {
-        kind = 'pele-note';
+        kind = 'pelers-note';
         const r = w / 2;
         const b = h / 2;
         outline =
           `<path d="M${num(-r)},${num(-b)}H${num(r - FOLD)}L${num(r)},${num(FOLD - b)}V${num(b)}H${num(-r)}Z" fill="var(--_a)" stroke="var(--_b)" stroke-linejoin="round"${shape}/>` +
           `<path d="M${num(r - FOLD)},${num(-b)}V${num(FOLD - b)}H${num(r)}" fill="none" stroke="var(--_b)" stroke-linejoin="round"${view.style.line}/>`;
       } else {
-        kind = 'pele-usecase';
+        kind = 'pelers-usecase';
         outline = `<rect x="${num(-w / 2)}" y="${num(-h / 2)}" width="${num(w)}" height="${num(h)}"${rounded(SHAPE_ATTRS + shape)}/>`;
       }
       body =
@@ -491,18 +491,18 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
           view.stereotype,
           0,
           -view.label.height / 2,
-          ` class="pele-stereotype" font-size="${tiny}"${muted}`,
+          ` class="pelers-stereotype" font-size="${tiny}"${muted}`,
           icons
         ) +
         labelSvg(
           view.label,
           0,
           labelY,
-          ` class="pele-label"${node.shape === 'note' ? ` font-size="${small}"` : ''}${color}${textAttrs}`,
+          ` class="pelers-label"${node.shape === 'note' ? ` font-size="${small}"` : ''}${color}${textAttrs}`,
           icons
         );
     }
-    nodesOut += `<g class="pele-node ${kind}${classes}" data-id="${id}" transform="translate(${num(c.x)},${num(c.y)})">${body}</g>`;
+    nodesOut += `<g class="pelers-node ${kind}${classes}" data-id="${id}" transform="translate(${num(c.x)},${num(c.y)})">${body}</g>`;
   }
 
   let casings = '';
@@ -584,7 +584,7 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
       mark(startType, path.sx, path.sy, path.sdx, path.sdy, color) +
       mark(endType, path.ex, path.ey, path.edx, path.edy, color);
     edgesOut +=
-      `<g class="pele-edge pele-${edge.relationshipType}${classNames(edge.classes.replace(/^default relationship relationship-\S+\s?/, ''))}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
+      `<g class="pelers-edge pelers-${edge.relationshipType}${classNames(edge.classes.replace(/^default relationship relationship-\S+\s?/, ''))}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
       `<path d="${path.d}"${dashes ? ` stroke-dasharray="${dashes}"` : ''}/>` +
       (under && over ? hollowOn(marks, under) : marks) +
       '</g>';
@@ -610,12 +610,12 @@ function draw(model: UsecaseModel, config: Config, options: RenderOptions, turne
     size,
     options,
     model,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
 
   return { svg, width, height, links: [] };

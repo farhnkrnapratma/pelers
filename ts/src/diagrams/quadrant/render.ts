@@ -108,9 +108,9 @@ export function renderQuadrant(model: QuadrantModel, config: Config, options: Re
     const cy = hasPoints ? y + textTop + text.height / 2 : y + tileH / 2;
     taken.push(cx - text.width / 2, cy - text.height / 2, cx + text.width / 2, cy + text.height / 2);
     quadrants +=
-      `<g class="pele-quadrant" data-id="${k + 1}">` +
+      `<g class="pelers-quadrant" data-id="${k + 1}">` +
       `<rect x="${num(x)}" y="${num(y)}" width="${num(tileW)}" height="${num(tileH)}"${ROUNDED}/>` +
-      labelSvg(text, cx, cy, ` class="pele-label"${sizeAttr(quadrantSize, size)} fill="var(--_fg)" stroke="none"`) +
+      labelSvg(text, cx, cy, ` class="pelers-label"${sizeAttr(quadrantSize, size)} fill="var(--_fg)" stroke="none"`) +
       '</g>';
   }
 
@@ -159,7 +159,7 @@ export function renderQuadrant(model: QuadrantModel, config: Config, options: Re
       text: label(point.text, pointSize, w),
     });
     circles.push(
-      `<circle class="pele-point${classNames(point.className)}" data-id="${escText(point.text.text)}" cx="${num(cx)}" cy="${num(cy)}" r="${num(r)}"${
+      `<circle class="pelers-point${classNames(point.className)}" data-id="${escText(point.text.text)}" cx="${num(cx)}" cy="${num(cy)}" r="${num(r)}"${
         strokeWidth && !strokeColor ? ` stroke="${fill}"` : ''
       }${resolveStyle(styles).shape}/>`
     );
@@ -213,7 +213,7 @@ export function renderQuadrant(model: QuadrantModel, config: Config, options: Re
       if (free) break;
     }
     if (careful) taken.push(tx - halfW, ty - halfH, tx + halfW, ty + halfH);
-    labels += labelSvg(text, tx, ty, ' class="pele-label"');
+    labels += labelSvg(text, tx, ty, ' class="pelers-label"');
   }
 
   // Mermaid puts each new point under the ones before it.
@@ -222,13 +222,13 @@ export function renderQuadrant(model: QuadrantModel, config: Config, options: Re
       title,
       width / 2,
       titlePad / 2 + title.height / 2,
-      ` class="pele-title"${sizeAttr(titleSize, size)} font-weight="var(--_tw)"`
+      ` class="pelers-title"${sizeAttr(titleSize, size)} font-weight="var(--_tw)"`
     ) +
-    `<g class="pele-quadrants" fill="var(--_s)" stroke="var(--_b)">${quadrants}</g>` +
-    (axes ? `<g class="pele-axis-labels" font-size="${xAxisSize}" fill="var(--_m)">${axes}</g>` : '') +
+    `<g class="pelers-quadrants" fill="var(--_s)" stroke="var(--_b)">${quadrants}</g>` +
+    (axes ? `<g class="pelers-axis-labels" font-size="${xAxisSize}" fill="var(--_m)">${axes}</g>` : '') +
     (dots.length > 0
-      ? `<g class="pele-points" fill="${fill}">${circles.reverse().join('')}</g>` +
-        `<g class="pele-point-labels" font-size="${pointSize}">${labels}</g>`
+      ? `<g class="pelers-points" fill="${fill}">${circles.reverse().join('')}</g>` +
+        `<g class="pelers-point-labels" font-size="${pointSize}">${labels}</g>`
       : '');
 
   return {

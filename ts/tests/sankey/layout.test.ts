@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 import { SankeyDb } from '../../src/diagrams/sankey/db.js';
 import { layoutSankey, type Alignment, type LayoutOptions } from '../../src/diagrams/sankey/layout.js';
 
@@ -163,7 +163,7 @@ describe('sankey layout', () => {
   });
 
   it('rejects circular links, naming a node on the cycle', () => {
-    expect(() => layoutSankey(build([['a', 'a', 1]]), options())).toThrow(PeleError);
+    expect(() => layoutSankey(build([['a', 'a', 1]]), options())).toThrow(PelersError);
     expect(() =>
       layoutSankey(
         build([
@@ -194,7 +194,7 @@ describe('sankey layout', () => {
         options()
       );
     } catch (error) {
-      expect((error as PeleError).code).toBe('semantic');
+      expect((error as PelersError).code).toBe('semantic');
     }
   });
 

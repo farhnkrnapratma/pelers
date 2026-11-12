@@ -10,13 +10,13 @@ export default {
       file: 'flow.spec.js',
       test: "should be able to parse a '<'",
       reason:
-        "Expects the label `<` to be stored as `&lt;`, which is DOMPurify's serialization. Pele stores label text as written and escapes it when writing SVG.",
+        "Expects the label `<` to be stored as `&lt;`, which is DOMPurify's serialization. Pelers stores label text as written and escapes it when writing SVG.",
     },
     {
       file: 'flowDb.spec.ts',
       test: 'should have functions used in flow JISON as own property',
       reason:
-        'Checks that FlowDB methods are own properties, a requirement of the Jison runtime. Pele has no Jison runtime.',
+        'Checks that FlowDB methods are own properties, a requirement of the Jison runtime. Pelers has no Jison runtime.',
     },
   ],
   notPorted: [

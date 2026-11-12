@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { parseYaml, type YamlValue } from '../../util/yaml.js';
 import { isCssColor } from './colors.js';
 import {
@@ -29,7 +29,7 @@ const RE_LINE_TERMINATOR = /[\r\u2028\u2029]/;
 const RE_WORD = /^\w*/;
 
 function fail(message: string): never {
-  throw new PeleError(message, 'semantic', { type: 'sequence' });
+  throw new PelersError(message, 'semantic', { type: 'sequence' });
 }
 
 function extractWrap(raw: string): SeqText {
@@ -136,7 +136,7 @@ export class SeqDb implements SequenceModel {
       try {
         parsed = parseYaml(metadata.includes('\n') ? metadata + '\n' : '{\n' + metadata + '\n}');
       } catch (error) {
-        throw new PeleError(`Config of participant "${id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
+        throw new PelersError(`Config of participant "${id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
           type: 'sequence',
         });
       }
@@ -238,7 +238,7 @@ export class SeqDb implements SequenceModel {
   }
 
   // Mermaid logs and ignores menu text that is not valid JSON. It also undoes the `&amp;` and
-  // `&equals;` its sanitizer writes; Pele has no sanitizer, and a `;` cannot occur in the text.
+  // `&equals;` its sanitizer writes; Pelers has no sanitizer, and a `;` cannot occur in the text.
   addLinks(actorId: string, text: { text: string }): void {
     const actor = this.actors.get(actorId);
     if (!actor) return;
@@ -268,7 +268,7 @@ export class SeqDb implements SequenceModel {
     }
   }
 
-  // Mermaid reads the properties and links from a page element with this id. Pele keeps the id.
+  // Mermaid reads the properties and links from a page element with this id. Pelers keeps the id.
   addDetails(actorId: string, text: { text: string }): void {
     const actor = this.actors.get(actorId);
     if (actor) actor.details = text.text;

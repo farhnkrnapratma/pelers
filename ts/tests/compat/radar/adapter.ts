@@ -1,6 +1,6 @@
 import { buildRadar, type RadarModel } from '../../../src/diagrams/radar/model.js';
 import { parseRadar, type RadarAst } from '../../../src/diagrams/radar/parser.js';
-import { PeleError, parse as peleParse, render } from '../../../src/index.js';
+import { PelersError, parse as pelersParse, render } from '../../../src/index.js';
 import { metricsMeasurer } from '../../../src/text/measurer.js';
 import { toResult } from '../../support/langium.js';
 
@@ -11,7 +11,7 @@ export const Radar = { $type: 'Radar' };
 
 export const radarParse = (src: string) => toResult<RadarAst>(parseRadar, src);
 
-export const MermaidParseError = PeleError;
+export const MermaidParseError = PelersError;
 
 export async function parse(_type: string, src: string): Promise<RadarAst> {
   return parseRadar(src);
@@ -41,10 +41,10 @@ export const parser = {
   },
 };
 
-// The spec's drawing tests go through Mermaid's API; here they go through Pele's.
+// The spec's drawing tests go through Mermaid's API; here they go through Pelers's.
 export const mermaidAPI = {
   async parse(src: string): Promise<void> {
-    peleParse(src);
+    pelersParse(src);
   },
 };
 

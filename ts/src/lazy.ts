@@ -43,7 +43,7 @@ const loaders = new Map<DiagramType, () => Promise<Diagram<unknown>>>([
 
 const pending = new Map<DiagramType, Promise<boolean>>();
 
-// Loads and registers one diagram type. Resolves to false for a type Pele does not draw.
+// Loads and registers one diagram type. Resolves to false for a type Pelers does not draw.
 export function load(type: DiagramType | null): Promise<boolean> {
   if (type === null) return Promise.resolve(false);
   if (registered(type)) return Promise.resolve(true);

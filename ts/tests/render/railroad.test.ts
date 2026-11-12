@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { random } from '../support/corpus.js';
 import { NOTATIONS, corpusFor, grammar } from '../support/railroad-oracle.js';
@@ -83,8 +83,8 @@ describe('railroad rendering', () => {
       }
       const { svg, type } = render(src, options);
       expect(type).toBe('railroad');
-      expect(svg).toContain('class="pele pele-railroad"');
-      expect(count(svg, 'class="pele-node pele-terminal"')).toBe(1);
+      expect(svg).toContain('class="pelers pelers-railroad"');
+      expect(count(svg, 'class="pelers-node pelers-terminal"')).toBe(1);
     });
     // The four drawings differ in nothing but the notation they were written in.
     expect(new Set(sources.map((src) => render(src, options).svg)).size).toBe(1);
@@ -92,26 +92,26 @@ describe('railroad rendering', () => {
 
   it('detects a keyword in any case, as Mermaid does, and then rejects it', () => {
     expect(detectType('Railroad-EBNF-Beta\nr = "a" ;')).toBe('railroad');
-    expect(() => render('Railroad-EBNF-Beta\nr = "a" ;', options)).toThrow(PeleError);
+    expect(() => render('Railroad-EBNF-Beta\nr = "a" ;', options)).toThrow(PelersError);
     expect(() => render('RAILROAD-BETA\nr = terminal("a") ;', options)).toThrow(/railroad-beta/);
   });
 
   it('draws one diagram per rule with a heading, markers, and a track', () => {
     const { svg } = ebnf('first = "a" b ;\nsecond = c ;');
-    expect(count(svg, '<g class="pele-rule"')).toBe(2);
-    expect(svg).toContain('<g class="pele-rule" data-id="first">');
-    expect(svg).toMatch(/<text class="pele-rule-name"[^>]*font-weight="var\(--_hw\)"[^>]*>first<\/text>/);
-    expect(count(svg, 'class="pele-marker pele-start"')).toBe(2);
-    expect(count(svg, 'class="pele-marker pele-end"')).toBe(2);
-    expect(count(svg, 'class="pele-edge pele-track"')).toBe(2);
+    expect(count(svg, '<g class="pelers-rule"')).toBe(2);
+    expect(svg).toContain('<g class="pelers-rule" data-id="first">');
+    expect(svg).toMatch(/<text class="pelers-rule-name"[^>]*font-weight="var\(--_hw\)"[^>]*>first<\/text>/);
+    expect(count(svg, 'class="pelers-marker pelers-start"')).toBe(2);
+    expect(count(svg, 'class="pelers-marker pelers-end"')).toBe(2);
+    expect(count(svg, 'class="pelers-edge pelers-track"')).toBe(2);
   });
 
   it('draws terminals as pills and non-terminals as boxes that name their rule', () => {
     const { svg } = ebnf('r = "lit" name ;');
     const [terminal, nonterminal] = rects(svg);
-    expect(svg).toMatch(/<g class="pele-node pele-terminal"><rect[^>]* rx="15" fill="var\(--_s\)"/);
+    expect(svg).toMatch(/<g class="pelers-node pelers-terminal"><rect[^>]* rx="15" fill="var\(--_s\)"/);
     expect(svg).toMatch(
-      /<g class="pele-node pele-nonterminal" data-id="name"><rect[^>]* fill="var\(--_bg\)"[^>]* style="rx:var\(--_r\)"/
+      /<g class="pelers-node pelers-nonterminal" data-id="name"><rect[^>]* fill="var\(--_bg\)"[^>]* style="rx:var\(--_r\)"/
     );
     expect(svg).toContain('font-family="var(--_fm)">lit</text>');
     expect(terminal.h).toBe(30);
@@ -142,7 +142,7 @@ describe('railroad rendering', () => {
     expect(optional.height).toBeGreaterThan(plain.height);
     // The bypass leaves room above; the element stays on the track.
     expect(rects(optional.svg)[0].y).toBeGreaterThan(rects(plain.svg)[0].y);
-    expect(optional.svg).not.toContain('class="pele-marker" d=');
+    expect(optional.svg).not.toContain('class="pelers-marker" d=');
   });
 
   it('draws repetition as a loop back under the element, with a bypass when it may be skipped', () => {
@@ -152,7 +152,7 @@ describe('railroad rendering', () => {
     expect(more.width).toBe(plain.width + 20);
     expect(rects(more.svg)[0].y).toBe(rects(plain.svg)[0].y);
     expect(more.height).toBeGreaterThan(plain.height);
-    expect(count(more.svg, 'class="pele-marker" d="M')).toBe(1);
+    expect(count(more.svg, 'class="pelers-marker" d="M')).toBe(1);
     expect(any.svg).toBe(ebnf('r = { a } ;').svg);
     expect(any.width).toBe(more.width + 40);
     expect(rects(any.svg)[0].y).toBeGreaterThan(rects(more.svg)[0].y);
@@ -165,21 +165,21 @@ describe('railroad rendering', () => {
     expect(abnf('r = 2*a ;')).toContain('>≥2×</text>');
     expect(abnf('r = *5a ;')).toContain('>≤5×</text>');
     expect(abnf('r = ' + '9'.repeat(400) + 'a ;')).toContain('>∞×</text>');
-    expect(abnf('r = *a ;')).not.toContain('pele-count');
-    expect(abnf('r = 1*a ;')).not.toContain('pele-count');
+    expect(abnf('r = *a ;')).not.toContain('pelers-count');
+    expect(abnf('r = 1*a ;')).not.toContain('pelers-count');
     expect(abnf('r = 1a ;')).toBe(abnf('r = a ;'));
     expect(abnf('r = 0*1a ;')).toBe(abnf('r = [ a ] ;'));
   });
 
   it('draws special sequences dashed, and exceptions and predicates the way Mermaid models them', () => {
     const special = ebnf('r = ? any character ? ;').svg;
-    expect(special).toMatch(/<g class="pele-node pele-special"><rect[^>]* stroke-dasharray="4 3"/);
+    expect(special).toMatch(/<g class="pelers-node pelers-special"><rect[^>]* stroke-dasharray="4 3"/);
     expect(special).toContain('<tspan fill="var(--_m)">? </tspan>any character<tspan fill="var(--_m)"> ?</tspan>');
     const exception = ebnf('r = letter - "x" ;').svg;
-    expect(count(exception, 'pele-terminal')).toBe(2);
+    expect(count(exception, 'pelers-terminal')).toBe(2);
     expect(exception).toContain('>-</text>');
     const peg = render('railroad-peg-beta\nR <- !Keyword &"k" . !( a b ) ;', options).svg;
-    expect(count(peg, 'pele-special')).toBe(4);
+    expect(count(peg, 'pelers-special')).toBe(4);
     expect(peg).toContain('>!Keyword<');
     expect(peg).toContain('>&amp;&quot;k&quot;<');
     expect(peg).toContain('>.<');
@@ -220,7 +220,7 @@ describe('railroad rendering', () => {
   });
 
   it('takes the title from the diagram, or else from front matter', () => {
-    expect(ebnf('title "Quoted \\"title\\""\nr = a ;').svg).toContain('class="pele-title" font-weight="var(--_tw)"');
+    expect(ebnf('title "Quoted \\"title\\""\nr = a ;').svg).toContain('class="pelers-title" font-weight="var(--_tw)"');
     expect(ebnf('title "Quoted \\"title\\""\nr = a ;').svg).toContain('>Quoted &quot;title&quot;<');
     expect(render('---\ntitle: From front matter\n---\nrailroad-peg-beta\nR <- a ;', options).svg).toContain(
       '>From front matter<'
@@ -228,13 +228,13 @@ describe('railroad rendering', () => {
     const own = render('---\ntitle: From front matter\n---\nrailroad-abnf-beta\ntitle Own\nr = a ;', options).svg;
     expect(own).toContain('>Own<');
     expect(own).not.toContain('From front matter');
-    expect(ebnf('r = a ;').svg).not.toContain('pele-title');
+    expect(ebnf('r = a ;').svg).not.toContain('pelers-title');
   });
 
   it('names the drawing for assistive technology', () => {
     const { svg } = ebnf('accTitle: Grammar\naccDescr {\n  Two\n  lines\n}\nr = a ;');
-    expect(svg).toContain('<title id="pele-title">Grammar</title>');
-    expect(svg).toContain('<desc id="pele-desc">Two\nlines</desc>');
+    expect(svg).toContain('<title id="pelers-title">Grammar</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Two\nlines</desc>');
   });
 
   it('honours the railroad config keys that have a meaning here', () => {
@@ -250,7 +250,7 @@ describe('railroad rendering', () => {
     expect(withConfig('    verticalSeparation: 30').height).toBeGreaterThan(plain.height);
     expect(withConfig('    verticalSeparation: 30').width).toBe(plain.width);
     expect(withConfig('    fontSize: 20').svg).toContain(
-      '<g class="pele-rules" transform="translate(0.5,0.5)" font-size="20"'
+      '<g class="pelers-rules" transform="translate(0.5,0.5)" font-size="20"'
     );
     expect(withConfig('    fontSize: 20').width).toBeGreaterThan(plain.width);
     expect(withConfig('    strokeWidth: 2').svg).toContain('stroke="var(--_l)" stroke-width="2"');
@@ -266,7 +266,7 @@ describe('railroad rendering', () => {
 
   it('draws a rule again when its name is defined again', () => {
     const { svg } = ebnf('r = a ;\nr = b ;');
-    expect(count(svg, '<g class="pele-rule" data-id="r">')).toBe(2);
+    expect(count(svg, '<g class="pelers-rule" data-id="r">')).toBe(2);
     const model = parse('railroad-ebnf-beta\nr = a ;\nr = b ;');
     if (model.type === 'railroad')
       expect(model.rules.map((rule) => rule.definition)).toEqual([
@@ -278,7 +278,7 @@ describe('railroad rendering', () => {
   it('draws a grammar with no rules', () => {
     const empty = render('railroad-beta', options);
     expect(empty.svg).toContain('<svg');
-    expect(empty.svg).not.toContain('pele-rule');
+    expect(empty.svg).not.toContain('pelers-rule');
     expect(render('railroad-ebnf-beta\ntitle Only a title', options).svg).toContain('>Only a title<');
   });
 
@@ -301,7 +301,7 @@ describe('railroad rendering', () => {
         try {
           result = render(src, options);
         } catch (error) {
-          expect(error).toBeInstanceOf(PeleError);
+          expect(error).toBeInstanceOf(PelersError);
           continue;
         }
         assertTidy(result.svg, result.width, result.height, JSON.stringify(src).slice(0, 200));

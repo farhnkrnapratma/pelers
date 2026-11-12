@@ -1,5 +1,5 @@
 import { tighten, titleRoom } from '../common/fit-width.js';
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Config } from '../../preprocess.js';
 import { esc, escText, labelSvg, num } from '../../svg/builder.js';
 import { ARROW, casingsSvg, edgeCasing, marker, markerTrim, overFills, type Fill } from '../../svg/edges.js';
@@ -96,7 +96,7 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
     const a = from && boxes.get(from);
     const b = to && boxes.get(to);
     if (!a || !b) {
-      throw new PeleError(`C4 rel "${rel.from}" -> "${rel.to}" references an unknown shape or boundary`, 'semantic', {
+      throw new PelersError(`C4 rel "${rel.from}" -> "${rel.to}" references an unknown shape or boundary`, 'semantic', {
         type: 'c4',
       });
     }
@@ -165,7 +165,7 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
     if (over === '')
       casings += edgeCasing(r, startArrow ? 'arrow_point' : 'none', endArrow ? 'arrow_point' : 'none', style.line);
     edgesOut +=
-      `<g class="pele-edge" data-id="${escText(rel.from + '-' + rel.to)}"${over ? ` stroke="${over}"` : ''}${style.line}><path d="${r.d}"/>` +
+      `<g class="pelers-edge" data-id="${escText(rel.from + '-' + rel.to)}"${over ? ` stroke="${over}"` : ''}${style.line}><path d="${r.d}"/>` +
       (startArrow ? marker('arrow_point', r.sx, r.sy, r.sdx, r.sdy, color) : '') +
       (endArrow ? marker('arrow_point', r.ex, r.ey, r.edx, r.edy, color) : '') +
       '</g>';
@@ -238,7 +238,7 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
     if (careful) taken.push(cx - lw / 2, top, cx + lw / 2, top + lh);
     grow(cx - lw / 2, top, cx + lw / 2, top + lh);
     labelsOut +=
-      `<g class="pele-edge-label" data-id="${escText(id)}">` +
+      `<g class="pelers-edge-label" data-id="${escText(id)}">` +
       (rel.descr ? `<title>${escText(rel.descr)}</title>` : '') +
       `<rect x="${num(cx - lw / 2)}" y="${num(top)}" width="${num(lw)}" height="${num(lh)}" rx="3" fill="var(--_bg)"/>` +
       link(
@@ -247,7 +247,7 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
             techn,
             cx,
             top + label.height + techn.height / 2,
-            ` class="pele-c4-techn" fill="var(--_m)"${style.text}`
+            ` class="pelers-c4-techn" fill="var(--_m)"${style.text}`
           ),
         rel.link,
         id,
@@ -267,13 +267,13 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
       let y = group.y + HEAD_TOP;
       const color = inkFill(style) + style.text;
       const muted = inkFill(style, 'var(--_m)') + style.text;
-      let text = leftLabelSvg(group.labels[0], x, y, ` class="pele-cluster-label" font-weight="var(--_hw)"${color}`);
+      let text = leftLabelSvg(group.labels[0], x, y, ` class="pelers-cluster-label" font-weight="var(--_hw)"${color}`);
       y += group.labels[0].height;
-      text += leftLabelSvg(group.labels[1], x, y, ` class="pele-c4-type" font-size="${small}"${muted}`);
+      text += leftLabelSvg(group.labels[1], x, y, ` class="pelers-c4-type" font-size="${small}"${muted}`);
       y += group.labels[1].height;
-      text += leftLabelSvg(group.labels[2], x, y, ` class="pele-c4-descr" font-size="${small}"${muted}`);
+      text += leftLabelSvg(group.labels[2], x, y, ` class="pelers-c4-descr" font-size="${small}"${muted}`);
       clusters +=
-        `<g class="pele-cluster pele-c4-${boundary.nodeType ? 'node' : 'boundary'}" data-id="${escText(boundary.alias)}">` +
+        `<g class="pelers-cluster pelers-c4-${boundary.nodeType ? 'node' : 'boundary'}" data-id="${escText(boundary.alias)}">` +
         `<rect x="${num(group.x)}" y="${num(group.y)}" width="${num(group.w)}" height="${num(group.h)}" fill="none" stroke="var(--_b)"${
           boundary.nodeType ? '' : ' stroke-dasharray="6 4"'
         }${rounded(style.shape)}/>` +
@@ -295,16 +295,16 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
         labels[0],
         dx,
         y + labels[0].height / 2,
-        ` class="pele-c4-type" font-size="${small - 1}"${muted}`
+        ` class="pelers-c4-type" font-size="${small - 1}"${muted}`
       );
       y += labels[0].height;
-      text += labelSvg(labels[1], dx, y + labels[1].height / 2, ` class="pele-label" font-weight="var(--_hw)"${color}`);
+      text += labelSvg(labels[1], dx, y + labels[1].height / 2, ` class="pelers-label" font-weight="var(--_hw)"${color}`);
       y += labels[1].height;
-      text += labelSvg(labels[2], dx, y + labels[2].height / 2, ` class="pele-c4-techn" font-size="${small}"${muted}`);
+      text += labelSvg(labels[2], dx, y + labels[2].height / 2, ` class="pelers-c4-techn" font-size="${small}"${muted}`);
       y += labels[2].height + 4;
-      text += labelSvg(labels[3], dx, y + labels[3].height / 2, ` class="pele-c4-descr" font-size="${small}"${color}`);
+      text += labelSvg(labels[3], dx, y + labels[3].height / 2, ` class="pelers-c4-descr" font-size="${small}"${color}`);
       nodesOut +=
-        `<g class="pele-node pele-shape-${form} pele-c4-${shape.kind}${external ? ' pele-c4-external' : ''}" data-id="${escText(
+        `<g class="pelers-node pelers-shape-${form} pelers-c4-${shape.kind}${external ? ' pelers-c4-external' : ''}" data-id="${escText(
           shape.alias
         )}" transform="translate(${num(node.x + w / 2)},${num(node.y + h / 2)})">` +
         link(
@@ -339,13 +339,13 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
     size,
     options,
     db,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       `<g transform="translate(${num(ox)},${num(oy)})">` +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (nodesOut ? `<g class="pele-nodes">${nodesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (nodesOut ? `<g class="pelers-nodes">${nodesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
       '</g>'
   );
   return [{ svg, width, height, links }, lanes.squeezed];

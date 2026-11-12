@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { lineColumn, locationText } from './lexer.js';
 import {
   emptyModel,
@@ -188,9 +188,9 @@ export function resolveUsecase(
 
   const at = (span: Span): string => locationText(src, span[0], span[1]);
 
-  const error = (message: string, span: Span): PeleError => {
+  const error = (message: string, span: Span): PelersError => {
     const [line, column] = lineColumn(src, span[0]);
-    return new PeleError(message, 'semantic', { type: 'usecase', line, column });
+    return new PelersError(message, 'semantic', { type: 'usecase', line, column });
   };
 
   const fail = (message: string, span: Span): never => {

@@ -1,4 +1,4 @@
-import { locate, PeleError } from '../../errors.js';
+import { locate, PelersError } from '../../errors.js';
 
 // Mermaid's box-drawing preprocessor: turns `├──`, `└──`, `│` (and the heavy variants) into the
 // indentation the grammar reads.
@@ -47,7 +47,7 @@ export function lineStart(text: string, line: number): number {
 
 function fail(input: string, index: number, message: string): never {
   const { line } = locate(input, lineStart(input, index + 1));
-  throw new PeleError(`Line ${line}: ${message}`, 'syntax', { type: 'treeView', line });
+  throw new PelersError(`Line ${line}: ${message}`, 'syntax', { type: 'treeView', line });
 }
 
 // Undo four-space tab expansion.

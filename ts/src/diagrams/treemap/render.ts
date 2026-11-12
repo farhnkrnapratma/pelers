@@ -125,7 +125,7 @@ export function renderTreemap(model: TreemapModel, config: Config, options: Rend
           text += `<text x="${num(x + SIDE + 2)}" y="${num(baseline + labelSize * 0.35)}" font-weight="var(--_hw)"${short ? ` font-size="${labelSize}"` : ''}${ink}${style.text}>${esc(label.text)}</text>`;
         }
         if (withValue && valueSize * LINE <= HEADER) {
-          text += `<text class="pele-value" x="${num(x + b.w - SIDE - 2)}" y="${num(baseline + valueSize * 0.35)}" font-size="${tiny}" text-anchor="end"${ink || ' fill="var(--_m)"'}${style.text}>${esc(value)}</text>`;
+          text += `<text class="pelers-value" x="${num(x + b.w - SIDE - 2)}" y="${num(baseline + valueSize * 0.35)}" font-size="${tiny}" text-anchor="end"${ink || ' fill="var(--_m)"'}${style.text}>${esc(value)}</text>`;
         }
       }
       // A section is a tint of its color, unless a class gives it a fill of its own. Headerless
@@ -134,7 +134,7 @@ export function renderTreemap(model: TreemapModel, config: Config, options: Rend
       const shape = b.headed
         ? `${rect}${corners(`${tint} stroke="${color}"${style.shape}`, b)}/>`
         : `<rect x="${num(x)}" y="${num(y)}" width="${num(b.w)}" height="${num(b.h)}" fill="none"/>`;
-      sections += `<g class="pele-node pele-section${classNames(node.classSelector ?? '')}" ${group}${tooltip(drawn)}${shape}${text}</g>`;
+      sections += `<g class="pelers-node pelers-section${classNames(node.classSelector ?? '')}" ${group}${tooltip(drawn)}${shape}${text}</g>`;
       continue;
     }
 
@@ -154,20 +154,20 @@ export function renderTreemap(model: TreemapModel, config: Config, options: Rend
         const second = cy + lines / 2 - (valueSize * LINE) / 2;
         text =
           `<text x="${cx}" y="${num(first + label.size * 0.35)}" font-size="${num(label.size)}"${ink}${style.text}>${esc(label.text)}</text>` +
-          `<text class="pele-value" x="${cx}" y="${num(second + valueSize * 0.35)}" font-size="${num(valueSize)}"${ink}${style.text}>${esc(value)}</text>`;
+          `<text class="pelers-value" x="${cx}" y="${num(second + valueSize * 0.35)}" font-size="${num(valueSize)}"${ink}${style.text}>${esc(value)}</text>`;
       } else {
         text = `<text x="${cx}" y="${num(cy + label.size * 0.35)}" font-size="${num(label.size)}"${ink}${style.text}>${esc(label.text)}</text>`;
       }
     }
-    leaves += `<g class="pele-node pele-leaf${classNames(node.classSelector ?? '')}" ${group}${tooltip(label?.text)}${rect}${corners(style.shape, b)}/>${text}</g>`;
+    leaves += `<g class="pelers-node pelers-leaf${classNames(node.classSelector ?? '')}" ${group}${tooltip(label?.text)}${rect}${corners(style.shape, b)}/>${text}</g>`;
   }
 
   const totalWidth = Math.ceil(Math.max(width, title.width) + 2 * pad);
   const totalHeight = Math.ceil(height + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    (sections ? `<g class="pele-sections" font-size="${small}">${sections}</g>` : '') +
-    (leaves ? `<g class="pele-leaves" text-anchor="middle" fill="var(--_bg)">${leaves}</g>` : '');
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    (sections ? `<g class="pelers-sections" font-size="${small}">${sections}</g>` : '') +
+    (leaves ? `<g class="pelers-leaves" text-anchor="middle" fill="var(--_bg)">${leaves}</g>` : '');
 
   return {
     svg: svgDocument('treemap', totalWidth, totalHeight, size, options, model, content),

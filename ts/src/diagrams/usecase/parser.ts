@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import {
   emptyDrafts,
   resolveUsecase,
@@ -114,7 +114,7 @@ function span(k: number): Span {
 
 function fail(detail: string): never {
   const [line, column] = lineColumn(src, starts[p]);
-  throw new PeleError(
+  throw new PelersError(
     `Error parsing usecase diagram: ${detail} at ${locationText(src, starts[p], ends[p])}`,
     'syntax',
     { type: 'usecase', line, column }

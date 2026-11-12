@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { CYNEFIN_TOKENS, parseCynefin } from '../../src/diagrams/cynefin/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
-import { peleLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
 
 const FRAGMENTS = [
   'cynefin-beta',
@@ -80,15 +80,15 @@ const corpus = [...loadCorpus('cynefin', /cynefin-beta/), ...VALID, ...INVALID];
 
 async function compare(src: string): Promise<void> {
   const expected = await referenceAst('cynefin', src);
-  const actual = peleAst(parseCynefin, src);
+  const actual = pelersAst(parseCynefin, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('cynefin parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(CYNEFIN_TOKENS)).toEqual(referenceTokens('createCynefinServices', 'Cynefin'));
-    expect(peleLongerAlts(CYNEFIN_TOKENS)).toEqual(referenceLongerAlts('createCynefinServices', 'Cynefin'));
+    expect(pelersTokens(CYNEFIN_TOKENS)).toEqual(referenceTokens('createCynefinServices', 'Cynefin'));
+    expect(pelersLongerAlts(CYNEFIN_TOKENS)).toEqual(referenceLongerAlts('createCynefinServices', 'Cynefin'));
   });
 
   it('agrees on every spec and documentation input', async () => {

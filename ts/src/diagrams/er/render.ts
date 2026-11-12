@@ -135,7 +135,7 @@ function textLeft(
     for (const span of line) {
       if (span.icon !== undefined) {
         const side = label.size * 1.1;
-        extra += `<svg class="pele-icon" data-icon="${escText(span.icon)}" x="${num(sx)}" y="${num(
+        extra += `<svg class="pelers-icon" data-icon="${escText(span.icon)}" x="${num(sx)}" y="${num(
           y - label.size * 0.35 - side / 2
         )}" width="${num(side)}" height="${num(side)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${
           icons?.(span.icon) ?? ''
@@ -378,13 +378,13 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
       const titleX = clusterTitleX(c, view.label.width, crossings, GROUP_PAD);
       if (paints(view.style.shape)) fills.push({ box: [x, y, x + c.w, y + c.h], shape: view.style.shape });
       clusters +=
-        `<g class="pele-cluster${classes}" data-id="${escText(node.id)}">` +
+        `<g class="pelers-cluster${classes}" data-id="${escText(node.id)}">` +
         `<rect x="${num(x)}" y="${num(y)}" width="${num(c.w)}" height="${num(c.h)}" fill="var(--_a)"${setsFill(view.style.shape) ? '' : ' fill-opacity="0.5"'} stroke="var(--_b)"${rounded(view.style.shape)}/>` +
         labelSvg(
           view.label,
           titleX,
           y + 8 + view.label.height / 2,
-          ` class="pele-cluster-label"${inkFill(view.style, 'var(--_m)')}${view.style.text}`,
+          ` class="pelers-cluster-label"${inkFill(view.style, 'var(--_m)')}${view.style.text}`,
           icons
         ) +
         '</g>';
@@ -403,7 +403,7 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
       view.label,
       0,
       view.rows.length > 0 ? y0 + view.headH / 2 : 0,
-      ` class="pele-label"${color}${text}`,
+      ` class="pelers-label"${color}${text}`,
       icons
     );
     const display = decodeEntities(node.alias || node.label);
@@ -440,17 +440,17 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
         const baseline = y + ROW_PAD / 2 + rowLine / 2 + view.rowSize * 0.35;
         const [type, attribute, keys, comment] = row.cells;
         cells +=
-          textLeft(type, x0 + view.cols[0], baseline, ` class="pele-er-type"${muted}${text}`, icons, view.mono) +
-          textLeft(attribute, x0 + view.cols[1], baseline, ` class="pele-er-name"${color}${text}`, icons, view.mono) +
+          textLeft(type, x0 + view.cols[0], baseline, ` class="pelers-er-type"${muted}${text}`, icons, view.mono) +
+          textLeft(attribute, x0 + view.cols[1], baseline, ` class="pelers-er-name"${color}${text}`, icons, view.mono) +
           textLeft(
             keys,
             x0 + view.cols[2],
             baseline,
-            ` class="pele-er-keys" font-size="${view.keySize}"${muted}${text}`,
+            ` class="pelers-er-keys" font-size="${view.keySize}"${muted}${text}`,
             icons,
             view.mono
           ) +
-          textLeft(comment, x0 + view.cols[3], baseline, ` class="pele-er-comment"${muted}${text}`, icons);
+          textLeft(comment, x0 + view.cols[3], baseline, ` class="pelers-er-comment"${muted}${text}`, icons);
         y += row.h;
       }
       const dividerY = num(y0 + view.headH);
@@ -461,13 +461,13 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
         `<rect ${shape}${rounded(BOX_ATTRS + view.style.shape)}/>` +
         // Over a fill the diagram chose, the shading is a tint of that fill. The opacity is on the
         // group because the two parts of the last row overlap.
-        `<g class="pele-er-stripes" fill="${shade}"${view.style.shape.includes('fill:') ? ' opacity="0.6"' : ''}>${stripes}</g>` +
-        `<path class="pele-er-divider" d="M${num(x0)},${dividerY}H${num(x0 + w)}" stroke="${lineColor}"/>` +
+        `<g class="pelers-er-stripes" fill="${shade}"${view.style.shape.includes('fill:') ? ' opacity="0.6"' : ''}>${stripes}</g>` +
+        `<path class="pelers-er-divider" d="M${num(x0)},${dividerY}H${num(x0 + w)}" stroke="${lineColor}"/>` +
         `<rect ${shape} fill="none" stroke="var(--_b)"${rounded(view.style.line)}/>` +
         name +
-        `<g class="pele-er-attributes" font-size="${view.rowSize}">${cells}</g>`;
+        `<g class="pelers-er-attributes" font-size="${view.rowSize}">${cells}</g>`;
     }
-    nodesOut += `<g class="pele-node pele-entity${classes}" data-id="${escText(node.label)}" transform="translate(${num(
+    nodesOut += `<g class="pelers-node pelers-entity${classes}" data-id="${escText(node.label)}" transform="translate(${num(
       c.x
     )},${num(c.y)})">${body}</g>`;
   }
@@ -547,7 +547,7 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
     }
     const dashed = edge.pattern === 'dashed';
     edgesOut +=
-      `<g class="pele-edge pele-er-${dashed ? 'non-identifying' : 'identifying'}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}>` +
+      `<g class="pelers-edge pelers-er-${dashed ? 'non-identifying' : 'identifying'}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}>` +
       `<path d="${d}"${dashed ? ' stroke-dasharray="4 3"' : ''}/>` +
       start +
       end +
@@ -566,12 +566,12 @@ function draw(db: ErDb, config: Config, options: RenderOptions, turned: boolean)
     size,
     options,
     db,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${smallSize}">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${smallSize}">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
 
   return { svg, width, height, links };

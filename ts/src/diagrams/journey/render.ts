@@ -27,7 +27,7 @@ const MOUTHS = { happy: 'M-5,2A6,6 0 0 0 5,2', neutral: 'M-4.5,4.5H4.5', sad: 'M
 
 function face(x: number, y: number, mood: keyof typeof MOUTHS): string {
   return (
-    `<g class="pele-face pele-face-${mood}" transform="translate(${num(x)},${num(y)})">` +
+    `<g class="pelers-face pelers-face-${mood}" transform="translate(${num(x)},${num(y)})">` +
     `<circle r="${FACE}" fill="var(--_bg)" stroke="var(--_l)"/>` +
     `<g fill="var(--_l)">${EYES}</g>` +
     `<path d="${MOUTHS[mood]}" fill="none" stroke="var(--_l)" stroke-linecap="round"/>` +
@@ -132,8 +132,8 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
       scale += `<text x="${num(left - 12)}" y="${num(y + tiny * 0.35)}">${score}</text>`;
     }
     body +=
-      `<path class="pele-grid" d="${grid}" fill="none" stroke="var(--_a)"/>` +
-      `<g class="pele-scale" font-size="${tiny}" text-anchor="end" fill="var(--_m)">${scale}</g>`;
+      `<path class="pelers-grid" d="${grid}" fill="none" stroke="var(--_a)"/>` +
+      `<g class="pelers-scale" font-size="${tiny}" text-anchor="end" fill="var(--_m)">${scale}</g>`;
 
     let line = '';
     let stems = '';
@@ -154,11 +154,11 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
       const step = Math.min(DOT_STEP, (cardW - 2 * PAD_X - 2 * DOT) / Math.max(people.length - 1, 1));
       people.forEach((name, k) => {
         dots +=
-          `<circle class="pele-actor" cx="${num(cx + (k - (people.length - 1) / 2) * step)}" cy="${num(cardsY + cardH - PAD_Y - DOT)}" r="${DOT}" fill="${seriesColor(actor.get(name) ?? 0)}" stroke="var(--_s)">` +
+          `<circle class="pelers-actor" cx="${num(cx + (k - (people.length - 1) / 2) * step)}" cy="${num(cardsY + cardH - PAD_Y - DOT)}" r="${DOT}" fill="${seriesColor(actor.get(name) ?? 0)}" stroke="var(--_s)">` +
           `<title>${escText(name)}</title></circle>`;
       });
       cards.push(
-        `<g class="pele-node pele-task" data-id="${escText(task.task.trim())}">` +
+        `<g class="pelers-node pelers-task" data-id="${escText(task.task.trim())}">` +
           `<rect x="${num(x)}" y="${num(cardsY)}" width="${num(cardW)}" height="${num(cardH)}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>` +
           labelSvg(labels[i], cx, cardsY + PAD_Y + textH / 2, ` font-size="${small}"`) +
           dots +
@@ -166,8 +166,8 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
       );
     });
     body +=
-      `<path class="pele-stems" d="${stems}" fill="none" stroke="var(--_b)" stroke-dasharray="2 3"/>` +
-      (n > 1 ? `<path class="pele-edge" d="${line}" fill="none" stroke="var(--_l)" stroke-linejoin="round"/>` : '') +
+      `<path class="pelers-stems" d="${stems}" fill="none" stroke="var(--_b)" stroke-dasharray="2 3"/>` +
+      (n > 1 ? `<path class="pelers-edge" d="${line}" fill="none" stroke="var(--_l)" stroke-linejoin="round"/>` : '') +
       faces;
 
     for (const run of runs) {
@@ -179,7 +179,7 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
       const x = left + run.start * pitch;
       const w = run.count * pitch - GAP;
       body +=
-        `<g class="pele-cluster pele-section" data-id="${escText(tasks[run.start].section.trim())}">` +
+        `<g class="pelers-cluster pelers-section" data-id="${escText(tasks[run.start].section.trim())}">` +
         `<rect x="${num(x)}" y="${num(top)}" width="${num(w)}" height="${num(bandH)}" fill="var(--_a)"${ROUNDED}/>` +
         labelSvg(run.label, x + w / 2, top + bandH / 2, ` font-size="${small}" font-weight="var(--_hw)"`) +
         members +
@@ -194,12 +194,12 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
       for (const item of legend) {
         const cy = y0 + item.y + item.h / 2;
         items +=
-          `<g class="pele-legend-item" data-id="${escText(item.name)}">` +
+          `<g class="pelers-legend-item" data-id="${escText(item.name)}">` +
           `<circle cx="${num(x0 + item.x + DOT)}" cy="${num(cy)}" r="${DOT}" fill="${seriesColor(actor.get(item.name) ?? 0)}"/>` +
           labelSvg(item.label, x0 + item.x + 2 * DOT + 6 + item.label.width / 2, cy, '') +
           '</g>';
       }
-      body += `<g class="pele-legend" font-size="${small}">${items}</g>`;
+      body += `<g class="pelers-legend" font-size="${small}">${items}</g>`;
       bottom = y0 + legendH;
     }
   }
@@ -207,7 +207,7 @@ function draw(model: JourneyModel, _config: Config, options: RenderOptions, down
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(Math.max(bottom, pad) + pad);
   const content =
-    labelSvg(title, pad + width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') + body;
+    labelSvg(title, pad + width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') + body;
   return {
     svg: svgDocument('journey', totalWidth, totalHeight, size, options, model, content),
     width: totalWidth,
@@ -238,7 +238,7 @@ function verticalJourney(model: JourneyModel, options: RenderOptions): Rendered 
           head,
           pad + 8 + head.width / 2,
           y + head.height / 2,
-          ' class="pele-cluster-label" font-weight="var(--_hw)"'
+          ' class="pelers-cluster-label" font-weight="var(--_hw)"'
         );
         width = Math.max(width, head.width + 16);
         y += head.height + 8;
@@ -252,36 +252,36 @@ function verticalJourney(model: JourneyModel, options: RenderOptions): Rendered 
     let h = 2 * PAD_Y + textH;
     for (const person of people) h += Math.max(16, person.label.height) + 4;
     const w = Math.max(room, label.width + 72);
-    body += `<g class="pele-node pele-journey-step" data-id="${index}"><rect x="${num(pad)}" y="${num(y)}" width="${num(w)}" height="${num(h)}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>`;
-    body += labelSvg(label, pad + PAD_X + label.width / 2, y + PAD_Y + label.height / 2, ' class="pele-label"');
+    body += `<g class="pelers-node pelers-journey-step" data-id="${index}"><rect x="${num(pad)}" y="${num(y)}" width="${num(w)}" height="${num(h)}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>`;
+    body += labelSvg(label, pad + PAD_X + label.width / 2, y + PAD_Y + label.height / 2, ' class="pelers-label"');
     const cx = pad + w - 28;
     body += face(cx, y + PAD_Y + FACE, task.score > 3 ? 'happy' : task.score < 3 ? 'sad' : 'neutral');
     if (!Number.isNaN(task.score))
-      body += `<text class="pele-journey-score" x="${num(cx)}" y="${num(y + PAD_Y + 2 * FACE + small)}" font-size="${small}" text-anchor="middle">${num(Math.min(5, Math.max(1, task.score)))}</text>`;
+      body += `<text class="pelers-journey-score" x="${num(cx)}" y="${num(y + PAD_Y + 2 * FACE + small)}" font-size="${small}" text-anchor="middle">${num(Math.min(5, Math.max(1, task.score)))}</text>`;
     let py = y + PAD_Y + textH + 4;
     for (const person of people) {
       const ph = Math.max(16, person.label.height);
       body +=
-        `<circle class="pele-actor" cx="${num(pad + 16)}" cy="${num(py + ph / 2)}" r="${DOT}" fill="${seriesColor(actors.get(person.name)!)}"/>` +
+        `<circle class="pelers-actor" cx="${num(pad + 16)}" cy="${num(py + ph / 2)}" r="${DOT}" fill="${seriesColor(actors.get(person.name)!)}"/>` +
         labelSvg(
           person.label,
           pad + 28 + person.label.width / 2,
           py + ph / 2,
-          ` class="pele-journey-actor" font-size="${small}"`
+          ` class="pelers-journey-actor" font-size="${small}"`
         );
       py += ph + 4;
     }
     body += '</g>';
     y += h;
     if (index + 1 < model.tasks.length)
-      body += `<path class="pele-edge" d="M${num(pad + w / 2)},${num(y)}v16" fill="none" stroke="var(--_l)"/>`;
+      body += `<path class="pelers-edge" d="M${num(pad + w / 2)},${num(y)}v16" fill="none" stroke="var(--_l)"/>`;
     y += 16;
     width = Math.max(width, w);
   });
   const totalWidth = Math.ceil(width + 2 * pad);
   const height = Math.ceil(Math.max(pad + title.height, y - (model.tasks.length ? 16 : 0)) + pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') + body;
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') + body;
   return {
     svg: svgDocument('journey', totalWidth, height, size, options, model, content),
     width: totalWidth,

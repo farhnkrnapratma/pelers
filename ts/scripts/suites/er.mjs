@@ -9,7 +9,7 @@ export default {
   notPorted: [
     [
       'erRenderer.spec.ts',
-      "Tests generateId from Mermaid's legacy d3 renderer, which derives DOM ids from a UUID. Pele writes no element ids.",
+      "Tests generateId from Mermaid's legacy d3 renderer, which derives DOM ids from a UUID. Pelers writes no element ids.",
     ],
   ],
   rewrite: [

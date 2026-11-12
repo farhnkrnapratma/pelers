@@ -69,7 +69,7 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
   const icons = options.icons;
   const showDescriptions = (config.cynefin as Config | undefined)?.showDomainDescriptions !== false;
   const amplitude = setting(config, 'boundaryAmplitude', 8, 0, 50);
-  const seed = resolveSeed(setting(config, 'seed', 0, -1e15, 1e15), options.idPrefix ?? 'pele');
+  const seed = resolveSeed(setting(config, 'seed', 0, -1e15, 1e15), options.idPrefix ?? 'pelers');
   const itemLine = Math.round(itemSize * 1.5);
 
   const badge = (text: string, overflow: boolean): Badge => {
@@ -162,29 +162,29 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
 
   let fills = '';
   for (const [name, , , color] of QUADRANTS) {
-    fills += `<path class="pele-cynefin-region" data-id="${name}" d="${regions.get(name)!}" fill="${seriesColor(color)}" fill-opacity="0.14"/>`;
+    fills += `<path class="pelers-cynefin-region" data-id="${name}" d="${regions.get(name)!}" fill="${seriesColor(color)}" fill-opacity="0.14"/>`;
   }
   const boundaries =
-    `<g class="pele-cynefin-boundaries" fill="none" stroke="var(--_b)" stroke-dasharray="6 3">` +
+    `<g class="pelers-cynefin-boundaries" fill="none" stroke="var(--_b)" stroke-dasharray="6 3">` +
     `<path d="${curvePath(fold)}"/><path d="${curvePath(west)}"/><path d="${curvePath(east)}"/>` +
-    `<path class="pele-cynefin-cliff" d="${curvePath(drop)}" stroke="var(--_l)" stroke-width="2" stroke-dasharray="none" stroke-linecap="round"/></g>`;
+    `<path class="pelers-cynefin-cliff" d="${curvePath(drop)}" stroke="var(--_l)" stroke-width="2" stroke-dasharray="none" stroke-linecap="round"/></g>`;
   const oval = ellipsePath(cx, cy, rx, ry);
   const ellipse =
     `<path d="${oval}" fill="var(--_bg)"/>` +
-    `<path class="pele-cynefin-region" data-id="confusion" d="${oval}" fill="${seriesColor(
+    `<path class="pelers-cynefin-region" data-id="confusion" d="${oval}" fill="${seriesColor(
       CONFUSION_COLOR
     )}" fill-opacity="0.18" stroke="var(--_b)" stroke-dasharray="4 2"/>`;
 
   const drawBlock = (b: Block): string => {
     let y = b.cy - b.h / 2;
-    let out = labelSvg(b.title, b.cx, y + b.title.height / 2, ' class="pele-label" font-weight="var(--_hw)"');
+    let out = labelSvg(b.title, b.cx, y + b.title.height / 2, ' class="pelers-label" font-weight="var(--_hw)"');
     y += b.title.height;
     for (const s of b.subtitles) {
       out += labelSvg(
         s,
         b.cx,
         y + s.height / 2,
-        ` class="pele-cynefin-subtitle" font-size="${small}" font-style="italic" fill="var(--_m)"`
+        ` class="pelers-cynefin-subtitle" font-size="${small}" font-style="italic" fill="var(--_m)"`
       );
       y += s.height;
     }
@@ -192,7 +192,7 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
     for (const item of b.badges) {
       y += ITEM_GAP;
       out +=
-        `<g class="pele-node${item.overflow ? ' pele-cynefin-overflow' : ''}"${item.overflow ? '' : ` data-id="${escText(item.text)}"`}>` +
+        `<g class="pelers-node${item.overflow ? ' pelers-cynefin-overflow' : ''}"${item.overflow ? '' : ` data-id="${escText(item.text)}"`}>` +
         `<rect x="${num(b.cx - item.w / 2)}" y="${num(y)}" width="${num(item.w)}" height="${num(
           item.h
         )}" fill="var(--_bg)" stroke="var(--_b)"${item.overflow ? ' stroke-dasharray="3 2"' : ''}${ROUNDED}/>` +
@@ -200,13 +200,13 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
           item.label,
           b.cx,
           y + item.h / 2,
-          ` class="pele-label" font-size="${itemSize}"${item.overflow ? ' fill="var(--_m)"' : ''}`,
+          ` class="pelers-label" font-size="${itemSize}"${item.overflow ? ' fill="var(--_m)"' : ''}`,
           icons
         ) +
         '</g>';
       y += item.h;
     }
-    return `<g class="pele-cynefin-domain" data-id="${b.name}">${out}</g>`;
+    return `<g class="pelers-cynefin-domain" data-id="${b.name}">${out}</g>`;
   };
 
   const blocks = new Map<DomainName, Block>();
@@ -293,10 +293,10 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
       const away = (Math.abs(nx) * label.width) / 2 + (Math.abs(ny) * label.height) / 2 + 6;
       const half = label.width / 2 + 4;
       const tx = Math.min(Math.max(lx + nx * away, x0 + half), Math.max(right - half, x0 + half));
-      text = labelSvg(label, tx, ly + ny * away, ` class="pele-edge-label" font-size="${small}"`, icons);
+      text = labelSvg(label, tx, ly + ny * away, ` class="pelers-edge-label" font-size="${small}"`, icons);
     }
     edges +=
-      `<g class="pele-edge" data-id="${transition.from}-${transition.to}">` +
+      `<g class="pelers-edge" data-id="${transition.from}-${transition.to}">` +
       `<path d="M${num(sx)},${num(sy)}Q${num(qx)},${num(qy)} ${num(ex)},${num(ey)}" fill="none" stroke="var(--_l)"/>` +
       head +
       text +
@@ -306,12 +306,12 @@ export function renderCynefin(model: CynefinModel, config: Config, options: Rend
   const totalWidth = Math.ceil(Math.max(width, title.width) + 2 * pad);
   const totalHeight = Math.ceil(height + titleHeight + 2 * pad);
   const content =
-    labelSvg(title, x0 + width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    `<g class="pele-cynefin-regions">${fills}</g>` +
+    labelSvg(title, x0 + width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    `<g class="pelers-cynefin-regions">${fills}</g>` +
     boundaries +
     ellipse +
     domains +
-    (edges ? `<g class="pele-edges">${edges}</g>` : '');
+    (edges ? `<g class="pelers-edges">${edges}</g>` : '');
 
   return {
     svg: svgDocument('cynefin', totalWidth, totalHeight, size, options, model, content),

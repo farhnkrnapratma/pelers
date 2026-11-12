@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -11,7 +11,7 @@ function check(src: string, extra: object = {}): boolean {
   try {
     svg = render(src, { ...options, ...extra }).svg;
   } catch (error) {
-    if (error instanceof PeleError) return false;
+    if (error instanceof PelersError) return false;
     throw new Error(
       `Unexpected ${(error as Error).name} for ${JSON.stringify(src).slice(0, 200)}: ${(error as Error).message}`
     );
@@ -129,7 +129,7 @@ describe('inert journey output', () => {
       'journey\n  section __proto__\n  constructor: 5: __proto__, constructor, toString, hasOwnProperty\n  __proto__: 1: valueOf\n',
       options
     );
-    expect(svg.split('class="pele-legend-item"').length - 1).toBe(5);
+    expect(svg.split('class="pelers-legend-item"').length - 1).toBe(5);
     expect(svg).toContain('data-id="__proto__"');
     render('---\nconfig:\n  journey:\n    __proto__:\n      polluted: true\n---\njourney\n  Task: 5: Me', options);
     expect(({} as Record<string, unknown>).polluted).toBeUndefined();

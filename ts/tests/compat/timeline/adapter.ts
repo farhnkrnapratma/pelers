@@ -1,7 +1,7 @@
 import { TimelineDb } from '../../../src/diagrams/timeline/db.js';
 import { parseTimeline } from '../../../src/diagrams/timeline/parser.js';
 
-// Exposes Pele's timeline model through the functions Mermaid's specs import from timelineDb.js,
+// Exposes Pelers's timeline model through the functions Mermaid's specs import from timelineDb.js,
 // commonDb.js and the generated parser. The spec assigns this module itself as the parser's `yy`.
 
 let db = new TimelineDb();

@@ -1,5 +1,5 @@
 // Bundles Mermaid's use case parser (a hand-written Chevrotain parser, its visitor, model builder
-// and DB) into tests/support/usecase-reference.mjs, the reference Pele's parser is compared with.
+// and DB) into tests/support/usecase-reference.mjs, the reference Pelers's parser is compared with.
 // Usage: node tests/support/build-usecase-reference.mjs <mermaid checkout> <directory holding the chevrotain package>
 import { build } from 'esbuild';
 import { execFileSync } from 'node:child_process';

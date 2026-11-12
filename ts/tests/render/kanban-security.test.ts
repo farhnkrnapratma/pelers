@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -13,7 +13,7 @@ function check(src: string, extra: object = {}): boolean {
   try {
     svg = render(src, { ...options, ...extra }).svg;
   } catch (error) {
-    if (error instanceof PeleError) return false;
+    if (error instanceof PelersError) return false;
     throw new Error(
       `Unexpected ${(error as Error).name} for ${JSON.stringify(src).slice(0, 200)}: ${(error as Error).message}`
     );
@@ -89,7 +89,7 @@ describe('inert kanban output', () => {
     const src = `${BASE}kanban\n  a<b>"&[<i onload=x>"&]\n  :::a"b <c> d=e\n    c@{ ticket: '"><x>&', assigned: 'x < y "&' }`;
     const { svg, links } = render(src, options);
     expect(svg).toContain('data-id="a&lt;b&gt;&quot;&amp;"');
-    expect(svg).toContain('class="pele-cluster pele-column a b c d e"');
+    expect(svg).toContain('class="pelers-cluster pelers-column a b c d e"');
     expect(svg).toContain('>x &lt; y &quot;&amp;</text>');
     expect(svg).not.toContain('<i');
     expect(svg).not.toContain('<x>');

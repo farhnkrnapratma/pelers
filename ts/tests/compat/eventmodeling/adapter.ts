@@ -1,10 +1,10 @@
 import { buildEventModel, type EventModelingModel } from '../../../src/diagrams/eventmodeling/model.js';
 import { parseEventModel, type EventModelAst } from '../../../src/diagrams/eventmodeling/parser.js';
 import { checkSourceFrameTypes, type Accept, type CheckedFrame } from './validator.js';
-import { parse as peleParse } from '../../../src/index.js';
+import { parse as pelersParse } from '../../../src/index.js';
 import { toResult } from '../../support/langium.js';
 
-// The spec stubs text measurement on the DOM's SVGElement, which Pele does not use.
+// The spec stubs text measurement on the DOM's SVGElement, which Pelers does not use.
 const scope = globalThis as { SVGElement?: unknown };
 scope.SVGElement ??= class {};
 
@@ -69,6 +69,6 @@ export const parser = {
 
 export const mermaidAPI = {
   async parse(src: string): Promise<void> {
-    peleParse(src);
+    pelersParse(src);
   },
 };

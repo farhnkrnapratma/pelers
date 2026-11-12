@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { parseTreemap } from '../../src/diagrams/treemap/parser.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -70,7 +70,7 @@ describe('treemap worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },

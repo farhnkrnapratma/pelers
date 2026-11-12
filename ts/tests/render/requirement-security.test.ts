@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { RequirementDb } from '../../src/diagrams/requirement/db.js';
 import { renderRequirement } from '../../src/diagrams/requirement/render.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
@@ -13,7 +13,7 @@ function check(src: string, extra: object = {}): boolean {
   try {
     svg = render(src, { ...options, ...extra }).svg;
   } catch (error) {
-    if (error instanceof PeleError) return false;
+    if (error instanceof PelersError) return false;
     throw new Error(
       `Unexpected ${(error as Error).name} for ${JSON.stringify(src).slice(0, 200)}: ${(error as Error).message}`
     );

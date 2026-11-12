@@ -7,7 +7,7 @@ export default {
       file: 'usecase.parser.spec.ts',
       test: 'defines the stable canonical CST rule names',
       reason:
-        "Reads the rule names out of Chevrotain's grammar recorder. Pele's parser is hand-written and has no grammar object.",
+        "Reads the rule names out of Chevrotain's grammar recorder. Pelers's parser is hand-written and has no grammar object.",
     },
   ],
   notPorted: [],

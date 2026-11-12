@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 import { NOTATIONS, corpusFor, grammar, longerAlternatives, pieces } from '../support/railroad-oracle.js';
 
 for (const notation of NOTATIONS) {
@@ -8,7 +8,7 @@ for (const notation of NOTATIONS) {
 
   const compare = async (src: string): Promise<boolean> => {
     const expected = await referenceAst(notation.type, src);
-    const actual = peleAst(notation.parse, src);
+    const actual = pelersAst(notation.parse, src);
     expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
     if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
     return expected.ok;
@@ -16,7 +16,7 @@ for (const notation of NOTATIONS) {
 
   describe(`${notation.name} parser against the Mermaid grammar`, () => {
     it('uses the same token types in the same order, with the same longer alternatives', () => {
-      expect(peleTokens(notation.tokens)).toEqual(referenceTokens(notation.create, notation.key));
+      expect(pelersTokens(notation.tokens)).toEqual(referenceTokens(notation.create, notation.key));
       expect(notation.tokens.map((t) => (t.longer ?? []).map((alt) => alt.name))).toEqual(longerAlternatives(notation));
     });
 
