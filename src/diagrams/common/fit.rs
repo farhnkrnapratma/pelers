@@ -45,7 +45,11 @@ pub fn plain_label(raw: Option<&str>, size: f64, max: f64, base: u32) -> Label {
         } else {
             text.to_owned()
         };
-        text.replace(":fa-", "&colon;fa-")
+        if text.contains(':') {
+            text.replace(":fa-", "&colon;fa-")
+        } else {
+            text
+        }
     });
     layout_label(text.as_deref(), false, size, max, base)
 }
