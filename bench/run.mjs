@@ -142,7 +142,7 @@ for (const [index, { type, source }] of corpus.entries()) {
   let pelersSvg;
   let referenceSvg;
   try {
-    pelersSvg = pelers.render(source).svg;
+    pelersSvg = pelers.render(source);
   } catch {
     pelersSvg = null;
   }

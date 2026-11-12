@@ -11,7 +11,9 @@ export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-was
 
 export declare function detectType(source: string): string | null
 
-export declare function render(source: string): RenderResult
+export declare function render(source: string): string
+
+export declare function renderFull(source: string): RenderResult
 
 export interface RenderResult {
   svg: string

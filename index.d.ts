@@ -12,6 +12,7 @@ export interface RenderResult {
     title?: string;
 }
 
-export declare function render(source: string): RenderResult;
+export declare function render(source: string): string;
+export declare function renderFull(source: string): RenderResult;
 export declare function detectType(source: string): string | null;
 export declare function supports(source: string): boolean;

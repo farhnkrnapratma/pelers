@@ -773,8 +773,9 @@ if (
   }
 }
 
-const { detectType, render, supports } = nativeBinding
+const { detectType, render, renderFull, supports } = nativeBinding
 export { detectType }
 export { render }
+export { renderFull }
 export { supports }
 export const __napiBindingTarget = __napiLoadedBindingTarget

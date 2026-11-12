@@ -1,4 +1,4 @@
-import { detectType as nativeDetectType, render as nativeRender, supports } from './index.native.js';
+import { detectType as nativeDetectType, render as nativeRender, renderFull as nativeRenderFull, supports } from './index.native.js';
 
 export class PelersError extends Error {
     constructor(message, code) {
@@ -15,6 +15,14 @@ const fail = error => {
 export function render(source) {
     try {
         return nativeRender(source);
+    } catch (error) {
+        return fail(error);
+    }
+}
+
+export function renderFull(source) {
+    try {
+        return nativeRenderFull(source);
     } catch (error) {
         return fail(error);
     }

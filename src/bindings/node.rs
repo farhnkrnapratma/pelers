@@ -49,7 +49,12 @@ fn render_catching_panics(source: &str) -> std::result::Result<crate::RenderResu
 }
 
 #[napi]
-pub fn render(source: String) -> std::result::Result<RenderResult, Error<String>> {
+pub fn render(source: String) -> std::result::Result<String, Error<String>> {
+    Ok(render_catching_panics(&source).map_err(to_napi)?.svg)
+}
+
+#[napi(js_name = "renderFull")]
+pub fn render_full(source: String) -> std::result::Result<RenderResult, Error<String>> {
     let rendered = render_catching_panics(&source).map_err(to_napi)?;
     Ok(RenderResult {
         svg: rendered.svg,
@@ -66,12 +71,7 @@ pub fn detect_type(source: String) -> Option<String> {
 
 #[napi]
 pub fn supports(source: String) -> bool {
-    detect_diagram(&source).is_some_and(|found| {
-        matches!(
-            found.diagram_type,
-            DiagramType::Flowchart | DiagramType::Info | DiagramType::Packet | DiagramType::Pie
-        )
-    })
+    detect_diagram(&source).is_some()
 }
 
 #[cfg(test)]
@@ -80,13 +80,15 @@ mod tests {
 
     #[test]
     fn renders_a_flowchart() {
-        let result = render("flowchart LR\n  A --> B".to_owned()).unwrap();
-        assert!(result.svg.starts_with("<svg"));
+        let svg = render("flowchart LR\n  A --> B".to_owned()).unwrap();
+        assert!(svg.starts_with("<svg"));
+        let full = render_full("flowchart LR\n  A --> B".to_owned()).unwrap();
+        assert!(full.svg.starts_with("<svg") && full.width > 0.0 && full.height > 0.0);
     }
 
     #[test]
-    fn rejects_unsupported_with_a_code() {
-        let error = render("sequenceDiagram\n  A->>B: hi".to_owned()).unwrap_err();
+    fn rejects_unknown_with_a_code() {
+        let error = render("hello".to_owned()).unwrap_err();
         assert_eq!(error.status, "unsupported-diagram");
     }
 
@@ -97,6 +99,8 @@ mod tests {
             Some("pie")
         );
         assert!(supports("graph TD\n A-->B".to_owned()));
-        assert!(!supports("pie\n \"a\": 1".to_owned()));
+        assert!(supports("pie\n \"a\": 1".to_owned()));
+        assert!(supports("sequenceDiagram\n  A->>B: hi".to_owned()));
+        assert!(!supports("hello".to_owned()));
     }
 }

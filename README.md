@@ -14,7 +14,7 @@ Alpha. The port is in progress; the TypeScript renderer in [`ts/`](ts) is the re
 | npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the TypeScript renderer (33 diagram types). The next version is the Rust binding and starts with flowcharts only; other types return `unsupported-diagram` until ported. |
 | crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. There is no command-line interface.                                    |
 
-The npm API of the Rust-backed version is `render`, `detectType`, `supports` and `PelersError`. `register()` and the per-diagram `pelers/diagrams/*` entry points of the TypeScript package go away.
+The npm API of the Rust-backed version is `render` (returns the SVG string), `renderFull` (returns `{ svg, width, height, title }`), `detectType`, `supports` and `PelersError`. `register()` and the per-diagram `pelers/diagrams/*` entry points of the TypeScript package go away.
 
 ## Install
 
@@ -28,9 +28,10 @@ cargo add pelers        # Rust
 JavaScript / TypeScript (Rust-backed version):
 
 ```ts
-import { render } from 'pelers';
+import { render, renderFull } from 'pelers';
 
-const { svg, width, height } = render('flowchart LR\n  A --> B');
+const svg = render('flowchart LR\n  A --> B');
+const { svg: sized, width, height } = renderFull('flowchart LR\n  A --> B');
 ```
 
 Rust:
