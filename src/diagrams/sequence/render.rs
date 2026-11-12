@@ -145,6 +145,26 @@ fn number_messages(messages: &[SeqMessage], always: bool) -> Numbering {
     Numbering { index, shown }
 }
 
+fn fill_ink(fill: &str) -> Option<String> {
+    thread_local! {
+        static CACHE: std::cell::RefCell<std::collections::HashMap<String, Option<String>>> =
+            std::cell::RefCell::new(std::collections::HashMap::new());
+    }
+    CACHE.with(|cache| {
+        if let Some(color) = cache.borrow().get(fill) {
+            return color.clone();
+        }
+        let shape = resolve_style(&[format!("fill:{fill}")]).shape;
+        let color = ink(&shape, "").map(str::to_owned);
+        let mut cache = cache.borrow_mut();
+        if cache.len() >= 1 << 12 {
+            cache.clear();
+        }
+        cache.insert(fill.to_owned(), color.clone());
+        color
+    })
+}
+
 #[derive(Clone, Debug)]
 struct Column {
     id: String,
@@ -462,8 +482,7 @@ impl Ctx<'_> {
         if let Some(cached) = self.inks.get(fill) {
             return cached.clone();
         }
-        let shape = resolve_style(&[format!("fill:{fill}")]).shape;
-        let color = ink(&shape, "").map(str::to_owned);
+        let color = fill_ink(fill);
         self.inks.insert(fill.to_owned(), color.clone());
         color
     }
@@ -515,8 +534,9 @@ impl Ctx<'_> {
         self.place();
         self.min_x = f64::INFINITY;
         self.max_x = f64::NEG_INFINITY;
-        for col in self.cols.clone() {
-            self.extend(col.x - col.size.w / 2.0, col.x + col.size.w / 2.0);
+        for i in 0..self.cols.len() {
+            let (x, w) = (self.cols[i].x, self.cols[i].size.w);
+            self.extend(x - w / 2.0, x + w / 2.0);
         }
         for run in self.runs.clone() {
             let (x0, x1) = self.box_edges(&run);
@@ -994,8 +1014,8 @@ fn draw(
 
     ctx.gaps = vec![0.0; n_cols.saturating_sub(1)];
     for i in 0..n_cols.saturating_sub(1) {
-        let left = ctx.cols[i].clone();
-        let right = ctx.cols[i + 1].clone();
+        let left = &ctx.cols[i];
+        let right = &ctx.cols[i + 1];
         let boxed = if left.actor.box_index != right.actor.box_index {
             (if left.actor.box_index.is_some() {
                 box_pad
