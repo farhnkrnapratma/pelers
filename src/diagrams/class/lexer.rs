@@ -1,10 +1,11 @@
 use super::tokens::*;
+use crate::diagrams::common::spans::{Span, Spans, empty};
 use crate::util::chars::is_js_space;
 use crate::util::unicode::is_unicode_letter;
 
 pub struct Tokens {
     pub types: Vec<usize>,
-    pub texts: Vec<String>,
+    pub spans: Vec<Span>,
     pub starts: Vec<usize>,
 }
 
@@ -66,8 +67,9 @@ fn starts_with(u: &[u16], at: usize, word: &str) -> bool {
 struct Lexer {
     u: Vec<u16>,
     n: usize,
+    spans_of: Spans,
     types: Vec<usize>,
-    texts: Vec<String>,
+    spans: Vec<Span>,
     starts: Vec<usize>,
     stack: Vec<S>,
     state: S,
@@ -79,17 +81,18 @@ impl Lexer {
         self.u.get(i).copied().unwrap_or(0)
     }
 
-    fn text(&self, s: usize, e: usize) -> String {
+    fn span(&self, s: usize, e: usize) -> Span {
         let e = e.min(self.n);
         if s >= e {
-            return String::new();
+            return empty();
         }
-        String::from_utf16_lossy(&self.u[s..e])
+        self.spans_of.span(&self.u, s, e)
     }
 
     fn emit(&mut self, t: usize, s: usize, e: usize) -> bool {
         self.types.push(t);
-        self.texts.push(self.text(s, e));
+        let span = self.span(s, e);
+        self.spans.push(span);
         self.starts.push(s);
         self.p = e;
         true
@@ -416,7 +419,7 @@ impl Lexer {
                 let at_end = AT_END[self.state as usize];
                 let n = self.n;
                 self.types.push(at_end);
-                self.texts.push(String::new());
+                self.spans.push(empty());
                 self.starts.push(n);
                 break;
             }
@@ -599,22 +602,22 @@ impl Lexer {
             };
             if !ok {
                 self.types.push(ERROR);
-                self.texts.push(String::new());
+                self.spans.push(empty());
                 self.starts.push(p);
                 return Tokens {
                     types: self.types,
-                    texts: self.texts,
+                    spans: self.spans,
                     starts: self.starts,
                 };
             }
         }
         let n = self.n;
         self.types.push(END);
-        self.texts.push(String::new());
+        self.spans.push(empty());
         self.starts.push(n);
         Tokens {
             types: self.types,
-            texts: self.texts,
+            spans: self.spans,
             starts: self.starts,
         }
     }
@@ -624,10 +627,11 @@ pub fn tokenize(src: &str) -> Tokens {
     let u: Vec<u16> = src.encode_utf16().collect();
     let n = u.len();
     Lexer {
+        spans_of: Spans::new(src),
         u,
         n,
         types: Vec::new(),
-        texts: Vec::new(),
+        spans: Vec::new(),
         starts: Vec::new(),
         stack: Vec::new(),
         state: S::Initial,

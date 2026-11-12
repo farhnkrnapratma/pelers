@@ -1,6 +1,7 @@
 use super::lexer::tokenize;
 use super::model::{Attr, C4Db, Named};
 use super::tokens::*;
+use crate::diagrams::common::spans::{Span, text as span_text};
 use crate::errors::{PelersError, lexical_error, syntax_error};
 use crate::util::chars::{trim, utf16_to_byte};
 
@@ -59,7 +60,7 @@ fn is_diagram(t: usize) -> bool {
 struct Parser<'a, 'b> {
     src: &'a str,
     types: Vec<usize>,
-    texts: Vec<String>,
+    spans: Vec<Span>,
     starts: Vec<usize>,
     i: usize,
     db: &'b mut C4Db,
@@ -71,7 +72,9 @@ impl Parser<'_, '_> {
     }
 
     fn text(&self, at: usize) -> &str {
-        self.texts.get(at).map_or("", String::as_str)
+        self.spans
+            .get(at)
+            .map_or("", |span| span_text(self.src, span))
     }
 
     fn fail<T>(&self, expected: &str) -> Result<T, PelersError> {
@@ -228,7 +231,7 @@ pub fn parse_c4(src: &str, db: &mut C4Db) -> Result<(), PelersError> {
     let mut p = Parser {
         src,
         types: tokens.types,
-        texts: tokens.texts,
+        spans: tokens.spans,
         starts: tokens.starts,
         i: 0,
         db,

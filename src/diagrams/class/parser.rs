@@ -2,6 +2,7 @@ use super::db::ClassDb;
 use super::lexer::tokenize;
 use super::tokens::*;
 use super::types::{ClassRelation, RelationEnd};
+use crate::diagrams::common::spans::{Span, text as span_text};
 use crate::errors::{PelersError, lexical_error, syntax_error};
 use crate::util::chars::{trim, utf16_to_byte};
 
@@ -36,7 +37,7 @@ struct Frame {
 struct Parser<'a, 'b> {
     src: &'a str,
     types: Vec<usize>,
-    texts: Vec<String>,
+    spans: Vec<Span>,
     starts: Vec<usize>,
     i: usize,
     db: &'b mut ClassDb,
@@ -47,8 +48,10 @@ impl Parser<'_, '_> {
         self.types.get(at).copied().unwrap_or(usize::MAX)
     }
 
-    fn text(&self, at: usize) -> String {
-        self.texts.get(at).cloned().unwrap_or_default()
+    fn text(&self, at: usize) -> &str {
+        self.spans
+            .get(at)
+            .map_or("", |span| span_text(self.src, span))
     }
 
     fn fail<T>(&self, expected: &str) -> Result<T, PelersError> {
@@ -75,7 +78,7 @@ impl Parser<'_, '_> {
         if self.ty(self.i) != t {
             return self.fail(&format!("'{}'", TOKEN_NAMES[t]));
         }
-        let text = self.text(self.i);
+        let text = self.text(self.i).to_owned();
         self.i += 1;
         Ok(text)
     }
@@ -84,7 +87,7 @@ impl Parser<'_, '_> {
         if !is_alphanum(self.ty(self.i)) {
             return self.fail("'UNICODE_TEXT', 'NUM', 'ALPHA', 'MINUS'");
         }
-        let text = self.text(self.i);
+        let text = self.text(self.i).to_owned();
         self.i += 1;
         Ok(text)
     }
@@ -93,14 +96,14 @@ impl Parser<'_, '_> {
         let mut out = String::new();
         loop {
             if self.ty(self.i) == BQUOTE_STR {
-                out.push_str(&self.text(self.i));
+                out.push_str(self.text(self.i));
                 self.i += 1;
                 break;
             }
             if !is_alphanum(self.ty(self.i)) {
                 return self.fail(NAME_TOKENS);
             }
-            out.push_str(&self.text(self.i));
+            out.push_str(self.text(self.i));
             self.i += 1;
             let t = self.ty(self.i);
             if t == DOT {
@@ -112,7 +115,7 @@ impl Parser<'_, '_> {
         }
         if generic && self.ty(self.i) == GENERICTYPE {
             out.push('~');
-            out.push_str(&self.text(self.i));
+            out.push_str(self.text(self.i));
             out.push('~');
             self.i += 1;
         }
@@ -132,7 +135,7 @@ impl Parser<'_, '_> {
         }
         let mut list = Vec::new();
         while self.ty(self.i) == MEMBER {
-            list.push(self.text(self.i));
+            list.push(self.text(self.i).to_owned());
             self.i += 1;
         }
         self.expect(STRUCT_STOP)?;
@@ -278,14 +281,14 @@ impl Parser<'_, '_> {
         let id1 = self.name(true)?;
         let mut t = self.ty(self.i);
         if t == LABEL {
-            let label = self.db.cleanup_label(&self.text(self.i));
+            let label = self.db.cleanup_label(self.text(self.i));
             self.i += 1;
             self.db.add_member(&id1, &label);
             return Ok(());
         }
         let mut title1 = "none".to_owned();
         if t == STR {
-            title1 = self.text(self.i);
+            title1 = self.text(self.i).to_owned();
             self.i += 1;
         } else if end_type(t).is_none() && t != LINE && t != DOTTED_LINE {
             return Ok(());
@@ -300,7 +303,7 @@ impl Parser<'_, '_> {
         self.i += 1;
         let type2 = self.relation_end();
         let title2 = if self.ty(self.i) == STR {
-            let text = self.text(self.i);
+            let text = self.text(self.i).to_owned();
             self.i += 1;
             text
         } else {
@@ -318,7 +321,7 @@ impl Parser<'_, '_> {
             line_type: u8::from(t != LINE),
         };
         if self.ty(self.i) == LABEL {
-            relation.title = Some(self.db.cleanup_label(&self.text(self.i)));
+            relation.title = Some(self.db.cleanup_label(self.text(self.i)));
             self.i += 1;
         }
         self.db.add_relation(relation);
@@ -333,10 +336,10 @@ impl Parser<'_, '_> {
                     "'ALPHA', 'NUM', 'COLON', 'UNIT', 'SPACE', 'BRKT', 'STYLE', 'PCT', 'LABEL'",
                 );
             }
-            let mut s = self.text(self.i);
+            let mut s = self.text(self.i).to_owned();
             self.i += 1;
             while is_style_part(self.ty(self.i)) {
-                s.push_str(&self.text(self.i));
+                s.push_str(self.text(self.i));
                 self.i += 1;
             }
             out.push(s);
@@ -349,7 +352,7 @@ impl Parser<'_, '_> {
 
     fn tooltip(&mut self, id: &str) {
         if self.ty(self.i) == STR {
-            let text = self.text(self.i);
+            let text = self.text(self.i).to_owned();
             self.i += 1;
             self.db.set_tooltip(id, Some(&text));
         }
@@ -358,14 +361,14 @@ impl Parser<'_, '_> {
     fn link_statement(&mut self, id: &str) -> Result<(), PelersError> {
         let href = self.expect(STR)?;
         let tip = if self.ty(self.i) == STR {
-            let text = self.text(self.i);
+            let text = self.text(self.i).to_owned();
             self.i += 1;
             Some(text)
         } else {
             None
         };
         if self.ty(self.i) == LINK_TARGET {
-            let target = self.text(self.i);
+            let target = self.text(self.i).to_owned();
             self.i += 1;
             self.db.set_link(id, &href, Some(&target));
         } else {
@@ -479,7 +482,7 @@ impl Parser<'_, '_> {
                 return Ok(());
             }
             ACC_DESCR_MULTILINE_VALUE => {
-                let value = self.text(self.i);
+                let value = self.text(self.i).to_owned();
                 self.i += 1;
                 self.db.set_acc_description(trim(&value));
                 return Ok(());
@@ -518,7 +521,7 @@ pub fn parse_class_diagram(src: &str, db: &mut ClassDb) -> Result<(), PelersErro
     let mut parser = Parser {
         src,
         types: tokens.types,
-        texts: tokens.texts,
+        spans: tokens.spans,
         starts: tokens.starts,
         i: 0,
         db,

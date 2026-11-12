@@ -1,8 +1,9 @@
 use super::tokens::*;
+use crate::diagrams::common::spans::{Span, Spans};
 
 pub struct Tokens {
     pub types: Vec<usize>,
-    pub texts: Vec<String>,
+    pub spans: Vec<Span>,
     pub starts: Vec<usize>,
 }
 
@@ -91,21 +92,15 @@ fn is_line_end(c: u16) -> bool {
     matches!(c, 10 | 13 | 0x2028 | 0x2029)
 }
 
-fn keyword(word: &str) -> Option<usize> {
-    KEYWORDS
-        .iter()
-        .find(|(name, _)| *name == word)
-        .map(|&(_, t)| t)
-}
-
 struct Lexer {
     units: Vec<u16>,
+    spans_of: Spans,
     n: i64,
     p: i64,
     state: State,
     acc_value: usize,
     types: Vec<usize>,
-    texts: Vec<String>,
+    spans: Vec<Span>,
     starts: Vec<usize>,
     dir_next: i64,
     line_end: i64,
@@ -121,14 +116,20 @@ impl Lexer {
         }
     }
 
-    fn text(&self, s: i64, e: i64) -> String {
-        String::from_utf16_lossy(&self.units[s as usize..e as usize])
+    fn keyword_at(&self, s: i64, e: i64) -> Option<usize> {
+        let word = &self.units[s as usize..e as usize];
+        KEYWORDS
+            .iter()
+            .find(|(name, _)| {
+                name.len() == word.len() && name.bytes().zip(word).all(|(b, &u)| u16::from(b) == u)
+            })
+            .map(|&(_, t)| t)
     }
 
     fn emit(&mut self, t: usize, s: i64, e: i64) {
-        let text = self.text(s, e);
+        let span = self.spans_of.span(&self.units, s as usize, e as usize);
         self.types.push(t);
-        self.texts.push(text);
+        self.spans.push(span);
         self.starts.push(s as usize);
         self.p = e;
     }
@@ -238,7 +239,7 @@ impl Lexer {
     fn into_tokens(self) -> Tokens {
         Tokens {
             types: self.types,
-            texts: self.texts,
+            spans: self.spans,
             starts: self.starts,
         }
     }
@@ -249,12 +250,13 @@ pub fn tokenize(src: &str) -> Tokens {
     let n = units.len() as i64;
     let mut lx = Lexer {
         units,
+        spans_of: Spans::new(src),
         n,
         p: 0,
         state: State::Initial,
         acc_value: ACC_TITLE_VALUE,
         types: Vec::new(),
-        texts: Vec::new(),
+        spans: Vec::new(),
         starts: Vec::new(),
         dir_next: -2,
         line_end: -1,
@@ -378,7 +380,7 @@ pub fn tokenize(src: &str) -> Tokens {
                     q += 1;
                 }
                 let found = if q - p <= 19 {
-                    keyword(&lx.text(p, q))
+                    lx.keyword_at(p, q)
                 } else {
                     None
                 };

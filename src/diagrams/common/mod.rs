@@ -6,6 +6,7 @@ pub mod icon;
 pub mod literal_label;
 pub mod outline;
 pub mod scan;
+pub mod spans;
 pub mod tokens;
 
 use crate::util::chars::{is_js_space, trim_start};
