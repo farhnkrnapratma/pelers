@@ -74,6 +74,9 @@ pub fn js_number_to_string(value: f64) -> String {
     if value.is_infinite() {
         return if value < 0.0 { "-Infinity" } else { "Infinity" }.to_owned();
     }
+    if (1e-6..1e21).contains(&value.abs()) {
+        return format!("{value}");
+    }
     let sign = if value < 0.0 { "-" } else { "" };
     let scientific = format!("{:e}", value.abs());
     let (mantissa, exponent) = scientific
