@@ -102,8 +102,20 @@ pub fn series_color(index: usize) -> String {
 
 pub fn rounded(attrs: &str) -> String {
     match attrs.find(" style=\"") {
-        None => format!("{attrs}{ROUNDED}"),
-        Some(at) => format!("{}rx:var(--_r);{}", &attrs[..at + 8], &attrs[at + 8..]),
+        None => {
+            let mut out = String::with_capacity(attrs.len() + ROUNDED.len());
+            out.push_str(attrs);
+            out.push_str(ROUNDED);
+            out
+        }
+        Some(at) => {
+            let split = at + 8;
+            let mut out = String::with_capacity(attrs.len() + 16);
+            out.push_str(&attrs[..split]);
+            out.push_str("rx:var(--_r);");
+            out.push_str(&attrs[split..]);
+            out
+        }
     }
 }
 
