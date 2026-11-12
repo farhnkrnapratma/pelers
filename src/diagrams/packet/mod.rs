@@ -2,7 +2,7 @@ mod parser;
 mod render;
 
 use crate::diagrams::common::{acc_descr, acc_title};
-use crate::errors::{PeleError, PeleErrorCode};
+use crate::errors::{PelersError, PelersErrorCode};
 use crate::preprocess::Config;
 use crate::util::jsnum::{js_min, js_number_to_string};
 use crate::util::value::Value;
@@ -43,8 +43,8 @@ pub fn packet_option(config: &Config, key: &str, fallback: f64, min: f64, max: f
     }
 }
 
-fn invalid(message: String) -> PeleError {
-    let mut error = PeleError::new(message, PeleErrorCode::Semantic);
+fn invalid(message: String) -> PelersError {
+    let mut error = PelersError::new(message, PelersErrorCode::Semantic);
     error.diagram_type = Some("packet".to_owned());
     error
 }
@@ -53,7 +53,7 @@ pub fn build_packet(
     ast: PacketAst,
     config: &Config,
     title: Option<String>,
-) -> Result<PacketModel, PeleError> {
+) -> Result<PacketModel, PelersError> {
     let bits_per_row = packet_option(config, "bitsPerRow", 32.0, 1.0, 4096.0).floor();
     let mut rows: Vec<Vec<PacketBlock>> = Vec::new();
     let mut last_bit = -1.0;
@@ -133,7 +133,7 @@ pub fn parse(
     source: &str,
     config: &Config,
     title: Option<String>,
-) -> Result<PacketModel, PeleError> {
+) -> Result<PacketModel, PelersError> {
     build_packet(parse_packet(source)?, config, title)
 }
 
@@ -146,7 +146,7 @@ mod tests {
         parse_json(text).unwrap().as_object().cloned().unwrap()
     }
 
-    fn model(source: &str, json: &str) -> Result<PacketModel, PeleError> {
+    fn model(source: &str, json: &str) -> Result<PacketModel, PelersError> {
         parse(source, &config(json), None)
     }
 

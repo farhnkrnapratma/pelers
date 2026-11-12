@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum PeleErrorCode {
+pub enum PelersErrorCode {
     UnsupportedDiagram,
     Syntax,
     Semantic,
@@ -7,9 +7,9 @@ pub enum PeleErrorCode {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct PeleError {
+pub struct PelersError {
     pub message: String,
-    pub code: PeleErrorCode,
+    pub code: PelersErrorCode,
     pub diagram_type: Option<String>,
     pub mermaid_type: Option<String>,
     pub line: usize,
@@ -17,8 +17,8 @@ pub struct PeleError {
     pub snippet: String,
 }
 
-impl PeleError {
-    pub fn new(message: impl Into<String>, code: PeleErrorCode) -> Self {
+impl PelersError {
+    pub fn new(message: impl Into<String>, code: PelersErrorCode) -> Self {
         Self {
             message: message.into(),
             code,
@@ -31,13 +31,13 @@ impl PeleError {
     }
 }
 
-impl std::fmt::Display for PeleError {
+impl std::fmt::Display for PelersError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(&self.message)
     }
 }
 
-impl std::error::Error for PeleError {}
+impl std::error::Error for PelersError {}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Edit {
@@ -140,7 +140,7 @@ pub fn locating_in<T>(
     run()
 }
 
-fn written(source: &str, offset: usize) -> (String, usize) {
+pub fn written(source: &str, offset: usize) -> (String, usize) {
     ORIGIN.with(|slot| match slot.borrow().as_ref() {
         Some(origin) if origin.parsed == source => (origin.find)(offset),
         _ => (source.to_owned(), offset),
@@ -178,16 +178,16 @@ fn located(
     offset: usize,
     head: fn(usize) -> String,
     tail: &str,
-) -> PeleError {
+) -> PelersError {
     let (line, column, snippet) = locate(source, offset);
     let mut message = format!("{}\n{snippet}", head(line));
     if !tail.is_empty() {
         message.push('\n');
         message.push_str(tail);
     }
-    PeleError {
+    PelersError {
         message,
-        code: PeleErrorCode::Syntax,
+        code: PelersErrorCode::Syntax,
         diagram_type: Some(diagram_type),
         mermaid_type: None,
         line,
@@ -201,7 +201,7 @@ pub fn syntax_error(
     source: &str,
     offset: usize,
     detail: impl AsRef<str>,
-) -> PeleError {
+) -> PelersError {
     located(
         diagram_type.into(),
         source,
@@ -211,7 +211,7 @@ pub fn syntax_error(
     )
 }
 
-pub fn lexical_error(diagram_type: impl Into<String>, source: &str, offset: usize) -> PeleError {
+pub fn lexical_error(diagram_type: impl Into<String>, source: &str, offset: usize) -> PelersError {
     located(
         diagram_type.into(),
         source,
@@ -224,7 +224,7 @@ pub fn lexical_error(diagram_type: impl Into<String>, source: &str, offset: usiz
 #[cfg(test)]
 mod tests {
     use super::{
-        Edit, PeleErrorCode, input_offset, lexical_error, locate, locating_in, syntax_error,
+        Edit, PelersErrorCode, input_offset, lexical_error, locate, locating_in, syntax_error,
     };
 
     #[test]
@@ -278,14 +278,14 @@ mod tests {
     #[test]
     fn builds_structured_syntax_error() {
         let error = syntax_error("flowchart", "A\nB", 2, "expected edge");
-        assert_eq!(error.code, PeleErrorCode::Syntax);
+        assert_eq!(error.code, PelersErrorCode::Syntax);
         assert_eq!(error.line, 2);
         assert_eq!(error.column, 1);
     }
 
     #[test]
     fn displays_the_message() {
-        let error = super::PeleError::new("boom", PeleErrorCode::Syntax);
+        let error = super::PelersError::new("boom", PelersErrorCode::Syntax);
         assert_eq!(error.to_string(), "boom");
         let boxed: &dyn std::error::Error = &error;
         assert_eq!(boxed.to_string(), "boom");

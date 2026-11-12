@@ -3,7 +3,7 @@ use crate::diagrams::common::tokens::{
     TokenType, WHITESPACE, YAML, acc_descr_value, acc_title_value, keyword, string_value,
     title_value, tokenize,
 };
-use crate::errors::PeleError;
+use crate::errors::PelersError;
 
 const PACKET_BETA: i32 = 0;
 const PACKET: i32 = 1;
@@ -80,7 +80,7 @@ fn skip_newlines(r: &mut Reader) {
     }
 }
 
-fn end_of_line(r: &mut Reader) -> Result<(), PeleError> {
+fn end_of_line(r: &mut Reader) -> Result<(), PelersError> {
     if r.kind() == -1 {
         return Ok(());
     }
@@ -96,7 +96,7 @@ fn number(text: &str) -> f64 {
         .expect("an INT token is a decimal number")
 }
 
-pub fn parse_packet(src: &str) -> Result<PacketAst, PeleError> {
+pub fn parse_packet(src: &str) -> Result<PacketAst, PelersError> {
     let mut r = Reader::new(
         tokenize(src, &PACKET_TOKENS, "packet")?,
         &PACKET_TOKENS,

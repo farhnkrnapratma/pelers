@@ -180,7 +180,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                 }) * bit_width;
             let w = count * bit_width - gap;
             fields.push_str(&format!(
-                "<g class=\"pele-node\" data-id=\"{}-{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
+                "<g class=\"pelers-node\" data-id=\"{}-{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
                 js_number_to_string(block.start),
                 js_number_to_string(block.end),
                 num(x),
@@ -250,13 +250,13 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
     let mut content = String::new();
     if !fields.is_empty() {
         content.push_str(&format!(
-            "<g class=\"pele-packet-fields\" font-size=\"{}\" text-anchor=\"middle\">{fields}</g>",
+            "<g class=\"pelers-packet-fields\" font-size=\"{}\" text-anchor=\"middle\">{fields}</g>",
             js_number_to_string(label_size)
         ));
     }
     if !bits.is_empty() {
         content.push_str(&format!(
-            "<g class=\"pele-packet-bits\" font-size=\"{}\" fill=\"var(--_m)\">{bits}</g>",
+            "<g class=\"pelers-packet-bits\" font-size=\"{}\" fill=\"var(--_m)\">{bits}</g>",
             js_number_to_string(bit_size)
         ));
     }
@@ -264,7 +264,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
         &title,
         total_width / 2.0,
         total_height - pad - title.height / 2.0,
-        " class=\"pele-title\" font-weight=\"var(--_tw)\"",
+        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     ));
 
     let acc = Accessible {
@@ -272,6 +272,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
         acc_descr: model.acc_descr.as_deref(),
     };
     Drawn {
+        links: Vec::new(),
         svg: svg_document(
             "packet",
             total_width,

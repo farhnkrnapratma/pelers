@@ -1,13 +1,16 @@
-use crate::errors::{PeleError, lexical_error, syntax_error};
+use crate::errors::{PelersError, lexical_error, syntax_error};
 use crate::util::chars::{is_js_space, trim};
 
 pub type Matcher = fn(src: &str, at: usize) -> Option<usize>;
+
+pub type Scanner = fn(src: &str, at: usize, previous: i32) -> Option<usize>;
 
 #[derive(Clone, Copy)]
 pub enum Pattern {
     Literal(&'static str),
     Keyword(&'static str),
     Match(Matcher),
+    Scan(Scanner),
 }
 
 #[derive(Clone, Copy)]
@@ -68,7 +71,7 @@ fn newline(src: &str, at: usize) -> Option<usize> {
     }
 }
 
-fn acc_descr(src: &str, at: usize) -> Option<usize> {
+pub fn acc_descr(src: &str, at: usize) -> Option<usize> {
     let p = blanks(src, at);
     let rest = src[p..].strip_prefix("accDescr")?;
     let p = src.len() - rest.len();
@@ -191,6 +194,43 @@ pub const TITLE: TokenType = TokenType::new("TITLE", Pattern::Match(title), Some
 pub const STRING: TokenType = TokenType::new("STRING", Pattern::Match(string), Some("\"'"));
 pub const NEWLINE: TokenType =
     TokenType::new("NEWLINE", Pattern::Match(newline_token), Some("\r\n"));
+fn title_before_word(src: &str, at: usize) -> Option<usize> {
+    let p = blanks(src, at);
+    let rest = src[p..].strip_prefix("title")?;
+    let r = src.len() - rest.len();
+    match src.as_bytes().get(r) {
+        Some(b'\t' | b' ') => Some(until_comment(src, r + 1)),
+        Some(&c) if c.is_ascii_alphanumeric() || c == b'_' => None,
+        _ => Some(r),
+    }
+}
+
+pub fn run_has(src: &str, at: usize, run: fn(char) -> bool, last: fn(char) -> bool) -> bool {
+    src[at..].chars().take_while(|&c| run(c)).any(last)
+}
+
+pub fn title_before(
+    src: &str,
+    at: usize,
+    run: fn(char) -> bool,
+    last: fn(char) -> bool,
+) -> Option<usize> {
+    let start = blanks(src, at);
+    let rest = src[start..].strip_prefix("title")?;
+    let r = src.len() - rest.len();
+    match src.as_bytes().get(r) {
+        Some(b'\t' | b' ') => {
+            let from = r + 1;
+            let line = line_end(src, from);
+            Some(src[from..line].find("%%").map_or(line, |i| from + i))
+        }
+        _ if run_has(src, r, run, last) => None,
+        _ => Some(r),
+    }
+}
+
+pub const TITLE_BEFORE_WORD: TokenType =
+    TokenType::new("TITLE", Pattern::Match(title_before_word), Some("\t t"));
 pub const WHITESPACE: TokenType = TokenType {
     hidden: true,
     ..TokenType::new("WHITESPACE", Pattern::Match(whitespace), Some("\t "))
@@ -224,6 +264,7 @@ fn match_at(
     src: &str,
     k: usize,
     at: usize,
+    previous: i32,
 ) -> Option<usize> {
     if dead[k] {
         return None;
@@ -235,6 +276,7 @@ fn match_at(
                 .then(|| at + word.len())
         }),
         Pattern::Match(matcher) => matcher(src, at),
+        Pattern::Scan(scanner) => scanner(src, at, previous),
     };
     if found.is_none()
         && types[k]
@@ -254,7 +296,7 @@ fn starts_with(types: &[TokenType], k: usize, byte: u8) -> bool {
     }
 }
 
-pub fn tokenize(src: &str, types: &[TokenType], diagram: &str) -> Result<Tokens, PeleError> {
+pub fn tokenize(src: &str, types: &[TokenType], diagram: &str) -> Result<Tokens, PelersError> {
     let mut kinds = Vec::new();
     let mut starts = Vec::new();
     let mut ends = Vec::new();
@@ -262,11 +304,14 @@ pub fn tokenize(src: &str, types: &[TokenType], diagram: &str) -> Result<Tokens,
     let mut p = 0;
     'scan: while p < src.len() {
         let byte = src.as_bytes()[p];
+        let previous = kinds.last().copied().unwrap_or(-1);
         for k in 0..types.len() {
             if byte < 128 && !starts_with(types, k, byte) {
                 continue;
             }
-            let Some(mut end) = match_at(types, &mut dead, src, k, p).filter(|&end| end > p) else {
+            let Some(mut end) =
+                match_at(types, &mut dead, src, k, p, previous).filter(|&end| end > p)
+            else {
                 continue;
             };
             let mut kind = k;
@@ -274,7 +319,7 @@ pub fn tokenize(src: &str, types: &[TokenType], diagram: &str) -> Result<Tokens,
                 let Some(alt) = types.iter().position(|t| t.name == *name) else {
                     continue;
                 };
-                if let Some(alt_end) = match_at(types, &mut dead, src, alt, p)
+                if let Some(alt_end) = match_at(types, &mut dead, src, alt, p, previous)
                     && alt_end > end
                 {
                     kind = alt;
@@ -478,6 +523,14 @@ impl<'a> Reader<'a> {
         self.tokens.kinds[self.i]
     }
 
+    pub fn kind_at(&self, index: usize) -> i32 {
+        self.tokens.kinds.get(index).copied().unwrap_or(-2)
+    }
+
+    pub fn start_at(&self, index: usize) -> usize {
+        self.tokens.starts[index]
+    }
+
     pub fn text(&self, index: usize) -> &str {
         &self.tokens.src[self.tokens.starts[index]..self.tokens.ends[index]]
     }
@@ -496,7 +549,7 @@ impl<'a> Reader<'a> {
         found
     }
 
-    pub fn expect(&mut self, kind: i32) -> Result<String, PeleError> {
+    pub fn expect(&mut self, kind: i32) -> Result<String, PelersError> {
         if self.kind() != kind {
             return Err(self.fail(&format!(
                 "token of type '{}'",
@@ -506,7 +559,7 @@ impl<'a> Reader<'a> {
         Ok(self.take())
     }
 
-    pub fn fail(&self, expected: &str) -> PeleError {
+    pub fn fail(&self, expected: &str) -> PelersError {
         let found = if self.kind() == -1 {
             "end of input".to_owned()
         } else {

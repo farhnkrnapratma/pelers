@@ -1,5 +1,5 @@
 use super::builder::{esc, esc_text};
-use super::palette::palette_style;
+use super::palette::{palette_style_len, push_palette_style};
 use super::theme::{RADIUS, ROOT_STYLE, font_style};
 use crate::util::jsnum::js_number_to_string;
 
@@ -16,6 +16,17 @@ pub struct RenderOptions {
     pub direction_breakpoint: Option<f64>,
     pub responsive: Option<bool>,
     pub id_prefix: Option<String>,
+    pub monospace: Option<Vec<String>>,
+    pub now: Option<f64>,
+    pub output_limit: Option<usize>,
+    pub link_schemes: Option<Vec<String>>,
+    pub image_schemes: Option<Vec<String>>,
+    pub links: Option<bool>,
+    pub images: Option<bool>,
+    pub link_rel: Option<String>,
+    pub icons: Option<crate::util::hook::Hook<crate::text::icons::IconFn>>,
+    pub math: Option<crate::util::hook::Hook<crate::text::math::MathFn>>,
+    pub measurer: Option<crate::util::hook::Hook<crate::text::measurer::MeasureFn>>,
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -54,7 +65,7 @@ pub fn svg_document(
     acc: Accessible<'_>,
     content: &str,
 ) -> String {
-    let prefix = esc(options.id_prefix.as_deref().unwrap_or("pele"));
+    let prefix = esc(options.id_prefix.as_deref().unwrap_or("pelers"));
     let mut head = String::new();
     let mut aria = String::new();
     if let Some(title) = acc.acc_title.filter(|t| !t.is_empty()) {
@@ -84,7 +95,7 @@ pub fn svg_document(
     };
     for (k, (alias, name)) in WEIGHTS.iter().enumerate() {
         if used[k + 1] {
-            weights.push_str(&format!(";--_{alias}:var(--pele-{name}-weight,bold)"));
+            weights.push_str(&format!(";--_{alias}:var(--pelers-{name}-weight,bold)"));
         }
     }
     let fonts = font_style(
@@ -93,11 +104,44 @@ pub fn svg_document(
         options.font_family_mono.as_deref(),
     );
     let (w, h) = (js_number_to_string(width), js_number_to_string(height));
-    format!(
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pele pele-{kind}\" viewBox=\"0 0 {w} {h}\" width=\"{w}\" height=\"{h}\" style=\"{fit}{ROOT_STYLE}{weights}{}{}\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"{kind}\"{aria}>{head}{content}</svg>",
-        esc(&fonts),
-        palette_style()
-    )
+    let palette_len = palette_style_len();
+    let mut out = String::with_capacity(
+        head.len()
+            + aria.len()
+            + content.len()
+            + fonts.len()
+            + palette_len
+            + ROOT_STYLE.len()
+            + weights.len()
+            + 320,
+    );
+    out.push_str("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pelers pelers-");
+    out.push_str(kind);
+    out.push_str("\" viewBox=\"0 0 ");
+    out.push_str(&w);
+    out.push(' ');
+    out.push_str(&h);
+    out.push_str("\" width=\"");
+    out.push_str(&w);
+    out.push_str("\" height=\"");
+    out.push_str(&h);
+    out.push_str("\" style=\"");
+    out.push_str(fit);
+    out.push_str(ROOT_STYLE);
+    out.push_str(&weights);
+    out.push_str(&esc(&fonts));
+    push_palette_style(&mut out);
+    out.push_str(
+        "\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"",
+    );
+    out.push_str(kind);
+    out.push('"');
+    out.push_str(&aria);
+    out.push('>');
+    out.push_str(&head);
+    out.push_str(content);
+    out.push_str("</svg>");
+    out
 }
 
 #[cfg(test)]
@@ -125,7 +169,7 @@ mod tests {
         };
         let svg = svg_document("info", 10.0, 5.0, 16.0, &options, Accessible::default(), "");
         assert!(svg.contains("style=\"--_bg:"));
-        assert!(svg.starts_with("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pele pele-info\" viewBox=\"0 0 10 5\""));
+        assert!(svg.starts_with("<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pelers pelers-info\" viewBox=\"0 0 10 5\""));
     }
 
     #[test]

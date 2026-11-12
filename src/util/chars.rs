@@ -28,6 +28,22 @@ pub fn trim_end(text: &str) -> &str {
     text.trim_end_matches(is_js_space)
 }
 
+pub fn utf16_len(text: &str) -> usize {
+    text.encode_utf16().count()
+}
+
+pub fn utf16_to_byte(text: &str, unit: usize) -> usize {
+    let mut at = 0usize;
+    for (byte, ch) in text.char_indices() {
+        let width = ch.len_utf16();
+        if at + width > unit {
+            return byte;
+        }
+        at += width;
+    }
+    text.len()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

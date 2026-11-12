@@ -1,5 +1,11 @@
 pub mod builder;
+pub mod cluster;
+pub mod document;
+pub mod edges;
 pub mod ink;
+pub mod options;
 pub mod palette;
 pub mod root;
+pub mod shapes;
 pub mod theme;
+pub mod title;

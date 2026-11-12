@@ -1,6 +1,11 @@
-use crate::{DiagramType, PeleError, PeleErrorCode, detect_diagram, parse, render as render_model};
+use crate::{
+    DiagramType, PelersError, PelersErrorCode, detect_diagram, parse, render as render_model,
+};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
+
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[derive(Debug)]
 #[napi(object)]
@@ -11,20 +16,20 @@ pub struct RenderResult {
     pub title: Option<String>,
 }
 
-fn code(error: &PeleError) -> &'static str {
+fn code(error: &PelersError) -> &'static str {
     match error.code {
-        PeleErrorCode::UnsupportedDiagram => "unsupported-diagram",
-        PeleErrorCode::Syntax => "syntax",
-        PeleErrorCode::Semantic => "semantic",
-        PeleErrorCode::Limit => "limit",
+        PelersErrorCode::UnsupportedDiagram => "unsupported-diagram",
+        PelersErrorCode::Syntax => "syntax",
+        PelersErrorCode::Semantic => "semantic",
+        PelersErrorCode::Limit => "limit",
     }
 }
 
-fn to_napi(error: PeleError) -> Error<String> {
+fn to_napi(error: PelersError) -> Error<String> {
     Error::new(code(&error).to_owned(), error.message)
 }
 
-fn render_catching_panics(source: &str) -> std::result::Result<crate::RenderResult, PeleError> {
+fn render_catching_panics(source: &str) -> std::result::Result<crate::RenderResult, PelersError> {
     std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
         parse(source).and_then(|model| render_model(&model))
     }))
@@ -36,9 +41,9 @@ fn render_catching_panics(source: &str) -> std::result::Result<crate::RenderResu
         } else {
             "unknown panic".to_owned()
         };
-        Err(PeleError::new(
+        Err(PelersError::new(
             format!("render panicked: {msg}"),
-            PeleErrorCode::Semantic,
+            PelersErrorCode::Semantic,
         ))
     })
 }

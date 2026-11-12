@@ -1,6 +1,11 @@
+pub mod fit;
 pub mod fit_text;
 pub mod fit_width;
+pub mod generics;
+pub mod icon;
 pub mod literal_label;
+pub mod outline;
+pub mod scan;
 pub mod tokens;
 
 use crate::util::chars::{is_js_space, trim_start};
@@ -9,6 +14,7 @@ pub struct Drawn {
     pub svg: String,
     pub width: f64,
     pub height: f64,
+    pub links: Vec<crate::svg::options::LinkInfo>,
 }
 
 pub fn dedent_descr(text: &str) -> String {
@@ -51,3 +57,5 @@ mod tests {
         assert_eq!(acc_descr(Some("a\n b".into())).as_deref(), Some("a\nb"));
     }
 }
+
+pub mod width;

@@ -1,4 +1,4 @@
-use crate::errors::{Edit, PeleError, PeleErrorCode};
+use crate::errors::{Edit, PelersError, PelersErrorCode};
 use crate::util::chars::{is_js_space, is_word, trim, trim_start};
 use crate::util::json;
 use crate::util::value::{Object, Value};
@@ -364,11 +364,11 @@ fn string_of(value: &Value) -> Option<String> {
     value.is_truthy().then(|| value.to_js_string())
 }
 
-pub fn preprocess(source: &str) -> Result<Preprocessed, PeleError> {
+pub fn preprocess(source: &str) -> Result<Preprocessed, PelersError> {
     preprocess_steps(source, None)
 }
 
-pub fn preprocess_steps(source: &str, mut steps: Steps) -> Result<Preprocessed, PeleError> {
+pub fn preprocess_steps(source: &str, mut steps: Steps) -> Result<Preprocessed, PelersError> {
     let mut text = normalize_line_breaks(source);
     let last_close = if text.contains('<') {
         text.rfind('>')
@@ -400,9 +400,9 @@ pub fn preprocess_steps(source: &str, mut steps: Steps) -> Result<Preprocessed, 
                 .join("\n")
         };
         let parsed = parse_yaml(&body).map_err(|message| {
-            PeleError::new(
+            PelersError::new(
                 format!("Front matter is not valid YAML. {message}"),
-                PeleErrorCode::Syntax,
+                PelersErrorCode::Syntax,
             )
         })?;
         if let Value::Object(map) = &parsed {

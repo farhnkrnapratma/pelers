@@ -4,7 +4,7 @@ mod render;
 use std::collections::HashSet;
 
 use crate::diagrams::common::{acc_descr, acc_title};
-use crate::errors::{PeleError, PeleErrorCode};
+use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::jsnum::js_number_to_string;
 
 pub use parser::{PieAst, parse_pie};
@@ -19,17 +19,17 @@ pub struct PieModel {
     pub sections: Vec<(String, f64)>,
 }
 
-pub fn build_pie(ast: PieAst, title: Option<String>) -> Result<PieModel, PeleError> {
+pub fn build_pie(ast: PieAst, title: Option<String>) -> Result<PieModel, PelersError> {
     let mut seen = HashSet::new();
     let mut sections = Vec::new();
     for (label, value) in ast.sections {
         if value < 0.0 {
-            let mut error = PeleError::new(
+            let mut error = PelersError::new(
                 format!(
                     "\"{label}\" has invalid value: {}. Negative values are not allowed in pie charts. All slice values must be >= 0.",
                     js_number_to_string(value)
                 ),
-                PeleErrorCode::Semantic,
+                PelersErrorCode::Semantic,
             );
             error.diagram_type = Some("pie".to_owned());
             return Err(error);
@@ -47,7 +47,7 @@ pub fn build_pie(ast: PieAst, title: Option<String>) -> Result<PieModel, PeleErr
     })
 }
 
-pub fn parse(source: &str, title: Option<String>) -> Result<PieModel, PeleError> {
+pub fn parse(source: &str, title: Option<String>) -> Result<PieModel, PelersError> {
     build_pie(parse_pie(source)?, title)
 }
 
@@ -67,7 +67,7 @@ mod tests {
     #[test]
     fn rejects_negative_values() {
         let error = parse("pie\n\"a\" : -2\n", None).unwrap_err();
-        assert_eq!(error.code, PeleErrorCode::Semantic);
+        assert_eq!(error.code, PelersErrorCode::Semantic);
         assert_eq!(
             error.message,
             "\"a\" has invalid value: -2. Negative values are not allowed in pie charts. All slice values must be >= 0."

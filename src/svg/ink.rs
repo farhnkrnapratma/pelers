@@ -1,14 +1,33 @@
+use std::borrow::Cow;
+use std::collections::HashSet;
+use std::sync::OnceLock;
+
 use crate::util::chars::{is_js_space, trim};
 use crate::util::jsnum::{js_max, js_min};
 
 const DARK: &str = "black blue blueviolet brown crimson darkblue darkcyan darkgreen darkmagenta darkolivegreen darkorchid darkred darkslateblue darkslategray darkviolet dimgray firebrick forestgreen green indigo maroon mediumblue mediumslateblue mediumvioletred midnightblue navy olive purple rebeccapurple royalblue saddlebrown seagreen sienna slateblue steelblue teal";
 const LIGHT: &str = "aliceblue antiquewhite aqua aquamarine azure beige bisque blanchedalmond burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk cyan darkgoldenrod darkgray darkkhaki darkorange darksalmon darkseagreen darkturquoise deeppink deepskyblue dodgerblue floralwhite fuchsia gainsboro ghostwhite gold goldenrod gray greenyellow honeydew hotpink indianred ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightpink lightsalmon lightseagreen lightskyblue lightslategray lightsteelblue lightyellow lime limegreen linen magenta mediumaquamarine mediumorchid mediumpurple mediumseagreen mediumspringgreen mediumturquoise mintcream mistyrose moccasin navajowhite oldlace olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue red rosybrown salmon sandybrown seashell silver skyblue slategray snow springgreen tan thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen";
 
-pub const ON_LIGHT: &str = "var(--pele-fg-on-light,#1f1f1f)";
-pub const ON_DARK: &str = "var(--pele-fg-on-dark,#fff)";
+pub const ON_LIGHT: &str = "var(--pelers-fg-on-light,#1f1f1f)";
+pub const ON_DARK: &str = "var(--pelers-fg-on-dark,#fff)";
 
-fn listed(set: &str, name: &str) -> bool {
-    set.split(' ').any(|entry| entry == name)
+fn dark_names() -> &'static HashSet<&'static str> {
+    static SET: OnceLock<HashSet<&'static str>> = OnceLock::new();
+    SET.get_or_init(|| DARK.split(' ').collect())
+}
+
+fn light_names() -> &'static HashSet<&'static str> {
+    static SET: OnceLock<HashSet<&'static str>> = OnceLock::new();
+    SET.get_or_init(|| LIGHT.split(' ').collect())
+}
+
+fn lowered(raw: &str) -> Cow<'_, str> {
+    let trimmed = trim(raw);
+    if trimmed.is_ascii() && !trimmed.bytes().any(|b| b.is_ascii_uppercase()) {
+        Cow::Borrowed(trimmed)
+    } else {
+        Cow::Owned(trimmed.to_lowercase())
+    }
 }
 
 fn linear(c: f64) -> f64 {
@@ -181,16 +200,20 @@ fn is_hex(value: &str) -> bool {
     matches!(digits.len(), 3 | 4 | 6 | 8) && digits.bytes().all(|b| b.is_ascii_hexdigit())
 }
 
-fn grey_to_gray(value: &str) -> String {
-    value.replacen("grey", "gray", 1)
+fn grey_to_gray(value: &str) -> Cow<'_, str> {
+    if value.contains("grey") {
+        Cow::Owned(value.replacen("grey", "gray", 1))
+    } else {
+        Cow::Borrowed(value)
+    }
 }
 
 pub fn plain_color(raw: &str) -> bool {
-    let value = trim(raw).to_lowercase();
+    let value = lowered(raw);
     let name = grey_to_gray(&value);
     is_hex(&value)
-        || listed(DARK, &name)
-        || listed(LIGHT, &name)
+        || dark_names().contains(&*name)
+        || light_names().contains(&*name)
         || value == "transparent"
         || value == "currentcolor"
 }
@@ -205,15 +228,16 @@ fn function_parts(value: &str) -> Option<(&str, &str)> {
 }
 
 fn color(raw: &str) -> Option<(f64, f64)> {
-    let value = trim(raw).to_lowercase();
-    let name = grey_to_gray(&value);
-    if listed(DARK, &name) {
+    let owned = lowered(raw);
+    let value: &str = &owned;
+    let name = grey_to_gray(value);
+    if dark_names().contains(&*name) {
         return Some((0.0, 1.0));
     }
-    if listed(LIGHT, &name) {
+    if light_names().contains(&*name) {
         return Some((1.0, 1.0));
     }
-    if is_hex(&value) {
+    if is_hex(value) {
         let hex = &value[1..];
         let digits: String = if value.len() < 6 {
             hex.chars().flat_map(|c| [c, c]).collect()
@@ -226,7 +250,7 @@ fn color(raw: &str) -> Option<(f64, f64)> {
         let alpha = if digits.len() == 8 { channel(3) } else { 1.0 };
         return Some((luminance(channel(0), channel(1), channel(2)), alpha));
     }
-    let (name, body) = function_parts(&value)?;
+    let (name, body) = function_parts(value)?;
     let hsl = match name {
         "rgb" | "rgba" => false,
         "hsl" | "hsla" => true,
@@ -301,6 +325,26 @@ pub fn ink(shape: &str, text: &str) -> Option<&'static str> {
         return None;
     }
     Some(if lum > even() { ON_LIGHT } else { ON_DARK })
+}
+
+pub fn paints(shape: &str) -> bool {
+    let Some(raw) = fill_of(shape) else {
+        return false;
+    };
+    let fill = raw.trim().to_lowercase();
+    if fill.is_empty() || fill == "none" || fill == "transparent" {
+        return false;
+    }
+    let scale = opacity(shape);
+    let alpha = color(&fill).map_or(1.0, |c| c.1);
+    alpha * if scale.is_nan() { 1.0 } else { scale } > 0.0
+}
+
+pub fn ink_fill(shape: &str, text: &str, fallback: Option<&str>) -> String {
+    match ink(shape, text).or(fallback) {
+        Some(color) if !color.is_empty() => format!(" fill=\"{color}\""),
+        _ => String::new(),
+    }
 }
 
 #[cfg(test)]
