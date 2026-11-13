@@ -1,10 +1,11 @@
 pelers
 Copyright (c) 2026 Farhan Kurnia Pratama
 
-This project is derived from Pelers (https://github.com/obsidianmd/pelers),
-a Mermaid renderer by kepano, and the TypeScript implementation in this
-repository carries over that work. Pelers is distributed under the MIT License,
-reproduced below as required by its terms.
+pelers is a Rust rewrite of Pele (https://github.com/obsidianmd/pele), a Mermaid
+renderer by kepano (Obsidian). The TypeScript renderer kept in ts/ is Pele's source
+with the product name changed. pelers ports Pele's diagram types one by one and
+keeps Pele's MIT License. Pele's original copyright notice is reproduced below as
+required by its terms.
 
 MIT License
 
