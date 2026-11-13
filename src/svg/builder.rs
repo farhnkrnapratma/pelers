@@ -193,18 +193,24 @@ pub fn shared_style(label: &Label) -> u32 {
     if any { shared } else { 0 }
 }
 
-pub fn text_style(attrs: &str, shared: u32) -> String {
+pub fn text_style(attrs: &str, shared: u32) -> Cow<'_, str> {
+    let bold = shared & BOLD_STYLE != 0 && !attrs.contains(" font-weight=\"");
+    let italic = shared & ITALIC != 0 && !attrs.contains(" font-style=\"");
+    let mono = shared & MONO != 0 && !attrs.contains(" font-family=\"");
+    if !(bold || italic || mono) {
+        return Cow::Borrowed(attrs);
+    }
     let mut out = attrs.to_owned();
-    if shared & BOLD_STYLE != 0 && !attrs.contains(" font-weight=\"") {
+    if bold {
         out.push_str(BOLD);
     }
-    if shared & ITALIC != 0 && !attrs.contains(" font-style=\"") {
+    if italic {
         out.push_str(ITALIC_ATTR);
     }
-    if shared & MONO != 0 && !attrs.contains(" font-family=\"") {
+    if mono {
         out.push_str(MONO_ATTR);
     }
-    out
+    Cow::Owned(out)
 }
 
 pub fn label_svg(label: &Label, cx: f64, cy: f64, attrs: &str) -> String {
