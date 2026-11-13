@@ -5,6 +5,7 @@ use super::db::{
 };
 use super::lexer::tokenize;
 use super::tokens::{T, token_name};
+use crate::diagrams::common::spans::{Span, Spans, text as span_text};
 use crate::errors::{PelersError, lexical_error, syntax_error};
 use crate::util::chars::{trim, utf16_to_byte};
 
@@ -44,11 +45,19 @@ struct Parser<'a> {
     src: &'a str,
     units: Vec<u16>,
     types: Vec<i32>,
-    texts: Vec<String>,
+    spans: Vec<Span>,
     starts: Vec<usize>,
     i: usize,
     fields: Vec<i32>,
     values: Vec<String>,
+}
+
+impl Parser<'_> {
+    fn text(&self, at: usize) -> &str {
+        self.spans
+            .get(at)
+            .map_or("", |span| span_text(self.src, span))
+    }
 }
 
 impl Parser<'_> {
@@ -86,7 +95,7 @@ impl Parser<'_> {
         if self.kind() != kind {
             return Err(self.fail(kind, kind, &[]));
         }
-        let text = self.texts[self.i].clone();
+        let text = self.text(self.i).to_owned();
         self.i += 1;
         Ok(text)
     }
@@ -105,7 +114,7 @@ impl Parser<'_> {
         if t != T::UnqString as i32 && t != T::QString as i32 {
             return Err(self.fail(T::QString as i32, T::UnqString as i32, &[]));
         }
-        let text = self.texts[self.i].clone();
+        let text = self.text(self.i).to_owned();
         self.i += 1;
         Ok(text)
     }
@@ -121,7 +130,7 @@ impl Parser<'_> {
             let text = self.expect(T::AccDescrValue as i32)?;
             db.set_acc_description(trim(&text));
         } else if t == T::AccDescrMultilineValue as i32 {
-            let text = self.texts[self.i].clone();
+            let text = self.text(self.i).to_owned();
             self.i += 1;
             db.set_acc_description(trim(&text));
         } else {
@@ -137,7 +146,7 @@ impl Parser<'_> {
             if t != T::Alpha as i32 && t != T::UnqString as i32 && t != T::QString as i32 {
                 return Err(self.fail(T::QString as i32, T::UnqString as i32, &[T::Alpha as i32]));
             }
-            list.push(self.texts[self.i].clone());
+            list.push(self.text(self.i).to_owned());
             self.i += 1;
             if self.kind() != T::Comma as i32 {
                 return Ok(list);
@@ -156,10 +165,10 @@ impl Parser<'_> {
                     &[T::Minus as i32, T::Brkt as i32],
                 ));
             }
-            let mut style = self.texts[self.i].clone();
+            let mut style = self.text(self.i).to_owned();
             self.i += 1;
             while is_style_part(self.kind()) {
-                style.push_str(&self.texts[self.i]);
+                style.push_str(self.text(self.i));
                 self.i += 1;
             }
             styles.push(style);
@@ -259,12 +268,12 @@ impl Parser<'_> {
 
 pub fn parse_requirement(src: &str, db: &mut RequirementDb) -> Result<(), PelersError> {
     let units: Vec<u16> = src.encode_utf16().collect();
-    let tokens = tokenize(&units);
+    let tokens = tokenize(&units, Spans::new(src));
     let mut p = Parser {
         src,
         units,
         types: tokens.types,
-        texts: tokens.texts,
+        spans: tokens.spans,
         starts: tokens.starts,
         i: 0,
         fields: Vec::new(),
@@ -345,7 +354,7 @@ pub fn parse_requirement(src: &str, db: &mut RequirementDb) -> Result<(), Pelers
             let classes = p.id_list()?;
             db.set_class(&ids, &classes)?;
         } else if t == T::UnqString as i32 || t == T::QString as i32 {
-            let id = p.texts[p.i].clone();
+            let id = p.text(p.i).to_owned();
             p.i += 1;
             let next = p.kind();
             if next == T::StyleSeparator as i32 {

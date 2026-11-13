@@ -1,10 +1,12 @@
 use super::tokens::{T, keyword_kind};
+use crate::diagrams::common::spans::{Span, Spans, empty};
 use crate::util::chars::is_js_space;
 
 pub struct Tokens {
     pub types: Vec<i32>,
-    pub texts: Vec<String>,
+    pub spans: Vec<Span>,
     pub starts: Vec<usize>,
+    pub spans_of: Spans,
 }
 
 #[derive(Clone, Copy, PartialEq)]
@@ -113,9 +115,20 @@ fn text_of(units: &[u16], s: usize, e: usize) -> String {
 
 fn emit(out: &mut Tokens, units: &[u16], kind: i32, s: usize, e: usize) -> usize {
     out.types.push(kind);
-    out.texts.push(text_of(units, s, e));
+    let span = span_of(&out.spans_of, units, s, e);
+    out.spans.push(span);
     out.starts.push(s);
     e
+}
+
+fn span_of(spans_of: &Spans, units: &[u16], s: usize, e: usize) -> Span {
+    let n = units.len();
+    let (a, b) = (s.min(n), e.min(n));
+    if a >= b {
+        empty()
+    } else {
+        spans_of.span(units, a, b)
+    }
 }
 
 fn line_break(units: &[u16], q: usize) -> usize {
@@ -140,13 +153,14 @@ fn is_stop(c: u16) -> bool {
         )
 }
 
-pub fn tokenize(units: &[u16]) -> Tokens {
+pub fn tokenize(units: &[u16], spans_of: Spans) -> Tokens {
     let n = units.len();
     let at_u = |q: usize| -> u16 { units.get(q).copied().unwrap_or(0) };
     let mut out = Tokens {
         types: Vec::new(),
-        texts: Vec::new(),
+        spans: Vec::new(),
         starts: Vec::new(),
+        spans_of,
     };
     let mut stack: Vec<S> = Vec::new();
     let mut state = S::Initial;
@@ -292,8 +306,9 @@ pub fn tokenize(units: &[u16]) -> Tokens {
                             q2 += 1;
                         }
                         out.types.push(T::UnqString as i32);
-                        out.texts
-                            .push(crate::util::chars::trim(&text_of(units, p, q2)).to_owned());
+                        out.spans.push(Span::Lossy(
+                            crate::util::chars::trim(&text_of(units, p, q2)).to_owned(),
+                        ));
                         out.starts.push(p);
                         p = q2;
                     }
@@ -410,7 +425,7 @@ pub fn tokenize(units: &[u16]) -> Tokens {
         }
         if !ok {
             out.types.push(T::Error as i32);
-            out.texts.push(String::new());
+            out.spans.push(empty());
             out.starts.push(p);
             return out;
         }
