@@ -366,21 +366,39 @@ pub fn marker(kind: &str, x: f64, y: f64, dx: f64, dy: f64, color: &str, stroke:
             let bx = x - dx * ARROW;
             let by = y - dy * ARROW;
             let half = ARROW * 0.42;
-            format!(
-                "<path class=\"pelers-marker\" d=\"M{},{}L{},{}L{},{}Z\" fill=\"{color}\" stroke=\"{stroke}\"/>",
-                num(x),
-                num(y),
-                num(bx + nx * half),
-                num(by + ny * half),
-                num(bx - nx * half),
-                num(by - ny * half)
-            )
+            let mut out = String::with_capacity(color.len() + stroke.len() + 120);
+            out.push_str("<path class=\"pelers-marker\" d=\"M");
+            out.push_str(&num(x));
+            out.push(',');
+            out.push_str(&num(y));
+            out.push('L');
+            out.push_str(&num(bx + nx * half));
+            out.push(',');
+            out.push_str(&num(by + ny * half));
+            out.push('L');
+            out.push_str(&num(bx - nx * half));
+            out.push(',');
+            out.push_str(&num(by - ny * half));
+            out.push_str("Z\" fill=\"");
+            out.push_str(color);
+            out.push_str("\" stroke=\"");
+            out.push_str(stroke);
+            out.push_str("\"/>");
+            out
         }
-        "arrow_circle" => format!(
-            "<circle class=\"pelers-marker\" cx=\"{}\" cy=\"{}\" r=\"3.5\" fill=\"{color}\" stroke=\"{stroke}\"/>",
-            num(x - dx * 4.0),
-            num(y - dy * 4.0)
-        ),
+        "arrow_circle" => {
+            let mut out = String::with_capacity(color.len() + stroke.len() + 120);
+            out.push_str("<circle class=\"pelers-marker\" cx=\"");
+            out.push_str(&num(x - dx * 4.0));
+            out.push_str("\" cy=\"");
+            out.push_str(&num(y - dy * 4.0));
+            out.push_str("\" r=\"3.5\" fill=\"");
+            out.push_str(color);
+            out.push_str("\" stroke=\"");
+            out.push_str(stroke);
+            out.push_str("\"/>");
+            out
+        }
         "arrow_cross" => {
             let cx = x - dx * 4.0;
             let cy = y - dy * 4.0;
@@ -937,25 +955,39 @@ pub fn casings_svg(casings: &str) -> String {
     if casings.is_empty() {
         String::new()
     } else {
-        format!(
-            "<g class=\"pelers-casings\" fill=\"none\" stroke=\"var(--_bg)\" stroke-width=\"{}\" stroke-linecap=\"round\" stroke-linejoin=\"round\" pointer-events=\"none\">{casings}</g>",
-            1.0 + CASE
-        )
+        let mut out = String::with_capacity(casings.len() + 200);
+        out.push_str(
+            "<g class=\"pelers-casings\" fill=\"none\" stroke=\"var(--_bg)\" stroke-width=\"",
+        );
+        out.push_str(&num(1.0 + CASE));
+        out.push_str(
+            "\" stroke-linecap=\"round\" stroke-linejoin=\"round\" pointer-events=\"none\">",
+        );
+        out.push_str(casings);
+        out.push_str("</g>");
+        out
     }
 }
 
 pub fn edge_label_svg(id: &str, label: &Label, x: f64, y: f64, attrs: &str, icons: bool) -> String {
     let w = label.width + 8.0;
     let h = label.height;
-    format!(
-        "<g class=\"pelers-edge-label\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"3\" fill=\"var(--_bg)\"/>{}</g>",
-        esc_text(id),
-        num(x - w / 2.0),
-        num(y - h / 2.0),
-        num(w),
-        num(h),
-        label_svg_with(label, x, y, attrs, icons)
-    )
+    let inner = label_svg_with(label, x, y, attrs, icons);
+    let mut out = String::with_capacity(inner.len() + id.len() + 180);
+    out.push_str("<g class=\"pelers-edge-label\" data-id=\"");
+    out.push_str(&esc_text(id));
+    out.push_str("\"><rect x=\"");
+    out.push_str(&num(x - w / 2.0));
+    out.push_str("\" y=\"");
+    out.push_str(&num(y - h / 2.0));
+    out.push_str("\" width=\"");
+    out.push_str(&num(w));
+    out.push_str("\" height=\"");
+    out.push_str(&num(h));
+    out.push_str("\" rx=\"3\" fill=\"var(--_bg)\"/>");
+    out.push_str(&inner);
+    out.push_str("</g>");
+    out
 }
 
 pub struct LoopNode {
