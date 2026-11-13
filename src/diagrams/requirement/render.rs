@@ -168,28 +168,33 @@ fn start_text(label: &Label, x: f64, top: f64, attrs: &str) -> String {
             if span.icon.is_some() || span.text.is_empty() {
                 continue;
             }
-            let position = if first {
-                format!(" x=\"{}\" y=\"{}\"", num(x), num(y))
-            } else {
-                String::new()
-            };
-            body.push_str(&format!(
-                "<tspan{position}{}>{}</tspan>",
-                span_style(span.style & !shared),
-                esc(&span.text)
-            ));
+            body.push_str("<tspan");
+            if first {
+                body.push_str(" x=\"");
+                body.push_str(&num(x));
+                body.push_str("\" y=\"");
+                body.push_str(&num(y));
+                body.push('"');
+            }
+            body.push_str(&span_style(span.style & !shared));
+            body.push('>');
+            body.push_str(&esc(&span.text));
+            body.push_str("</tspan>");
             first = false;
         }
     }
-    let text = if body.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "<text{} text-anchor=\"start\" xml:space=\"preserve\">{body}</text>",
-            text_style(attrs, shared)
-        )
-    };
-    text + &math
+    if body.is_empty() {
+        return math;
+    }
+    let style = text_style(attrs, shared);
+    let mut out = String::with_capacity(body.len() + style.len() + math.len() + 64);
+    out.push_str("<text");
+    out.push_str(&style);
+    out.push_str(" text-anchor=\"start\" xml:space=\"preserve\">");
+    out.push_str(&body);
+    out.push_str("</text>");
+    out.push_str(&math);
+    out
 }
 
 fn contains_marker(x: f64, y: f64, dx: f64, dy: f64) -> String {
