@@ -67,6 +67,7 @@ fn starts_with(u: &[u16], at: usize, word: &str) -> bool {
 struct Lexer {
     u: Vec<u16>,
     n: usize,
+    direction_possible: bool,
     spans_of: Spans,
     types: Vec<usize>,
     spans: Vec<Span>,
@@ -322,6 +323,9 @@ impl Lexer {
     }
 
     fn direction(&mut self) -> bool {
+        if !self.direction_possible {
+            return false;
+        }
         const KEYWORDS: [&str; 4] = ["TB", "BT", "RL", "LR"];
         for (i, keyword) in KEYWORDS.iter().enumerate() {
             if let Some(end) = self.direction_end(keyword) {
@@ -626,8 +630,10 @@ impl Lexer {
 pub fn tokenize(src: &str) -> Tokens {
     let u: Vec<u16> = src.encode_utf16().collect();
     let n = u.len();
+    let direction_possible = (0..n).any(|at| starts_with(&u, at, "direction"));
     Lexer {
         spans_of: Spans::new(src),
+        direction_possible,
         u,
         n,
         types: Vec::new(),
