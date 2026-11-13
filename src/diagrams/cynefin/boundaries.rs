@@ -138,45 +138,50 @@ pub fn cliff(cx: f64, top: f64, bottom: f64, amplitude: f64) -> Vec<f64> {
     ]
 }
 
+fn push_point(out: &mut String, x: f64, y: f64) {
+    out.push_str(&num(x));
+    out.push(',');
+    out.push_str(&num(y));
+}
+
 pub fn forward(curve: &[f64]) -> String {
-    let mut d = String::new();
+    let mut d = String::with_capacity(curve.len() * 12);
     let mut i = 2;
     while i < curve.len() {
-        d.push_str(&format!(
-            "C{},{} {},{} {},{}",
-            num(curve[i]),
-            num(curve[i + 1]),
-            num(curve[i + 2]),
-            num(curve[i + 3]),
-            num(curve[i + 4]),
-            num(curve[i + 5])
-        ));
+        d.push('C');
+        push_point(&mut d, curve[i], curve[i + 1]);
+        d.push(' ');
+        push_point(&mut d, curve[i + 2], curve[i + 3]);
+        d.push(' ');
+        push_point(&mut d, curve[i + 4], curve[i + 5]);
         i += 6;
     }
     d
 }
 
 pub fn backward(curve: &[f64]) -> String {
-    let mut d = String::new();
+    let mut d = String::with_capacity(curve.len() * 12);
     let mut i = curve.len() as isize - 6;
     while i >= 2 {
         let at = i as usize;
-        d.push_str(&format!(
-            "C{},{} {},{} {},{}",
-            num(curve[at + 2]),
-            num(curve[at + 3]),
-            num(curve[at]),
-            num(curve[at + 1]),
-            num(curve[at - 2]),
-            num(curve[at - 1])
-        ));
+        d.push('C');
+        push_point(&mut d, curve[at + 2], curve[at + 3]);
+        d.push(' ');
+        push_point(&mut d, curve[at], curve[at + 1]);
+        d.push(' ');
+        push_point(&mut d, curve[at - 2], curve[at - 1]);
         i -= 6;
     }
     d
 }
 
 pub fn curve_path(curve: &[f64]) -> String {
-    format!("M{},{}{}", num(curve[0]), num(curve[1]), forward(curve))
+    let body = forward(curve);
+    let mut out = String::with_capacity(body.len() + 24);
+    out.push('M');
+    push_point(&mut out, curve[0], curve[1]);
+    out.push_str(&body);
+    out
 }
 
 pub fn ellipse_path(cx: f64, cy: f64, rx: f64, ry: f64) -> String {
