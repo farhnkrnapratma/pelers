@@ -445,6 +445,16 @@ fn pad_fill(c: char) -> Option<&'static str> {
 }
 
 pub fn time_format(specifier: &str, date: &JsDate) -> String {
+    let fields = date.fields().unwrap_or(super::jsdate::Fields {
+        year: 0,
+        month: 0,
+        day: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0,
+        weekday: 0,
+    });
     let mut out = String::new();
     let chars: Vec<char> = specifier.chars().collect();
     let mut from = 0usize;
@@ -471,7 +481,7 @@ pub fn time_format(specifier: &str, date: &JsDate) -> String {
                 }
             }
         };
-        out.push_str(&directive(c, date, fill));
+        out.push_str(&directive(c, date, fields, fill));
         i += 1;
         from = i;
     }
@@ -524,17 +534,7 @@ fn week_of_year(date: &JsDate, week_start: f64) -> f64 {
     span(&floored(&before, &week), &floored(date, &week), WEEK)
 }
 
-fn directive(c: char, d: &JsDate, p: &str) -> String {
-    let f = d.fields().unwrap_or(super::jsdate::Fields {
-        year: 0,
-        month: 0,
-        day: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-        milliseconds: 0,
-        weekday: 0,
-    });
+fn directive(c: char, d: &JsDate, f: super::jsdate::Fields, p: &str) -> String {
     match c {
         'a' => WEEKDAYS[f.weekday as usize][..3].to_owned(),
         'A' => WEEKDAYS[f.weekday as usize].to_owned(),
