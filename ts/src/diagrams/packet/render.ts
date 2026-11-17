@@ -123,7 +123,7 @@ function draw(model: PacketModel, config: Config, options: RenderOptions, down: 
       const w = count * bitWidth - gap;
       const text = down ? undefined : fit(block.label, w - 6);
       fields +=
-        `<g class="pele-node" data-id="${block.start}-${block.end}">` +
+        `<g class="pelers-node" data-id="${block.start}-${block.end}">` +
         `<rect x="${num(x)}" y="${num(y)}" width="${num(w)}" height="${num(rowHeight)}" fill="var(--_s)" stroke="var(--_b)"${ROUNDED}/>` +
         (down
           ? labelSvg(labels.get(block)!, x + w / 2, y + rowHeight / 2, '')
@@ -149,14 +149,14 @@ function draw(model: PacketModel, config: Config, options: RenderOptions, down: 
   const totalWidth = Math.ceil(Math.max(width, title.width) + 2 * pad);
   const totalHeight = Math.ceil(rowsHeight + titleHeight + 2 * pad);
   const content =
-    (fields ? `<g class="pele-packet-fields" font-size="${labelSize}" text-anchor="middle">${fields}</g>` : '') +
-    (bits ? `<g class="pele-packet-bits" font-size="${bitSize}" fill="var(--_m)">${bits}</g>` : '') +
+    (fields ? `<g class="pelers-packet-fields" font-size="${labelSize}" text-anchor="middle">${fields}</g>` : '') +
+    (bits ? `<g class="pelers-packet-bits" font-size="${bitSize}" fill="var(--_m)">${bits}</g>` : '') +
     // Mermaid puts a packet's title under it.
     labelSvg(
       title,
       totalWidth / 2,
       totalHeight - pad - title.height / 2,
-      ' class="pele-title" font-weight="var(--_tw)"'
+      ' class="pelers-title" font-weight="var(--_tw)"'
     );
 
   return {

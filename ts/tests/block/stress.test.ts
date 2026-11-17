@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/block/lexer.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -108,7 +108,7 @@ describe('block worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -118,7 +118,7 @@ describe('block worst cases', () => {
 
   it('refuses space counts past the limit and keeps the ones within it', () => {
     expect(() => parse('block\na space:100001 b')).toThrow(/at most 100000 space blocks/);
-    expect(() => parse('block\n' + 'space:60000 '.repeat(2))).toThrow(PeleError);
+    expect(() => parse('block\n' + 'space:60000 '.repeat(2))).toThrow(PelersError);
     const model = parse('block\na space:5 b');
     expect(model.type === 'block' && model.blocks.length).toBe(7);
   });

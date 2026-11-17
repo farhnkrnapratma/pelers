@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/block-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/block-oracle.js';
 
-// Compares Pele's block lexer and parser with the parser Mermaid generates from block.jison:
+// Compares Pelers's block lexer and parser with the parser Mermaid generates from block.jison:
 // the same tokens, the same accept or reject decision, and the same calls into the model.
 // Set FUZZ to raise the number of mutated inputs.
 
@@ -160,9 +160,9 @@ const FRAGMENTS = [
 const corpus = loadCorpus('block', /block/);
 
 function compare(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
   else expect(actual.error, `error for ${JSON.stringify(src)}`).toMatch(/^(Parse|Lexical) error on line \d+/);

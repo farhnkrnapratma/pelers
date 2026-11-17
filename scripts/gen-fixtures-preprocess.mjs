@@ -2,6 +2,8 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
+const OUT = process.env.PELERS_FUZZ_OUT ?? (`${root}tests/fixtures`);
 const { parseYaml } = await import(`${root}ts/src/util/yaml.ts`);
 const { cleanupComments, encodeEntities, preprocess } = await import(`${root}ts/src/preprocess.ts`);
 const { inputOffset } = await import(`${root}ts/src/errors.ts`);
@@ -14,7 +16,7 @@ function mulberry32(seed) {
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 }
-const random = mulberry32(777);
+const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 777));
 const pick = list => list[Math.floor(random() * list.length)];
 
 function encode(value) {
@@ -90,7 +92,7 @@ function addYaml(source) {
     if (!engineSpecific(result)) yaml.push([source, result]);
 }
 for (const source of YAML_CASES) addYaml(source);
-for (let i = 0; i < 2500; i++) {
+for (let i = 0; i < 2500 * SCALE; i++) {
     let source = '';
     for (let n = 1 + Math.floor(random() * 8); n > 0; n--) source += pick(YAML_FRAGMENTS);
     addYaml(source);
@@ -154,7 +156,7 @@ for (const source of [
     'A["<b a="1" c="2]',
     '<span class="x>hi</span>',
 ]) addPre(source);
-for (let i = 0; i < 2500; i++) {
+for (let i = 0; i < 2500 * SCALE; i++) {
     let source = '';
     for (let n = 1 + Math.floor(random() * 9); n > 0; n--) source += pick(PRE_FRAGMENTS);
     addPre(source);
@@ -162,11 +164,11 @@ for (let i = 0; i < 2500; i++) {
 
 const ENTITY_FRAGMENTS = ['style', 'classDef', ':', '#', ';', ' ', '\n', 'a', 'fill', '9', '\t', ':#', '#f9f;', '\r', '#35;', '#x;', 'é'];
 const entities = [];
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 2000 * SCALE; i++) {
     let source = '';
     for (let n = Math.floor(random() * 14); n > 0; n--) source += pick(ENTITY_FRAGMENTS);
     entities.push([source, encodeEntities(source)]);
 }
 
-writeFileSync(`${root}tests/fixtures/preprocess.json`, `${JSON.stringify({ yaml, pre, mapping, entities })}\n`);
+writeFileSync(`${OUT}/preprocess.json`, `${JSON.stringify({ yaml, pre, mapping, entities })}\n`);
 console.log(`fixtures: ${yaml.length} yaml, ${pre.length} preprocess, ${mapping.length} mappings, ${entities.length} entities`);

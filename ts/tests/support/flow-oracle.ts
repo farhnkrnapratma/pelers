@@ -36,7 +36,7 @@ export function oracleTokens(src: string): Pair[] {
   return mergeTokens(oracle.tokens(prepare(src), recorder().yy), MERGED);
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(prepare(src));
   return mergeTokens(
     types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair),
@@ -52,7 +52,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls: semantic(calls), error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseFlowchart(src, yy as unknown as FlowDb);

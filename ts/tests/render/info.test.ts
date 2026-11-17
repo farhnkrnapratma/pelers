@@ -7,12 +7,12 @@ const options = { measurer: metricsMeasurer };
 const { version } = JSON.parse(readFileSync('package.json', 'utf8')) as { version: string };
 
 describe('info rendering', () => {
-  it("draws Pele's version", () => {
+  it("draws Pelers's version", () => {
     const { svg, type, width, height } = render('info', options);
     expect(type).toBe('info');
     expect(supports('info showInfo')).toBe(true);
-    expect(svg).toContain(`>Pele v${version}<`);
-    expect(svg).toContain('class="pele-version"');
+    expect(svg).toContain(`>Pelers v${version}<`);
+    expect(svg).toContain('class="pelers-version"');
     expect(width).toBeLessThan(200);
     expect(height).toBeLessThan(60);
   });
@@ -33,8 +33,8 @@ describe('info rendering', () => {
   it('writes accessible names and exposes the model', () => {
     const src = 'info showInfo\naccTitle: Name\naccDescr: Text';
     const { svg } = render(src, options);
-    expect(svg).toContain('<title id="pele-title">Name</title>');
-    expect(svg).toContain('<desc id="pele-desc">Text</desc>');
+    expect(svg).toContain('<title id="pelers-title">Name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Text</desc>');
     expect(parse(src)).toEqual({
       type: 'info',
       mermaidType: 'info',

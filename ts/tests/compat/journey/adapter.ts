@@ -1,7 +1,7 @@
 import { JourneyDb } from '../../../src/diagrams/journey/db.js';
 import { parseJourney } from '../../../src/diagrams/journey/parser.js';
 
-// Exposes Pele's journey model through the object Mermaid's specs import from journeyDb.js.
+// Exposes Pelers's journey model through the object Mermaid's specs import from journeyDb.js.
 
 let db = new JourneyDb();
 

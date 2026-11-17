@@ -5,10 +5,10 @@ import { assertInert, inertProblem } from '../support/inert.js';
 
 // The check that the other security tests rely on. If it stopped objecting, they would all pass.
 const svg = (inner: string, attrs = ''): string =>
-  `<svg xmlns="http://www.w3.org/2000/svg" class="pele"${attrs}>${inner}</svg>`;
+  `<svg xmlns="http://www.w3.org/2000/svg" class="pelers"${attrs}>${inner}</svg>`;
 
 describe('the inertness check', () => {
-  it('accepts what Pele draws', () => {
+  it('accepts what Pelers draws', () => {
     const drawn = render(
       'flowchart LR\n  A[One] --> B[Two]\n  click A href "https://example.com/a?b=1#c"\n  style B fill:#eee,stroke-width:2px',
       { measurer: metricsMeasurer }

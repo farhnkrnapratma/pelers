@@ -1,5 +1,5 @@
 const RECOVERY =
-  "Reads the partial tree that Chevrotain's error recovery leaves behind. Mermaid's `parse()` throws on any parser error, so Mermaid rejects this input, and so does Pele.";
+  "Reads the partial tree that Chevrotain's error recovery leaves behind. Mermaid's `parse()` throws on any parser error, so Mermaid rejects this input, and so does Pelers.";
 
 export default {
   files: [

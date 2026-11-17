@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { EVENTMODELING_TOKENS, parseEventModel } from '../../src/diagrams/eventmodeling/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleTree, referenceTree } from '../support/eventmodeling-oracle.js';
-import { peleTokens, referenceTokens } from '../support/langium.js';
-import { peleLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
+import { pelersTree, referenceTree } from '../support/eventmodeling-oracle.js';
+import { pelersTokens, referenceTokens } from '../support/langium.js';
+import { pelersLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
 
 const FRAGMENTS = [
   'eventmodeling',
@@ -139,15 +139,15 @@ const INVALID = [
 const corpus = [...loadCorpus('eventmodeling', /eventmodeling/), ...VALID, ...INVALID];
 
 function compare(src: string, expected: Awaited<ReturnType<typeof referenceTree>>): void {
-  const actual = peleTree(parseEventModel, src);
+  const actual = pelersTree(parseEventModel, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('eventmodeling parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(EVENTMODELING_TOKENS)).toEqual(referenceTokens('createEventModelingServices', 'EventModel'));
-    expect(peleLongerAlts(EVENTMODELING_TOKENS)).toEqual(
+    expect(pelersTokens(EVENTMODELING_TOKENS)).toEqual(referenceTokens('createEventModelingServices', 'EventModel'));
+    expect(pelersLongerAlts(EVENTMODELING_TOKENS)).toEqual(
       referenceLongerAlts('createEventModelingServices', 'EventModel')
     );
   });

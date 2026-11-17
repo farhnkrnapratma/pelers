@@ -321,7 +321,7 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
         fills.push({ box: [x - c.w / 2, y - c.h / 2, x + c.w / 2, y + c.h / 2], shape: view.style.shape });
       const titleX = clusterTitleX(c, view.label.width, crossings, GROUP_PAD);
       clusters +=
-        `<g class="pele-cluster pele-flow${classes}" data-id="${id}">` +
+        `<g class="pelers-cluster pelers-flow${classes}" data-id="${id}">` +
         `<rect x="${num(x - c.w / 2)}" y="${num(y - c.h / 2)}" width="${num(c.w)}" height="${num(c.h)}"${rounded(
           tint(node.colorIndex ?? KIND_SLOT.size, '0.06', view.style) + view.style.shape
         )}/>` +
@@ -329,7 +329,7 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
           view.label,
           titleX,
           y - c.h / 2 + 8 + view.label.height / 2,
-          ` class="pele-cluster-label"${inkFill(view.style, 'var(--_m)')}${view.style.text}`,
+          ` class="pelers-cluster-label"${inkFill(view.style, 'var(--_m)')}${view.style.text}`,
           icons
         ) +
         '</g>';
@@ -349,10 +349,10 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
           tint(node.colorIndex ?? KIND_SLOT.size, '0.06', view.style) + view.style.shape
         )}/>` +
         `<path d="M${num(-w / 2 + 10)},${num(line)}H${num(w / 2 - 10)}" fill="none" stroke="${color}" stroke-dasharray="3 3"${view.style.line}/>` +
-        `<path class="pele-collapsed-mark" d="${dot(-9, dots)}${dot(0, dots)}${dot(9, dots)}" fill="${color}" stroke="none"/>`;
+        `<path class="pelers-collapsed-mark" d="${dot(-9, dots)}${dot(0, dots)}${dot(9, dots)}" fill="${color}" stroke="none"/>`;
     } else {
       const slot = KIND_SLOT.get(node.kind ?? 'task') ?? 1;
-      kind = ` pele-kind-${node.kind ?? 'task'}`;
+      kind = ` pelers-kind-${node.kind ?? 'task'}`;
       shape = drawShape(
         view.shape,
         w,
@@ -363,7 +363,7 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
     }
 
     const ink = view.shape === COLLAPSED || shapeFilled(view.shape) ? inkFill(view.style) : '';
-    let text = labelSvg(view.label, 0, view.dy, ` class="pele-label"${ink}${view.style.text}`, icons);
+    let text = labelSvg(view.label, 0, view.dy, ` class="pelers-label"${ink}${view.style.text}`, icons);
     const internal = / internal-link(?: |$)/.test(classes + ' ');
     if (internal && node.label && options.links !== false) {
       // The label is a note name, but it still ends up in an href, so it gets the same check as a URL.
@@ -384,7 +384,7 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
         options,
         node.linkTarget ? ` target="${esc(node.linkTarget)}"` : ''
       );
-    nodesOut += `<g class="pele-node pele-shape-${view.shape}${kind}${classes}" data-id="${id}" transform="translate(${num(
+    nodesOut += `<g class="pelers-node pelers-shape-${view.shape}${kind}${classes}" data-id="${id}" transform="translate(${num(
       x
     )},${num(y)})">${body}</g>`;
   }
@@ -404,7 +404,7 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
     const classes = classNames(edge.classes.replace(/edge-thickness-normal|edge-pattern-solid|flowchart-link/g, ''));
     if (over === '') casings += edgeCasing(path, 'none', endType, style?.line);
     edgesOut +=
-      `<g class="pele-edge pele-edge-${kind}${classes}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
+      `<g class="pelers-edge pelers-edge-${kind}${classes}" data-id="${escText(edge.id)}"${over ? ` stroke="${over}"` : ''}${style?.line ?? ''}>` +
       `<path d="${path.d}"${edge.thickness === 'dotted' ? ' stroke-dasharray="3 4"' : ''}/>` +
       marker(endType, path.ex, path.ey, path.edx, path.edy, color) +
       '</g>';
@@ -442,12 +442,12 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
     size,
     options,
     db,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${edgeSize}">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${edgeSize}">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
 
   return { svg, width, height, links };

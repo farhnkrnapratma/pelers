@@ -9,7 +9,7 @@ export default {
       file: 'icons.spec.ts',
       test: 'every icon has a non-empty body that inherits color via currentColor',
       reason:
-        "Checks the markup of Mermaid's Iconify pack. Pele keeps path data for the two built-in glyphs and colors them with theme tokens.",
+        "Checks the markup of Mermaid's Iconify pack. Pelers keeps path data for the two built-in glyphs and colors them with theme tokens.",
     },
   ],
   notPorted: [],

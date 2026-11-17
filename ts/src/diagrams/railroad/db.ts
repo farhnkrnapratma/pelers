@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { abnfRules, parseAbnf } from './abnf.js';
 import { ebnfRules, parseEbnf } from './ebnf.js';
 import { irRules, parseIr } from './ir.js';
@@ -86,7 +86,7 @@ export function populate(db: RailroadDb, source: string, notation: Notation): vo
 
 export function parseRailroad(source: string, title: string | undefined): RailroadDb {
   const notation = notationOf(source);
-  if (notation === undefined) throw new PeleError('No railroad diagram keyword found.', 'syntax', { type: 'railroad' });
+  if (notation === undefined) throw new PelersError('No railroad diagram keyword found.', 'syntax', { type: 'railroad' });
   const db = new RailroadDb();
   if (title) db.title = title;
   populate(db, source, notation);

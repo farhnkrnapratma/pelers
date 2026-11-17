@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Relation, Requirement, RequirementClass, RequirementElement, RequirementModel } from './types.js';
 
 export const RequirementType = {
@@ -56,7 +56,7 @@ export class RequirementDb implements RequirementModel {
   private copy(target: string[], styles: string[]): void {
     this.styleCopies += styles.length;
     if (this.styleCopies > MAX_STYLE_COPIES) {
-      throw new PeleError('Requirement diagram applies too many style declarations.', 'limit', { type: 'requirement' });
+      throw new PelersError('Requirement diagram applies too many style declarations.', 'limit', { type: 'requirement' });
     }
     for (const style of styles) target.push(style);
   }

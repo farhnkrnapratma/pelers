@@ -10,7 +10,7 @@ export default {
       file: 'quadrantDb.spec.ts',
       test: 'should call getConfig at sanitization time, not at module load time',
       reason:
-        'Checks when Mermaid reads its global config to sanitize text with DOMPurify. Pele has no global config and escapes text when writing SVG.',
+        'Checks when Mermaid reads its global config to sanitize text with DOMPurify. Pelers has no global config and escapes text when writing SVG.',
     },
   ],
   rewrite: [

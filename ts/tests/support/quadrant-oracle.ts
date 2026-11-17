@@ -11,7 +11,7 @@ export function oracleTokens(src: string): Pair[] {
   return oracle.tokens(src, {});
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, texts } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], texts[i]] as Pair);
 }
@@ -22,7 +22,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recordingYy(oracle.methods);
   try {
     parseQuadrant(src, yy as unknown as QuadrantDb);
@@ -32,7 +32,7 @@ export function peleParse(src: string): Outcome {
   }
 }
 
-// Match Pele: comments leave the preceding character intact.
+// Match Pelers: comments leave the preceding character intact.
 {
   const rules = (oracle.parser.lexer as unknown as { rules: RegExp[] }).rules;
   const comments = rules.filter((rule) => rule.source === String.raw`^(?:[^\}]%%[^\n]*)`);

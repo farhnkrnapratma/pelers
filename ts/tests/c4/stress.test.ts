@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/c4/lexer.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -168,7 +168,7 @@ describe('C4 worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -191,7 +191,7 @@ describe('C4 worst cases', () => {
 
   it('renders what it can of the large cases', () => {
     expect(
-      render(H + repeat(2500, (i) => `System(s${i}, "S${i}")\n`), big).svg.split('class="pele-node ').length - 1
+      render(H + repeat(2500, (i) => `System(s${i}, "S${i}")\n`), big).svg.split('class="pelers-node ').length - 1
     ).toBe(2500);
     expect(
       render(H + repeat(2000, (i) => `Boundary(b${i}, "B${i}") {\n`) + 'System(s, "S")\n' + '}\n'.repeat(2000), big).svg

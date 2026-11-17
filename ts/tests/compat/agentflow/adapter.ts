@@ -1,4 +1,4 @@
-import { PeleError } from '../../../src/errors.js';
+import { PelersError } from '../../../src/errors.js';
 import * as slots from '../../../src/diagrams/agentflow/colorSlots.js';
 import { AgentflowDb, type AgentflowDbOptions } from '../../../src/diagrams/agentflow/db.js';
 import { AgentflowWarning as Vocabulary, EMITTED, RESERVED } from '../../../src/diagrams/agentflow/diagnostics.js';
@@ -71,7 +71,7 @@ function options(): AgentflowDbOptions {
   };
 }
 
-// Exposes Pele's agentflow model through the method names Mermaid's specs call on AgentFlowDB.
+// Exposes Pelers's agentflow model through the method names Mermaid's specs call on AgentFlowDB.
 export class AgentFlowDB extends AgentflowDb {
   readonly preserveCommentsWhenParsing = true;
 
@@ -175,7 +175,7 @@ export function transformData(data: LayoutData, db?: AgentFlowDB): void {
   normaliseNodeShapes(data.nodes, db ?? logSink);
 }
 
-// Mermaid marks a node's kind with a class its stylesheet matches; Pele keeps the kind on the node.
+// Mermaid marks a node's kind with a class its stylesheet matches; Pelers keeps the kind on the node.
 export function assignColorSlots(
   nodes: { id: string; shape?: string; isGroup?: boolean; colorIndex?: number; cssClasses?: string }[],
   kindOf: (id: string) => string | undefined,
@@ -192,15 +192,15 @@ export function assignColorSlots(
 }
 
 export function getStyles(): string {
-  throw new Error('Pele writes no stylesheet.');
+  throw new Error('Pelers writes no stylesheet.');
 }
 
-// Presents a PeleError's position the way Jison attaches one to its errors.
+// Presents a PelersError's position the way Jison attaches one to its errors.
 function located<R>(run: () => R): R {
   try {
     return run();
   } catch (error) {
-    if (error instanceof PeleError && error.line > 0) {
+    if (error instanceof PelersError && error.line > 0) {
       Object.assign(error, {
         hash: {
           line: error.line - 1,
@@ -233,7 +233,7 @@ export default {
 };
 
 export const Diagram = {
-  // What Pele's own entry point does with the text before handing it to the agentflow parser.
+  // What Pelers's own entry point does with the text before handing it to the agentflow parser.
   async fromText(text: string): Promise<{ db: AgentFlowDB }> {
     const pre = preprocess(text);
     const db = new AgentFlowDB();

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { PIE_TOKENS, parsePie } from '../../src/diagrams/pie/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 
 const FRAGMENTS = [
   'pie',
@@ -57,14 +57,14 @@ const corpus = [
 
 async function compare(src: string): Promise<void> {
   const expected = await referenceAst('pie', src);
-  const actual = peleAst(parsePie, src);
+  const actual = pelersAst(parsePie, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('pie parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(PIE_TOKENS)).toEqual(referenceTokens('createPieServices', 'Pie'));
+    expect(pelersTokens(PIE_TOKENS)).toEqual(referenceTokens('createPieServices', 'Pie'));
   });
 
   it('agrees on every spec and documentation input', async () => {

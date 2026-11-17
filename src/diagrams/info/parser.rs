@@ -2,7 +2,7 @@ use crate::diagrams::common::tokens::{
     ACC_DESCR, ACC_TITLE, DIRECTIVE, NEWLINE, Reader, SINGLE_LINE_COMMENT, TITLE, TokenType,
     WHITESPACE, YAML, acc_descr_value, acc_title_value, keyword, title_value, tokenize,
 };
-use crate::errors::PeleError;
+use crate::errors::PelersError;
 
 const SHOW_INFO: i32 = 0;
 const INFO: i32 = 1;
@@ -37,7 +37,7 @@ fn skip_newlines(r: &mut Reader) {
     }
 }
 
-pub fn parse_info(src: &str) -> Result<InfoAst, PeleError> {
+pub fn parse_info(src: &str) -> Result<InfoAst, PelersError> {
     let mut r = Reader::new(tokenize(src, &INFO_TOKENS, "info")?, &INFO_TOKENS, "info");
     let mut ast = InfoAst::default();
 

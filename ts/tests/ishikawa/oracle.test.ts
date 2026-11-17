@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/ishikawa-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/ishikawa-oracle.js';
 
-// Compares Pele's Ishikawa lexer and parser with the parser Mermaid generates from ishikawa.jison:
+// Compares Pelers's Ishikawa lexer and parser with the parser Mermaid generates from ishikawa.jison:
 // the same tokens, the same accept or reject decision, and the same calls into the model.
 // Set FUZZ to raise the number of generated inputs and SEED to change them.
 
@@ -78,9 +78,9 @@ const SEEDS = [
 const corpus = [...new Set([...loadCorpus('ishikawa', /ishikawa/i), ...SEEDS])];
 
 function compare(src: string): boolean {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
   return expected.ok;

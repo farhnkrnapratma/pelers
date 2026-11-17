@@ -1,0 +1,165 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/lexend';
+@import '@fontsource-variable/archivo/wdth.css';
+@import './lib/design/tokens.css';
+
+@font-face {
+    font-family: 'Paper Mono';
+    src: url('./lib/fonts/PaperMono-VF.woff2') format('woff2');
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Martian Mono';
+    src: url('./lib/fonts/MartianMono-VF.woff2') format('woff2');
+    font-weight: 100 800;
+    font-stretch: 75% 112.5%;
+    font-style: normal;
+    font-display: swap;
+}
+
+@layer base {
+    html {
+        background: var(--color-canvas);
+        color: var(--color-fg);
+        font-family: var(--font-sans);
+        font-size: 15px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+        color: var(--color-fg-accent);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    a:focus-visible {
+        outline: 2px solid var(--color-focus-ring);
+        outline-offset: 2px;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-focus-ring);
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    .doc-prose h1,
+    .doc-prose h2,
+    .doc-prose h3 {
+        font-family: var(--font-title);
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        scroll-margin-top: 5rem;
+    }
+
+    .doc-prose h2 {
+        margin-top: 2.5rem;
+        border-bottom: 1px solid var(--color-line-subtle);
+        padding-bottom: 0.4rem;
+        font-size: 1.5rem;
+    }
+
+    .doc-prose h3 {
+        margin-top: 2rem;
+        font-size: 1.15rem;
+    }
+
+    .doc-prose p,
+    .doc-prose li {
+        margin: 0.75rem 0;
+    }
+
+    .doc-prose code:not(pre code) {
+        background: var(--color-code-inline);
+        padding: 0.05rem 0.3rem;
+        font-size: var(--text-code);
+        font-family: var(--font-mono);
+    }
+
+    .doc-prose table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1rem 0;
+        font-size: 0.9rem;
+    }
+
+    .doc-prose th,
+    .doc-prose td {
+        border: 1px solid var(--color-line-subtle);
+        padding: 0.4rem 0.6rem;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .doc-code {
+        position: relative;
+        margin: 1.25rem 0;
+        border: 1px solid var(--color-line);
+        background: var(--color-surface-subtle);
+    }
+
+    .doc-code figcaption {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--color-line-subtle);
+        padding: 0.35rem 0.75rem;
+        font-family: var(--font-mono);
+        font-size: var(--text-xxs);
+        color: var(--color-fg-muted);
+    }
+
+    .doc-code pre {
+        overflow-x: auto;
+        margin: 0;
+        padding: 0.9rem 1rem;
+        font-family: var(--font-mono);
+        font-size: var(--text-code);
+        line-height: 1.5;
+    }
+
+    .doc-code-copy {
+        border: 1px solid var(--color-line);
+        background: var(--color-surface);
+        color: var(--color-fg-muted);
+        padding: 0.2rem 0.5rem;
+        font-family: var(--font-mono);
+        font-size: var(--text-xxs);
+        cursor: pointer;
+    }
+
+    .doc-code-copy:hover {
+        color: var(--color-fg);
+        border-color: var(--color-line-strong);
+    }
+
+    .hljs-keyword,
+    .hljs-title.function_ {
+        color: var(--color-fg-accent);
+    }
+
+    .hljs-string,
+    .hljs-attr {
+        color: var(--color-fg-success);
+    }
+
+    .hljs-comment {
+        color: var(--color-fg-muted);
+        font-style: italic;
+    }
+
+    .hljs-number,
+    .hljs-literal {
+        color: var(--color-fg-warning);
+    }
+
+    .hljs-title,
+    .hljs-selector-tag {
+        color: var(--color-fg-danger);
+    }
+}

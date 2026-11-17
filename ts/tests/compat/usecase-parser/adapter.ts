@@ -1,4 +1,4 @@
-import { PeleError } from '../../../src/errors.js';
+import { PelersError } from '../../../src/errors.js';
 import { parseOrderedJson } from '../../../src/diagrams/usecase/json.js';
 import { lineColumn, tokenize } from '../../../src/diagrams/usecase/lexer.js';
 import { parseUsecase } from '../../../src/diagrams/usecase/parser.js';
@@ -19,7 +19,7 @@ interface Lexed {
   errors: unknown[];
 }
 
-// Pele's tokens as the objects Chevrotain's lexer returns.
+// Pelers's tokens as the objects Chevrotain's lexer returns.
 export const usecaseLexer = {
   tokenize(source: string): Lexed {
     const tokens: Lexed['tokens'] = [];
@@ -44,7 +44,7 @@ export const usecaseLexer = {
   },
 };
 
-// The specs feed tokens to the Chevrotain parser and read its syntax errors. Pele parses and
+// The specs feed tokens to the Chevrotain parser and read its syntax errors. Pelers parses and
 // resolves in one pass, so an error from the resolving step means the grammar accepted the text.
 export const usecaseParser = {
   source: '',
@@ -57,8 +57,8 @@ export const usecaseParser = {
     try {
       parseUsecase(this.source);
     } catch (error) {
-      if (error instanceof PeleError && /^Error (?:parsing|lexing) /.test(error.message)) this.errors = [error];
-      else if (!(error instanceof PeleError)) throw error;
+      if (error instanceof PelersError && /^Error (?:parsing|lexing) /.test(error.message)) this.errors = [error];
+      else if (!(error instanceof PelersError)) throw error;
     }
     return { name: 'start' };
   },
@@ -80,7 +80,7 @@ export function parseOrderedJsonObject(text: string, line: number, column: numbe
     const { value, propertyOrder } = parseOrderedJson(text, () => [line, column]);
     return { value, propertyOrder: record(propertyOrder) };
   } catch (error) {
-    if (error instanceof PeleError) throw new UsecaseJsonError(error.message, error.line, error.column);
+    if (error instanceof PelersError) throw new UsecaseJsonError(error.message, error.line, error.column);
     throw error;
   }
 }

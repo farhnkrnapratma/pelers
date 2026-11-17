@@ -1,4 +1,4 @@
-import { locate, PeleError } from '../../errors.js';
+import { locate, PelersError } from '../../errors.js';
 import { safeUrl } from '../../util/url.js';
 import { parseYaml, type YamlValue } from '../../util/yaml.js';
 import { isValidShape, resolveShapeAlias } from './shapes.js';
@@ -261,7 +261,7 @@ export class AgentflowDb implements AgentflowModel {
       if (retried === undefined) {
         const { line, column } = this.errorAt(loc);
         const at = loc ? ` (${line}:${column})` : '';
-        throw new PeleError(`Metadata of "${id}" is not valid YAML. ${(error as Error).message}${at}`, 'syntax', {
+        throw new PelersError(`Metadata of "${id}" is not valid YAML. ${(error as Error).message}${at}`, 'syntax', {
           type: 'agentflow',
           line,
           column,
@@ -282,8 +282,8 @@ export class AgentflowDb implements AgentflowModel {
     return { line, column };
   }
 
-  private shapeError(message: string, loc: Loc | undefined): PeleError {
-    return new PeleError(message, 'semantic', { type: 'agentflow', ...this.errorAt(loc) });
+  private shapeError(message: string, loc: Loc | undefined): PelersError {
+    return new PelersError(message, 'semantic', { type: 'agentflow', ...this.errorAt(loc) });
   }
 
   addVertex(
@@ -411,7 +411,7 @@ export class AgentflowDb implements AgentflowModel {
 
     const max = this.options.maxEdges;
     if (max !== undefined && this.edges.length >= max) {
-      throw new PeleError(`Edge limit exceeded. The limit is ${max}.`, 'limit', {
+      throw new PelersError(`Edge limit exceeded. The limit is ${max}.`, 'limit', {
         type: 'agentflow',
       });
     }
@@ -454,7 +454,7 @@ export class AgentflowDb implements AgentflowModel {
   private edgeAt(pos: string | number): AgentEdge {
     const edge = this.edges[Number(pos)];
     if (edge === undefined) {
-      throw new PeleError(
+      throw new PelersError(
         `The index ${pos} for linkStyle is out of bounds. Valid indices for linkStyle are between 0 and ${
           this.edges.length - 1
         }. (Help: Ensure that the index is within the range of existing edges.)`,

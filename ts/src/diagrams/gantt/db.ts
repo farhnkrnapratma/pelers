@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { safeUrl } from '../../util/url.js';
 import { WEEKDAYS, add, addDays, format, isValid, isoDate, parseStrict, type Unit } from './dates.js';
 import type { GanttModel, GanttTask } from './types.js';
@@ -166,10 +166,10 @@ export class GanttDb implements GanttModel {
     }
     // Mermaid fails with a TypeError on both of these.
     if (data.length === 0) {
-      throw new PeleError(`Task "${descr.trim()}" needs a duration or an end date.`, 'semantic', { type: 'gantt' });
+      throw new PelersError(`Task "${descr.trim()}" needs a duration or an end date.`, 'semantic', { type: 'gantt' });
     }
     if (data.length > 3) {
-      throw new PeleError(
+      throw new PelersError(
         `Task "${descr.trim()}" has too many fields. A task takes an id, a start, and an end or duration.`,
         'semantic',
         { type: 'gantt' }
@@ -261,7 +261,7 @@ export class GanttDb implements GanttModel {
   private spend(units: number): void {
     this.work += units;
     if (this.work > WORK_LIMIT) {
-      throw new PeleError('The gantt chart takes too much work to schedule.', 'limit', { type: 'gantt' });
+      throw new PelersError('The gantt chart takes too much work to schedule.', 'limit', { type: 'gantt' });
     }
   }
 
@@ -345,13 +345,13 @@ export class GanttDb implements GanttModel {
     // What does not fit the format gets a second chance with the JavaScript date parser, as in Mermaid.
     const date = new Date(str);
     if (!isValid(date) || date.getFullYear() < -10000 || date.getFullYear() > 10000) {
-      throw new PeleError('Invalid date:' + str, 'semantic', { type: 'gantt' });
+      throw new PelersError('Invalid date:' + str, 'semantic', { type: 'gantt' });
     }
     return date;
   }
 
   private checked(date: Date, str: string): Date {
-    if (!isValid(date)) throw new PeleError('Invalid date:' + str, 'semantic', { type: 'gantt' });
+    if (!isValid(date)) throw new PelersError('Invalid date:' + str, 'semantic', { type: 'gantt' });
     return date;
   }
 
@@ -399,7 +399,7 @@ export class GanttDb implements GanttModel {
       if (invalid) {
         endTime.setDate(endTime.getDate() + 1);
         if (+endTime > maxEndTime) {
-          throw new PeleError(
+          throw new PelersError(
             'Failed to find a valid date that was not excluded by `excludes` after 10,000 iterations.',
             'semantic',
             { type: 'gantt' }

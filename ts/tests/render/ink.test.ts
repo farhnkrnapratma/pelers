@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { ink } from '../../src/svg/ink.js';
 import { resolveStyle } from '../../src/svg/theme.js';
 
-const ON_LIGHT = 'var(--pele-fg-on-light,#1f1f1f)';
-const ON_DARK = 'var(--pele-fg-on-dark,#fff)';
+const ON_LIGHT = 'var(--pelers-fg-on-light,#1f1f1f)';
+const ON_DARK = 'var(--pelers-fg-on-dark,#fff)';
 
 function inkFor(...declarations: string[]): string | undefined {
   const style = resolveStyle(declarations);

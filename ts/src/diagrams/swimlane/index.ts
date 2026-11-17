@@ -54,9 +54,9 @@ function drawLane(
   const sideways = dir === 'LR' || dir === 'RL';
   const cx = sideways ? left + c.padTop / 2 : c.x;
   const cy = sideways ? c.y : top + c.padTop / 2;
-  const text = labelSvg(label, cx, cy, ` class="pele-cluster-label"${inkFill(style, 'var(--_m)')}${style.text}`, icons);
+  const text = labelSvg(label, cx, cy, ` class="pelers-cluster-label"${inkFill(style, 'var(--_m)')}${style.text}`, icons);
   return (
-    `<g class="pele-cluster pele-lane${classes}" data-id="${id}">` +
+    `<g class="pelers-cluster pelers-lane${classes}" data-id="${id}">` +
     `<rect x="${num(left)}" y="${num(top)}" width="${num(c.w)}" height="${num(c.h)}" fill="none" stroke="var(--_b)"/>` +
     `<rect x="${num(left)}" y="${num(top)}" width="${num(sideways ? c.padTop : c.w)}" height="${num(
       sideways ? c.h : c.padTop

@@ -1,5 +1,5 @@
 const SINGLETON =
-  "Tests Mermaid's shared DB singleton (commit, clear, counters, config). Pele builds a new model on every parse and has no DB to commit into.";
+  "Tests Mermaid's shared DB singleton (commit, clear, counters, config). Pelers builds a new model on every parse and has no DB to commit into.";
 
 export default {
   files: [['usecase', /^(?:usecase|usecase\.parser|usecaseDb)\.spec\.ts$/]],
@@ -24,7 +24,7 @@ export default {
     {
       file: 'usecase.spec.ts',
       test: 'consolidates canonical selectors and relies on shared animation keyframes',
-      reason: 'Tests the CSS Mermaid generates for its themes. Pele emits no stylesheet.',
+      reason: 'Tests the CSS Mermaid generates for its themes. Pelers emits no stylesheet.',
     },
   ],
   notPorted: [
@@ -34,12 +34,12 @@ export default {
     ],
     [
       'usecase-colorIndex.spec.ts',
-      "Tests the palette slot numbers Mermaid's redux-color themes read. Pele colors by role through CSS tokens and has no palette slots.",
+      "Tests the palette slot numbers Mermaid's redux-color themes read. Pelers colors by role through CSS tokens and has no palette slots.",
     ],
-    ['usecaseRoleColors.spec.ts', 'Tests the theme CSS Mermaid generates. Pele emits no stylesheet.'],
+    ['usecaseRoleColors.spec.ts', 'Tests the theme CSS Mermaid generates. Pelers emits no stylesheet.'],
     [
       'usecase.docs.spec.ts',
-      "Renders the documentation examples through mermaidAPI under jsdom. The same examples are Pele's doc corpus and are parsed and rendered by its own tests.",
+      "Renders the documentation examples through mermaidAPI under jsdom. The same examples are Pelers's doc corpus and are parsed and rendered by its own tests.",
     ],
   ],
   rewrite: [

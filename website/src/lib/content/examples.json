@@ -1,0 +1,6 @@
+{
+  "homeExample": "flowchart TD\n  A[Mermaid text] --> B{Flowchart?}\n  B -- Yes --> C[Pelers]\n  B -- No --> D[Mermaid]\n  C --> E([SVG])\n  D --> E",
+  "themeExample": "flowchart LR\n  A[Variables] --> B(Light)\n  A --> C(Dark)\n  subgraph Themes\n    B\n    C\n  end",
+  "themeCss": ".pelers {\n  --pelers-bg: #fffcf0;\n  --pelers-fg: #100f0f;\n  --pelers-muted: #6f6e69;\n  --pelers-line: #100f0f;\n  --pelers-surface: #f2f0e5;\n  --pelers-surface-alt: #e6e4d9;\n  --pelers-border: #cecdc3;\n}",
+  "playgroundExample": "flowchart TD\n  A([Mermaid text]) --> B{Supported?}\n  B -- Yes --> C[Parse]\n  B -- No --> H[Fall back]\n\n  subgraph Pelers\n    C --> D[Layout]\n    D --> E[Render]\n  end\n\n  E --> F[(SVG)]\n  F -.-> G[Theme with CSS]\n"
+}

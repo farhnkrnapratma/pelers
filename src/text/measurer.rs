@@ -8,6 +8,7 @@ pub const MONO: u32 = 4;
 pub const SUB: u32 = 8;
 pub const SUP: u32 = 16;
 pub const UNDERLINE: u32 = 32;
+pub const MEASURE_MONO: u32 = 64;
 
 const SMALLER: f64 = 1.2;
 
@@ -39,8 +40,34 @@ fn is_zero_width(c: u16) -> bool {
     matches!(c, 0xad | 0x300..=0x36f | 0x200b..=0x200f | 0xdc00..=0xdfff | 0xfe00..=0xfe0f | 0xfeff)
 }
 
+pub type MeasureFn = dyn Fn(&str, f64, u32) -> f64;
+
+thread_local! {
+    static MEASURER: std::cell::RefCell<Option<std::rc::Rc<MeasureFn>>> = const { std::cell::RefCell::new(None) };
+}
+
+struct MeasurerRestore(Option<std::rc::Rc<MeasureFn>>);
+
+impl Drop for MeasurerRestore {
+    fn drop(&mut self) {
+        MEASURER.with(|slot| *slot.borrow_mut() = self.0.take());
+    }
+}
+
+pub fn with_measurer<T>(
+    measurer: Option<crate::util::hook::Hook<MeasureFn>>,
+    run: impl FnOnce() -> T,
+) -> T {
+    let outer = MEASURER.with(|slot| slot.replace(measurer.map(|hook| hook.0)));
+    let _restore = MeasurerRestore(outer);
+    run()
+}
+
 pub fn width(text: &str, size: f64, style: u32) -> f64 {
-    let mono = style & MONO != 0;
+    if let Some(measure) = MEASURER.with(|slot| slot.borrow().clone()) {
+        return measure(text, size, style);
+    }
+    let mono = style & (MONO | MEASURE_MONO) != 0;
     let eff = if style & (SUB | SUP) != 0 {
         size / SMALLER
     } else {

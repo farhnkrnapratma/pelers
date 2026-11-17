@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleParse, peleTokens, referenceParse, referenceTokens, specCorpus } from '../support/usecase-oracle.js';
+import { pelersParse, pelersTokens, referenceParse, referenceTokens, specCorpus } from '../support/usecase-oracle.js';
 
-// Compares Pele's use case lexer and parser with Mermaid's own, bundled as a reference: the same
+// Compares Pelers's use case lexer and parser with Mermaid's own, bundled as a reference: the same
 // tokens or the same lexer error, the same accept or reject decision with the same message, and,
 // when the text is accepted, the same published model and AST down to every source span.
 // Set FUZZ to raise the number of generated inputs and SEED to change them.
@@ -311,13 +311,13 @@ const spec = specCorpus();
 const corpus = [...new Set([...loadCorpus('usecase', /usecase-beta/), ...spec.diagrams, ...SEEDS, ...REJECTED])];
 
 function compareTokens(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(referenceTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(referenceTokens(src));
 }
 
 async function compare(src: string): Promise<boolean> {
   compareTokens(src);
   const expected = await referenceParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   if (actual.ok !== expected.ok || actual.error !== expected.error) {
     expect(actual.error, `result of ${JSON.stringify(src)}`).toBe(expected.error);
   }

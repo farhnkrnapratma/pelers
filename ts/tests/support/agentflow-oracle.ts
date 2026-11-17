@@ -90,7 +90,7 @@ export function oracleTokens(src: string): Token[] {
   return merge(out);
 }
 
-export function peleTokens(src: string): Token[] {
+export function pelersTokens(src: string): Token[] {
   const { types, texts, locs } = tokenize(src);
   const last = types.length - 1;
   return merge(
@@ -111,7 +111,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls: semantic(calls), error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseAgentflow(src, yy as unknown as AgentflowDb, true);

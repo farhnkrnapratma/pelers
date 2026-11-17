@@ -7,7 +7,7 @@ export type RelationshipType = string;
 
 export function setConfig(_config: unknown): void {}
 
-// Exposes Pele's requirement model through the names Mermaid's specs call on RequirementDB.
+// Exposes Pelers's requirement model through the names Mermaid's specs call on RequirementDB.
 export class RequirementDB extends RequirementDb {
   RequirementType = RequirementType;
   RiskLevel = RiskLevel;

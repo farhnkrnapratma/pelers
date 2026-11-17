@@ -6,7 +6,7 @@ import { createOracle, recordingYy, type Outcome, type Pair } from './oracle.js'
 
 export const oracle = createOracle(resolve('tests/compat/venn/upstream/venn.jison'));
 
-// Match Pele: keep titles on one line.
+// Match Pelers: keep titles on one line.
 const titleRules = (oracle.parser.lexer as unknown as { rules: RegExp[] }).rules;
 const titleMatches = titleRules.filter((rule) => rule.source === '^(?:title\\s[^#\\n;]+)');
 if (titleMatches.length !== 1) throw new Error('Expected one Venn title rule');
@@ -38,7 +38,7 @@ export function oracleTokens(src: string, indent: boolean): Pair[] {
   return oracle.tokens(src, recorder(indent).yy);
 }
 
-export function peleTokens(src: string, indent: boolean): Pair[] {
+export function pelersTokens(src: string, indent: boolean): Pair[] {
   const lexer = new VennLexer(src, recorder(indent).yy as unknown as IndentHost);
   const out: Pair[] = [];
   for (let i = 0; i < 1e6; i++) {
@@ -55,7 +55,7 @@ export function oracleParse(src: string): Outcome {
   return { ok: result.ok, calls, error: result.error };
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recorder();
   try {
     parseVenn(src, yy as unknown as VennDb);
@@ -65,7 +65,7 @@ export function peleParse(src: string): Outcome {
   }
 }
 
-// Match Pele: comments leave the preceding character intact.
+// Match Pelers: comments leave the preceding character intact.
 {
   const rules = (oracle.parser.lexer as unknown as { rules: RegExp[] }).rules;
   const comments = rules.filter((rule) => rule.source === String.raw`^(?:[^\}]%%[^\n]*)`);
@@ -73,7 +73,7 @@ export function peleParse(src: string): Outcome {
   rules[rules.indexOf(comments[0])] = /(?!)/;
 }
 
-// Match Pele: skip bare titles like comments.
+// Match Pelers: skip bare titles like comments.
 {
   const lexer = oracle.parser.lexer as unknown as { next(): unknown; _input: string; matched: string };
   const next = lexer.next;
@@ -87,7 +87,7 @@ export function peleParse(src: string): Outcome {
   };
 }
 
-// Match Pele: allow hyphenated names, but still strip indented `text`.
+// Match Pelers: allow hyphenated names, but still strip indented `text`.
 {
   const lexer = oracle.parser.lexer as unknown as {
     rules: RegExp[];

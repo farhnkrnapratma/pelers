@@ -1,8 +1,8 @@
-// Times Pele on Mermaid's flowchart documentation examples and on generated graphs.
+// Times Pelers on Mermaid's flowchart documentation examples and on generated graphs.
 // Run `npm run build` first. Pass --compare to also time beautiful-mermaid on the same inputs.
 import { readFileSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
-import { render } from '../dist/pele.js';
+import { render } from '../dist/pelers.js';
 
 const docs = JSON.parse(readFileSync('tests/corpus/flowchart-docs.json', 'utf8'));
 
@@ -58,7 +58,7 @@ function time(fn, inputs) {
   return { ms: samples[samples.length >> 1], done };
 }
 
-const engines = [['pele', (src) => render(src)]];
+const engines = [['pelers', (src) => render(src)]];
 if (process.argv.includes('--compare')) {
   const bm = await import('beautiful-mermaid');
   engines.push(['beautiful-mermaid', (src) => bm.renderMermaidSVG(src)]);
@@ -76,7 +76,7 @@ for (const [name, inputs] of cases) {
 }
 console.table(rows);
 
-const code = readFileSync('dist/pele.js');
+const code = readFileSync('dist/pelers.js');
 console.log(
   `bundle: ${(code.length / 1024).toFixed(1)} kB minified, ${(gzipSync(code).length / 1024).toFixed(1)} kB gzipped`
 );

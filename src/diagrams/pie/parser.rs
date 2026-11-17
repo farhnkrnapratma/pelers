@@ -3,7 +3,7 @@ use crate::diagrams::common::tokens::{
     TokenType, WHITESPACE, YAML, acc_descr_value, acc_title_value, keyword, string_value,
     title_value, tokenize,
 };
-use crate::errors::PeleError;
+use crate::errors::PelersError;
 
 const SHOW_DATA: i32 = 0;
 const PIE: i32 = 1;
@@ -83,7 +83,7 @@ fn skip_newlines(r: &mut Reader) {
     }
 }
 
-fn end_of_line(r: &mut Reader) -> Result<(), PeleError> {
+fn end_of_line(r: &mut Reader) -> Result<(), PelersError> {
     if r.kind() == -1 {
         return Ok(());
     }
@@ -94,7 +94,7 @@ fn end_of_line(r: &mut Reader) -> Result<(), PeleError> {
     Ok(())
 }
 
-pub fn parse_pie(src: &str) -> Result<PieAst, PeleError> {
+pub fn parse_pie(src: &str) -> Result<PieAst, PelersError> {
     let mut r = Reader::new(tokenize(src, &PIE_TOKENS, "pie")?, &PIE_TOKENS, "pie");
     let mut ast = PieAst::default();
 

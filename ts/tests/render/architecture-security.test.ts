@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, render } from '../../src/index.js';
+import { PelersError, render } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
 import { PAYLOADS, assertInert } from '../support/inert.js';
@@ -11,7 +11,7 @@ function check(src: string, extra: object = {}): boolean {
   try {
     svg = render(src, { ...options, ...extra }).svg;
   } catch (error) {
-    if (error instanceof PeleError) return false;
+    if (error instanceof PelersError) return false;
     throw new Error(
       `Unexpected ${(error as Error).name} for ${JSON.stringify(src).slice(0, 200)}: ${(error as Error).message}`
     );
@@ -117,8 +117,8 @@ describe('inert architecture output', () => {
   it('treats ids that name object internals as plain ids', () => {
     const src = `${head}group __proto__(cloud)[P]\ngroup constructor[C] in __proto__\nservice toString(server)[A] in __proto__\nservice hasOwnProperty[B] in constructor\njunction valueOf\ntoString:R -- L:hasOwnProperty\nhasOwnProperty:B -- T:valueOf\nalign row toString hasOwnProperty`;
     const { svg } = render(src, options);
-    expect(svg.match(/class="pele-cluster"/g)?.length).toBe(2);
-    expect(svg.match(/class="pele-node /g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-cluster"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-node /g)?.length).toBe(3);
     expect(svg).toContain('data-id="__proto__"');
     expect(Object.prototype).not.toHaveProperty('polluted');
     expect(Object.keys(Object.prototype)).toHaveLength(0);

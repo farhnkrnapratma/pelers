@@ -10,7 +10,7 @@ const themed = (vars: Record<string, unknown>, body: string): string =>
 function series(svg: string): Record<number, string> {
   const style = /^<svg[^>]*\bstyle="([^"]*)"/.exec(svg)![1];
   const found: Record<number, string> = {};
-  for (const [, n, color] of style.matchAll(/--pele-series-(\d):([^;]*)/g)) found[Number(n)] = color;
+  for (const [, n, color] of style.matchAll(/--pelers-series-(\d):([^;]*)/g)) found[Number(n)] = color;
   return found;
 }
 
@@ -44,7 +44,7 @@ line [5,15,25,35]`;
       7: '#00FF00',
       8: '#FF0000',
     });
-    expect(svg).toContain('stroke="var(--pele-series-1,');
+    expect(svg).toContain('stroke="var(--pelers-series-1,');
   });
 
   it('keeps commas inside color functions', () => {
@@ -92,12 +92,12 @@ line [5,15,25,35]`;
 
   it('accepts theme-aware colors', () => {
     const vars = {
-      pie1: 'var(--pele-accent)',
+      pie1: 'var(--pelers-accent)',
       pie2: 'light-dark(#000, #fff)',
       pie3: 'color-mix(in srgb, red 40%, blue)',
     };
     expect(series(render(themed(vars, PIE), options).svg)).toEqual({
-      1: 'var(--pele-accent)',
+      1: 'var(--pelers-accent)',
       2: 'light-dark(#000, #fff)',
       3: 'color-mix(in srgb, red 40%, blue)',
     });
@@ -132,21 +132,21 @@ line [5,15,25,35]`;
   });
 
   it('picks label colors that contrast with palette colors', () => {
-    const ON_LIGHT = 'fill="var(--pele-fg-on-light,#1f1f1f)"';
-    const ON_DARK = 'fill="var(--pele-fg-on-dark,#fff)"';
+    const ON_LIGHT = 'fill="var(--pelers-fg-on-light,#1f1f1f)"';
+    const ON_DARK = 'fill="var(--pelers-fg-on-dark,#fff)"';
     const pie = render(
-      themed({ pie1: '#ffeb3b', pie2: 'navy', pie3: 'var(--pele-accent)' }, 'pie\n  "A": 1\n  "B": 1\n  "C": 1'),
+      themed({ pie1: '#ffeb3b', pie2: 'navy', pie3: 'var(--pelers-accent)' }, 'pie\n  "A": 1\n  "B": 1\n  "C": 1'),
       options
     ).svg;
     const labels = [...pie.matchAll(/<text [^>]*>\d+%</g)].map((m) => m[0]);
     expect(labels[0]).toContain(ON_LIGHT);
     expect(labels[1]).toContain(ON_DARK);
     expect(labels[2]).not.toContain('fill=');
-    expect(pie).toContain('class="pele-slice-labels"');
+    expect(pie).toContain('class="pelers-slice-labels"');
 
     const git = render(themed({ git0: '#ffeb3b' }, 'gitGraph\n  commit\n  branch dev\n  commit'), options).svg;
-    expect(git).toMatch(new RegExp(`class="pele-label" ${ON_LIGHT.replace(/[()]/g, '\\$&')}`));
-    expect(git).toContain('class="pele-label" fill="var(--_bg)"');
+    expect(git).toMatch(new RegExp(`class="pelers-label" ${ON_LIGHT.replace(/[()]/g, '\\$&')}`));
+    expect(git).toContain('class="pelers-label" fill="var(--_bg)"');
 
     const timeline = render(themed({ cScale0: '#ffeb3b' }, 'timeline\n  section S\n    2001 : a'), options).svg;
     expect(timeline.split(ON_LIGHT).length - 1).toBe(2);
@@ -157,6 +157,6 @@ line [5,15,25,35]`;
 
   it('leaves the output unchanged without a palette', () => {
     expect(render(PIE, options).svg).toBe(render(themed({ primaryColor: 'red' }, PIE), options).svg);
-    expect(render(PIE, options).svg).not.toContain('--pele-series-1:');
+    expect(render(PIE, options).svg).not.toContain('--pelers-series-1:');
   });
 });

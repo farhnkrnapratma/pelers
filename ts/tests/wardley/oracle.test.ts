@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { WARDLEY_TOKENS, parseWardley } from '../../src/diagrams/wardley/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
-import { peleLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersLongerAlts, referenceLongerAlts } from '../support/langium-extra.js';
 
 const FRAGMENTS = [
   'wardley-beta',
@@ -144,15 +144,15 @@ const corpus = [...loadCorpus('wardley', /wardley-beta/), ...VALID, ...INVALID];
 
 async function compare(src: string): Promise<void> {
   const expected = await referenceAst('wardley', src);
-  const actual = peleAst(parseWardley, src);
+  const actual = pelersAst(parseWardley, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('wardley parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(WARDLEY_TOKENS)).toEqual(referenceTokens('createWardleyServices', 'Wardley'));
-    expect(peleLongerAlts(WARDLEY_TOKENS)).toEqual(referenceLongerAlts('createWardleyServices', 'Wardley'));
+    expect(pelersTokens(WARDLEY_TOKENS)).toEqual(referenceTokens('createWardleyServices', 'Wardley'));
+    expect(pelersLongerAlts(WARDLEY_TOKENS)).toEqual(referenceLongerAlts('createWardleyServices', 'Wardley'));
   });
 
   it('agrees on every spec and documentation input', async () => {

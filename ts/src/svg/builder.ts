@@ -86,7 +86,7 @@ export function labelSvg(label: Label, cx: number, cy: number, attrs: string, ic
         } else if (span.icon !== undefined) {
           const side = label.size * 1.1;
           const inner = icons?.(span.icon) ?? '';
-          extra += `<svg class="pele-icon" data-icon="${escText(span.icon)}" x="${num(x)}" y="${num(
+          extra += `<svg class="pelers-icon" data-icon="${escText(span.icon)}" x="${num(x)}" y="${num(
             mid - side / 2
           )}" width="${num(side)}" height="${num(side)}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
         } else if (span.text !== '') {
@@ -130,9 +130,9 @@ function mathLook(attrs: string): MathLook {
 
 // Resolver markup is trusted.
 function mathSvg(math: MathMarkup, box: string, size: number, attrs: string): string {
-  if ('svg' in math) return `<svg class="pele-math" ${box} overflow="visible"${attrs}>${math.svg}</svg>`;
+  if ('svg' in math) return `<svg class="pelers-math" ${box} overflow="visible"${attrs}>${math.svg}</svg>`;
   return (
-    `<foreignObject class="pele-math" ${box} overflow="visible"${attrs}>` +
+    `<foreignObject class="pelers-math" ${box} overflow="visible"${attrs}>` +
     `<div xmlns="http://www.w3.org/1999/xhtml" style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:${num(size)}px;line-height:normal;white-space:nowrap">${math.html}</div>` +
     '</foreignObject>'
   );

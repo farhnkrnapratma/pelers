@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { elements } from '../support/xml.js';
 
@@ -16,13 +16,13 @@ describe('timeline rendering', () => {
     expect(type).toBe('timeline');
     expect(supports(SOCIAL)).toBe(true);
     expect(links).toEqual([]);
-    expect(svg).toContain('class="pele pele-timeline"');
+    expect(svg).toContain('class="pelers pelers-timeline"');
     expect(svg).toContain('>History of Social Media<');
-    expect(count(svg, 'pele-node pele-period')).toBe(3);
-    expect(count(svg, 'pele-node pele-event')).toBe(4);
-    expect(count(svg, 'pele-dot')).toBe(3);
-    expect(count(svg, 'pele-axis')).toBe(1);
-    expect(count(svg, 'pele-marker')).toBe(1);
+    expect(count(svg, 'pelers-node pelers-period')).toBe(3);
+    expect(count(svg, 'pelers-node pelers-event')).toBe(4);
+    expect(count(svg, 'pelers-dot')).toBe(3);
+    expect(count(svg, 'pelers-axis')).toBe(1);
+    expect(count(svg, 'pelers-marker')).toBe(1);
     expect(texts(svg)).toEqual([
       'History of Social Media',
       '2002',
@@ -54,23 +54,23 @@ describe('timeline rendering', () => {
 
   it('gives each period its own series color, or one color with disableMulticolor', () => {
     const multi = render(SOCIAL, options).svg;
-    expect(multi).toContain('var(--pele-series-1,');
-    expect(multi).toContain('var(--pele-series-2,');
-    expect(multi).toContain('var(--pele-series-3,');
+    expect(multi).toContain('var(--pelers-series-1,');
+    expect(multi).toContain('var(--pelers-series-2,');
+    expect(multi).toContain('var(--pelers-series-3,');
     const single = render('---\nconfig:\n  timeline:\n    disableMulticolor: true\n---\n' + SOCIAL, options).svg;
-    expect(single).toContain('var(--pele-series-1,');
-    expect(single).not.toContain('var(--pele-series-2,');
+    expect(single).toContain('var(--pelers-series-1,');
+    expect(single).not.toContain('var(--pelers-series-2,');
     const directive = render('%%{init: {"timeline": {"disableMulticolor": true}}}%%\n' + SOCIAL, options).svg;
     expect(directive).toBe(render(SOCIAL, { ...options, config: { timeline: { disableMulticolor: true } } }).svg);
-    expect(directive).not.toContain('var(--pele-series-2,');
+    expect(directive).not.toContain('var(--pelers-series-2,');
   });
 
   it('colors by section and draws a header over each section', () => {
     const { svg } = render('timeline\n  section One\n    A : a\n    B : b\n  section Two\n    C : c\n', options);
-    expect(count(svg, 'pele-cluster pele-section')).toBe(2);
+    expect(count(svg, 'pelers-cluster pelers-section')).toBe(2);
     expect(svg).toContain('data-id="One"');
     expect(svg).toContain('>One<');
-    expect(svg).not.toContain('var(--pele-series-3,');
+    expect(svg).not.toContain('var(--pelers-series-3,');
     const rects = elements(svg).filter((el) => el.name === 'rect');
     const header = rects[0];
     const [a, , b] = rects.slice(1);
@@ -87,8 +87,8 @@ describe('timeline rendering', () => {
       'timeline\n  Early : e\n  section Same\n    A\n  section Empty\n  section Same\n    B\n',
       options
     );
-    expect(count(svg, 'pele-node pele-period')).toBe(3);
-    expect(count(svg, 'pele-cluster pele-section')).toBe(3);
+    expect(count(svg, 'pelers-node pelers-period')).toBe(3);
+    expect(count(svg, 'pelers-cluster pelers-section')).toBe(3);
     expect(svg).toContain('fill="var(--_m)"');
     expect(svg.indexOf('>Early<')).toBeLessThan(svg.indexOf('>Same<'));
   });
@@ -99,8 +99,8 @@ describe('timeline rendering', () => {
     expect(render(SOCIAL.replace('timeline', 'timeline LR'), options).svg).toBe(lr.svg);
     expect(td.height).toBeGreaterThan(lr.height);
     expect(td.width).toBeLessThan(lr.width);
-    expect(count(td.svg, 'pele-node pele-period')).toBe(3);
-    expect(count(td.svg, 'pele-node pele-event')).toBe(4);
+    expect(count(td.svg, 'pelers-node pelers-period')).toBe(3);
+    expect(count(td.svg, 'pelers-node pelers-event')).toBe(4);
     const rects = elements(td.svg).filter((el) => el.name === 'rect');
     expect(Number(rects[2].attrs.get('y'))).toBeGreaterThan(Number(rects[0].attrs.get('y')));
     expect(Number(rects[1].attrs.get('x'))).toBeGreaterThan(Number(rects[0].attrs.get('x')));
@@ -114,14 +114,14 @@ describe('timeline rendering', () => {
       const [, y, h] = rect.match(/ y="([\d.]+)" width="[\d.]+" height="([\d.]+)"/) ?? [];
       return { top: Number(y), bottom: Number(y) + Number(h), middle: Number(y) + Number(h) / 2 };
     };
-    const rows = svg.split('<g class="pele-node pele-period"').slice(1);
+    const rows = svg.split('<g class="pelers-node pelers-period"').slice(1);
     expect(rows).toHaveLength(4);
     let above = 0;
     for (const row of rows) {
       const boxes = (row.match(/<rect [^>]+>/g) ?? []).map(box);
       const [period, event] = boxes;
       expect(event.middle).toBe(period.middle);
-      const path = row.match(/class="pele-edge" d="([^"]+)"/)?.[1] ?? '';
+      const path = row.match(/class="pelers-edge" d="([^"]+)"/)?.[1] ?? '';
       const stubs = [...path.matchAll(/M[\d.]+,([\d.]+)H/g)].slice(0, 2).map((m) => Number(m[1]));
       expect(stubs).toEqual([period.middle, period.middle]);
       expect(Math.min(...boxes.map((b) => b.top))).toBeGreaterThan(above);
@@ -168,7 +168,7 @@ describe('timeline rendering', () => {
       '#1 &amp; &lt;b&gt;bold&lt;/b&gt; [link](http://example.com) fa:fa-check a&lt;T&gt;'
     );
     expect(svg).not.toContain('<a');
-    expect(svg).not.toContain('pele-icon');
+    expect(svg).not.toContain('pelers-icon');
   });
 
   it('takes the title from front matter unless the diagram sets one', () => {
@@ -185,8 +185,8 @@ describe('timeline rendering', () => {
       'timeline\n  accTitle: Short name\n  accDescr {\n    A longer\n    description\n  }\n  2001\n',
       options
     );
-    expect(svg).toContain('<title id="pele-title">Short name</title>');
-    expect(svg).toContain('<desc id="pele-desc">A longer\ndescription</desc>');
+    expect(svg).toContain('<title id="pelers-title">Short name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">A longer\ndescription</desc>');
   });
 
   it('draws an empty timeline, a lone title, and sections without periods', () => {
@@ -201,15 +201,15 @@ describe('timeline rendering', () => {
       expect(svg).not.toMatch(/NaN|Infinity|undefined/);
       expect(width).toBeGreaterThan(0);
       expect(height).toBeGreaterThan(0);
-      expect(count(svg, 'pele-axis')).toBe(0);
+      expect(count(svg, 'pelers-axis')).toBe(0);
     }
   });
 
   it('rejects what Mermaid rejects', () => {
-    expect(() => render('timeline\n  : orphan event\n', options)).toThrow(PeleError);
+    expect(() => render('timeline\n  : orphan event\n', options)).toThrow(PelersError);
     expect(() => render('timeline\n  2001 :no space\n', options)).toThrow(/Expecting .* got 'INVALID'/);
     expect(() => render('timeline\n  Timeline of things : x\n', options)).toThrow(/got 'timeline'/);
-    expect(() => render('timeline\n  accDescr {\n  never closed\n', options)).toThrow(PeleError);
+    expect(() => render('timeline\n  accDescr {\n  never closed\n', options)).toThrow(PelersError);
   });
 
   it('treats a bare title as no title', () => {

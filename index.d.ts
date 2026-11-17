@@ -1,8 +1,8 @@
-export type PeleErrorCode = 'unsupported-diagram' | 'syntax' | 'semantic' | 'limit';
+export type PelersErrorCode = 'unsupported-diagram' | 'syntax' | 'semantic' | 'limit';
 
-export declare class PeleError extends Error {
-    readonly code: PeleErrorCode;
-    constructor(message: string, code: PeleErrorCode);
+export declare class PelersError extends Error {
+    readonly code: PelersErrorCode;
+    constructor(message: string, code: PelersErrorCode);
 }
 
 export interface RenderResult {
@@ -12,6 +12,7 @@ export interface RenderResult {
     title?: string;
 }
 
-export declare function render(source: string): RenderResult;
+export declare function render(source: string): string;
+export declare function renderFull(source: string): RenderResult;
 export declare function detectType(source: string): string | null;
 export declare function supports(source: string): boolean;

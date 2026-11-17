@@ -2,11 +2,11 @@ import { describe, expect, it } from 'vitest';
 import { PACKET_TOKENS, parsePacket } from '../../src/diagrams/packet/parser.js';
 import { tokenize } from '../../src/diagrams/common/tokens.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 import {
   loadTestStrings,
-  peleLexer,
-  peleLongerAlts,
+  pelersLexer,
+  pelersLongerAlts,
   referenceLexer,
   referenceLongerAlts,
 } from '../support/langium-extra.js';
@@ -110,20 +110,20 @@ const corpus = [
 ];
 
 const referenceLex = referenceLexer('createPacketServices', 'Packet');
-const peleLex = peleLexer(PACKET_TOKENS, (src) => tokenize(src, PACKET_TOKENS, 'packet'));
+const pelersLex = pelersLexer(PACKET_TOKENS, (src) => tokenize(src, PACKET_TOKENS, 'packet'));
 
 async function compare(src: string): Promise<void> {
-  expect(peleLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
+  expect(pelersLex(src), `tokens of ${JSON.stringify(src)}`).toBe(referenceLex(src));
   const expected = await referenceAst('packet', src);
-  const actual = peleAst(parsePacket, src);
+  const actual = pelersAst(parsePacket, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
 
 describe('packet parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(PACKET_TOKENS)).toEqual(referenceTokens('createPacketServices', 'Packet'));
-    expect(peleLongerAlts(PACKET_TOKENS)).toEqual(referenceLongerAlts('createPacketServices', 'Packet'));
+    expect(pelersTokens(PACKET_TOKENS)).toEqual(referenceTokens('createPacketServices', 'Packet'));
+    expect(pelersLongerAlts(PACKET_TOKENS)).toEqual(referenceLongerAlts('createPacketServices', 'Packet'));
   });
 
   it('agrees on every spec and documentation input', async () => {

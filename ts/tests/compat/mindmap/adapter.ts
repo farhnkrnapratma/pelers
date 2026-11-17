@@ -30,7 +30,7 @@ export interface MindmapLayoutEdge {
 
 export type Edge = MindmapLayoutEdge;
 
-// Exposes Pele's mindmap model through the names Mermaid's specs call on MindmapDB.
+// Exposes Pelers's mindmap model through the names Mermaid's specs call on MindmapDB.
 export class MindmapDB extends MindmapDb {
   readonly nodeType = NODE_TYPE;
 

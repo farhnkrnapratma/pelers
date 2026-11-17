@@ -18,7 +18,7 @@ pub fn render_info(model: &InfoModel, options: &RenderOptions) -> Drawn {
     } else {
         0.0
     };
-    let text = layout_label(Some(&format!("Pele v{VERSION}")), false, size, 4000.0, 0);
+    let text = layout_label(Some(&format!("Pelers v{VERSION}")), false, size, 4000.0, 0);
 
     let width = (js_max(title.width, text.width) + 2.0 * pad).ceil();
     let height = (title_height + text.height + 2.0 * pad).ceil();
@@ -26,12 +26,12 @@ pub fn render_info(model: &InfoModel, options: &RenderOptions) -> Drawn {
         &title,
         width / 2.0,
         pad + title.height / 2.0,
-        " class=\"pele-title\" font-weight=\"var(--_tw)\"",
+        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     ) + &label_svg(
         &text,
         width / 2.0,
         pad + title_height + text.height / 2.0,
-        " class=\"pele-version\" fill=\"var(--_m)\"",
+        " class=\"pelers-version\" fill=\"var(--_m)\"",
     );
 
     let acc = Accessible {
@@ -39,6 +39,7 @@ pub fn render_info(model: &InfoModel, options: &RenderOptions) -> Drawn {
         acc_descr: model.acc_descr.as_deref(),
     };
     Drawn {
+        links: Vec::new(),
         svg: svg_document("info", width, height, size, options, acc, &content),
         width,
         height,
@@ -59,6 +60,6 @@ mod tests {
             &RenderOptions::default(),
         );
         assert!(titled.height > plain.height);
-        assert!(titled.svg.contains("pele-title"));
+        assert!(titled.svg.contains("pelers-title"));
     }
 }

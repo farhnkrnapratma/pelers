@@ -56,6 +56,19 @@ pub fn turn_to_fit(options: &RenderOptions, mut draw: impl FnMut(bool) -> Drawn)
     }
 }
 
+pub fn cap_width(options: &RenderOptions, natural: f64, least: f64, around: f64) -> f64 {
+    match options.max_width {
+        Some(available) if available > 0.0 => {
+            js_max(js_min(least, natural), js_min(natural, available - around))
+        }
+        _ => natural,
+    }
+}
+
+pub fn runs_across(direction: Option<&str>) -> bool {
+    matches!(direction, Some("LR" | "RL"))
+}
+
 pub fn title_room(options: &RenderOptions) -> f64 {
     match options.max_width {
         Some(available) if available > 0.0 => {
@@ -65,12 +78,29 @@ pub fn title_room(options: &RenderOptions) -> f64 {
     }
 }
 
+pub fn tighten(options: &RenderOptions, draw: impl Fn(bool) -> Drawn) -> Drawn {
+    let loose = draw(false);
+    let Some(available) = options.max_width.filter(|a| *a > 0.0) else {
+        return loose;
+    };
+    if loose.width <= available {
+        return loose;
+    }
+    let tight = draw(true);
+    if tight.width < loose.width {
+        tight
+    } else {
+        loose
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn drawn(width: f64) -> Drawn {
         Drawn {
+            links: Vec::new(),
             svg: String::new(),
             width,
             height: 0.0,

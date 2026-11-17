@@ -10,7 +10,7 @@ let views = new WeakMap<object, unknown>();
 type View = Record<string, unknown>;
 
 // Mermaid wraps text fields as { text } and keeps a named argument found in the alias or
-// label slot as a one-key object there. Pele stores plain strings, with that argument beside them.
+// label slot as a one-key object there. Pelers stores plain strings, with that argument beside them.
 const text = (value: string | undefined): { text: string } | undefined => (value === undefined ? undefined : { text: value });
 const pair = (attr: C4Named): View => ({ [attr.key]: attr.value });
 const slot = (value: string, attr: C4Named | undefined): string | View => (attr ? pair(attr) : value);
@@ -67,7 +67,7 @@ const relView = (rel: C4Rel): View =>
 const inside = <E extends C4Element>(list: E[], parent: string | null | undefined): E[] =>
   parent === undefined || parent === null ? list : list.filter((el) => (el.parent ? el.parent.alias : '') === parent);
 
-// Exposes Pele's C4 model through the names Mermaid's specs call on c4Db.
+// Exposes Pelers's C4 model through the names Mermaid's specs call on c4Db.
 export const c4Db = {
   clear(): void {
     db = new C4Db();

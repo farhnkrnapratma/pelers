@@ -1,4 +1,4 @@
-import { inputOffset, replacements, syntaxError, type Edit, type PeleError } from '../../errors.js';
+import { inputOffset, replacements, syntaxError, type Edit, type PelersError } from '../../errors.js';
 import { decodeEntities } from '../../text/entities.js';
 import type { SankeyDb } from './db.js';
 import { T, TOKEN_NAMES, tokenize } from './lexer.js';
@@ -80,7 +80,7 @@ export function parseSankey(src: string, db: SankeyDb, source = src): void {
   const { types, texts, starts } = tokenize(src);
   let i = 0;
 
-  const error = (at: number, detail: string): PeleError => {
+  const error = (at: number, detail: string): PelersError => {
     const steps: Edit[][] = [];
     if (source !== src) prepareTextForParsing(source, steps);
     // Map EOF before the trimmed trailing blanks.

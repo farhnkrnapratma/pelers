@@ -1,0 +1,494 @@
+[
+  {
+    "index": 21,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(internet)[Data tier]\ngroup g2(cloud)[Data tier]\ngroup g3(disk)[Edge long title]\nservice s0(database)[Ünï] in g1\nservice s1 \"Ünï\"[Server]\nservice s2(server)[DB]\ns2:L <-- R:s2\ns2:B <-- T:s1\ns0:L <--> L:s2\ns0:R -- B:s0\n",
+    "original": "architecture-beta\ngroup g1(internet)[Data tier]\ngroup g2(cloud)[Data tier]\ngroup g3(disk)[Edge long title]\nservice s0(database)[Ünï] in g1\nservice s1 \"Ünï\"[Server]\nservice s2(server)[DB]\ns2:L <-- R:s2\ns2:B <-- T:s1\ns2:B -[Ünï]- L:s1\ns0:L <--> L:s2\ns2:B --> B:s0\ns2:L <-- L:s2\ns2:L -[Ünï]- T:s2\ns0:R -- B:s0\ns0:L <--> L:s2\ns2:R --> R:s2\ns0:R <-- B:s2\ns0:B -- B:s0\n",
+    "method": "removed duplicate architecture edges",
+    "removed": [
+      "s2:B -[Ünï]- L:s1",
+      "s2:L <-- L:s2",
+      "s2:L -[Ünï]- T:s2",
+      "s2:B --> B:s0",
+      "s0:L <--> L:s2",
+      "s2:R --> R:s2",
+      "s0:R <-- B:s2",
+      "s0:B -- B:s0"
+    ]
+  },
+  {
+    "index": 22,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(cloud)[Edge long title]\ngroup g2(server)[API] in g1\nservice s0(cloud)[Ünï] in g1\njunction s1 in g2\nservice s2(internet)[x y z x y z x y z x y z x y z x y z]\ns0:T <--> B:s2\ns1:L <--> L:s2\ns2:L --> B:s1{group}\ns1:T <-- R:s1\ns0:B -- L:s1\ns2{group}:L --> B:s0\ns1{group}:B --> B:s0{group}\n",
+    "original": "architecture-beta\ngroup g1(cloud)[Edge long title]\ngroup g2(server)[API] in g1\nservice s0(cloud)[Ünï] in g1\njunction s1 in g2\nservice s2(internet)[x y z x y z x y z x y z x y z x y z]\ns0:T <--> B:s2\ns1:L <--> L:s2\ns1:L -[Ünï]- L:s2\ns0:L --> L:s2{group}\ns0:L <--> T:s2{group}\ns2:L --> B:s1{group}\ns0:B <-- B:s2\ns1:T <-- R:s1\ns0:B -- L:s1\ns0:L -[Ünï]- L:s1\ns2{group}:L --> B:s0\ns1{group}:B --> B:s0{group}\ns1:L <-- R:s1\n",
+    "method": "removed duplicate architecture edges",
+    "removed": [
+      "s1:L -[Ünï]- L:s2",
+      "s0:L --> L:s2{group}",
+      "s0:L <--> T:s2{group}",
+      "s0:B <-- B:s2",
+      "s0:L -[Ünï]- L:s1",
+      "s1:L <-- R:s1"
+    ]
+  },
+  {
+    "index": 23,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(disk)[API]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1(unknown-icon)[DB]\nservice s2(cloud)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s3 \"Ünï\"[Ünï] in g1\nservice s4(internet)[x y z x y z x y z x y z x y z x y z]\nservice s5(unknown-icon)[line one<br>line two<br>line three<br>line four] in g1\nservice s6(cloud)[DB] in g1\nservice s7(server)[DB]\ns4:R <--> L:s0\ns5:T <--> B:s7\ns2:B --> R:s2\ns0:T --> R:s6\ns3:R -- L:s5\ns3:B <--> B:s4\ns3:T <-- B:s1\ns6:T -- L:s6\n",
+    "original": "architecture-beta\ngroup g1(disk)[API]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1(unknown-icon)[DB]\nservice s2(cloud)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s3 \"Ünï\"[Ünï] in g1\nservice s4(internet)[x y z x y z x y z x y z x y z x y z]\nservice s5(unknown-icon)[line one<br>line two<br>line three<br>line four] in g1\nservice s6(cloud)[DB] in g1\nservice s7(server)[DB]\ns4:R <--> L:s0\ns5:T <--> B:s7\ns2:B --> R:s2\ns2:L -[Ünï]- R:s2\ns0:T --> R:s6\ns3:R -- L:s5\ns3:B <--> B:s4\ns3:R -[label]- L:s4\ns3:T <-- B:s1\ns6:T -- L:s6\ns6:T -[label]- L:s6\ns4:T --> R:s0\n",
+    "method": "removed duplicate architecture edges",
+    "removed": [
+      "s2:L -[Ünï]- R:s2",
+      "s3:R -[label]- L:s4",
+      "s6:T -[label]- L:s6",
+      "s4:T --> R:s0"
+    ]
+  },
+  {
+    "index": 24,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(database)[API]\nservice s0(unknown-icon)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated] in g1\nservice s1(disk)[Ünï]\nservice s2 \"a very long icon text that cannot fit the icon\"[DB]\nservice s3(disk)[DB] in g1\ns1:B -- T:s3\ns2:L --> B:s0\ns1:L -- T:s0{group}\ns2:B <-- T:s2\ns2:B <-- T:s1\ns0:L <--> R:s0\n",
+    "original": "architecture-beta\ngroup g1(database)[API]\nservice s0(unknown-icon)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated] in g1\nservice s1(disk)[Ünï]\nservice s2 \"a very long icon text that cannot fit the icon\"[DB]\nservice s3(disk)[DB] in g1\ns1:B -- T:s3\ns1:B -[label]- R:s3\ns2:L --> B:s0\ns1:L -- T:s0{group}\ns2:B <-- T:s2\ns2:B <-- T:s1\ns0:L <--> R:s0\ns0:T -[Ünï]- R:s0\ns1{group}:B <--> L:s3\ns1:R -[Ünï]- R:s3\n",
+    "method": "removed duplicate architecture edges",
+    "removed": [
+      "s1:B -[label]- R:s3",
+      "s0:T -[Ünï]- R:s0",
+      "s1{group}:B <--> L:s3",
+      "s1:R -[Ünï]- R:s3"
+    ]
+  },
+  {
+    "index": 25,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- R:s3\ns4:L -- L:s4\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
+    "original": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- L:s3{group}\ns2:L -- R:s3\ns4:L -- L:s4\ns2:B <--> L:s5\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
+    "method": "removed lines",
+    "removed": [
+      "s2:L -- L:s3{group}",
+      "s2:B <--> L:s5"
+    ]
+  },
+  {
+    "index": 26,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1:L -[Ünï]- L:s1\n",
+    "original": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T <--> B:s3\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1{group}:L -- L:s1\ns1:L -[Ünï]- L:s1\n",
+    "method": "removed lines",
+    "removed": [
+      "s2:T <--> B:s3",
+      "s1{group}:L -- L:s1"
+    ]
+  },
+  {
+    "index": 27,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\naccTitle: Ünï title\nservice a\nservice b\na:R --> L:b\n",
+    "original": "architecture-beta\naccTitle: Ünï title\nservice a\nservice b\na:R >--< L:b\na:T >-[x]-< B:b\na{group}:L <-- R:b\na:B --> T:b{group}\na : L - [ y ] - R : b\n",
+    "method": "kept one edge; replaced >--< with -->",
+    "removed": [
+      "a:T >-[x]-< B:b",
+      "a{group}:L <-- R:b",
+      "a:B --> T:b{group}",
+      "a : L - [ y ] - R : b"
+    ]
+  },
+  {
+    "index": 36,
+    "type": "architecture",
+    "ok": true,
+    "lines": 2,
+    "original": 10,
+    "source": "architecture-beta\n"
+  },
+  {
+    "index": 37,
+    "type": "architecture",
+    "ok": true,
+    "lines": 7,
+    "original": 11,
+    "source": "architecture-beta\nservice svc0(unknown-icon)[Database]\njunction j1\nservice svc2(internet)[A long service title that wraps]\nsvc2:R -- R:j1\nalign row svc0 j1 svc2\n"
+  },
+  {
+    "index": 41,
+    "type": "block",
+    "ok": true,
+    "lines": 16,
+    "original": 22,
+    "source": "block-beta\n  id1[[\"fa:fa-check ok\"]]\n  n2[\\\"emoji 😀\"/]:2\n  ID[/\"$$b^2$$\"/]\n  x[\\\"a\"/]:1\n  group_one{{\"Database\"}}\n  Zed(\"Database\"):3\n  ID --x B\n  Zed ==> A\n  x --- id1\n  n2 -- \"long label that goes on and on for wrapping purposes\" ==> b\n  B -- \"Dogs\" --- a\n  n2 -- \"two words\" ==> B\n  Zed -- \"Dogs\" --- ID\n  space\n"
+  },
+  {
+    "index": 42,
+    "type": "block",
+    "ok": true,
+    "lines": 16,
+    "original": 20,
+    "source": "block-beta\n  A[/\"emoji 😀\"/]\n  B(\"日本\")\n  id1>\"x < y\"]:1\n  n2([\"Dogs\"])\n  ID[\"x&amp;y\"]:1\n  n2 --o A\n  ID === ID\n  b -- \"x&amp;y\" ==> b\n  c <--> b\n  B -.-> id1\n  c === ID\n  b === b\n  B -- \"x < y\" --> a\n  a --x a\n"
+  },
+  {
+    "index": 43,
+    "type": "block",
+    "ok": true,
+    "lines": 5,
+    "original": 15,
+    "source": "block-beta\n  A -- \"a\" --> b\n  a ---> a\n  space\n"
+  },
+  {
+    "index": 44,
+    "type": "block",
+    "ok": true,
+    "source": "block-beta\n  columns 4\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
+    "original": "block-beta\n  columns 4\n  a{\"two words\"}\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  ID{\"x < y\"}:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
+    "method": "removed lines",
+    "removed": [
+      "  a{\"two words\"}",
+      "  ID{\"x < y\"}:3"
+    ]
+  },
+  {
+    "index": 45,
+    "type": "block",
+    "ok": true,
+    "source": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
+    "original": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  b{\"Dogs\"}:2\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  n2{\"fa:fa-check ok\"}\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
+    "method": "removed lines",
+    "removed": [
+      "  b{\"Dogs\"}:2",
+      "  n2{\"fa:fa-check ok\"}"
+    ]
+  },
+  {
+    "index": 46,
+    "type": "block",
+    "ok": true,
+    "lines": 18,
+    "original": 23,
+    "source": "block-beta\n  B[/\"x&amp;y\"\\]\n  id1[\\\"$$b^2$$\"\\]:2\n  n2{{\"$$b^2$$\"}}\n  ID[(\"x&amp;y\")]\n  x>\"x < y\"]:1\n  group_one{{\"Ünï label\"}}\n  Zed[(\"日本\")]\n  c <--> B\n  Zed --> b\n  b --> a\n  x === n2\n  id1 ==> B\n  n2 -- \"日本\" -.-> A\n  n2 === A\n  B -- \"emoji 😀\" -.-> x\n  a -- \"two words\" --> group_one\n"
+  },
+  {
+    "index": 47,
+    "type": "block",
+    "ok": true,
+    "lines": 15,
+    "original": 20,
+    "source": "block-beta\n  B[/\"日本\"/]\n  id1(\"日本\")\n  n2([\"long label that goes on and on for wrapping purposes\"])\n  ID[\\\"x < y\"\\]\n  x[/\"a\"/]:3\n  id1 ==> c\n  n2 --> c\n  ID === ID\n  A -- \"$$b^2$$\" --> ID\n  c <--> A\n  b -.- a\n  c -- \"日本\" ==> b\n  space\n"
+  },
+  {
+    "index": 49,
+    "type": "block",
+    "ok": true,
+    "lines": 17,
+    "original": 27,
+    "source": "block-beta\n  n2 <--> B\n  id1 --- c\n  x -- \"Dogs\" --> id1\n  b ==> ID\n  a -.-> B\n  A -- \"Ünï label\" -.-> a\n  B -- \"emoji 😀\" --> id1\n  ID --x x\n  a -- \"x < y\" ==> id1\n  c -- \"日本\" --- b\n  c -- \"a\" --- a\n  x -- \"日本\" --> n2\n  B ---> ID\n  x -- \"fa:fa-check ok\" -.-> b\n  space\n"
+  },
+  {
+    "index": 54,
+    "type": "block",
+    "ok": true,
+    "lines": 14,
+    "original": 20,
+    "source": "block-beta\n  id1>\"a\"]\n  id1 -- \"日本\" --- A\n  id1 ==> id1\n  A === b\n  id1 -.- B\n  B --x a\n  b --> b\n  b -- \"$$b^2$$\" -.-> c\n  b ---> B\n  c --o c\n  A === B\n  space\n"
+  },
+  {
+    "index": 58,
+    "type": "block",
+    "ok": true,
+    "lines": 10,
+    "original": 14,
+    "source": "block-beta\n  A[/\"A wide one in the middle\"/]:3\n  A -.-> a\n  A ==> A\n  b --- A\n  c -- \"emoji 😀\" --> c\n  a --o c\n  b --o A\n  space\n"
+  },
+  {
+    "index": 87,
+    "type": "class",
+    "ok": true,
+    "lines": 24,
+    "original": 25,
+    "source": "---\nconfig:\n  class:\n    hierarchicalNamespaces: false\n---\nclassDiagram\n    namespace Company.Engineering.Backend {\n        class Developer {\n            +writeCode()\n        }\n    }\n    namespace Company.Engineering.Frontend {\n        class Designer {\n            +createMockup()\n        }\n    }\n    namespace Company {\n        class CEO {\n            +makeDecisions()\n        }\n    }\n    CEO --> Developer : oversees\n    CEO --> Designer : oversees\n"
+  },
+  {
+    "index": 95,
+    "type": "class",
+    "ok": true,
+    "source": "classDiagram\n  note for A \"$$h2$$ note\"\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n  }\n  class Fish\n",
+    "original": "classDiagram\n  note for A \"$$h2$$ note\"\n  C : run)\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n    run)\n  }\n  class Fish\n",
+    "method": "removed lines",
+    "removed": [
+      "  C : run)",
+      "    run)"
+    ]
+  },
+  {
+    "index": 98,
+    "type": "class",
+    "ok": true,
+    "lines": 5,
+    "original": 8,
+    "source": "classDiagram\n  A --> \"Ünï\" Duck\n  A ()-- \"Ünï\" C\n  Animal \"Ünï\" o-- Dog\n"
+  },
+  {
+    "index": 177,
+    "type": "flowchart",
+    "ok": true,
+    "source": "flowchart TD\n  a --> b",
+    "original": "flowchart TD\nsubgraph\n  a --> b\nend",
+    "method": "removed lines",
+    "removed": [
+      "subgraph",
+      "end"
+    ]
+  },
+  {
+    "index": 194,
+    "type": "gitGraph",
+    "ok": true,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    rotateCommitLabel: false\n---\ngitGraph\n  commit id: \"feat(api): ...\"\n  commit id: \"a\"\n  commit id: \"b\"\n  commit id: \"fix(client): .extra long label..\"\n  branch c2\n  commit id: \"feat(modules): ...\"\n  commit id: \"test(client): ...\"\n  checkout main\n  commit id: \"fix(api): ...\"\n  commit id: \"ci: ...\"\n  branch b1\n  commit\n  branch b2\n  commit\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    rotateCommitLabel: false\n---\ngitGraph\n  commit id: \"feat(api): ...\"\n  commit id: \"a\"\n  commit id: \"b\"\n  commit id: \"fix(client): .extra long label..\"\n  branch c2\n  commit id: \"feat(modules): ...\"\n  commit id: \"test(client): ...\"\n  checkout main\n  commit id: \"fix(api): ...\"\n  commit id: \"ci: ...\"\n  branch b1\n  commit\n  branch b2\n  commit\n",
+    "method": "dropped accDescr block",
+    "removed": []
+  },
+  {
+    "index": 195,
+    "type": "gitGraph",
+    "ok": true,
+    "lines": 17,
+    "original": 18,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    showBranches: true\n    showCommitLabel: true\n    mainBranchOrder: 2\n---\n      gitGraph\n      commit\n      branch test1 order: 3\n      branch test2\n      branch test3\n      branch test4 order: 1\n\n"
+  },
+  {
+    "index": 196,
+    "type": "gitGraph",
+    "ok": true,
+    "lines": 23,
+    "original": 24,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'default'\n  themeVariables:\n    commitLabelColor: '#ff0000'\n    commitLabelBackground: '#00ff00'\n    tagLabelFontSize: '16px'\n---\n       gitGraph\n       commit\n       branch develop\n       commit tag:\"v1.0.0\"\n       commit\n       checkout main\n       commit type: HIGHLIGHT\n       commit\n       merge develop\n       commit\n       branch featureA\n       commit\n\n"
+  },
+  {
+    "index": 265,
+    "type": "kanban",
+    "ok": true,
+    "source": "---\nconfig:\n  kanban:\n    ticketBaseUrl: 'javascript:alert(#TICKET#)'\n---\nkanban\n  todo\n    a[Task]@{ ticket: MC-1 }",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  kanban:\n    ticketBaseUrl: 'javascript:alert(#TICKET#)'\n---\nkanban\n  todo\n    a[Task]@{ ticket: MC-1 }",
+    "method": "dropped accDescr block",
+    "removed": []
+  },
+  {
+    "index": 305,
+    "type": "packet",
+    "ok": true,
+    "lines": 14,
+    "original": 17,
+    "source": "---\n    paddingX: 1\n---\npacket-beta\ntitle x < y\n0- 15 : \"Reserved\"\n16 - 23 : \"Flags\"\n24- 61: \"Source Port\"\n62: \" padded \"\n63- 64 : \"Source Port\"\n\n+16: \"Flags\"\n%% note\n"
+  },
+  {
+    "index": 306,
+    "type": "packet",
+    "ok": true,
+    "lines": 17,
+    "original": 20,
+    "source": "---\n    showBits: false\n---\npacket\ntitle TCP Packet\naccTitle: Packet\n0 -31:\"a\"\n%% note\n+8: \"Reserved\"\n40-71 : \"Übergrößenträger\"\n72-135: \"URG\"\n136-167: \"A very long field label that cannot possibly fit in a small box\"\n168: \"Data (variable length)\"\n169-176: \"x&amp;y\"\n177-192 : \"URG\"\n\n"
+  },
+  {
+    "index": 360,
+    "type": "radar",
+    "ok": true,
+    "lines": 4,
+    "original": 5,
+    "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta"
+  },
+  {
+    "index": 384,
+    "type": "railroad",
+    "ok": true,
+    "lines": 5,
+    "original": 9,
+    "source": "---\naccDescr {\n---\nrailroad-peg-beta\nR <- a ;"
+  },
+  {
+    "index": 387,
+    "type": "railroad",
+    "ok": true,
+    "lines": 5,
+    "original": 6,
+    "source": "---\ntitle: x\n---\nrailroad-beta\nr = choice(terminal(\"a\"), sequence(terminal(\"b\"), terminal(\"c\")), special(\"d\")) ;"
+  },
+  {
+    "index": 416,
+    "type": "sankey",
+    "ok": true,
+    "source": "---\nconfig:\n  sankey:\n    nodeColors:\n      __proto__: red\n      constructor: blue\n---\nsankey\n__proto__,constructor,1\nconstructor,toString,2\nhasOwnProperty,__proto__,3\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  sankey:\n    nodeColors:\n      __proto__: red\n      constructor: blue\n---\nsankey\n__proto__,constructor,1\nconstructor,toString,2\nhasOwnProperty,__proto__,3\n",
+    "method": "dropped accDescr block",
+    "removed": []
+  },
+  {
+    "index": 417,
+    "type": "sankey",
+    "ok": true,
+    "source": "sankey-beta\nIndustry,Japan,20\n",
+    "original": "sankey-beta\nIndustry,日本,20\n",
+    "method": "renamed non-ASCII label 日本 to Japan",
+    "removed": []
+  },
+  {
+    "index": 420,
+    "type": "sankey",
+    "ok": true,
+    "lines": 6,
+    "original": 15,
+    "source": "---\nconfig:\n---\nsankey-beta\nHomes,C,5\n"
+  },
+  {
+    "index": 447,
+    "type": "state",
+    "ok": true,
+    "lines": 9,
+    "original": 11,
+    "source": "stateDiagram-v2\n  Running --> [*]\n  S2 --> A\n  [*] --> Wait1\n  state B <<choice>>\n  Done : described\n  note left of Running : multi\n  Long_name : described\n"
+  },
+  {
+    "index": 448,
+    "type": "state",
+    "ok": true,
+    "lines": 5,
+    "original": 10,
+    "source": "stateDiagram-v2\n  state Done <<fork>>\n  A : Ünï\n  Idle --> Ünï\n"
+  },
+  {
+    "index": 449,
+    "type": "state",
+    "ok": true,
+    "lines": 14,
+    "original": 16,
+    "source": "stateDiagram-v2\n  state Done {\n    S2 --> Running\n    --\n    B --> [*]\n  }\n  state A {\n    Running --> Wait1\n    --\n    Ünï --> [*]\n  }\n  Done : described\n  state S2 <<choice>>\n"
+  },
+  {
+    "index": 450,
+    "type": "state",
+    "ok": true,
+    "lines": 5,
+    "original": 10,
+    "source": "stateDiagram-v2\n  Wait1 --> [*]\n  A : described\n  state Idle <<fork>>\n"
+  },
+  {
+    "index": 452,
+    "type": "state",
+    "ok": true,
+    "source": "stateDiagram-v2\n  S2 --> A\n  Done --> [*]\n  [*] --> Idle\n  Running : described\n  S2 : Ünï\n  S2 --> [*]\n",
+    "original": "stateDiagram-v2\n  S2 --> A\n  state Done <<fork>>\n  Done --> [*]\n  note right of Wait1 : Ünï note\n  [*] --> Idle\n  state Running {\n    Running --> Idle\n    --\n    Long_name --> [*]\n  }\n  state C {\n    Done --> C\n    --\n    C --> [*]\n  }\n  Running : described\n  S2 : Ünï\n  S2 --> [*]\n",
+    "method": "removed composite states, fork and notes",
+    "removed": [
+      "  state Done <<fork>>",
+      "  note right of Wait1 : Ünï note",
+      "  state Running {",
+      "    Running --> Idle",
+      "    --",
+      "    Long_name --> [*]",
+      "  }",
+      "  state C {",
+      "    Done --> C",
+      "    --",
+      "    C --> [*]",
+      "  }"
+    ]
+  },
+  {
+    "index": 453,
+    "type": "state",
+    "ok": true,
+    "source": "stateDiagram-v2\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  Wait1 : Ünï\n",
+    "original": "stateDiagram-v2\n  note right of C : multi\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  note right of S2 : multi\n  Wait1 : Ünï\n",
+    "method": "removed lines",
+    "removed": [
+      "  note right of C : multi",
+      "  note right of S2 : multi"
+    ]
+  },
+  {
+    "index": 454,
+    "type": "state",
+    "ok": true,
+    "lines": 7,
+    "original": 13,
+    "source": "stateDiagram-v2\n    Wait1 --> [*]\n  }\n  S2 --> B : go\n  [*] --> Long_name\n  [*] --> Wait1\n"
+  },
+  {
+    "index": 455,
+    "type": "state",
+    "ok": true,
+    "lines": 12,
+    "original": 13,
+    "source": "stateDiagram-v2\n  [*] --> S2\n  state Long_name {\n    B --> A\n    --\n    S2 --> [*]\n  }\n  state Done <<choice>>\n  B --> C : go\n  C --> C\n  state Wait1 <<fork>>\n"
+  },
+  {
+    "index": 456,
+    "type": "state",
+    "ok": true,
+    "lines": 14,
+    "original": 22,
+    "source": "stateDiagram-v2\n    Ünï --> [*]\n  }\n  state Ünï {\n    --\n    S2 --> [*]\n  }\n  [*] --> Wait1\n  Done --> S2 : go\n  state Done <<join>>\n  [*] --> A\n  [*] --> A\n  A --> Running\n"
+  },
+  {
+    "index": 460,
+    "type": "state",
+    "ok": true,
+    "source": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n    S2 --> Ünï\n    Long_name --> [*]\n  }\n",
+    "original": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n  state Long_name {\n    S2 --> Ünï\n    --\n    Long_name --> [*]\n  }\n",
+    "method": "removed lines",
+    "removed": [
+      "  state Long_name {",
+      "    --"
+    ]
+  },
+  {
+    "index": 467,
+    "type": "swimlane",
+    "ok": true,
+    "lines": 6,
+    "original": 15,
+    "source": "swimlane-beta TB\n  subgraph L3[\"Customer\"]\n  end\n  subgraph L1[\"Ünï Team\"]\n  end\n"
+  },
+  {
+    "index": 487,
+    "type": "timeline",
+    "ok": true,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'dark'\n---\n    timeline\n        title History of Social Media Platform\n          2002 : LinkedIn\n          2004 : Facebook : Google\n          2005 : YouTube\n          2006 : Twitter\n          2007 : Tumblr\n          2008 : Instagram\n          2010 : Pinterest\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'dark'\n---\n    timeline\n        title History of Social Media Platform\n          2002 : LinkedIn\n          2004 : Facebook : Google\n          2005 : YouTube\n          2006 : Twitter\n          2007 : Tumblr\n          2008 : Instagram\n          2010 : Pinterest\n",
+    "method": "dropped accDescr block",
+    "removed": []
+  },
+  {
+    "index": 525,
+    "type": "treemap",
+    "ok": true,
+    "source": "treemap\nclassDef title_2 fill:red",
+    "original": "treemap\n\"S\":::titles\n  \"a\": 1:::title_2\nclassDef title_2 fill:red",
+    "method": "removed lines",
+    "removed": [
+      "\"S\":::titles",
+      "  \"a\": 1:::title_2"
+    ]
+  },
+  {
+    "index": 535,
+    "type": "treemap",
+    "ok": true,
+    "source": "---\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\n\"Market Share\"\n    \"Company A\": 0.35\n    \"Company B\": 0.25\n    \"Company C\": 0.15\n    \"Others\": 0.25\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\n\"Market Share\"\n    \"Company A\": 0.35\n    \"Company B\": 0.25\n    \"Company C\": 0.15\n    \"Others\": 0.25\n",
+    "method": "dropped accDescr block",
+    "removed": []
+  },
+  {
+    "index": 550,
+    "type": "usecase",
+    "ok": true,
+    "lines": 10,
+    "original": 14,
+    "source": "---\naccDescr {\n---\nusecase-beta\naccTitle: Online ordering\naccDescr {\n  A customer orders.\n   Staff review.\n}\nactor A"
+  }
+]

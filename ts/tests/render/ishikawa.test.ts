@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed } from '../support/xml.js';
@@ -22,7 +22,7 @@ interface Box {
 // The box of every one-line text in the picture, from its anchor, its size and the measurer.
 function textBoxes(svg: string): Box[] {
   const out: Box[] = [];
-  for (const group of svg.matchAll(/<g class="pele-ishikawa-causes" font-size="(\d+)">(.*?)<\/g>/g)) {
+  for (const group of svg.matchAll(/<g class="pelers-ishikawa-causes" font-size="(\d+)">(.*?)<\/g>/g)) {
     const size = Number(group[1]);
     for (const m of group[2].matchAll(/<text[^>]* x="([-\d.]+)" y="([-\d.]+)" text-anchor="middle">([^<]*)<\/text>/g)) {
       const text = m[3].replace(/&amp;/g, '&');
@@ -45,7 +45,7 @@ function categories(
 ): { id: string; body: string; bones: string; box: { x: number; y: number; w: number; h: number } }[] {
   return [
     ...svg.matchAll(
-      /<g class="pele-ishikawa-category" data-id="([^"]*)"><path class="pele-ishikawa-bones" d="([^"]+)"[^>]*\/>(.*?)<\/g>(?=<g class="pele-ishikawa-(?:category|head)")/g
+      /<g class="pelers-ishikawa-category" data-id="([^"]*)"><path class="pelers-ishikawa-bones" d="([^"]+)"[^>]*\/>(.*?)<\/g>(?=<g class="pelers-ishikawa-(?:category|head)")/g
     ),
   ].map((m) => {
     const rect = /<rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/.exec(m[3])!;
@@ -59,7 +59,7 @@ function categories(
 }
 
 function spine(svg: string): { from: number; to: number; y: number } {
-  const m = /<path class="pele-ishikawa-spine" d="M([-\d.]+),([-\d.]+)H([-\d.]+)"/.exec(svg)!;
+  const m = /<path class="pelers-ishikawa-spine" d="M([-\d.]+),([-\d.]+)H([-\d.]+)"/.exec(svg)!;
   return { from: Number(m[1]), y: Number(m[2]), to: Number(m[3]) };
 }
 
@@ -82,7 +82,7 @@ describe('Ishikawa diagram rendering', () => {
       expect(supports(src)).toBe(true);
       const result = render(src, options);
       expect(result.type).toBe('ishikawa');
-      expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-ishikawa"/);
+      expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-ishikawa"/);
       expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     }
     const model = parse('ishikawa-beta\n  Effect\n    Cause\n      Sub\n');
@@ -99,25 +99,25 @@ describe('Ishikawa diagram rendering', () => {
     const svg = svgOf('  Late delivery\n    People\n    Process\n');
     const s = spine(svg);
     expect(s.to).toBeGreaterThan(s.from);
-    expect(svg).toContain('<g class="pele-ishikawa-head" data-id="Late delivery">');
-    expect(svg).toMatch(/<text class="pele-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Late delivery<\/tspan>/);
+    expect(svg).toContain('<g class="pelers-ishikawa-head" data-id="Late delivery">');
+    expect(svg).toMatch(/<text class="pelers-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Late delivery<\/tspan>/);
     // The head starts where the spine's arrowhead ends, and every category is to its left.
-    const head = /<g class="pele-ishikawa-head"[^>]*><path d="M([-\d.]+),/.exec(svg)!;
+    const head = /<g class="pelers-ishikawa-head"[^>]*><path d="M([-\d.]+),/.exec(svg)!;
     expect(Number(head[1])).toBeCloseTo(s.to + 7, 1);
     for (const category of categories(svg)) expect(category.box.x + category.box.w).toBeLessThan(Number(head[1]) + 1);
-    expect(count(svg, 'class="pele-marker"')).toBe(3);
+    expect(count(svg, 'class="pelers-marker"')).toBe(3);
   });
 
   it('draws only the head when the effect has no causes', () => {
     const svg = svgOf('  Just an effect\n');
-    expect(count(svg, 'pele-ishikawa-category')).toBe(0);
-    expect(svg).toContain('pele-ishikawa-head');
-    expect(svg).toContain('pele-ishikawa-spine');
+    expect(count(svg, 'pelers-ishikawa-category')).toBe(0);
+    expect(svg).toContain('pelers-ishikawa-head');
+    expect(svg).toContain('pelers-ishikawa-spine');
   });
 
   it('draws nothing but the frame when there is no effect', () => {
     const result = render('ishikawa-beta%% only a comment', options);
-    expect(result.svg).not.toContain('pele-ishikawa-head');
+    expect(result.svg).not.toContain('pelers-ishikawa-head');
     expect(result.width).toBeGreaterThan(0);
   });
 
@@ -243,8 +243,8 @@ describe('Ishikawa diagram rendering', () => {
     const svg = svgOf(
       '  An effect described at such length that it has to be wrapped\n    A category with a name that is long as well\n      A cause that takes a good many words to state in full\n'
     );
-    expect(count(/<g class="pele-ishikawa-head".*$/.exec(svg)![0], '<tspan')).toBeGreaterThan(1);
-    expect(count(/<g class="pele-ishikawa-causes"[^>]*>(.*?)<\/g>/.exec(svg)![1], '<tspan')).toBeGreaterThan(1);
+    expect(count(/<g class="pelers-ishikawa-head".*$/.exec(svg)![0], '<tspan')).toBeGreaterThan(1);
+    expect(count(/<g class="pelers-ishikawa-causes"[^>]*>(.*?)<\/g>/.exec(svg)![1], '<tspan')).toBeGreaterThan(1);
   });
 
   it('nests by indentation relative to the first cause', () => {
@@ -259,16 +259,16 @@ describe('Ishikawa diagram rendering', () => {
 
   it('draws the front matter title above the diagram', () => {
     const { svg } = render('---\ntitle: Root causes\n---\nishikawa-beta\n  Effect\n    Cause\n', options);
-    expect(svg).toContain('<text class="pele-title" font-weight="var(--_tw)"');
+    expect(svg).toContain('<text class="pelers-title" font-weight="var(--_tw)"');
     expect(svg).toContain('>Root causes</tspan>');
   });
 
   it('rejects what Mermaid rejects', () => {
     // A blank line between the keyword and an indented effect is one, as is the keyword alone.
     for (const src of ['ishikawa-beta', 'ishikawa-beta\n\n  Effect\n']) {
-      expect(() => render(src, options)).toThrow(PeleError);
+      expect(() => render(src, options)).toThrow(PelersError);
     }
-    expect(render('ishikawa-beta\n', options).svg).not.toContain('pele-ishikawa-head');
+    expect(render('ishikawa-beta\n', options).svg).not.toContain('pelers-ishikawa-head');
     expect(() => render('ishikawa-beta\n  Effect\n  ishikawa again\n', options)).toThrow(
       /Expecting 'SPACELINE', 'NL', 'EOF', 'TEXT', got 'ISHIKAWA'/
     );

@@ -22,7 +22,7 @@ export function reset(): void {
   config = {};
 }
 
-// Exposes Pele's class diagram model through the method names Mermaid's specs call on ClassDB.
+// Exposes Pelers's class diagram model through the method names Mermaid's specs call on ClassDB.
 export class ClassDB extends ClassDb {
   clear(): void {
     Object.assign(this, new ClassDb());

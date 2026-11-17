@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import type { KanbanModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -18,10 +18,10 @@ describe('kanban rendering', () => {
     );
     expect(type).toBe('kanban');
     expect(supports('kanban\n  a')).toBe(true);
-    expect(svg.match(/class="pele-cluster pele-column"/g)?.length).toBe(3);
-    expect(svg.match(/class="pele-node pele-card"/g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-cluster pelers-column"/g)?.length).toBe(3);
+    expect(svg.match(/class="pelers-node pelers-card"/g)?.length).toBe(3);
     for (const text of ['To do', 'First', 'Second', 'Done', 'Third', 'Later']) expect(svg).toContain(`>${text}</text>`);
-    expect([...svg.matchAll(/class="pele-count"[^>]*>(\d+)</g)].map((m) => m[1])).toEqual(['2', '1', '0']);
+    expect([...svg.matchAll(/class="pelers-count"[^>]*>(\d+)</g)].map((m) => m[1])).toEqual(['2', '1', '0']);
     expect(svg).toContain('data-id="todo"');
     expect(svg).toContain('data-id="a"');
   });
@@ -30,7 +30,7 @@ describe('kanban rendering', () => {
     const { svg } = render('kanban\n  a\n    one\n    two\n    three\n  b\n    four\n  c', options);
     const columns = [
       ...svg.matchAll(
-        /pele-column" data-id="[^"]*" transform="translate\(([\d.]+),[\d.]+\)"><rect width="(\d+)" height="([\d.]+)"/g
+        /pelers-column" data-id="[^"]*" transform="translate\(([\d.]+),[\d.]+\)"><rect width="(\d+)" height="([\d.]+)"/g
       ),
     ];
     expect(columns.length).toBe(3);
@@ -53,7 +53,7 @@ describe('kanban rendering', () => {
   it('rejects a line after one indented less than the first column', () => {
     expect(model('kanban\n    a\n  shallow').sections[0].items[0].id).toBe('shallow');
     const bad = (): unknown => render('kanban\n    a\n  shallow\n    b', options);
-    expect(bad).toThrow(PeleError);
+    expect(bad).toThrow(PelersError);
     expect(bad).toThrow('Items without section detected, found section ("shallow")');
   });
 
@@ -76,8 +76,8 @@ describe('kanban rendering', () => {
 
   it('shows the assignee and the ticket', () => {
     const { svg, links } = render("kanban\n  todo\n    a[Task]@{ ticket: MC-1, assigned: 'knsv' }", options);
-    expect(svg).toMatch(/class="pele-ticket" fill="var\(--_m\)"[^>]*>MC-1</);
-    expect(svg).toMatch(/class="pele-assigned" fill="var\(--_m\)"[^>]*text-anchor="end">knsv</);
+    expect(svg).toMatch(/class="pelers-ticket" fill="var\(--_m\)"[^>]*>MC-1</);
+    expect(svg).toMatch(/class="pelers-assigned" fill="var\(--_m\)"[^>]*text-anchor="end">knsv</);
     expect(svg).not.toContain('<a ');
     expect(links).toEqual([]);
   });
@@ -115,9 +115,9 @@ describe('kanban rendering', () => {
     const { svg } = render(src, options);
     const edge = (id: string): string | undefined =>
       new RegExp(
-        `data-id="${id}"[^>]*><rect[^>]*/><path class="pele-priority"[^>]*fill="none" (.*?) stroke-width`
+        `data-id="${id}"[^>]*><rect[^>]*/><path class="pelers-priority"[^>]*fill="none" (.*?) stroke-width`
       ).exec(svg)?.[1];
-    const red = 'stroke="var(--pele-critical,#e45756)"';
+    const red = 'stroke="var(--pelers-critical,#e45756)"';
     const grey = 'stroke="var(--_m)"';
     const faint = ' opacity="0.5"';
     expect(['a', 'b', 'c', 'd', 'e', 'f', 'g'].map(edge)).toEqual([
@@ -129,17 +129,17 @@ describe('kanban rendering', () => {
       red + faint,
       undefined,
     ]);
-    expect(svg).not.toContain('--pele-series-');
-    expect(svg).toContain('class="pele-node pele-card pele-priority-very-high" data-id="a"');
-    expect(svg).toContain('class="pele-node pele-card" data-id="g"');
+    expect(svg).not.toContain('--pelers-series-');
+    expect(svg).toContain('class="pelers-node pelers-card pelers-priority-very-high" data-id="a"');
+    expect(svg).toContain('class="pelers-node pelers-card" data-id="g"');
   });
 
   it('applies classes and icons to columns and cards', () => {
     const src = 'kanban\n  todo[To do]\n  :::wide\n  ::icon(inbox)\n    a[Task]@{ icon: star }\n    :::urgent large';
     const { svg } = render(src, { ...options, icons: (name) => `<path d="M0,0" data-icon="${name}"/>` });
-    expect(svg).toContain('class="pele-cluster pele-column wide" data-id="todo"');
-    expect(svg).toContain('class="pele-node pele-card urgent large" data-id="a"');
-    expect(svg).toContain('<svg class="pele-icon" data-icon="inbox"');
+    expect(svg).toContain('class="pelers-cluster pelers-column wide" data-id="todo"');
+    expect(svg).toContain('class="pelers-node pelers-card urgent large" data-id="a"');
+    expect(svg).toContain('<svg class="pelers-icon" data-icon="inbox"');
     expect(svg).toContain('<path d="M0,0" data-icon="star"/></svg>');
   });
 
@@ -150,7 +150,7 @@ describe('kanban rendering', () => {
     expect(long.height).toBeGreaterThan(short.height);
     expect(long.width).toBe(short.width);
     expect(word.width).toBe(short.width);
-    const pieces = [...word.svg.matchAll(/class="pele-label"[^>]*>(x+)</g)].map((m) => m[1]);
+    const pieces = [...word.svg.matchAll(/class="pelers-label"[^>]*>(x+)</g)].map((m) => m[1]);
     expect(pieces.length).toBeGreaterThan(3);
     expect(pieces.join('')).toBe('x'.repeat(120));
     for (const piece of pieces) expect(metricsMeasurer.width(piece, 14, 0)).toBeLessThanOrEqual(164);
@@ -163,7 +163,7 @@ describe('kanban rendering', () => {
   });
 
   it('reports metadata that is not valid YAML, and ignores metadata that is not a mapping', () => {
-    expect(() => render('kanban\n  todo\n    a@{ label: "x }', options)).toThrow(PeleError);
+    expect(() => render('kanban\n  todo\n    a@{ label: "x }', options)).toThrow(PelersError);
     expect(() => render('kanban\n  todo\n    a@{ a: [ }', options)).toThrow(/not valid YAML/);
     expect(render('kanban\n  todo\n    a@{\n}', options).svg).toContain('>a</text>');
     expect(render('kanban\n  todo\n    a@{\n - x\n}', options).svg).toContain('>a</text>');
@@ -185,7 +185,7 @@ describe('kanban rendering', () => {
   it('draws the front matter title', () => {
     const plain = render('kanban\n  todo\n    a', options);
     const titled = render('---\ntitle: Sprint 12\n---\nkanban\n  todo\n    a', options);
-    expect(titled.svg).toContain('class="pele-title" font-weight="var(--_tw)"');
+    expect(titled.svg).toContain('class="pelers-title" font-weight="var(--_tw)"');
     expect(titled.svg).toContain('>Sprint 12<');
     expect(titled.height).toBeGreaterThan(plain.height);
   });

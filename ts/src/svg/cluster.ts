@@ -64,7 +64,7 @@ export function struckTitle(
   // Each cluster is half its fill over what is behind it.
   const fill = `color-mix(in srgb,var(--_a) ${num(100 * (1 - 0.5 ** depth))}%,var(--_bg))`;
   return (
-    `<g class="pele-cluster-title" data-id="${id}">` +
+    `<g class="pelers-cluster-title" data-id="${id}">` +
     labelSvg(label, x, y, ` fill="none" stroke="${fill}" stroke-width="5" stroke-linejoin="round"`, icons) +
     labelSvg(label, x, y, attrs, icons) +
     '</g>'

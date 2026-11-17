@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/sequence/lexer.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 // Inputs of about 50,000 characters built to hit the sequence diagram's worst cases: lexer rules
 // with lookahead, deep nesting, huge counts, and wide layouts. Each must finish quickly and either
-// succeed or fail with a PeleError. The bounds are loose; a regression is seconds or a hang.
+// succeed or fail with a PelersError. The bounds are loose; a regression is seconds or a hang.
 
 const N = 50000;
 const big = { measurer: metricsMeasurer, limit: Infinity };
@@ -114,7 +114,7 @@ describe('sequence worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },

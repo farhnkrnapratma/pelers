@@ -29,7 +29,7 @@ export function setConfig(next: Record<string, unknown>): void {
 
 export function addDiagrams(): void {}
 
-// Pele stores text as written and escapes it when it writes SVG.
+// Pelers stores text as written and escapes it when it writes SVG.
 export function sanitizeText(text: string, _config?: unknown): string {
   return text;
 }
@@ -85,7 +85,7 @@ export const db = {
   getDirection: () => model.direction,
   getAccTitle: () => model.accTitle,
   getAccDescription: () => model.accDescr,
-  // Pele's graph under the names Mermaid's layout data uses, with the labels of each edge's ends.
+  // Pelers's graph under the names Mermaid's layout data uses, with the labels of each edge's ends.
   getData() {
     const graph = buildUsecaseGraph(model);
     return {

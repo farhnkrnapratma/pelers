@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use std::sync::OnceLock;
 
 use crate::util::chars::is_word;
+use crate::util::fxhash::FastMap;
 
 const NAMED: &str = "amp:38,lt:60,gt:62,quot:34,apos:39,nbsp:160,shy:173,iexcl:161,cent:162,pound:163,curren:164,yen:165,sect:167,\
 copy:169,laquo:171,not:172,reg:174,deg:176,plusmn:177,sup2:178,sup3:179,micro:181,para:182,middot:183,\
@@ -23,8 +23,8 @@ Upsilon:933,Phi:934,Chi:935,Psi:936,Omega:937,alpha:945,beta:946,gamma:947,delta
 eta:951,theta:952,iota:953,kappa:954,lambda:955,mu:956,nu:957,xi:958,omicron:959,pi:960,rho:961,sigmaf:962,\
 sigma:963,tau:964,upsilon:965,phi:966,chi:967,psi:968,omega:969";
 
-fn named() -> &'static HashMap<&'static str, char> {
-    static MAP: OnceLock<HashMap<&'static str, char>> = OnceLock::new();
+fn named() -> &'static FastMap<&'static str, char> {
+    static MAP: OnceLock<FastMap<&'static str, char>> = OnceLock::new();
     MAP.get_or_init(|| {
         NAMED
             .split(',')

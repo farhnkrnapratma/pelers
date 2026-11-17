@@ -1,5 +1,4 @@
 use std::fs;
-use std::path::Path;
 
 use crate::errors::input_offset;
 use crate::preprocess::{encode_entities, preprocess, source_map};
@@ -9,7 +8,7 @@ use crate::util::yaml::parse_yaml;
 use serde_json::Value as Json;
 
 fn fixtures() -> Json {
-    let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/preprocess.json");
+    let path = crate::tests::fixture_path("preprocess.json");
     serde_json::from_str(&fs::read_to_string(path).unwrap()).unwrap()
 }
 

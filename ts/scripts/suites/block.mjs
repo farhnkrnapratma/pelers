@@ -1,4 +1,4 @@
-const STYLESHEET = 'Tests the CSS stylesheet Mermaid generates for themes. Pele emits no stylesheet.';
+const STYLESHEET = 'Tests the CSS stylesheet Mermaid generates for themes. Pelers emits no stylesheet.';
 
 export default {
   files: [
@@ -12,12 +12,12 @@ export default {
       file: 'block.spec.ts',
       test: 'sanitizes labels with the current dompurify config',
       reason:
-        'Expects DOMPurify to strip a tag from a label. Pele stores label text as written and escapes it when writing SVG.',
+        'Expects DOMPurify to strip a tag from a label. Pelers stores label text as written and escapes it when writing SVG.',
     },
     {
       file: 'blockDB.spec.ts',
       test: 'should call getConfig at sanitization time, not at module load time',
-      reason: 'Checks when Mermaid reads its global config for DOMPurify. Pele has neither.',
+      reason: 'Checks when Mermaid reads its global config for DOMPurify. Pelers has neither.',
     },
     {
       file: 'blockColorIndex.spec.ts',

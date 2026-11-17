@@ -19,7 +19,7 @@ for (const [module, rest] of [
 }
 
 // The four railroad grammars, each with what the differential tests need: Mermaid's services and
-// parser name, Pele's token table and parser, and three sources of test input.
+// parser name, Pelers's token table and parser, and three sources of test input.
 
 type Rnd = () => number;
 

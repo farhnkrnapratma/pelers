@@ -1,5 +1,11 @@
 pub mod chars;
+pub mod fxhash;
+pub mod hook;
 pub mod jsnum;
 pub mod json;
+pub mod json_errors;
+pub mod ordered;
+pub mod unicode;
+pub mod url;
 pub mod value;
 pub mod yaml;

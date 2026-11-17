@@ -3,7 +3,7 @@ import { RailroadDb, notationOf, populate } from '../../../src/diagrams/railroad
 import { railroad as diagram } from '../../../src/diagrams/railroad/index.js';
 import { parseIr, type IrAst, type IrExpression } from '../../../src/diagrams/railroad/ir.js';
 import type { Notation } from '../../../src/diagrams/railroad/types.js';
-import { PeleError } from '../../../src/errors.js';
+import { PelersError } from '../../../src/errors.js';
 import { toResult } from '../../support/langium.js';
 
 export { expectNoErrorsOrAlternatives } from '../../support/langium.js';
@@ -14,7 +14,7 @@ export type RailroadSequenceExpr = Extract<IrExpression, { $type: 'RailroadSeque
 export type RailroadSpecialExpr = Extract<IrExpression, { $type: 'RailroadSpecialExpr' }>;
 
 // Mermaid's railroad database is a module-level singleton that its four parsers fill.
-// This exposes one Pele model through the names the specs call on it.
+// This exposes one Pelers model through the names the specs call on it.
 class Db extends RailroadDb {
   clear(): void {
     Object.assign(this, new RailroadDb());
@@ -62,7 +62,7 @@ export const ebnfParser = parserFor('ebnf');
 export const abnfParser = parserFor('abnf');
 export const pegParser = parserFor('peg');
 
-// Pele detects the four keywords as one diagram type and then picks the notation from the keyword.
+// Pelers detects the four keywords as one diagram type and then picks the notation from the keyword.
 function definition(id: string, notation: Notation) {
   return {
     id,
@@ -86,7 +86,7 @@ export async function parse(_type: 'railroad', text: string): Promise<IrAst> {
   try {
     return parseIr(text);
   } catch (error) {
-    if (error instanceof PeleError) throw new MermaidParseError(error.message);
+    if (error instanceof PelersError) throw new MermaidParseError(error.message);
     throw error;
   }
 }

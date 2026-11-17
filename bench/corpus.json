@@ -1,0 +1,2518 @@
+[
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta LR\nA@{ shape: subproc }\nB[\"x\"]@{ shape: subproc }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta LR\nA@{ shape: lin-rect }\nB[\"x\"]@{ shape: lin-rect }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta LR\nA@{ shape: lined-rectangle }\nB[\"x\"]@{ shape: lined-rectangle }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta LR\nA@{ shape: h-cyl }\nB[\"x\"]@{ shape: h-cyl }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta LR\nA@{ shape: fr-rect }\nB[\"x\"]@{ shape: fr-rect }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\nA@{ shape: \"\" }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\nA@{ shape: null }\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\nflow F3\n  flow F4\n    A\n  end\nend\nglobal\n  B\nend\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\nA[\"one\"]\nA[\"two\"]\nA --> B"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\nflow F1\n  direction LR\n  A\nend\nflow F1\n  direction TB\n  B\nend\nclass F1 hot\nclassDef hot fill:#f00"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\nflow F1\n  flow F2\n    A\n  end\n  B\nend\nF2 --> B\nF1 --> F2\nA --> F1\nF2 -- \"held\" --> C"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta\naccDescr {\n  multi line\n  description\n}\n"
+ },
+ {
+  "type": "agentflow",
+  "source": "%% leading comment\n%% a comment line\nagentflow-beta TB\n  a --> b"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\naccTitle: Ünï title\n  a[/trap %% not part of the label\nlabel/]\n  b --> a"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\n%% before flow\nflow f1[\"Flow One\"]\n%% inside flow\n  a --> b\nend\n%% after flow"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\naccDescr {\n  multi line\n  description\n}\n%% before connector\nconnector github[\"GitHub\"]\n%% after connector\n  a --> b"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\naccDescr {\n  multi line\n  description\n}\n  connector github[\"GitHub\"]@{\n    protocol: \"mcp\", # main protocol\n    transport: \"stdio\"\n  }"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\n  a --> b"
+ },
+ {
+  "type": "agentflow",
+  "source": "---\ntitle: Ünï 😀 title\n---\nagentflow-beta TB\n  file_path[\"file_path\"]\n  file_path@{ shape: input, value: \"src/HelloWorld.java\" }"
+ },
+ {
+  "type": "agentflow",
+  "source": "agentflow-beta TB\naccDescr: one line description\n  a -- yes --> b\n  a --x c\n  refdoc1[\"RefDoc\"]\n  refdoc1@{ shape: refdoc }\n  a -.- refdoc1"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(unknown-icon)[Edge long title]\ngroup g2(database)[Data tier] in g1\nservice s0(cloud)[Ünï]\nservice s1 \"PG\"[x y z x y z x y z x y z x y z x y z]\nservice s2(disk)[Server] in g2\nservice s3(server)[x y z x y z x y z x y z x y z x y z]\nservice s4(database)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s5 \"Ünï\"[x y z x y z x y z x y z x y z x y z] in g1\ns2:L <-- T:s4\ns2:B --> R:s2\ns0:T <--> B:s2\ns5:B <--> R:s4\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(internet)[Data tier]\ngroup g2(cloud)[Data tier]\ngroup g3(disk)[Edge long title]\nservice s0(database)[Ünï] in g1\nservice s1 \"Ünï\"[Server]\nservice s2(server)[DB]\ns2:L <-- R:s2\ns2:B <-- T:s1\ns2:B -[Ünï]- L:s1\ns0:L <--> L:s2\ns2:B --> B:s0\ns2:L <-- L:s2\ns2:L -[Ünï]- T:s2\ns0:R -- B:s0\ns0:L <--> L:s2\ns2:R --> R:s2\ns0:R <-- B:s2\ns0:B -- B:s0\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(cloud)[Edge long title]\ngroup g2(server)[API] in g1\nservice s0(cloud)[Ünï] in g1\njunction s1 in g2\nservice s2(internet)[x y z x y z x y z x y z x y z x y z]\ns0:T <--> B:s2\ns1:L <--> L:s2\ns1:L -[Ünï]- L:s2\ns0:L --> L:s2{group}\ns0:L <--> T:s2{group}\ns2:L --> B:s1{group}\ns0:B <-- B:s2\ns1:T <-- R:s1\ns0:B -- L:s1\ns0:L -[Ünï]- L:s1\ns2{group}:L --> B:s0\ns1{group}:B --> B:s0{group}\ns1:L <-- R:s1\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(disk)[API]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1(unknown-icon)[DB]\nservice s2(cloud)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s3 \"Ünï\"[Ünï] in g1\nservice s4(internet)[x y z x y z x y z x y z x y z x y z]\nservice s5(unknown-icon)[line one<br>line two<br>line three<br>line four] in g1\nservice s6(cloud)[DB] in g1\nservice s7(server)[DB]\ns4:R <--> L:s0\ns5:T <--> B:s7\ns2:B --> R:s2\ns2:L -[Ünï]- R:s2\ns0:T --> R:s6\ns3:R -- L:s5\ns3:B <--> B:s4\ns3:R -[label]- L:s4\ns3:T <-- B:s1\ns6:T -- L:s6\ns6:T -[label]- L:s6\ns4:T --> R:s0\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(database)[API]\nservice s0(unknown-icon)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated] in g1\nservice s1(disk)[Ünï]\nservice s2 \"a very long icon text that cannot fit the icon\"[DB]\nservice s3(disk)[DB] in g1\ns1:B -- T:s3\ns1:B -[label]- R:s3\ns2:L --> B:s0\ns1:L -- T:s0{group}\ns2:B <-- T:s2\ns2:B <-- T:s1\ns0:L <--> R:s0\ns0:T -[Ünï]- R:s0\ns1{group}:B <--> L:s3\ns1:R -[Ünï]- R:s3\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- L:s3{group}\ns2:L -- R:s3\ns4:L -- L:s4\ns2:B <--> L:s5\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T <--> B:s3\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1{group}:L -- L:s1\ns1:L -[Ünï]- L:s1\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\naccTitle: Ünï title\nservice a\nservice b\na:R >--< L:b\na:T >-[x]-< B:b\na{group}:L <-- R:b\na:B --> T:b{group}\na : L - [ y ] - R : b\n"
+ },
+ {
+  "type": "architecture",
+  "source": "---\ntitle: Ünï 😀 title\n---\narchitecture-beta"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\n    group sub1(cloud)[Subscription A]\n    group vnet1(cloud)[VNet A] in sub1\n    service vm1(server)[VM] in vnet1\n\n    group sub2(cloud)[Subscription B]\n    group shared(cloud)[Shared] in sub2\n    service reg(database)[Registry] in shared\n\n    group env(cloud)[Environment] in sub2\n    group vnet(cloud)[VNet] in env\n    group snet1(cloud)[App Subnet] in vnet\n    service nsg(server)[NSG] in snet1\n    service asp(server)[App Plan] in snet1\n    service web(server)[Web App] in snet1\n\n    group snet2(cloud)[PE Subnet] in vnet\n    service pe1(server)[PE Blob] in snet2\n    service pe2(server)[PE Bus] in snet2\n\n    service storage(disk)[Storage] in env\n    service container(disk)[Container] in env\n    service bus(server)[Service Bus] in env\n    service dns(server)[DNS Zone] in env\n\n    service client(internet)[Client]\n\n    reg:B --> T:web\n    nsg:R --> L:asp\n    asp:R --> L:web\n    web:R --> L:pe1\n    pe1:R --> L:storage\n    storage:B --> T:container\n    web:B --> T:pe2\n    pe2:R --> L:bus\n    vm1:R --> L:pe2"
+ },
+ {
+  "type": "architecture",
+  "source": "---\ntitle: Ünï 😀 title\n---\narchitecture-beta\n  service a(server)[A]\n  service b(server)[B]\n  align column a b"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\n%% a comment line\n"
+ },
+ {
+  "type": "architecture",
+  "source": "---\ntitle: From front matter\n---\narchitecture-beta\ntitle Own\nservice a"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\n  group api(cloud)[API]\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\naccDescr {\n  multi line\n  description\n}\n    group api(cloud)[API]\n\n    service db(database)[Database] in api\n    service disk1(disk)[Storage] in api\n    service disk2(disk)[Storage] in api\n    service server(server)[Server] in api\n\n    db:L -- R:server\n    disk1:T -- B:server\n    disk2:T -- B:db\n"
+ },
+ {
+  "type": "architecture",
+  "source": "---\ntitle: Ünï 😀 title\n---\narchitecture-beta\n    group api(logos:aws-lambda)[API]\n\n    service db(logos:aws-aurora)[Database] in api\n    service disk1(logos:aws-glacier)[Storage] in api\n    service disk2(logos:aws-s3)[Storage] in api\n    service server(logos:aws-ec2)[Server] in api\n\n    db:L -- R:server\n    disk1:T -- B:server\n    disk2:T -- B:db\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\naccTitle: Cloud\ngroup grp0[API]\nservice svc0(cloud)[Database]\nservice svc1(cloud)[A long service title that wraps]\nsvc0:T -[HTTPS]- T:svc1\nsvc1:B -- T:svc0\nsvc1:L -- B:svc1\nsvc0:T < -- T:svc1\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\nservice svc0(unknown-icon)[Database]\njunction j1\nservice svc2(internet)[A long service title that wraps]\nsvc0:R -- R:svc0\nsvc2:L -- B:svc0\nsvc0:T < -- T:svc2\nsvc0:T -[HTTPS]- B:svc2\nsvc2:R -- R:j1\nalign row svc0 j1 svc2\n"
+ },
+ {
+  "type": "architecture",
+  "source": "---\ntitle: Front\n---\n%% comment\narchitecture-beta\ntitle Colon: stack\ngroup grp0[API]\ngroup grp1(unknown-icon)[Data tier]\nservice svc0(internet)[Server]\nservice svc1(database)[Server] in grp0\njunction j2 in grp0\nservice svc3(database)[Database]\nservice svc4(disk)[A long service title that wraps]\nsvc4:B -- B:j2\nsvc4:L < -- R:svc3\nalign column svc0 svc1\n"
+ },
+ {
+  "type": "architecture",
+  "source": "architecture-beta\ntitle Colon: stack\ngroup grp0(cloud)[Edge]\ngroup grp1[Edge] in grp0\nservice svc0(disk)\nservice svc1(unknown-icon) in grp0\nservice svc2(cloud)[Database]\nservice svc3(disk)[Database] in grp0\nsvc2:B -- R:svc2\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a([\"Database\"])\n  b[\\\"Database\"/]\n  c>\"$$b^2$$\"]\n  A[(\"x < y\")]:2\n  b --> A\n  b ==> a\n  c -- \"Database\" --> a\n  a <--> c\n  b --x b\n  b --x c\n  a === b\n  b --o a\n  a --- a\n  b ==> c\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a[/\"emoji 😀\"\\]\n  b[(\"a\")]\n  c[\\\"日本\"/]\n  A[[\"two words\"]]\n  B{\"x&amp;y\"}\n  id1[[\"fa:fa-check ok\"]]\n  n2[\\\"emoji 😀\"/]:2\n  ID[/\"$$b^2$$\"/]\n  x[\\\"a\"/]:1\n  group_one{{\"Database\"}}\n  Zed(\"Database\"):3\n  ID --x B\n  Zed ==> A\n  x --- id1\n  n2 -- \"long label that goes on and on for wrapping purposes\" ==> b\n  B -- \"Dogs\" --- a\n  n2 -- \"two words\" ==> B\n  Zed -- \"Dogs\" --- ID\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 2\n  a(\"two words\")\n  b[[\"Database\"]]\n  c{\"x < y\"}:1\n  A[/\"emoji 😀\"/]\n  B(\"日本\")\n  id1>\"x < y\"]:1\n  n2([\"Dogs\"])\n  ID[\"x&amp;y\"]:1\n  n2 --o A\n  ID === ID\n  b -- \"x&amp;y\" ==> b\n  c <--> b\n  B -.-> id1\n  c === ID\n  b === b\n  B -- \"x < y\" --> a\n  a --x a\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 3\n  a[\"x < y\"]:1\n  b{{\"emoji 😀\"}}\n  c([\"$$b^2$$\"])\n  A((\"Dogs\"))\n  c -.-> A\n  c --> a\n  c -- \"$$b^2$$\" --- c\n  a <--> a\n  b === b\n  A -- \"a\" --> b\n  a ---> a\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 4\n  a{\"two words\"}\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  ID{\"x < y\"}:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  b{\"Dogs\"}:2\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  n2{\"fa:fa-check ok\"}\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 2\n  a{{\"x < y\"}}\n  b((\"two words\")):1\n  c{{\"$$b^2$$\"}}\n  A{\"Database\"}\n  B[/\"x&amp;y\"\\]\n  id1[\\\"$$b^2$$\"\\]:2\n  n2{{\"$$b^2$$\"}}\n  ID[(\"x&amp;y\")]\n  x>\"x < y\"]:1\n  group_one{{\"Ünï label\"}}\n  Zed[(\"日本\")]\n  c <--> B\n  Zed --> b\n  b --> a\n  x === n2\n  id1 ==> B\n  n2 -- \"日本\" -.-> A\n  n2 === A\n  B -- \"emoji 😀\" -.-> x\n  a -- \"two words\" --> group_one\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a((\"日本\")):3\n  b[\\\"Ünï label\"\\]\n  c[[\"Database\"]]\n  A{\"a\"}:3\n  B[/\"日本\"/]\n  id1(\"日本\")\n  n2([\"long label that goes on and on for wrapping purposes\"])\n  ID[\\\"x < y\"\\]\n  x[/\"a\"/]:3\n  id1 ==> c\n  n2 --> c\n  ID === ID\n  A -- \"$$b^2$$\" --> ID\n  c <--> A\n  b -.- a\n  c -- \"日本\" ==> b\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a([\"A wide one in the middle\"])\n  b{{\"$$b^2$$\"}}:2\n  c[\\\"x < y\"\\]\n  A([\"long label that goes on and on for wrapping purposes\"]):2\n  B[/\"two words\"\\]:3\n  id1([\"x < y\"]):2\n  A -- \"$$b^2$$\" -.-> b\n  A -- \"long label that goes on and on for wrapping purposes\" --- B\n  B --> B\n  b -.- c\n  id1 -- \"Ünï label\" ==> b\n  c --o id1\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a([\"Dogs\"]):3\n  b[\\\"emoji 😀\"\\]\n  c[\"Database\"]:2\n  A[\"$$b^2$$\"]\n  B[(\"Database\")]:3\n  id1([\"$$b^2$$\"])\n  n2[\\\"Ünï label\"/]\n  ID>\"x < y\"]\n  x{\"Dogs\"}\n  n2 <--> B\n  id1 --- c\n  x -- \"Dogs\" --> id1\n  b ==> ID\n  a -.-> B\n  A -- \"Ünï label\" -.-> a\n  B -- \"emoji 😀\" --> id1\n  ID --x x\n  a -- \"x < y\" ==> id1\n  c -- \"日本\" --- b\n  c -- \"a\" --- a\n  x -- \"日本\" --> n2\n  B ---> ID\n  x -- \"fa:fa-check ok\" -.-> b\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a{{\"$$b^2$$\"}}:2\n  b>\"A wide one in the middle\"]\n  c[(\"x < y\")]:1\n  A([\"A wide one in the middle\"])\n  B{{\"x < y\"}}\n  id1[\"$$b^2$$\"]\n  n2[\\\"a\"/]\n  ID{{\"日本\"}}:3\n  id1 -.-> A\n  n2 --> A\n  c --- c\n  a <--> b\n  id1 -.- ID\n  a -- \"fa:fa-check ok\" -.-> A\n  c --- A\n  A -- \"Ünï label\" --- a\n  a -- \"emoji 😀\" -.-> ID\n  a --o ID\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 2\n  a[[\"x&amp;y\"]]\n  b[\\\"a\"\\]\n  c{{\"x&amp;y\"}}:3\n  A{{\"A wide one in the middle\"}}\n  B[\\\"A wide one in the middle\"\\]\n  id1([\"x < y\"])\n  n2(\"A wide one in the middle\")\n  ID[\"two words\"]:1\n  c === id1\n  id1 -.- c\n  B -.- c\n  b -- \"$$b^2$$\" --- c\n  a -- \"Ünï label\" --> ID\n  B -.- c\n  ID -.-> a\n  b --- A\n  b --o a\n  c -- \"a\" --- ID\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 4\n  a((\"long label that goes on and on for wrapping purposes\")):2\n  b[[\"a\"]]\n  c[/\"日本\"\\]\n  A[(\"emoji 😀\")]:1\n  B>\"emoji 😀\"]\n  id1[\"A wide one in the middle\"]\n  n2(\"Dogs\"):3\n  B --o A\n  b -- \"two words\" ==> id1\n  n2 -- \"emoji 😀\" -.-> c\n  b --o b\n  id1 -.-> a\n  A ==> A\n  a === c\n  B -.- b\n  c --- A\n  b <--> A\n  a --x n2\n  n2 -- \"long label that goes on and on for wrapping purposes\" --> A\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 3\n  a[/\"Ünï label\"\\]\n  b[[\"long label that goes on and on for wrapping purposes\"]]:3\n  c>\"fa:fa-check ok\"]\n  A[\\\"A wide one in the middle\"\\]\n  b -- \"x < y\" --- c\n  b -- \"x < y\" --> b\n  b -- \"x&amp;y\" -.-> b\n  c <--> A\n  c --> b\n  c --> A\n  b --> A\n  b -- \"A wide one in the middle\" ==> b\n  a -- \"long label that goes on and on for wrapping purposes\" -.-> A\n  a --o c\n  c -- \"A wide one in the middle\" ==> A\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a[/\"A wide one in the middle\"/]\n  b[[\"x&amp;y\"]]\n  c{{\"Ünï label\"}}\n  A[\\\"Dogs\"\\]:2\n  B{\"日本\"}\n  id1>\"a\"]\n  id1 -- \"日本\" --- A\n  id1 ==> id1\n  A === b\n  id1 -.- B\n  B --x a\n  b --> b\n  b -- \"$$b^2$$\" -.-> c\n  b ---> B\n  c --o c\n  A === B\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a[[\"Ünï label\"]]\n  b[\"x&amp;y\"]\n  c(\"x&amp;y\")\n  A[\\\"x&amp;y\"\\]\n  B[\"$$b^2$$\"]\n  id1[[\"fa:fa-check ok\"]]\n  n2((\"Ünï label\"))\n  ID(\"Ünï label\")\n  x[\"Dogs\"]\n  group_one[/\"x < y\"\\]\n  ID ---> id1\n  ID -- \"a\" ==> id1\n  x --o A\n  group_one --o n2\n  a -.- A\n  A --- c\n  b -- \"Dogs\" --- id1\n  x --o x\n  a -.-> a\n  a --o id1\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 3\n  a{{\"two words\"}}\n  b([\"A wide one in the middle\"])\n  c[\\\"Dogs\"/]\n  A[(\"Database\")]:1\n  B>\"two words\"]\n  A --x B\n  b -.- b\n  B ---> b\n  c --> c\n  b -- \"A wide one in the middle\" ==> a\n  A -.-> c\n  B -- \"$$b^2$$\" ==> a\n  B --> A\n  c --> A\n  b ==> c\n  c --> c\n  a -- \"Dogs\" -.-> a\n  B --x b\n  b --o A\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 5\n  a([\"fa:fa-check ok\"])\n  b[\\\"a\"\\]\n  c([\"a\"])\n  A[(\"emoji 😀\")]\n  B{{\"Dogs\"}}\n  id1((\"Ünï label\"))\n  n2[/\"a\"/]:2\n  ID[[\"$$b^2$$\"]]:2\n  x[\\\"two words\"/]:3\n  group_one(\"Database\")\n  ID --o b\n  n2 <--> a\n  B -- \"A wide one in the middle\" ==> A\n  B -.-> group_one\n  ID === id1\n  a -- \"x < y\" ==> b\n  group_one -.- ID\n  a -.- n2\n  x --x c\n  B -- \"$$b^2$$\" --- a\n  B -.-> n2\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 4\n  a(\"a\")\n  b>\"a\"]\n  c{\"日本\"}\n  A[/\"A wide one in the middle\"/]:3\n  A -.-> a\n  A ==> A\n  b --- A\n  c -- \"emoji 😀\" --> c\n  a --o c\n  b --o A\n  space\n"
+ },
+ {
+  "type": "block",
+  "source": "block-beta\n  columns 2\n  a[\\\"Database\"/]\n  b([\"$$b^2$$\"]):2\n  c((\"long label that goes on and on for wrapping purposes\"))\n  A((\"x&amp;y\"))\n  B([\"long label that goes on and on for wrapping purposes\"]):1\n  id1(\"x&amp;y\")\n  n2(\"日本\")\n  ID[(\"Dogs\")]\n  x{{\"two words\"}}\n  id1 --> a\n  x ==> A\n  n2 --> id1\n  A === ID\n  n2 --x a\n  a --> x\n  ID -- \"A wide one in the middle\" --> B\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Context\n  Person(a, \"A\", \"desc\", $link=\"https://a.example\")\n  System(b, \"B\", \"desc\", \"\", $link=\"https://b.example\")\n  Container(c, \"C\", \"Rust\", \"desc\", \"\", \"\", $link=\"https://c.example\")\n  Rel(a, b, \"uses\")"
+ },
+ {
+  "type": "c4",
+  "source": "C4Context\ntitle System Context diagram for Internet Banking System\nPerson(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")"
+ },
+ {
+  "type": "c4",
+  "source": "---\ntitle: Ünï 😀 title\n---\nC4Container\nEnterprise_Boundary(e, \"E\") {\n  System_Boundary(s, \"S\") {\n    Container_Boundary(c, \"C\") {\n      Boundary(b, \"B\") {\n        Boundary(t, \"T\", \"custom\") {\n          System(x, \"X\")\n        }\n      }\n    }\n  }\n}"
+ },
+ {
+  "type": "c4",
+  "source": "C4Context\naccTitle: Ünï title\nSystem(a, \"First\", \"d1\")\nSystem(b, \"B\")\nBoundary(x, \"X\") {\n  Person(a, \"Second\")\n}\nRel(a, b, \"one\", \"t\")\nBiRel(a, b, \"two\")"
+ },
+ {
+  "type": "c4",
+  "source": "C4Context\n%% a comment line\naccTitle: Shown on top\naccDescr: For screen readers\nSystem(a, \"A\")"
+ },
+ {
+  "type": "c4",
+  "source": "C4Deployment\n    title System Context diagram for Internet Banking\n    UpdateLayoutConfig($c4ShapeInRow=\"1\", $c4BoundaryInRow=\"2\")\n    Boundary(b0, \"<b>bold</b>\", \"boundary\") {\n    Container_Ext(e1, \"a\", \"SMTP\", \"A system of the bank.\")\n    }\n    Rel_R(b0, b0, \"Banking Customer\")\n    Rel(e1, e1, \"A longer label that goes on and on for wrapping purposes\", \"javascript and angular\")\n    Rel(e1, b0, \"<b>bold</b>\")\n    SystemQueue(e2, \"x < y\", \"A system of the bank.\")\n    SystemDb(e3, \"x&amp;y\", \"\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    SystemQueue_Ext(e0, \"日本語\")\n    Rel(e0, e0, \"a\", \"javascript and angular\")\n    Deployment_Node(n1, \"Banking Customer\", \"server\") {\n    Person_Ext(e2, \"x&amp;y\")\n    UpdateElementStyle(e2, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\n    }\n    System(e3, \"Sign In Controller\", \"Ünï descr\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Dynamic\n    Node_L(n0, \"a\", \"server\", \"Long description that should wrap across several lines in the shape box\") {\n    System_Boundary(b1, \"a\") {\n    ComponentQueue(e2, \"x < y\", \"\")\n    UpdateElementStyle(b1, $fontColor=\"red\", $bgColor=\"#abc\", $borderColor=\"red\")\n    }\n    }\n    UpdateLayoutConfig($c4ShapeInRow=\"3\", $c4BoundaryInRow=\"3\")\n    UpdateRelStyle(e2, n0, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"5\", $offsetY=\"20\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Container\n    Container_Ext(e0, \"日本語\", \"Spring Bean\", \"\")\n    Node_L(n1, \"a\", \"server\", \"\") {\n    Node_L(n2, \"Ünï Name\", \"Ünï\", \"Long description that should wrap across several lines in the shape box\") {\n    Person(e3, \"emoji 😀\", \"<br/> break\")\n    ComponentDb_Ext(e4, \"x&amp;y\", \"SMTP\")\n    }\n    Rel_Back(e3, e0, \"Ünï Name\", \"SMTP\")\n    }\n    System_Ext(e5, \"日本語\")\n    Enterprise_Boundary(b6, \"x < y\") {\n    ComponentQueue(e7, \"Sign In Controller\", \"Spring Bean\", \"A system of the bank.\")\n    Node_R(n8, \"日本語\", \"server\", \"A system of the bank.\") {\n    System_Ext(e9, \"Sign In Controller\", \"Ünï descr\")\n    }\n    ComponentDb_Ext(e10, \"x&amp;y\", \"Spring Bean\", \"Long description that should wrap across several lines in the shape box\")\n    }\n    Rel_L(n2, b6, \"日本語\")\n    Node_R(n11, \"x < y\", \"server\") {\n    ContainerQueue_Ext(e12, \"日本語\", \"javascript and angular\")\n    }\n    ContainerDb(e13, \"Ünï Name\", \"SMTP\", \"A system of the bank.\", $tags=\"db\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Container\n    title System Context diagram for Internet Banking\n    SystemDb(e0, \"x&amp;y\", \"Ünï descr\")\n    SystemDb_Ext(e1, \"<b>bold</b>\", $tags=\"db\")\n    Node_R(n2, \"Banking Customer\", \"server\") {\n    Enterprise_Boundary(b3, \"Banking Customer\") {\n    Person(e4, \"日本語\", \"<br/> break\")\n    }\n    }\n    Component_Ext(e5, \"Sign In Controller\", \"SMTP\", \"Long description that should wrap across several lines in the shape box\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Deployment\n    Enterprise_Boundary(b0, \"Banking Customer\") {\n    ComponentDb_Ext(e1, \"x&amp;y\", \"\")\n    }\n    Deployment_Node(n2, \"Banking Customer\", \"Ünï\", \"<br/> break\") {\n    SystemDb_Ext(e3, \"x&amp;y\")\n    }\n    ContainerDb_Ext(e4, \"Ünï Name\", \"JSON/HTTPS\", \"\")\n    Node(n5, \"<b>bold</b>\", \"server\") {\n    UpdateLayoutConfig($c4ShapeInRow=\"2\", $c4BoundaryInRow=\"3\")\n    }\n    Rel_D(e3, e4, \"日本語\")\n    ComponentQueue(e6, \"Banking Customer\", \"Spring Bean\")\n    Container(e7, \"x&amp;y\", \"\", \"A system of the bank.\")\n    Enterprise_Boundary(b8, \"Banking Customer\") {\n    Rel_R(e4, e7, \"x&amp;y\", \"javascript and angular\")\n    Node_R(n9, \"emoji 😀\", \"vm\") {\n    UpdateRelStyle(e4, e3, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"5\", $offsetY=\"40\")\n    }\n    }\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    title System Context diagram for Internet Banking\n    ContainerDb(e0, \"emoji 😀\", \"Spring Bean\", \"\")\n    SystemDb_Ext(e1, \"x&amp;y\", \"Ünï descr\")\n    Enterprise_Boundary(b2, \"x&amp;y\") {\n    ComponentDb_Ext(e3, \"emoji 😀\", \"javascript and angular\", $tags=\"Ext\")\n    Rel_D(b2, e1, \"Banking Customer\", \"javascript and angular\")\n    ComponentQueue_Ext(e4, \"Sign In Controller\", \"Spring Bean\", \"A system of the bank.\")\n    }\n    ContainerQueue_Ext(e5, \"Sign In Controller\", \"SMTP\", \"A system of the bank.\")\n    ContainerQueue(e6, \"A longer label that goes on and on for wrapping purposes\", \"SMTP\", \"Long description that should wrap across several lines in the shape box\")\n    ComponentDb_Ext(e7, \"x&amp;y\", \"SMTP\", \"<br/> break\")\n    %% a comment\n    Rel_D(e0, b2, \"a\", \"SMTP\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    System(e0, \"x < y\", \"A system of the bank.\")\n    Enterprise_Boundary(b1, \"日本語\") {\n    UpdateElementStyle(b1, $fontColor=\"red\", $bgColor=\"#abc\", $borderColor=\"red\")\n    System(e2, \"x < y\", \"Ünï descr\")\n    %% a comment\n    }\n    UpdateRelStyle(e0, b1, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"-50\", $offsetY=\"40\")\n    Boundary(b3, \"Sign In Controller\", \"boundary\") {\n    UpdateElementStyle(e2, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\n    }\n    System_Ext(e4, \"x&amp;y\")\n    ContainerQueue(e5, \"Ünï Name\", \"SMTP\", \"<br/> break\")\n    Rel(e0, e5, \"日本語\")\n    UpdateRelStyle(b3, e0, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"40\", $offsetY=\"40\")\n    System_Boundary(b6, \"x < y\") {\n    Node(n7, \"日本語\", \"Ünï\", \"\") {\n    ContainerQueue_Ext(e8, \"x < y\", \"SMTP\")\n    }\n    Rel_L(e8, e5, \"日本語\", \"javascript and angular\")\n    Rel_L(b1, b1, \"Banking Customer\")\n    }\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    %% a comment\n    ComponentQueue_Ext(e0, \"emoji 😀\", \"SMTP\")\n    Person(e1, \"A longer label that goes on and on for wrapping purposes\", \"<br/> break\")\n    System_Boundary(b2, \"Sign In Controller\") {\n    Boundary(b3, \"x < y\") {\n    SystemDb_Ext(e4, \"A longer label that goes on and on for wrapping purposes\", \"A system of the bank.\")\n    Rel_L(e1, e4, \"A longer label that goes on and on for wrapping purposes\")\n    Rel_Back(e1, e1, \"<b>bold</b>\", \"SMTP\")\n    }\n    System_Boundary(b5, \"emoji 😀\") {\n    UpdateElementStyle(b3, $fontColor=\"red\", $bgColor=\"#abc\", $borderColor=\"red\")\n    ComponentQueue(e6, \"Banking Customer\", \"SMTP\", \"A system of the bank.\", $tags=\"Ext\")\n    UpdateElementStyle(b2, $fontColor=\"red\", $bgColor=\"Ünï\", $borderColor=\"red\")\n    }\n    }\n    Component_Ext(e7, \"A longer label that goes on and on for wrapping purposes\", \"JSON/HTTPS\", \"<br/> break\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Dynamic\n    Enterprise_Boundary(b0, \"emoji 😀\") {\n    Node_R(n1, \"emoji 😀\", \"Ünï\", \"\") {\n    SystemDb(e2, \"Ünï Name\", \"\")\n    ContainerDb_Ext(e3, \"a\", \"Spring Bean\", \"Long description that should wrap across several lines in the shape box\")\n    }\n    BiRel(b0, b0, \"A longer label that goes on and on for wrapping purposes\", \"JSON/HTTPS\")\n    Rel(e3, n1, \"emoji 😀\")\n    }\n    SystemDb_Ext(e4, \"日本語\", \"Ünï descr\", $tags=\"Ext\")\n    Rel_L(e3, e3, \"a\", \"SMTP\")\n    ComponentDb(e5, \"Banking Customer\", \"Spring Bean\", \"\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Deployment\n    title Diagram title\n    SystemDb(e0, \"日本語\", \"<br/> break\")\n    Rel(e0, e0, \"A longer label that goes on and on for wrapping purposes\", \"javascript and angular\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Dynamic\n    Enterprise_Boundary(b0, \"emoji 😀\") {\n    ComponentQueue(e1, \"Ünï Name\", \"javascript and angular\", \"Ünï descr\", $tags=\"db\")\n    }\n    Rel_Back(b0, e1, \"emoji 😀\")\n    Rel_D(b0, e1, \"a\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    Boundary(b0, \"Ünï Name\", \"system\") {\n    Person(e1, \"Sign In Controller\", \"<br/> break\")\n    Container_Ext(e2, \"a\", \"\")\n    }\n    Rel(b0, e1, \"a\")\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Context\n    title System Context diagram for Internet Banking\n    UpdateLayoutConfig($c4ShapeInRow=\"3\", $c4BoundaryInRow=\"3\")\n    System(e0, \"a\", \"Ünï descr\")\n    Rel(e0, e0, \"emoji 😀\", \"\")\n    System_Boundary(b1, \"日本語\") {\n    %% a comment\n    ComponentQueue(e2, \"emoji 😀\", \"javascript and angular\", \"Ünï descr\")\n    Component_Ext(e3, \"Banking Customer\", \"\", \"A system of the bank.\")\n    }\n"
+ },
+ {
+  "type": "c4",
+  "source": "C4Component\n    title Ünï title\n    Node(n0, \"<b>bold</b>\", \"vm\", \"\") {\n    UpdateElementStyle(n0, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\n    }\n    ComponentDb_Ext(e1, \"日本語\", \"javascript and angular\")\n    Person_Ext(e2, \"x&amp;y\", \"Ünï descr\", $tags=\"Ext\")\n    Enterprise_Boundary(b3, \"日本語\") {\n    Rel_Back(e2, b3, \"Ünï Name\", \"javascript and angular\")\n    Rel_D(n0, e2, \"<b>bold</b>\", \"javascript and angular\")\n    }\n    ContainerDb(e4, \"Ünï Name\", \"Spring Bean\", \"Ünï descr\")\n    UpdateElementStyle(e1, $fontColor=\"red\", $bgColor=\"#abc\", $borderColor=\"red\")\n    UpdateElementStyle(e4, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\n    Node_L(n5, \"<b>bold</b>\", \"server\", \"\") {\n    System_Ext(e6, \"<b>bold</b>\", \"Long description that should wrap across several lines in the shape box\")\n    }\n    System_Boundary(b7, \"a\") {\n    ComponentDb(e8, \"emoji 😀\", \"Spring Bean\", \"A system of the bank.\")\n    }\n"
+ },
+ {
+  "type": "class",
+  "source": "---\ntitle: Ünï 😀 title\n---\nclassDiagram\nclass interface0\nclass note0\nbar ()-- interface0\nnote for note0 \"n\"\nnamespace note0 {\n class X\n}"
+ },
+ {
+  "type": "class",
+  "source": "---\ntitle: Ünï 😀 title\n---\nclassDiagram\n        namespace A.B {\n          class Foo\n        }"
+ },
+ {
+  "type": "class",
+  "source": "---\ntitle: Ünï 😀 title\n---\nclassDiagram\nnamespace Namespace1 {\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}\nclass Class2\n}"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\nclass C1[\"Class 1 with text label\"]:::styleClass {\n  +member1\n}\nC1 -->  C2\n  "
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\naccTitle: Ünï title\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\naccDescr: one line description\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\naccDescr {\n  multi line\n  description\n}\n"
+ },
+ {
+  "type": "class",
+  "source": "---\n%% a comment line\nconfig:\n  class:\n    hierarchicalNamespaces: false\n---\nclassDiagram\n    namespace Company.Engineering.Backend {\n        class Developer {\n            +writeCode()\n        }\n    }\n    namespace Company.Engineering.Frontend {\n        class Designer {\n            +createMockup()\n        }\n    }\n    namespace Company {\n        class CEO {\n            +makeDecisions()\n        }\n    }\n    CEO --> Developer : oversees\n    CEO --> Designer : oversees\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\nclass Shape\n<<interface>> Shape\nShape : noOfVertices\nShape : draw()\n"
+ },
+ {
+  "type": "class",
+  "source": "---\ntitle: Ünï 😀 title\n---\nclassDiagram\n%% This whole line is a comment classDiagram class Shape <<interface>>\nclass Shape{\n    <<interface>>\n    noOfVertices\n    draw()\n}\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\naccDescr: one line description\n  direction RL\n  class Student {\n    -idCard : IdCard\n  }\n  class IdCard{\n    -id : int\n    -name : string\n  }\n  class Bike{\n    -id : int\n    -name : string\n  }\n  Student \"1\" --o \"1\" IdCard : carries\n  Student \"1\" --o \"1\" Bike : rides\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  classDef cold fill:#f96\n  classDef cold stroke:#333\n  Animal : -int id\n  namespace Ünï ns {\n    class B\n  }\n  style Customer fill:#f96\n  note \"a note\"\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  LineItem --> B\n  Payment --() \"*\" Duck\n  note \"Ünï note\"\n  click LineItem href \"https://example.com/x\" \"tip\"\n  namespace Ünï ns {\n    class Customer\n  }\n  List~int~\n  Payment\n  click Payment href \"https://example.com/x\" \"tip\"\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  cssClass \"A\" hot\n  class A {\n    canEat()\n  }\n  cssClass \"Order\" cold\n  LineItem \"*\" .. Duck\n  class C {\n    +List~int~ items\n    +static$()\n  }\n  note for List~int~ \"Ünï note\"\n  class Dog {\n    +isMammal()\n    +int age\n    +isMammal()\n  }\n  C ..|> \"Ünï\" Zebra\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  class Ünï\n  note \"two<br>lines\"\n  Zebra \"*\" --> Fish\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  note for A \"$$h2$$ note\"\n  C : run)\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n    run)\n  }\n  class Fish\n"
+ },
+ {
+  "type": "class",
+  "source": "---\ntitle: Ünï classes\n---\nclassDiagram\n  note for List~int~ \"$$h2$$ note\"\n  Ünï : <<interface>>\n  Duck <|-- Payment\n  Payment\n  C\n  Customer .. \"0..1\" Fish : $$a+b$$\n  Duck\n  class Customer {\n    +int age\n    +x: int\n  }\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  accTitle: Classes\n  A <|-- List~int~\n  namespace Outer.Inner {\n    class C\n  }\n  class Zebra {\n    +x: int\n  }\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  Fish ()-- A\n  Animal : ~run(int a, b) bool\n  Fish : run)\n  A --> \"Ünï\" Duck\n  A ()-- \"Ünï\" C\n  Animal \"Ünï\" o-- Dog\n"
+ },
+ {
+  "type": "class",
+  "source": "classDiagram\n  Node1\n  click Animal href \"https://example.com/x\" \"tip\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "---\ntitle: Ünï 😀 title\n---\ncynefin-beta\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\naccDescr: one line description\n  complex\n    \"x\""
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complicated\n    \"x\"\n    \"Expert review needed\"\n    \"extra one\"\n\n  clear\n    \"Item with: colon\"\n    \"Restart service\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n    \"日本語の項目\"\n    \"fa:fa-check ok\"\n    \"Ünïcode item\"\n    \"x&amp;y\"\n\n  chaotic\n    \"Unknown failure mode\"\n    \"$$b^2$$\"\n\n  complicated --> clear\n  chaotic --> clear : \"Stabilized\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title Strategy: Categorization\n  clear\n\n  complicated --> chaotic\n  complex --> complex : \"$$b^2$$\"\n  complicated --> complex : \"$$b^2$$\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title Strategy: Categorization\n  complex\n    \"x\"\n    \"Ünïcode item\"\n    \"more\"\n\n  complicated\n    \"日本語の項目\"\n\n  clear\n    \"Item with: colon\"\n\n  chaotic\n    \"Expert review needed\"\n\n  confusion\n    \"extra one\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "%% comment\ncynefin-beta\n  complicated\n    \"Page on-call immediately\"\n    \"Expert review needed\"\n\n  chaotic\n    \"extra one\"\n\n  confusion\n    \"x&amp;y\"\n    \"more\"\n\n  chaotic --> chaotic\n  complicated --> chaotic : \"Best practice codified\"\n  complicated --> chaotic\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complex\n    \"Investigate root cause\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n\n  complicated\n    \"Investigate root cause\"\n    \"Ünïcode item\"\n    \"$$b^2$$\"\n\n  chaotic\n    \"fa:fa-check ok\"\n\n  confusion\n    \"Item with: colon\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n    \"x\"\n\n  complicated --> confusion : \"Stabilized\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complex\n\n  complicated\n    \"fa:fa-check ok\"\n    \"Apply known fix\"\n    \"fa:fa-check ok\"\n\n  clear\n    \"Page on-call immediately\"\n    \"Investigate root cause\"\n    \"Ünïcode item\"\n\n  confusion\n    \"x\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n    \"Investigate root cause\"\n\n  clear --> clear : \"Stabilized\"\n  clear --> complicated\n  complex --> confusion\n  complex --> complex : \"$$b^2$$\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title A long title that might need to wrap across the top of the framework diagram\n  complex\n    \"Analyze performance data\"\n    \"another\"\n    \"Restart service\"\n    \"more\"\n    \"Restart service\"\n    \"more\"\n    \"Unknown failure mode\"\n    \"Page on-call immediately\"\n\n  complicated\n\n  clear\n\n  chaotic\n    \"another\"\n\n  confusion\n    \"Ünïcode item\"\n    \"extra one\"\n    \"more\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title A long title that might need to wrap across the top of the framework diagram\n  complicated\n    \"x\"\n    \"extra one\"\n    \"Restart service\"\n\n  clear\n    \"日本語の項目\"\n    \"x\"\n    \"x&amp;y\"\n    \"Ünïcode item\"\n    \"more\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n    \"Investigate root cause\"\n\n  confusion\n    \"extra one\"\n    \"Investigate root cause\"\n    \"Page on-call immediately\"\n\n  complicated --> complicated : \"Ünï\"\n  clear --> complex\n  complicated --> clear : \"Complacency\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title Strategy: Categorization\n  clear\n    \"Apply known fix\"\n    \"Expert review needed\"\n\n  chaotic\n    \"Investigate root cause\"\n\n  complex --> complicated : \"Complacency\"\n  complex --> complex : \"Pattern identified\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title A long title that might need to wrap across the top of the framework diagram\n  complex\n    \"日本語の項目\"\n    \"x&amp;y\"\n    \"x&amp;y\"\n\n  clear\n\n  chaotic\n    \"Item with: colon\"\n\n  confusion\n    \"Expert review needed\"\n    \"Investigate root cause\"\n    \"Analyze performance data\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complex\n    \"more\"\n\n  complicated\n    \"Run chaos experiment\"\n\n  clear\n    \"Investigate root cause\"\n    \"extra one\"\n    \"more\"\n\n  confusion\n    \"$$b^2$$\"\n    \"more\"\n    \"more\"\n    \"fa:fa-check ok\"\n\n  chaotic --> confusion : \"$$b^2$$\"\n  complicated --> clear : \"$$b^2$$\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "---\ntitle: Front\n---\ncynefin-beta\n  title Strategy: Categorization\n  clear\n    \"Expert review needed\"\n    \"Item with: colon\"\n    \"日本語の項目\"\n    \"A very long item label that goes on and on to need wrapping in the box\"\n\n  confusion\n    \"Expert review needed\"\n\n  clear --> chaotic : \"A long transition label that is wide\"\n  chaotic --> confusion\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "---\nconfig:\n  cynefin:\n    width: 900\n    height: 600\n---\ncynefin-beta\n  title A long title that might need to wrap across the top of the framework diagram\n  complicated\n    \"Run chaos experiment\"\n\n  clear\n    \"Item with: colon\"\n\n  chaotic\n    \"$$b^2$$\"\n    \"Restart service\"\n    \"$$b^2$$\"\n\n  confusion\n    \"日本語の項目\"\n    \"Expert review needed\"\n\n  complicated --> confusion : \"$$b^2$$\"\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title Strategy: Categorization\n  complex\n    \"Analyze performance data\"\n\n  complicated\n    \"Page on-call immediately\"\n    \"extra one\"\n    \"Run chaos experiment\"\n\n  clear\n    \"Restart service\"\n\n  confusion\n    \"Ünïcode item\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complex\n    \"Apply known fix\"\n    \"another\"\n    \"Ünïcode item\"\n\n  clear\n\n  chaotic\n    \"Expert review needed\"\n    \"Investigate root cause\"\n    \"Expert review needed\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title A long title that might need to wrap across the top of the framework diagram\n  complex\n    \"Analyze performance data\"\n    \"Run chaos experiment\"\n\n  complicated\n    \"A very long item label that goes on and on to need wrapping in the box\"\n\n  chaotic\n    \"Item with: colon\"\n    \"extra one\"\n\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  complicated\n    \"$$b^2$$\"\n    \"Apply known fix\"\n\n  clear\n\n  chaotic\n    \"Restart service\"\n\n  confusion\n    \"Investigate root cause\"\n    \"Page on-call immediately\"\n\n  complex --> clear\n  complicated --> chaotic : \"Ünï\"\n  chaotic --> complicated\n  confusion --> complicated\n"
+ },
+ {
+  "type": "cynefin",
+  "source": "cynefin-beta\n  title Strategy: Categorization\n  confusion\n\n"
+ },
+ {
+  "type": "er",
+  "source": "---\ntitle: Ünï 😀 title\n---\nerDiagram\nA 1 to zero or more B : r\nC many(0) optionally to 0+ D : r\nE 1--1 F : r\nG 1..many H : r\nx 1--1 12 : r\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n A ||--|| B : x"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n A ||--o{ B : x"
+ },
+ {
+  "type": "er",
+  "source": "---\ntitle: Ünï 😀 title\n---\nerDiagram\n A ||--o{ B : x"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n%% a comment line\n A { int id PK \"key\" }\n B { int id }\n C { int id }\n D { int id }\n subgraph G\n  E\n end\n style A fill:navy\n style B fill:#BBDEFB\n style C fill:#BBDEFB,color:#333\n style G fill:#FFF9C4"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\naccTitle: Ünï title\n Note:::internal-link { string body }\n p[\"My page\"]:::internal-link"
+ },
+ {
+  "type": "er",
+  "source": "---\ntitle: Ünï 😀 title\n---\nerDiagram\n  direction LR\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ LINE_ITEM : contains\n  LINE_ITEM }|--|| PRODUCT : is"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\naccTitle: Ünï title\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ LINE_ITEM : contains\n  PRODUCT ||--o{ LINE_ITEM : \"appears in\"\n  CUSTOMER {\n    string name\n    string email\n  }\n  ORDER {\n    int id\n    date placedAt\n  }\n  LINE_ITEM {\n    int quantity\n    float price\n  }\n  PRODUCT {\n    string sku\n    string title\n  }\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\naccDescr {\n  multi line\n  description\n}\n    direction TB\n    CUSTOMER ||--o{ ORDER : places\n    CUSTOMER {\n        string name\n        string custNumber\n        string sector\n    }\n    ORDER ||--|{ LINE-ITEM : contains\n    ORDER {\n        int orderNumber\n        string deliveryAddress\n    }\n    LINE-ITEM {\n        string productCode\n        int quantity\n        float pricePerUnit\n    }\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  42 {\n    map~string,int~ name FK\n    int created-at\n  }\n  user_account {\n    map~string,int~ x \"a comment with spaces\"\n    float x\n    float name FK\n  }\n  Address |o..o| user_account : contains\n  subgraph S1 [Ünï area]\n  a }o..|{ 42 : x\n  end\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  a[\"Ünï alias\"]\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  a }|..|{ \"Quoted, name\" : \"has items\"\n  \"Quoted, name\" |o--|{ Address : \"quoted: role\"\n  Ünï\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  x {\n    int order_id\n    date created-at PK,FK \"the id\"\n  }\n  ORDER }|..|{ a : contains\n  user_account |o--|{ user_account : places\n  CUSTOMER[\"Alias text\"]\n"
+ },
+ {
+  "type": "er",
+  "source": "---\ntitle: Ünï shop\n---\nerDiagram\n  LINE-ITEM }o..|{ user_account : contains\n  \"Quoted, name\" }o..o| 日本 : x\n  style 日本 hot\n  x |o--|{ Ünï : contains\n  order2 ||..o{ a : x\n  classDef a fill:red\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  style a cls\n  user_account {\n    map~string,int~ Ünïname\n    map~string,int~ x\n  }\n  Ünï ||..|{ order2 : places\n  accDescr {\n    multi line\n  }\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  accTitle: Shop ER\n  Address }o..o{ ORDER : places\n  subgraph \"Quoted group\"\n  CUSTOMER\n  end\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  accDescr {\n    Ünï text\n  }\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  x[\"Alias text\"]\n  Zed {\n    map~string,int~ order_id\n    int order_id FK\n    string[] order_id\n  }\n"
+ },
+ {
+  "type": "er",
+  "source": "erDiagram\n  42 }o..|{ ORDER : x\n  a {}\n  LINE-ITEM {\n    Ünïtype order_id \"fa:fa-user admin\"\n    varchar(255) x\n    Ünïtype name UK \"a comment with spaces\"\n    List~int~ created-at\n  }\n  Ünï[\"Ünï alias\"]\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\ntitle: Ünï 😀 title\n---\neventmodeling\n    tf 01 ui CartUI\n    tf 02 cmd Inventory.AddItem\n    tf 03 evt Inventory.ItemAdded"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 123 evt _a1.b_2 { { nested } } \ntf 4 evt B { a } [[x]] { b }\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\ntitle: Ünï 😀 title\n---\neventmodeling%%c\ntf 01 ui tfx\ntf 02 ui eventx\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\n\ntf 03 evt External.InventoryChanged\ntf 02 pcr InventoryProcessor\ntf 04 cmd ChangeInventory\ntf 05 evt Cart.InventoryChanged\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "%% comment\neventmodeling\ntf 01 rmo External.InventoryChanged [[Data0]]\ntf 02 rmo ItemAdded\ntf 3 cmd Order ->> 01\ntf 04 ui Shop.Cart\ntf 5 cmd ItemAdded ->> 02\ntf 06 rmo External.InventoryChanged\ntf 07 pcr Payment.Charge ->> 3 ->> 01\n\ndata Data0 `json`\n{\n  description: 'john'\n  count: 3\n}\n\nnote 02 `md`\n{\n  A note for the frame\n    indented line\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\nconfig:\n  theme: default\n---\neventmodeling\nrf 01 evt CartUI\ntf 02 ui Shop.Cart [[Data1]]\ntf 3 cmd AddItem [[Data2]]\ntf 04 evt ItemAdded ->> 02\ntf 05 evt Order ->> 02 ->> 04 `json` {\"a\": 2}\n\ndata Data1\n{\n  value: string\n  count: 3\n}\n\ndata Data2\n{\n  price: 20.4\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 1 evt External.InventoryChanged [[Data0]]\n\ntf 2 pcr InventoryProcessor ->> 1 [[Data1]]\nrf 03 rmo InventoryProcessor\n\ndata Data0 `json`\n{\n  description: 'john'\n  image: avatar\n}\n\ndata Data1 `json`\n{\n  value: string\n  image: avatar\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\nconfig:\n  theme: default\n---\neventmodeling\ntf 01 evt AddItem [[Data0]]\nrf 02 rmo ItemAdded\ntf 03 evt External.InventoryChanged\n\ndata Data0 `json`\n{\n  value: string\n  count: 3\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\nrf 01 rmo External.InventoryChanged\ntf 02 cmd AddItem [[Data1]]\ntf 03 pcr ItemAdded ->> 02 ->> 01\n\ndata Data1 `json`\n{\n  description: 'john'\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\ntitle: Front\n---\n%% comment\neventmodeling\ntf 01 evt ItemAdded\ntf 02 cmd CartUI ->> 01\ntf 03 ui CartUI ->> 01\ntf 4 evt Shop.Cart\ntf 05 evt CartUI `json` {\"a\": 6}\ntf 06 pcr Order [[Data5]] `json` {\"a\": 7}\n\ndata Data5\n{\n  description: 'john'\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 1 cmd Payment.Charge\ntf 02 evt Order [[Data1]]\nrf 03 evt Order ->> 02 [[Data2]]\n\ntf 04 evt CartUI ->> 03 ->> 1 [[Data3]]\n\ndata Data1\n{\n  value: string\n  image: avatar\n}\n\ndata Data2\n{\n  description: 'john'\n  count: 3\n}\n\ndata Data3\n{\n  description: 'john'\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\nconfig:\n  theme: default\n---\neventmodeling\ntf 01 evt CartUI\nrf 02 evt External.InventoryChanged\ntf 03 pcr AddItem\ntf 04 ui Payment.Charge [[Data3]]\ntf 05 cmd ItemAdded ->> 01 [[Data4]]\ntf 06 pcr External.InventoryChanged\n\ndata Data3 `json`\n{\n  description: 'john'\n  \n}\n\ndata Data4\n{\n  description: 'john'\n  image: avatar\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 01 cmd Shop.Cart\ntf 02 rmo External.InventoryChanged ->> 01 [[Data1]]\n\ndata Data1 `json`\n{\n  value: string\n  image: avatar\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 01 ui InventoryProcessor [[Data0]]\nrf 2 evt Payment.Charge ->> 01 ->> 01 [[Data1]]\n\ndata Data0 `json`\n{\n  value: string\n  count: 3\n}\n\ndata Data1\n{\n  value: string\n  \n}\n\nnote 2 `md`\n{\n  A note for the frame\n    indented line\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 01 evt CartUI\nrf 02 evt CartUI [[Data1]]\ntf 3 rmo CartUI [[Data2]]\ntf 04 cmd External.InventoryChanged ->> 02\ntf 05 ui ItemAdded ->> 04 ->> 04\ntf 06 evt External.InventoryChanged ->> 02\n\ndata Data1\n{\n  price: 20.4\n  count: 3\n}\n\ndata Data2 `json`\n{\n  value: string\n  image: avatar\n}\n\nnote 06\n{\n  A note for the frame\n    indented line\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 1 evt InventoryProcessor `json` {\"a\": 1}\nrf 02 evt Payment.Charge ->> 1 ->> 1\nrf 03 evt Payment.Charge `json` {\"a\": 9}\ntf 04 ui CartUI `json` {\"a\": 6}\ntf 05 ui InventoryProcessor [[Data4]] `json` {\"a\": 4}\n\n\ndata Data4 `json`\n{\n  price: 20.4\n  image: avatar\n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\nentity Shop.Cart\ntf 01 cmd Payment.Charge\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "---\nconfig:\n  theme: default\n---\neventmodeling\ntf 01 cmd InventoryProcessor\ntf 02 rmo CartUI ->> 01 `json` {\"a\": 4}\ntf 03 cmd Payment.Charge\nrf 04 rmo Order ->> 01\ntf 05 ui ItemAdded ->> 03 [[Data4]]\ntf 6 cmd Payment.Charge ->> 03\nrf 07 rmo AddItem ->> 04 ->> 03\n\ndata Data4 `json`\n{\n  description: 'john'\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\ntf 01 ui CartUI [[Data0]]\ntf 02 cmd AddItem\ntf 03 cmd ItemAdded\ntf 04 cmd Shop.Cart ->> 02 ->> 03\n\ndata Data0 `json`\n{\n  description: 'john'\n  \n}\n"
+ },
+ {
+  "type": "eventmodeling",
+  "source": "eventmodeling\nrf 01 rmo Shop.Cart [[Data0]]\nrf 02 evt External.InventoryChanged ->> 01 [[Data1]]\n\ndata Data0 `json`\n{\n  price: 20.4\n  \n}\n\ndata Data1\n{\n  value: string\n  \n}\n\nnote 02 `md`\n{\n  A note for the frame\n    indented line\n}\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\nA --> B\nlinkStyle 0 interpolate basis stroke:#f00\nlinkStyle default interpolate step\nlinkStyle 0 interpolate linear stroke:#0f0"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\nA@{ shape: rect, label: \"meta\" } --> B\nB@{ shape: diamond } --> C@{ label: \"c\" }"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\nA@{ label: \"x\", w: 0, h: 2.5, x: -1, y: .5 } --> B@{ label: \"q\", w: -4 }"
+ },
+ {
+  "type": "flowchart",
+  "source": "graph\n  C & Ünï -- \"quoted\" --> B\n  Ünï{tab\there}\n  C -.- label .- Ünï[(fa:fa-check step)]\n  A & D --> C\n  B[\\long label that keeps going well past the wrapping width/]\n  E[/**bold** step/]\n  C & E -.- label .- C\n  subgraph D[\"Ünï group\"]\n    B -- \"quoted\" --> D\n  end\n  A ---> Ünï[[fa:fa-check step]]\n  C -. dotted .-> E[\\x < y/]\n  Ünï & Ünï -->|lbl| Ünï\n  E[/tab\there\\]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "graph TD\n  C ==> B{$$E=mc2$$}\n  Ünï{{long label that keeps going well past the wrapping width}}\n  subgraph Ünï[\"Group\"]\n    x1 -. dotted .-> C\n  end\n  A e1@--> B[\\tab\there/]\n  n_2[/long label that keeps going well past the wrapping width/]\n  D@{ shape: hourglass, label: \"Plan\" }\n  Ünï e1@--> C@{ shape: rect, label: \"Ünï\" }\n  D --o A@{ shape: st-rect }\n  D --o E[\"tab\there\"]\n  n_2 -.-> C@{ label: \"tab\there\" }\n  Ünï & D --o x1\n  B e1@--> B@{ shape: hexagon }\n  subgraph C[\"Group\"]\n    D -->|lbl| x1\n  end\n  x1(($$E=mc2$$))\n  A & x1 --> x1\n  Ünï -. dotted .-> x1[\\fa:fa-check step\\]\n  A e1@--> E[\\Ship it/]\n  Ünï <--> n_2[(tab\there)]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\n  B --- D[$$E=mc2$$]\n  D@{ shape: odd }\n  D & A -.-> B\n  subgraph D[\"Group\"]\n    D --> A\n  end\n  subgraph A[\"Ünï group\"]\n    A ==> C\n  end\n  D --- D[\"`**Run tests** md`\"]\n  C[[Ship it]]\n  D <--> B@{ shape: bolt }\n  C ---> A@{ label: \"fa:fa-check step\" }\n  C[\"$$E=mc2$$\"]\n  A@{ shape: fr-rect }\n  D([Ship it])\n  D -. dotted .-> C(((x < y)))\n  C & C <--> C\n  D[\\fa:fa-check step/]\n  C & D <--> C\n  D --o A[/fa:fa-check step/]\n  A ---> B[\"$$E=mc2$$\"]\n  B([Ünï])\n  B@{ shape: cloud }\n  B -->|lbl| D(Ünï)\n  D{{Run tests}}\n  C --> A[[$$E=mc2$$]]\n  A --- D[(**bold** step)]\n  C --- C[/**bold** step/]\n  A[\\Ünï/]\n  B@{ label: \"$$E=mc2$$\" }\n  B[/Plan/]\n  C & B -.- D\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TB\n  D & Start ==> C\n  Ünï[\\**bold** step/]\n  B -- \"quoted\" --> C[[**bold** step]]\n  Start[/Ship it/]\n  C -. dotted .-> E[\\**bold** step/]\n  E ~~~ D[\\Run tests\\]\n  D ==> x1[\\fa:fa-check step\\]\n  B[\"`****bold** step** md`\"]\n  x1[/Ünï/]\n  Start == thick ==> Ünï[(tab\there)]\n  A --> B@{ shape: doc, label: \"Run tests\" }\n  x1 -- text --> B([fa:fa-check step])\n  C((long label that keeps going well past the wrapping width))\n  Ünï -.-> Ünï(Ship it)\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart LR\n  x1 ==> x1(Plan)\n  subgraph A[\"Group\"]\n    D ~~~ C\n  end\n  E & B --o B\n  E & C --x E\n  subgraph A[\"Group\"]\n    A e1@--> x1\n  end\n  D --> E(((Ship it)))\n  E & x1 ~~~ D\n  subgraph E[\"Ünï group\"]\n    x1 <--> D\n  end\n  Ünï[\\Plan\\]\n  B <--> Ünï@{ label: \"Run tests\" }\n  A -.-> x1\n  A:::hot\n  C & E <--> x1\n  Ünï e1@--> D[(**bold** step)]\n  Ünï -.- D(((Ünï)))\n  A ---> x1[\"`**Run tests** md`\"]\n  E e2@==> Ünï{{Ünï}}\n  A ~~~ A[\"tab\there\"]\n  C & B ~~~ B\n  Ünï & B --x|cross| D\n  E == thick ==> D:::hot\n  D[[long label that keeps going well past the wrapping width]]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TB\n  subgraph n_2[\"Ünï group\"]\n    x1 -.- A\n  end\n  Ünï(((fa:fa-check step)))\n  漢 e2@==> D[Plan]\n  B <--> A>Run tests]\n  C --x|cross| B@{ shape: cloud }\n  B & Ünï e1@--> A\n  subgraph B[\"Group\"]\n    D --x A\n  end\n  D[/**bold** step/]\n  E@{ shape: procs }\n  n_2>tab\there]\n  Ünï & x1 == thick ==> x1\n  n_2 -->|lbl| A[\"$$E=mc2$$\"]\n  x1 --o D[\\**bold** step\\]\n  n_2[/Plan/]\n  C --> x1[/$$E=mc2$$\\]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "graph BT\n  A ---> E([Ünï])\n  subgraph B[\"Ünï group\"]\n    n_2 -->|lbl| n_2\n  end\n  subgraph A[\"Group\"]\n    x1 -.-> C\n  end\n  B@{ shape: icon }\n  C & B e1@--> D\n  A e2@==> Ünï{{Run tests}}\n  subgraph B[\"Group\"]\n    C e1@--> B\n  end\n  E[(fa:fa-check step)]\n  Ünï --x|cross| x1[/a \"quoted\" step\\]\n  Ünï & Ünï ~~~ n_2\n  Ünï e2@==> x1{x < y}\n  n_2 & E ---> B\n  A -.-> D>x < y]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TB\n  D -->|lbl| x1[\"`**Ünï** md`\"]\n  A e1@--> 漢>Plan]\n  Start & x1 --x|cross| x1\n  C --o C[(Ship it)]\n  B ~~~ E>Run tests]\n  x1 --o D[/$$E=mc2$$/]\n  Ünï\n  Start($$E=mc2$$)\n  B & n_2 --> A\n  Ünï[(Plan)]\n  D{Ünï}\n  subgraph D[\"Group\"]\n    B --x|cross| C\n  end\n  E == thick ==> n_2[/tab\there\\]\n  B & x1 -.- label .- x1\n  B -.-> B[fa:fa-check step]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart LR\n  B --> n_2:::hot\n  C e1@--> x1[\\long label that keeps going well past the wrapping width/]\n  A@{ shape: stadium, label: \"Ünï\" }\n  A & x1 -.- label .- E\n  E[\\x < y\\]\n  B e1@--> n_2(($$E=mc2$$))\n  D ==> A[\\a \"quoted\" step\\]\n  B & C -->|lbl| x1\n  D -->|lbl| x1[\\fa:fa-check step/]\n  subgraph C[\"Ünï group\"]\n    x1 --> E\n  end\n  C{{Ship it}}\n  E ---> D{{$$E=mc2$$}}\n  C & B e1@--> n_2\n  A & E --o Ünï\n  A e1@--> E[/Ünï\\]\n  B ==> B@{ label: \"x < y\" }\n  C e2@==> D[Ünï]\n  x1@{ shape: bolt, label: \"Plan\" }\n  A ==> B((x < y))\n  E>Ünï]\n  E --> x1{tab\there}\n  D & n_2 -.-> A\n  D([$$E=mc2$$])\n  D -->|lbl| n_2\n  A -- text --> n_2[\"long label that keeps going well past the wrapping width\"]\n  n_2[\"Ship it\"]\n  E{Run tests}\n  D -->|lbl| x1[/$$E=mc2$$\\]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "graph BT\n  Ünï & D -.-> D\n  A --x C[/long label that keeps going well past the wrapping width/]\n  x1[[fa:fa-check step]]\n  Start e2@==> B@{ label: \"Run tests\" }\n  subgraph x1[\"Ünï group\"]\n    Ünï -.- Ünï\n  end\n  C & x1 -- text --> D\n  C <--> x1@{ shape: fr-rect, label: \"x < y\" }\n  E -- \"quoted\" --> B((fa:fa-check step))\n  Ünï -. dotted .-> D@{ shape: h-cyl }\n  Ünï[/Plan/]\n  漢 -- \"quoted\" --> E[\"x < y\"]\n  E -.- label .- x1>tab\there]\n  x1[[Ünï]]\n  漢>Ship it]\n  C[\"fa:fa-check step\"]\n  Start -- text --> C[[tab\there]]\n  n_2 & 漢 --x|cross| C\n  x1 & n_2 == thick ==> Start\n  E ~~~ D[\"`**Ship it** md`\"]\n  D e2@==> B@{ shape: documents }\n  漢@{ label: \"fa:fa-check step\" }\n  漢 & D -->|lbl| B\n  C[Plan]\n  n_2 & B --o A\n  C[[tab\there]]\n"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart LR\nsubgraph S\n  x\nend\nsubgraph S\n  y\nend"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart LR\naccTitle: Ünï title\nsubgraph S\nend\nsubgraph S\n  subgraph T\n    y\n  end\nend"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\naccDescr {\n  multi line\n  description\n}\nA --> B"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\nA --> B"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart TD\nsubgraph\n  a --> b\nend"
+ },
+ {
+  "type": "flowchart",
+  "source": "flowchart LR\n  A[One] --> B[Two] --> C[Three] --> D[Four] --> E[Five] --> F[Six] --> G[Seven]"
+ },
+ {
+  "type": "flowchart",
+  "source": "---\ntitle: Ünï 😀 title\n---\nflowchart TD\n  A[one two]"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\ntitle: Ünï 😀 title\n---\ngitGraph:\n        commit tag:\"test\"\n        "
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph:\naccDescr: one line description\n        commit type: HIGHLIGHT\n        "
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph:\naccDescr: one line description\n        commit id:\"1111\" type:REVERSE tag: \"test tag\"\n        "
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\naccDescr: one line description\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        cherry-pick id: \"M\" parent:\"B\"\n        "
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph TB:\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph:\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\naccTitle: Ünï title\n  accTitle: Accessible Graph\n  commit\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\ntitle: Ünï 😀 title\n---\ngitGraph: commit\nbranch \"quoted name\" order: 3\ncheckout \"quoted name\"\ncommit\nswitch main\nmerge \"quoted name\" id:\"m\" tag:\"v\" type:HIGHLIGHT"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\n%% a comment line\ncommit\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\ncommit\nbranch b\ncommit\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\nbranch a"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\n%% a comment line\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph\naccDescr {\n  multi line\n  description\n}\n commit"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\ntitle: Ünï 😀 title\n---\ngitGraph\n  commit"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    rotateCommitLabel: false\n---\ngitGraph\n  commit id: \"feat(api): ...\"\n  commit id: \"a\"\n  commit id: \"b\"\n  commit id: \"fix(client): .extra long label..\"\n  branch c2\n  commit id: \"feat(modules): ...\"\n  commit id: \"test(client): ...\"\n  checkout main\n  commit id: \"fix(api): ...\"\n  commit id: \"ci: ...\"\n  branch b1\n  commit\n  branch b2\n  commit\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\n%% a comment line\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    showBranches: true\n    showCommitLabel: true\n    mainBranchOrder: 2\n---\n      gitGraph\n      commit\n      branch test1 order: 3\n      branch test2\n      branch test3\n      branch test4 order: 1\n\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "---\n%% a comment line\nconfig:\n  logLevel: 'debug'\n  theme: 'default'\n  themeVariables:\n    commitLabelColor: '#ff0000'\n    commitLabelBackground: '#00ff00'\n    tagLabelFontSize: '16px'\n---\n       gitGraph\n       commit\n       branch develop\n       commit tag:\"v1.0.0\"\n       commit\n       checkout main\n       commit type: HIGHLIGHT\n       commit\n       merge develop\n       commit\n       branch featureA\n       commit\n\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph BT:\ncommit\ncommit\ncheckout main\ncommit\nbranch release-1.0 order: 2\ncommit type: NORMAL\ncommit\ncommit\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph TB:\ncommit msg: \"m1\"\n"
+ },
+ {
+  "type": "gitGraph",
+  "source": "gitGraph:\ntitle Release history\naccDescr: A description\ncommit id: \"c0\"\ncommit\n"
+ },
+ {
+  "type": "info",
+  "source": "info showInfo"
+ },
+ {
+  "type": "info",
+  "source": "info\naccTitle: Ünï title\naccDescr {}\ntitle t"
+ },
+ {
+  "type": "info",
+  "source": "info\n"
+ },
+ {
+  "type": "info",
+  "source": "info\nshowInfo\n%% comment\n"
+ },
+ {
+  "type": "info",
+  "source": "info\naccDescr {\n  description text\n}\n"
+ },
+ {
+  "type": "info",
+  "source": "info\naccTitle: Ünï\n"
+ },
+ {
+  "type": "info",
+  "source": "---\ntitle: Info\n---\ninfo\n"
+ },
+ {
+  "type": "info",
+  "source": "info\nshowInfo\ntitle Ünï title\naccDescr {\n  description text\n}\n"
+ },
+ {
+  "type": "info",
+  "source": "info\ntitle Ünï title\n"
+ },
+ {
+  "type": "info",
+  "source": "info\naccTitle: Info acc\n"
+ },
+ {
+  "type": "info",
+  "source": "---\ntitle: Ünï\n---\ninfo\n"
+ },
+ {
+  "type": "info",
+  "source": "---\ntitle: Ünï\n---\ninfo\nshowInfo\n"
+ },
+ {
+  "type": "info",
+  "source": "info\nshowInfo\n"
+ },
+ {
+  "type": "info",
+  "source": "---\ntitle: Ünï\n---\ninfo\nshowInfo\ntitle Some title\naccDescr {\n  description text\n}\n"
+ },
+ {
+  "type": "info",
+  "source": "info\n%% comment\n"
+ },
+ {
+  "type": "info",
+  "source": "info\ntitle Some title\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-beta\nProblem\nCause A\n  Subcause A1\nCause B\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "---\ntitle: Ünï 😀 title\n---\nishikawa-beta\nEffect\n  A\n      B\n    C\n  D\n E\nF\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-beta\naccTitle: Ünï title\n        Problem\n  A\n      A1\n    A2\n  B\n C\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "---\ntitle: Root causes\n---\nishikawa-beta\n  Effect\n    Cause\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-beta Effect here\n    Effect with a long text that will need to be wrapped\n Long cause text that needs wrapping across several lines of the diagram\n Manpower\n Measurement\n fa:fa-check ok\n  Cause A\n <i>tag</i>\n Übergröße\n Measurement\n semi; colon\n B\n     with \"quote\"\n     $$b^2$$\n      semi; colon\n     Cause A\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa\n    Effect with a long text that will need to be wrapped\n      with \"quote\"\n  Environment\n  x&amp;y\n    Method\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "%% a comment\nishikawa-betaX\n    Late delivery\n  Measurement\n Method\n averyveryveryverylongwordwithoutanyspacesatallatall\n  Long cause text that needs wrapping across several lines of the diagram\n 日本語の原因\n tab\there\n $$b^2$$\n B\n dash - sep\n  dash - sep\n     fa:fa-check ok\n  with \"quote\"\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "\nishikawa-beta Effect here\n    Effect with a long text that will need to be wrapped\n Long cause text that needs wrapping across several lines of the diagram\n Manpower\n  $$b^2$$\n tab\there\n x&amp;y\n semi; colon\n Long cause text that needs wrapping across several lines of the diagram\n  Manpower\n   Cause A\n     semi; colon\n   Machine\n   Long cause text that needs wrapping across several lines of the diagram\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ISHIKAWA-BETA\n    Poor quality\n        emoji 😀\n             fa:fa-check ok\n    %% note\n            dash - sep\n        Environment\n    %% note\n            emoji 😀\n             semi; colon\n            tab\there\n\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa\n  Effect with a long text that will need to be wrapped\n a\n Manpower\n B\n  Environment\n  <i>tag</i>\n   Method\n    <i>tag</i>\n   emoji 😀\n fa:fa-check ok\n  Machine\n Machine\n with \"quote\"\n       Method\n\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-beta Effect here\n  Poor quality\n    x&amp;y\n    $$b^2$$\n     x&amp;y\n    semi; colon\n    Übergröße\n    100%\n    100%\n     dash - sep\n\n    日本語の原因\n    Method\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-beta\n  Effect with a long text that will need to be wrapped\n    x&amp;y\n    %% note\n    tab\there\n    $$b^2$$\n        日本語の原因\n            B\n            dash - sep\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "\nISHIKAWA-BETA\n    Effect with a long text that will need to be wrapped\n                        Environment\n                        with \"quote\"\n         with \"quote\"\n            emoji 😀\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-betaX\n    Poor quality\n    Long cause text that needs wrapping across several lines of the diagram\n                        <i>tag</i>\n    B\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa\nLate delivery\n  Material\n Material\n\n  dash - sep\n   x&amp;y\n    tab\there\n Cause A\n semi; colon\n Machine\n  Process\n  100%\n  日本語の原因\n dash - sep\n 100%\n   Cause A\n   with \"quote\"\n  Environment\n  Method\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa\n    Effect with a long text that will need to be wrapped\n  Long cause text that needs wrapping across several lines of the diagram\n  a\n  <i>tag</i>\n     Environment\n    <i>tag</i>\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-betaX\nLate delivery\n Process\n Long cause text that needs wrapping across several lines of the diagram\n\n  dash - sep\n  <i>tag</i>\n    %% note\n Long cause text that needs wrapping across several lines of the diagram\n Environment\n  Cause A\n Machine\n  日本語の原因\n       semi; colon\n     dash - sep\n      fa:fa-check ok\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "ishikawa-betaX\nBlurry Photo\n <i>tag</i>\n  dash - sep\n  $$b^2$$\n   dash - sep\n   Measurement\n  Measurement\n     dash - sep\n   Material\n with \"quote\"\n $$b^2$$\n <i>tag</i>\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "%% a comment\nishikawa-beta\n    Effect with a long text that will need to be wrapped\n\tB\n\tLong cause text that needs wrapping across several lines of the diagram\n\tManpower\n\tsemi; colon\n"
+ },
+ {
+  "type": "ishikawa",
+  "source": "---\ntitle: x < y\n---\nishikawa-beta\nEffect with a long text that will need to be wrapped\n    fa:fa-check ok\n                    x&amp;y\n                Übergröße\n\n            Manpower\n                Long cause text that needs wrapping across several lines of the diagram\n            100%\n            Measurement\n        Measurement\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\naccDescr {\n  multi line\n  description\n}\n  A task: 5\n  B task: 3:\n  C task: 1: a,b , c: ignored\n  D task:: x\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\n  accDescr {}title x\n  Task: 5"
+ },
+ {
+  "type": "journey",
+  "source": "journey\ntitle Adding journey diagram functionality to mermaid\nsection Documentation\nA task: 5: Alice, Bob, Charlie\nB task: 3:Bob, Charlie\nC task: 5\nD task: 5: Charlie, Alice\nE task: 5:\nsection Another section\nP task: 5:\nQ task: 5:\nR task: 5:"
+ },
+ {
+  "type": "journey",
+  "source": "---\ntitle: Ünï 😀 title\n---\njourney\n  accTitle: a\n  accDescr { b }\n  First: 3\n  section S\n  One<br>two: 2: A, B, C\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\n%% a comment line\n  top: 5\n  mid: 3\n  low: 1\n  big: 100\n  neg: -7\n  zero: 0\n  word: abc\n  blank: \n  half: 3.5\n  inf: Infinity\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\naccTitle: Ünï title\n  a: 5:\n  b: 3: , Real,\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\naccDescr {\n  multi line\n  description\n}\n  first: 3\n  section A\n  section B\n    b1: 3\n    b2: 3\n  section C\n    c1: 3\n  section D\n"
+ },
+ {
+  "type": "journey",
+  "source": "---\ntitle: Ünï 😀 title\n---\njourney\n  section A\n    a: 3\n  section A\n    b: 3\n  section B\n    c: 3\n  section A\n    d: 3\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\n  accTitle: Short name\n  accDescr {\n    A longer\n    description\n  }\n  a: 3\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\ntitle\nsection Work\nTask: 5: Me"
+ },
+ {
+  "type": "journey",
+  "source": "---\ntitle: x < y\n---\njourney \nsection Go to work\n    Long task name that should wrap across several lines when it is drawn:3:Ünïcode,Cat,Dog\n\n    日本語:1:\n    日本語:2.5:Ünïcode\nsection Late\n    $$b^2$$: 4 \n    $$b^2$$:3: ,alpha ,Long actor name\n    Go upstairs:0:\nsection Ünïcode section\n    <b>tag</b>:0x3:\nsection Go to work\n    Eat:-1:\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection Ünïcode section\n    Do work:3:, alpha,  spaced \n\n    $$b^2$$:2.5:\n    <b>tag</b>:4:Me\nsection Go to work\n    with \"quote\":2:alpha\nsection A very long section name that goes on and on and on\n    日本語::\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey \nsection A very long section name that goes on and on and on\n    Übung:6:Zed\n    日本語:-Infinity:Cat,  spaced , alpha\n"
+ },
+ {
+  "type": "journey",
+  "source": "---\ntitle: Front title\n---\njourney\nsection Go to work\n    Go upstairs:3.9:\n    Make tea:3:日本\n    日本語:4:\n    emoji 😀:1:\n    fa:fa-check ok::Bravo ,Bravo\n\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection Late\n    Long task name that should wrap across several lines when it is drawn:3.9:alpha\n    $$b^2$$:-Infinity:\n    <b>tag</b>::Dog\n    Übung:2:\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection Ünïcode section\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection Ünïcode section\n    日本語:1e1:Me,Dog,Ünïcode\n    日本語:3:\n    Sit down:2.5:\n    with \"quote\":5\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection Go to work\n    Do work:3\n    with \"quote\":-1\nsection Late\n    <b>tag</b>:abc:\nsection A very long section name that goes on and on and on\n    Sit down:Infinity:Long actor name ,Bravo ,日本\n    Übung:-1:Ünïcode,Ünïcode\n    Make tea:5:Me ,Dog ,日本\n"
+ },
+ {
+  "type": "journey",
+  "source": "journey\nsection A very long section name that goes on and on and on\n    a:3:Long actor name\n"
+ },
+ {
+  "type": "journey",
+  "source": "---\ntitle: Front title\n---\n%% comment\njourney\n    with \"quote\":0:日本\n    emoji 😀:-Infinity:Cat ,Bravo ,\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    ticketBaseUrl: \"https://tickets.example.com/browse/#TICKET#\"\n---\nkanban\n  Todo\n    id1[Task one]@{ ticket: ABC-1, assigned: \"Ann\" }\n    id2[Task two]@{ ticket: \"DEF-22\" }\n  Done\n    id3[Task three]@{ ticket: \"a b\" }"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    sectionWidth: 160\n---\nkanban\n  Ünï\n    ::icon(fa fa-bug)\n    Fix login bug\n      :::urgent\n    Create docs@{ assigned: K.Sveidqvist }\n    Create docs\n      ::icon(fa fa-book)\n    $$b^2$$@{ assigned: K.Sveidqvist }\n      ::icon(fa fa-bug)\n  fa:fa-check ok\n    id5[x&y]@{ shape: circle }\n      :::quiet\n      ::icon(fa fa-book)\n    x&y\n    id3[Update database function]@{ priority: 'very low' }\n    id2[fa:fa-check ok]\n      :::quiet\n    id1[Create docs]\n      ::icon(fa fa-book)\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    sectionWidth: 90\n---\nkanban\n  Ünï\n    $$b^2$$\n    A long card label that should wrap across several lines in the board\n      ::icon(fa fa-bug)\n    id1[Fix login bug]@{ priority: 'low' }\n      :::urgent\n      ::icon(fa fa-x)\n  fa:fa-check ok\n    Fix login bug@{ shape: cloud }\n      :::urgent\n    id2[Create docs]@{ priority: 'high' }\n    id1[Update database function]\n      ::icon(fa fa-x)\n  $$b^2$$\n    id4[A long card label that should wrap across several lines in the board]@{ ticket: MC-649, assigned: 'knsv', priority: 'High' }\n      ::icon(fa fa-bug)\n    id3[A long card label that should wrap across several lines in the board]\n    x&y\n    id1[Update database function]\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\n%% a comment line\n    root[The root]\n      "
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\naccDescr: one line description\nroot\n A\n \n\n B"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\naccDescr: one line description\ntodo\n a"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\ntodo\n a"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\ntodo\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\naccDescr: one line description\n  todo\n    a@{ icon: x, ticket: y }"
+ },
+ {
+  "type": "kanban",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  kanban:\n    ticketBaseUrl: 'javascript:alert(#TICKET#)'\n---\nkanban\n  todo\n    a[Task]@{ ticket: MC-1 }"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\naccDescr: one line description\n  todo\n    a[A]@{ priority: 'Very High' }\n    b[B]@{ priority: High }\n    c[C]@{ priority: Medium }\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\n\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\n  Ünï\n  Ready for deploy\n  id2[Todo]\n    :::urgent\n    ::icon(fa fa-bug)\n  Todo\n    id4[$$b^2$$]@{ shape: rounded }\n    Create docs\n    id6[A long card label that should wrap across several lines in the board]@{ ticket: MC-615, assigned: 'knsv', priority: 'Medium' }\n      ::icon(fa fa-bug)\n    id7[fa:fa-check ok]@{ ticket: MC-246, assigned: 'knsv', priority: 'Medium' }\n      id8[Update database function]\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    sectionWidth: 260\n---\nkanban\n  id0[Ready for deploy]\n  fa:fa-check ok\n  id2[In progress]\n\n  Ünï\n    id4[fa:fa-check ok]\n    A long card label that should wrap across several lines in the board@{ shape: circle }\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\n  fa:fa-check ok\n  In progress\n  id2[$$b^2$$]\n    $$b^2$$\n      ::icon(fa fa-bug)\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    sectionWidth: 260\n---\nkanban\n  fa:fa-check ok\n    ::icon(fa fa-book)\n    fa:fa-check ok@{ ticket: MC-531, assigned: 'knsv', priority: 'Low' }\n    id2[$$b^2$$]@{ label: \"Other label\" }\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    ticketBaseUrl: \"javascript:#TICKET#\"\n---\nkanban\n  id0[Ünï]\n    :::urgent\n  Todo\n  Backlog column with a long title that wraps\n"
+ },
+ {
+  "type": "kanban",
+  "source": "---\nconfig:\n  kanban:\n    ticketBaseUrl: \"https://tickets.example.com/browse/#TICKET#\"\n---\nkanban\n  $$b^2$$\n    id1[A long card label that should wrap across several lines in the board]\n    id2[x&y]\n"
+ },
+ {
+  "type": "kanban",
+  "source": "kanban\n  id0[fa:fa-check ok]\n"
+ },
+ {
+  "type": "kanban",
+  "source": "%% comment\nkanban\n  fa:fa-check ok\n    $$b^2$$\n      :::quiet\n  fa:fa-check ok\nid3[Fix login bug]@{ shape: rounded }\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\naccTitle: Ünï title\n    root"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n root((the root))\n "
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nroot\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\naccDescr: one line description\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n  root\n    Read\n    Write"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid4[\"Plan\"]\n        id5{{Tools}}\n            id8[emoji 🙂]\n            ((Research))\n            id8[emoji 🙂]\n                id5[\"a & b\"]\n                id7((Origins))\n                    id5[\"Tools\"]\n                        :::big-one\n                        ::icon(fa fa-tree)\n                fa:fa-check ok\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid8{{Ünï text}}\n    ((Tools))\n      :::big-one\n%% note\n      id5(a & b)\n\n%% note\n      id8[emoji 🙂]\n      \"Research\"\n      id8[Research]\n        id8[emoji 🙂]\n%% note\n    ((Origins))\n    id5))Ideas((\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nA long label that should wrap across several lines of the mindmap\n  ::icon(fa fa-tree)\n  id7{{Origins}}\n    :::hot\n  id5(a & b)\n  [Ünï text]\n  id4))Plan((\n  id8[\"Ünï text\"]\n  id5[Tools]\n    ((fa:fa-check ok))\n      id14{{fa:fa-check ok}}\n  id14[fa:fa-check ok]\n    :::cold\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid7{{Origins}}\n    \"emoji 🙂\"\n        id7{{Origins}}\n            :::big-one\n        id8((Ünï text))\n        id5{{Ideas}}\n            id14[\"fa:fa-check ok\"]\n        id5[\"a & b\"]\n            ::icon(fa fa-book)\n    [Ünï text]\n        \"Origins\"\n    [fa:fa-check ok]\n        Tools\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nPlan\n    :::big-one\n    id3[\"x<y\"]\n        ((Ideas))\n            :::big-one\n     id65{{A long label that should wrap across several lines of the mindmap}}\n         :::big-one\n        id8[\"Research\"]\n        Ideas\n            Origins\n                [A long label that should wrap across several lines of the mindmap]\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nIdeas\n    id5{{a & b}}\n         id4(Next)\n            id7((Origins))\n                [$$b^2$$]\n                    [Ideas]\n\n                    id5[\"Tools\"]\n                        :::cold\n                    id8{{emoji 🙂}}\n                    id8((Ünï text))\n                        fa:fa-check ok\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid65(A long label that should wrap across several lines of the mindmap)\n    id8[Research]\n  id5(a & b)\n    id4[Next]\n  id3[x<y]\n    :::hot\n  \"Research\"\n    :::hot\n  id8{{Research}}\n  id7))$$b^2$$((\n    ::icon(fa fa-book)\n  id5{{Tools}}\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n((Origins))\n  id8(Research)\n    [Ideas]\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid3{{x<y}}\n    id7[\"$$b^2$$\"]\n      :::cold\n      Origins\n    a & b\n\n      [Ünï text]\n        id4(Plan)\n        ((a & b))\n        id4(Next)\n          ::icon(fa fa-tree)\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid7($$b^2$$)\n    :::hot\n        id14[\"fa:fa-check ok\"]\n            ::icon(fa fa-book)\n    id8((Ünï text))\n    id8[\"Ünï text\"]\n    (($$b^2$$))\n        :::hot\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n\"Next\"\n    Ideas\n    id7($$b^2$$)\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\n((A long label that should wrap across several lines of the mindmap))\n        id8(Research)\n            ((a & b))\n\n            x<y\n            id5(Ideas)\n        id5[Ideas]\n        id5))Ideas((\n\n        id5{{a & b}}\n            \"Ideas\"\n            id5[Ideas]\n                :::cold\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nTools\n        Tools\n        id4(Next)\n            id4[\"Plan\"]\n                id7{{$$b^2$$}}\n"
+ },
+ {
+  "type": "mindmap",
+  "source": "mindmap\nid4[Plan]\n    id8((Research))\n        ::icon(fa fa-book)\n\n    id65{{A long label that should wrap across several lines of the mindmap}}\n        id65))A long label that should wrap across several lines of the mindmap((\n        \"x<y\"\n            ::icon(fa fa-tree)\n    id3((x<y))\n        id8[\"Ünï text\"]\n        id5[\"Tools\"]\n\n        id5((Tools))\n            [A long label that should wrap across several lines of the mindmap]\n                \"a & b\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 32\n    paddingY: 30\n    bitOrder: descending\n---\n%% a comment\npacket-beta\n+48: \"Data (variable length)\"\n+1: \"emoji 😀 field\"\n49 -52: \"Source Port\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    rowHeight: 32\n    bitOrder: ascending\n---\npacket\n0 -15 : \"averyveryveryverylongwordwithoutanyspacesatall\"\n+64: \"日本語フィールド\"\n+16: \"Übergrößenträger\"\n96-103: \"Data (variable length)\"\n104: \"Flags\"\n+8: \"a\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 5000\n    rowHeight: 0\n    paddingX: 600\n    paddingY: 2\n---\npacket\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 0.5\n    paddingX: 0\n    paddingY: 0\n    showBits: true\n---\npacket\naccDescr: A packet\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitWidth: 0\n    paddingX: 0\n    showBits: false\n---\npacket\naccTitle: Packet\n0-31: \"a\"\n+16: \"Source Port\"\n48 -55 : \"Flags\"\n56-71: \"A very long field label that cannot possibly fit in a small box\"\n72 -75: \"a\"\n76-83:\"Sequence Number\"\n\n84-91: \"Flags\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    rowHeight: 500\n    paddingY: 30\n---\npacket\n0-7:\"URG\"\n8- 40: \"averyveryveryverylongwordwithoutanyspacesatall\"\n+33: \"URG\"\n74- 76:\"averyveryveryverylongwordwithoutanyspacesatall\"\n77-124: \"Flags\"\n125-188: \"averyveryveryverylongwordwithoutanyspacesatall\"\n\n189-204: \"with \\\"quote\\\"\"\n+1: \"Source Port\"\n206-253: \"x&amp;y\"\n+1: \"a\"\n\n"
+ },
+ {
+  "type": "packet",
+  "source": "packet\ntitle TCP Packet\n0 -31:\"A very long field label that cannot possibly fit in a small box\"\n+8: \"averyveryveryverylongwordwithoutanyspacesatall\"\n40-87: \" padded \"\n88: \"Flags\"\n89: \"日本語フィールド\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 8\n    rowHeight: 0\n---\npacket-beta\n0: \"emoji 😀 field\"\n1-4 : \"Reserved\"\n5-14: \"Übergrößenträger\"\n15-22: \"日本語フィールド\"\n23 -38:\"A very long field label that cannot possibly fit in a small box\"\n\n39-41 : \"<b>b</b>\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    showBits: true\n---\npacket-beta\n0-63: \"日本語フィールド\"\n64 -65: \"Flags\"\n+16: \"a\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 7.9\n    paddingX: 1\n---\npacket-beta\ntitle x < y\n0- 15 : \"Reserved\"\n16 - 23 : \"Flags\"\n24- 61: \"Source Port\"\n62: \" padded \"\n63- 64 : \"Source Port\"\n\n+16: \"Flags\"\n%% note\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 7.9\n    showBits: false\n---\npacket\ntitle TCP Packet\naccTitle: Packet\n0 -31:\"a\"\n%% note\n+8: \"Reserved\"\n40-71 : \"Übergrößenträger\"\n72-135: \"URG\"\n136-167: \"A very long field label that cannot possibly fit in a small box\"\n168: \"Data (variable length)\"\n169-176: \"x&amp;y\"\n177-192 : \"URG\"\n\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    paddingY: 30\n---\npacket\n0-15: \"a\"\n16 - 79:\"Flags\"\n80- 143: \"\"\n144 - 175 : \"emoji 😀 field\"\n176: \"with \\\"quote\\\"\"\n177-184: \"Flags\"\n185 -200: \"Flags\"\n201-232: \"emoji 😀 field\"\n+1: \"Übergrößenträger\"\n234 -281: \"Source Port\"\n%% note\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 32\n    paddingX: 0\n    paddingY: 5\n    useMaxWidth: false\n---\n%% a comment\npacket\ntitle T&amp;C\n0-47:\"<b>b</b>\"\n+16: \"Flags\"\n64 -65:\"URG\"\n66-68: \"<b>b</b>\"\n+8: \"URG\"\n+3: \"日本語フィールド\"\n80- 83:\"with \\\"quote\\\"\"\n84-99 : \"日本語フィールド\"\n100 - 103 : \"Source Port\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "packet-beta\n0: \"with \\\"quote\\\"\"\n+3: \"with \\\"quote\\\"\"\n4 -5: \"\"\n6-13: \"Destination Port\"\n14-29: \"emoji 😀 field\"\n30 - 45: \"x&amp;y\"\n46- 53: \"emoji 😀 field\"\n54-61: \"Reserved\"\n62-77: \"\"\n78-125: \"A very long field label that cannot possibly fit in a small box\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    rowHeight: 32\n    bitWidth: 5\n    paddingX: 20\n    bitOrder: ascending\n---\npacket\n+3: \"日本語フィールド\"\n3- 18:\"a\"\n19-82: \"Source Port\"\n83 - 86:\"日本語フィールド\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    rowHeight: 60\n    bitOrder: descending\n---\npacket\naccTitle: Packet\n+3: \"emoji 😀 field\"\n+3: \"with \\\"quote\\\"\"\n6: \"with \\\"quote\\\"\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    rowHeight: 500\n    bitWidth: 5\n    bitOrder: descending\n---\n%% a comment\npacket\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitWidth: 5\n---\npacket\n0-47: \" padded \"\n48 -63 : \"Flags\"\n+1: \"Flags\"\n65- 125 : \"emoji 😀 field\"\n126-141 : \"URG\"\n142-143: \"A very long field label that cannot possibly fit in a small box\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 5000\n    paddingX: 0\n    showBits: false\n    useMaxWidth: false\n---\npacket\naccDescr: A packet\n0: \"emoji 😀 field\"\n"
+ },
+ {
+  "type": "packet",
+  "source": "---\nconfig:\n  packet:\n    bitsPerRow: 16\n    bitWidth: 0\n    useMaxWidth: false\n---\npacket-beta\n+2: \"emoji 😀 field\"\n2-9: \"Destination Port\"\n+8: \"averyveryveryverylongwordwithoutanyspacesatall\"\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 0.5\n    donutHole: -1\n    legendPosition: left\n---\npie showData\n    accTitle: Chart\n\t\"back\\\\slash\" :1000000\n'it\\'s' : 37896\n    %% note\n\t\"North\": 1\n\t\"long label that keeps going and going well past any reasonable width\" : 76.3\n    \"tab\there\": 8.70\n\"Dogs\" : 63.5\n    \"<b>bold</b>\": 7\n\"#fff\": 16\n\t\"B\" : 0.977\n    \"Iron\" :5\n    \"a\" : 7\n    %% note\n' ' :16\n    'tab\there': 14\n\t\"B\" : 67.8953\n    %% note\n\t\"with \\\"quote\\\"\":1000000\n    \"tab\there\":94.3090\n    'B' : 1\n\t'' :44.5718\n\" \" : 94909\n\t'Iron':1000000\n    %% note\n\"Übergrößenträger\":4.91\n\"\": 72241\n\t\"it's\" : -0\n    \"back\\\\slash\" :2.13\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: 0.2\n    legendPosition: right\n    useMaxWidth: false\n  themeVariables:\n    pie1: \"rgb(+5 5 5)\"\n    pie2: \"rgb(.5 .5 .5)\"\n    pie3: \"light-dark(red, blue)\"\n    pie4: \"#7a7a7a\"\n---\npie showData title T&amp;C\n    title Two\n    accTitle: Chart\n\t\"emoji 😀\" :5000\n    \"tab\there\" :3\n'Rats':0.2\n    \"Cats\": 3\n\t\"<b>bold</b>\": 1\n    \"Q1 2024\" :0.01\n    \"with \\\"quote\\\"\" : 0.01\n    \"\" : 0.2\n    \" \": 3\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: 0.5\n---\npie\n\"North\":19\n\n\"Iron\" :397\n    \"Calcium\" : 1000000\n    %% note\n\t\"日本語\": 336\n\"tab\there\" :2\n\t\"tab\there\" : 224\n    \"B\" : 0.347\n\"\":7\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1\n    legendPosition: center\n---\npie\n    \"#fff\" : 2\n\t\"Calcium\" : 3\n\t\"long label that keeps going and going well past any reasonable width\" : 0.627\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1.5\n    legendPosition: left\n---\npie showData\n\t\"Dogs\": 5000\n\t\"Dogs\":3\n\"Cats\":3\n\"Übergrößenträger\": 0.2\n    \"<b>bold</b>\": 0.01\n\"B\": 1\n\t\"<b>bold</b>\" :0.01\n    'B': 1\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  themeVariables:\n    pie1: \"#6e6e6e\"\n    pie2: \"#0008\"\n    pie3: \"#abcd\"\n---\npie showData\n    accDescr: A chart\n\t\"North\" : 191\n\"North\" : 224\n    \"#fff\": 4\n\t\"\":44698\n'North' : 64484\n\"emoji 😀\" :9.25\n\t\"tab\there\":222\n    \"B\": 3\n    \"a&amp;b\": 7\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 0.25\n    donutHole: -1\n  themeVariables:\n    pie1: \"rgba(0,0,0,.4)\"\n    pie2: \"#7f7f7f\"\n---\npie title A very long title that goes on and on and on and on and on\n    accTitle:   spaced  \n    accDescr: A chart\n    'North' : 5000\n    %% note\n    \"back\\\\slash\": 1\n    \"tab\there\" :1\n    %% note\n\t\" \": 1\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: 0.2\n    legendPosition: center\n  themeVariables:\n    pie1: \"#777777\"\n    pie2: \"#757575\"\n    pie3: \"rgba(255, 255, 255, 0.9)\"\n    pie4: \"#777777\"\n    pie5: \"hsl(90deg, 100%, 25%)\"\n---\npie\n\t\"<b>bold</b>\": 28\n\t\"#fff\" : 1748\n\"Übergrößenträger\" : 4.49\n\t\" \" : 3\n    \"\": 6.52\n\t\"100%\": -0\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1\n    donutHole: -1\n    legendPosition: center\n  themeVariables:\n    pie1: \"#abcd\"\n    pie2: \"rgb(1e1 2 3)\"\n---\npie showData\n    accDescr {\n      one\n        two\n    }\n    '日本語' :5000\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 0.9\n    legendPosition: top\n  themeVariables:\n    pie1: \"url(x)\"\n    pie2: \"red\"\n    pie3: \"RGB(9 9 9)\"\n    pie4: \"light-dark(red, blue)\"\n    pie5: \"hsl(200grad 60% 70%)\"\n---\npie\n\"back\\\\slash\" : 44096\n    \"long label that keeps going and going well past any reasonable width\" :3\n\n    \"B\": 7\n\t\"Dogs\" :35.71\n\t\"#fff\" : 0\n    %% note\n\t\"tab\there\" :7\n\t\"#fff\": 10\n    'Cats':0.132\n    ' ' : 0\n    \"North\" :1000000\n\t\"\": 0\n\"tab\there\": 7\n\t\"North\" : 1000000\n\t\"a\" : 192\n\t\"a&amp;b\" : 0.867\n\t'long label that keeps going and going well past any reasonable width' : 1000000\n    \"Cats\": 0.935\n    \"Dogs\":96045\n\t\"it's\" :0.608\n\"Iron\": 6.69\n\"with \\\"quote\\\"\" : 6.81\n\t\"#fff\" : 45\n    \"Iron\":5.69\n\t\"Dogs\":2.10\n    \"Iron\" :7\n\"<b>bold</b>\":96015\n\"Iron\": 0.369\n    'Q1 2024' : 94.6439\n    \"Cats\": 2\n    \"with \\\"quote\\\"\" : 2\n\"Cats\" :55919\n\"Calcium\": -0\n\t'tab\there':1000000\n'Rats': 74747\n    \"it's\":7\n\"\":1000000\n\n\" \":4\n    \"Iron\":76666\n    \"emoji 😀\": 5\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: -1\n    legendPosition: left\n---\npie showData\n    \"emoji 😀\" :1\n\"Calcium\":251\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    legendPosition: bottom\n  themeVariables:\n    pie1: \"rgb(1, 2, 3\"\n    pie2: \"#757575\"\n    pie3: \"#abcd\"\n    pie4: \"rgb(300 0 0)\"\n---\npie\n    title Later\n\t\"B\": 7\n\t'<b>bold</b>': 5.56\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1\n    donutHole: -1\n---\n%% a comment\npie showData\n    accTitle: Chart\n    \"<b>bold</b>\" : 5000\n    \"Q1 2024\":0.2\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1\n    legendPosition: right\n  themeVariables:\n    pie1: \"rgb(0 0 0 / 0.3)\"\n    pie2: \"#757575\"\n    pie3: \"Grey\"\n---\npie showData title A very long title that goes on and on and on and on and on\n\"emoji 😀\" : 5000\n    \"Übergrößenträger\" :0.2\n\t\"#fff\": 0.2\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1.5\n---\npie showData  title Pets\n\t'': 26481\n\t\"a\":5\n    \"<b>bold</b>\" : 0\n    \"Dogs\" : 45802\n\"日本語\":95.102\n\t\"Q1 2024\": 8.44\n\"B\" : 2\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: 0\n---\npie\n    title Later\n    accDescr: A chart\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: 1\n---\npie showData\n    \"long label that keeps going and going well past any reasonable width\" : 4\n\t' ' : 381\n\"North\" :91615\n    \"Rats\": 9.63\n    '100%': 198\n    %% note\n\t\"back\\\\slash\" :60.850\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    textPosition: -1\n  themeVariables:\n    pie1: 5\n    pie2: \"#787878\"\n---\npie\n    accTitle: Chart\n    accDescr: A chart\n'#fff' :10\n\"日本語\" : 7\n\n\t\"Q1 2024\" :0\n\"B\":0\n\t'' : 3\n\t\"\" : 333\n\"with \\\"quote\\\"\" :1000000\n\n\t'' :5\n\"it's\" : 305\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    donutHole: 0.95\n---\npie showData\n\t\"Iron\" :7.9\n\"<b>bold</b>\": 4\n    \"Übergrößenträger\": 6\n    \"Q1 2024\":13.27\n\t\"North\" :15\n\"Q1 2024\" :64\n\"a&amp;b\" :12\n    \"Cats\": 4.38\n"
+ },
+ {
+  "type": "pie",
+  "source": "---\nconfig:\n  pie:\n    legendPosition: right\n    useMaxWidth: false\n---\npie showData\n    title Two\n    accTitle: Chart\n\"Rats\" :-0\n    \"<b>bold</b>\":7\n\t'Q1 2024' :11\n\"North\":1000000\n\t\"it's\" : 9.90\n'Q1 2024' :2\n\"日本語\" : 7\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccDescr {\n  multi line\n  description\n}\n      title Analytics and Business Intelligence Platforms\n      x-axis \"Completeness of Vision ❤\" --> \"x-axis-2\"\n      y-axis Ability to Execute --> \"y-axis-2\"\n      quadrant-1 Leaders\n      quadrant-2 Challengers\n      quadrant-3 Niche\n      quadrant-4 Visionaries\n      Microsoft: [0.75, 0.75] stroke-color: #ff00ff ,stroke-width: 10px, color: #ff0000, radius: 10\n      Salesforce:::class1: [0.55, 0.60] radius: 10, color: #ff0000\n      IBM: [0.51, 0.40] stroke-color: #ff00ff ,stroke-width: 10px\n      Incorta: [0.20, 0.30] stroke-width: 10px"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccTitle: Ünï title\n       x-AxIs         \"Urgent(* +=[❤\""
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\n       x-AxIs         \"Urgent(* +=[❤\"  --> "
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccDescr {\n  multi line\n  description\n}\nquadrant-4 delete"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\nquadrant-1 需要扩展"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "---\ntitle: Ünï 😀 title\n---\nquadrantChart\nx-axis 低覆盖率 --> 高覆盖率"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccDescr: one line description\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccTitle: Ünï title\nA: [0.5, 0.5] "
+ },
+ {
+  "type": "quadrantChart",
+  "source": "---\ntitle: Ünï 😀 title\n---\nquadrantChart\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\n        A: [0.1, 0.1] radius: 12\n        B:::c1: [0.2, 0.2] color: #ff3300, radius: 10\n        C:::c2: [0.3, 0.3]\n        D: [0.4, 0.4] color: 00f, stroke-width: 3px\n        E: [0.5, 0.5] stroke-color: #00ff00\n        classDef c1 color: #109060\n        classDef c2 color: #908342, radius : 9, stroke-color: #310085, stroke-width: 10px"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\naccDescr: one line description\n accTitle: Priorities\n accDescr: Four boxes\n quadrant-1 Plan"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "---\nconfig:\n  quadrantChart:\n    chartWidth: 400\n    chartHeight: 400\n  themeVariables:\n    quadrant1TextFill: \"ff0000\"\n---\nquadrantChart\n  x-axis Urgent --> Not Urgent\n  y-axis Not Important --> \"Important ❤\"\n  quadrant-1 Plan\n  quadrant-2 Do\n  quadrant-3 Delegate\n  quadrant-4 Delete\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "%% comment\nquadrantChart\nx-axis Low Engagement --> Low Engagement\ny-axis A longer axis label\nquadrant-2 Need to promote\nquadrant-3 Ünï\nquadrant-4 Long quadrant label text that could need wrapping in narrow tiles\nZeta: [0.25, 0.1]\nemoji 😀: [0.25, 0.6]\nÜnïcode point: [0, 1]\nZeta:::hot: [0, 0.0]\nemoji 😀: [0.25, 0.0]\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\nquadrant-2 Need to promote\nquadrant-3 Need to promote\nCampaign B: [0, 0.1]\nÜnïcode point: [0.45, 0.5] stroke-width: 2px\nCampaign B:::hot: [0.5, 0.5]\nZeta: [1, 0.6]\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\ntitle A title: colon\nquadrant-2 We should expand\nquadrant-4 Ünï\nPt: [0.0, 0.23]\nProduct X: [0.99, 0.23]\nProduct X: [0.25, 0.9]\nZeta:::hot: [0.99, 0] radius: 10, color: #ff0000\nPt: [0.75, 0]\nA very long point label that goes on and on: [0.99, 0.23]\nProduct X: [0.75, 0.23]\nÜnïcode point: [1, 0.9]\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\ny-axis High Engagement\nquadrant-1 Long quadrant label text that could need wrapping in narrow tiles\nquadrant-2 Re-evaluate\nclassDef class1 radius: 12, color: #ff0000\nZeta: [0.3, 0.0]\nÜnïcode point: [0.45, 0.6]\nCampaign A:::missing: [1, 0.9]\nÜnïcode point:::hot: [0.75, 0.9]\n日本: [0.0, 0]\n日本: [0.5, 0.5]\n日本: [0.75, 0.0]\nPt: [1, 0.23] stroke-width: 2px\nPt: [0.3, 0.1]\nCampaign A: [1, 0.23] radius: 20, color: #ff0000\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\ntitle A title: colon\ny-axis High Reach\nquadrant-3 We should expand\nclassDef class1 color: #109060\nemoji 😀: [0.25, 0.9]\nA very long point label that goes on and on: [0.99, 0.0]\nemoji 😀: [0.5, 1]\nemoji 😀: [0.5, 0.9]\n日本:::class1: [0.5, 0] radius: 10, color: #abc\nPt: [0.75, 0.9]\nPt: [0.45, 0.0]\nPt: [0.25, 0.5] stroke-width: 2px\nCampaign A: [0.45, 0]\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\ntitle A title: colon\nx-axis High Reach --> Low Reach\nclassDef cold radius: 4, color: #abc\nCampaign A: [0.5, 1]\nA very long point label that goes on and on: [0.45, 0.6]\nZeta: [0.0, 0.6]\nCampaign A: [0.0, 0.5] radius: 4, color: #ff0000\nemoji 😀: [0.99, 0.5]\nPt: [0.3, 0.23]\nPt:::hot: [0.5, 0.1] radius: 10, color: #ff0000\nProduct X: [0.3, 0.23]\nemoji 😀: [0, 0]\nCampaign A: [0.25, 0.5] radius: 4, color: #abc\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "quadrantChart\ntitle Reach and engagement\nx-axis High Engagement --> A longer axis label\nquadrant-1 Long quadrant label text that could need wrapping in narrow tiles\nquadrant-3 May be improved\nquadrant-4 We should expand\nCampaign B: [0.5, 0]\nPt: [0.0, 0.9]\n日本: [0.75, 0]\nÜnïcode point: [0.0, 0.1]\nCampaign B:::class1: [0.45, 0]\nPt: [0.45, 0.0] radius: 20, color: #ff0000\nemoji 😀: [0.99, 0] stroke-width: 2px\nCampaign B: [0.5, 0.9] stroke-width: 2px\nemoji 😀:::missing: [0.5, 0.6]\nCampaign B: [1, 0.5]\n"
+ },
+ {
+  "type": "quadrantChart",
+  "source": "---\nconfig:\n  quadrantChart:\n    pointRadius: 8\n    titlePadding: 20\n---\nquadrantChart\ntitle A title: colon\ny-axis High Engagement --> High Engagement\nquadrant-1 Re-evaluate\nquadrant-4 Long quadrant label text that could need wrapping in narrow tiles\nCampaign A: [0.45, 0.5]\nZeta: [0.99, 0.0]\nÜnïcode point: [0.99, 1] radius: 4, color: #ff0000\n日本: [0.5, 1] stroke-width: 2px\nCampaign B: [0.75, 0.1]\nCampaign A:::hot: [1, 0.0]\nProduct X: [0.5, 0.0]\nCampaign A: [0.45, 0.9]\nPt: [0.45, 0.9]\nZeta: [0.45, 0.6]\n"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta\n    axis A,B,C\n    curve mycurve{ C: 3, A: 1, B: 2 }"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naxis A,B\ncurve c { B: 2, A 1 }\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naccDescr: one line description\naxis A\ncurve c{\n\n1,\n\n2\n\n}, d[\"D\"]{ A:3 }\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\ntitle T\naxis A"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta\naxis circles"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta\ngraticule %%{init: {}}%% circlecurve x{1}"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta\nticks 5 ticks 6\nticks 7"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naccDescr: one line description\naxis A, A\ncurve c{A 1, A 2}"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naccTitle: Ünï title\n  axis a, b, c\n  curve x{1,2,3}"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Ünï 😀 title\n---\nradar-beta\n curve c{1,2,3}"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\n  title Restaurant Comparison\n  axis food[\"Food Quality\"], service[\"Service\"], price[\"Price\"]\n  axis ambiance[\"Ambiance\"]\n\n  curve a[\"Restaurant A\"]{4, 3, 2, 4}\n  curve b[\"Restaurant B\"]{3, 4, 3, 3}\n  curve c[\"Restaurant C\"]{2, 3, 4, 2}\n  curve d[\"Restaurant D\"]{2, 2, 4, 3}\n\n  graticule polygon\n  max 5\n\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta:\naxis ax0, ax1[\"Axis 1 label\"], ax2, ax3[\"Axis 3 label\"], ax4\ncurve c0 {ax0: 3, ax1: 12.25, ax2: 0, ax3: 1, ax4: 2}\ncurve c1 {2, 0, 10, 10, 10}\ncurve c2 {3, 10, 3, 3, 10}\ncurve c3 {10, 1, 10, 12.25, 12.25}\n"
+ },
+ {
+  "type": "radar",
+  "source": "%% comment\nradar-beta:\naxis ax0, ax1\ncurve c0 {ax0: 0, ax1: 7}\ncurve c1[\"Curve 1\"] {ax0: 10, ax1: 1}\ncurve c2[\"Curve 2\"] {ax0: 3, ax1: 2}\ngraticule circle, ticks 6\n"
+ },
+ {
+  "type": "radar",
+  "source": "---\ntitle: Front\n---\nradar-beta\ntitle Skills\naxis ax0, ax1[\"Axis 1 label\"], ax2[\"Axis 2 label\"]\ncurve c0[\"Curve 0\"] {3, 3, 2}\ncurve c1 {1, 4.5, 10}\ncurve c2[\"Curve 2\"] {2, 0, 3}\ncurve c3[\"Curve 3\"] {7, 1, 4.5}\nmin 1\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naxis ax0[\"Axis 0 label\"], ax1, ax2[\"Axis 2 label\"], ax3[\"Axis 3 label\"], ax4[\"Axis 4 label\"]\ncurve c0 {1, 10, 2, 1, 4.5}\nmin 0.5, max 9.5\n"
+ },
+ {
+  "type": "radar",
+  "source": "%% comment\nradar-beta:\ntitle Skills\naxis ax0[\"Axis 0 label\"], ax1\ncurve c0[\"Curve 0\"] {10, 7}\ncurve c1[\"Curve 1\"] {10, 3, 10}\ncurve c2[\"Curve 2\"] {0, 1}\ngraticule polygon\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta:\naxis ax0[\"Axis 0 label\"], ax1[\"Axis 1 label\"], ax2, ax3[\"Axis 3 label\"]\ncurve c0[\"Curve 0\"] {ax0: 2, ax1: 12.25, ax2: 10, ax3: 10}\nticks 40\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naxis ax0[\"Axis 0 label\"], ax1[\"Axis 1 label\"], ax2[\"Axis 2 label\"], ax3\ncurve c0[\"Curve 0\"] {4.5, 3, 12.25, 10}\ncurve c1[\"Curve 1\"] {0, 7, 10, 3}\ncurve c2 {4.5, 2, 12.25, 12.25}\ncurve c3 {ax0: 12.25, ax1: 2, ax2: 0.5, ax3: 10}\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta:\naccDescr: A description\naxis ax0[\"Axis 0 label\"], ax1, ax2, ax3\ncurve c0 {1, 2, 0, 0.5}\nshowLegend false\n"
+ },
+ {
+  "type": "radar",
+  "source": "radar-beta\naccDescr: A description\naxis ax0[\"Axis 0 label\"], ax1\ncurve c0[\"Curve 0\"] {ax0: 2, ax1: 3}\ncurve c1 {0.5, 2}\ncurve c2 {3, 4.5}\ngraticule polygon\n"
+ },
+ {
+  "type": "railroad",
+  "source": "\n%% a comment line\n        railroad-ebnf-beta\n        rule = \"a\" | \"b\" | \"c\" ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "\n        railroad-ebnf-beta\n        rule = ? special ? ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-peg-beta\naccTitle: Ünï title\nrule <- \"test\" ;"
+ },
+ {
+  "type": "railroad",
+  "source": "\n        railroad-peg-beta\n        rule <- \"a\"* ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "\n        railroad-peg-beta\n        rule <- !\"a\" ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "\n%% a comment line\n        railroad-peg-beta\n        title \"Test Grammar\"\n        rule <- \"a\" ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "\n        railroad-beta\n        rule = sequence(\n            choice(terminal(\"a\"), terminal(\"b\")),\n            oneOrMore(choice(terminal(\"c\"), terminal(\"d\")))\n        ) ;\n      "
+ },
+ {
+  "type": "railroad",
+  "source": "---\ntitle: Ünï 😀 title\n---\nrailroad-abnf-beta\n"
+ },
+ {
+  "type": "railroad",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\ntitle: From front matter\n---\nrailroad-peg-beta\nR <- a ;"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-ebnf-beta\n%% a comment line\ntitle Only a title"
+ },
+ {
+  "type": "railroad",
+  "source": "---\ntitle: Ünï 😀 title\n---\nrailroad-ebnf-beta\nr = a ( b | \"c\" )+ ;"
+ },
+ {
+  "type": "railroad",
+  "source": "---\n%% a comment line\ntitle: x\n---\nrailroad-beta\nr = choice(terminal(\"a\"), sequence(terminal(\"b\"), terminal(\"c\")), special(\"d\")) ;"
+ },
+ {
+  "type": "railroad",
+  "source": "---\ntitle: Ünï 😀 title\n---\nrailroad-ebnf-beta\nr = a , b , c ;\ns ::= \"x\" | [ y ] | { z } | ( a b ) ;"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-peg-beta\naccDescr {\n  multi line\n  description\n}\n# a comment\nR <- \"a\" # another\n  / 'b' ;"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-ebnf-beta\naccTitle: Ünï title\ntitle \"Optional Sign\"\n\nsign = \"+\" | \"-\" ;\nnumber = sign? digit+ ;\ndigit = \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" ;\n"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-beta\nfactor = sequence(choice(choice(nonterminal(\"sel\"), nonterminal(\"sel\"), nonterminal(\"0\")), special(\"sel\"), sequence(terminal(\"x y\"), special(\"x y\"), nonterminal(\"0\"))), terminal(\"x y\")) ;\nletter = optional(nonterminal(\"a\")) ;\nterm = oneOrMore(terminal(\"x y\")) ;\n"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-ebnf-beta\nfactor = \"*\" | ( name_x , stmt-list | ( ?a special sequence?, \"a\\\"b\" - \"select\", ?a special sequence? | \"  x  \" | term + , ?special text? ) ), 'a', \"select\" | ?a special sequence?, { letter + | [ stmt-list , digit | digit, stmt-list *, \"a\\\"b\" ] } ;\n"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-beta\nexpr = terminal(\"0\") ;\nletter = oneOrMore(optional(special(\"a\"))) ;\ndigit = choice(oneOrMore(oneOrMore(nonterminal(\"0\"))), special(\"sel\"), special(\"a\")) ;\nstmt-list = choice(oneOrMore(oneOrMore(special(\"0\")))) ;\n"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-ebnf-beta\nterm = ( \"<br>\", ( \"  x  \" *, \"*\", stmt-list ) | ?special text? ? ) +, ( factor , 'a' , ( \"0\" , stmt-list | \"*\" * ) | factor, { letter | \"<br>\" } * ) +, term ;\nstmt-list = 'a' ;\n"
+ },
+ {
+  "type": "railroad",
+  "source": "railroad-beta\nletter = zeroOrMore(zeroOrMore(nonterminal(\"sel\"))) ;\nletter = nonterminal(\"0\") ;\nexpr = sequence(zeroOrMore(choice(special(\"sel\"), terminal(\"a\"), nonterminal(\"x y\"))), optional(optional(terminal(\"a\")))) ;\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\n%% a comment line\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\naccDescr: one line description\n  requirement checkout_req {\n    id: 1\n    text: Orders must be payable online.\n    risk: high\n    verifymethod: test\n  }\n  functionalRequirement payment_req {\n    id: 1.1\n    text: Card payments must be authorised.\n    risk: high\n    verifymethod: test\n  }\n  element checkout_service {\n    type: service\n  }\n  checkout_req - contains -> payment_req\n  checkout_service - satisfies -> payment_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\naccTitle: Ünï title\n\ndirection LR\n\nrequirement test_req {\n    id: 1\n    text: the test text.\n    risk: high\n    verifymethod: test\n}\n\nelement test_entity {\n    type: simulation\n}\n\ntest_entity - satisfies -> test_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nelement req_a {\n  type: simulation\n}\ndesignConstraint payment_req {\n  id: 92\n  text: a longer requirement text\n  verifymethod: demonstration\n}\nclassDef hot fill:#f9f,stroke:#333\nrequirement req_b {\n  id: 87\n  text: a longer requirement text\n  risk: low\n}\nelement entity_a {\n  type: word doc\n}\npayment_req - refines -> req_b\nreq_a - satisfies -> payment_req\npayment_req - satisfies -> entity_a\nstyle entity_a fill:#f9f,stroke:#333\nclass req_a cold\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nphysicalRequirement payment_req {\n  id: 57\n  text: a longer requirement text\n  verifymethod: analysis\n}\nfunctionalRequirement test_req {\n  id: 29\n  text: Quoted text here\n  verifymethod: analysis\n}\nelement payment_req {\n  type: word doc\n}\nelement payment_req {\n  type: simulation\n}\nphysicalRequirement payment_req {\n  risk: high\n  verifymethod: test\n}\npayment_req - contains -> payment_req\npayment_req - refines -> payment_req\npayment_req - derives -> payment_req\nstyle payment_req fill:#f9f,stroke:#333\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nelement req_a {\n}\nelement payment_req {\n  docref: doc1\n}\nphysicalRequirement req_a {\n  text: the test text\n  verifymethod: analysis\n}\nperformanceRequirement checkout_service {\n  id: 78\n  text: Quoted text here\n  risk: medium\n}\nfunctionalRequirement req_b {\n  id: 26\n  text: the test text\n  risk: low\n}\nelement test_req {\n}\nreq_a - copies -> test_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nphysicalRequirement payment_req {\n  id: 81\n  risk: medium\n  verifymethod: analysis\n}\nperformanceRequirement payment_req {\n  text: the test text\n  risk: medium\n  verifymethod: analysis\n}\nperformanceRequirement checkout_service {\n  id: 33\n  text: Quoted text here\n  verifymethod: inspection\n}\ndesignConstraint entity_a {\n  id: 47\n  text: the test text\n}\ncheckout_service - contains -> payment_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nelement checkout_service {\n  type: word doc\n}\nperformanceRequirement entity_a {\n  id: 66\n  verifymethod: inspection\n}\nphysicalRequirement entity_a {\n  id: 87\n  text: Quoted text here\n  verifymethod: test\n}\nphysicalRequirement req_a {\n  id: 28\n  text: a longer requirement text\n  risk: high\n}\nelement entity_a {\n  type: word doc\n}\nperformanceRequirement checkout_service {\n  id: 93\n  text: a longer requirement text\n  verifymethod: inspection\n}\nstyle checkout_service fill:#f9f,stroke:#333\nclass entity_a cold\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\ndirection RL\nperformanceRequirement payment_req {\n  text: Quoted text here\n  risk: high\n}\nrequirement entity_a {\n  id: 58\n  text: Quoted text here\n  risk: medium\n}\nphysicalRequirement req_b {\n  id: 72\n  text: a longer requirement text\n  risk: low\n  verifymethod: analysis\n}\nperformanceRequirement checkout_service {\n  id: 11\n  risk: low\n  verifymethod: demonstration\n}\ninterfaceRequirement checkout_service {\n  id: 35\n  verifymethod: analysis\n}\ncheckout_service - traces -> req_b\nclass entity_a hot\n"
+ },
+ {
+  "type": "requirement",
+  "source": "---\nconfig:\n  theme: default\n---\nrequirementDiagram\nelement entity_a {\n  type: simulation\n}\ndesignConstraint payment_req {\n  id: 78\n  text: the test text\n  risk: high\n  verifymethod: analysis\n}\nelement entity_a {\n  docref: doc1\n}\nentity_a - contains -> entity_a\nentity_a - contains -> payment_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nrequirement entity_a {\n  id: 56\n  text: the test text\n}\nrequirement entity_a {\n  id: 3\n  risk: high\n}\nelement req_b {\n  type: word doc\n}\nphysicalRequirement req_a {\n  id: 95\n  text: Quoted text here\n  risk: high\n}\nreq_a - verifies -> entity_a\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\ndesignConstraint req_a {\n  id: 58\n  text: a longer requirement text\n  risk: medium\n}\nfunctionalRequirement req_a {\n  id: 89\n  text: Quoted text here\n  risk: high\n}\nelement checkout_service {\n  type: simulation\n}\nreq_a - contains -> req_a\nreq_a - contains -> req_a\ncheckout_service - satisfies -> req_a\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nphysicalRequirement entity_a {\n  text: a longer requirement text\n  risk: low\n}\nrequirement test_req {\n  id: 94\n  text: Quoted text here\n  risk: medium\n}\nclassDef cold fill:#f9f,stroke:#333\nelement entity_a {\n  type: word doc\n}\nelement payment_req {\n  type: word doc\n}\nclassDef cold fill:#f9f,stroke:#333\ntest_req - verifies -> entity_a\nclass entity_a hot\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nrequirement payment_req {\n  id: 41\n}\nelement entity_a {\n  docref: doc1\n}\nrequirement entity_a {\n  id: 89\n  text: the test text\n  verifymethod: test\n}\npayment_req - verifies -> entity_a\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nrequirement entity_a {\n  id: 91\n  risk: low\n  verifymethod: test\n}\nelement entity_a {\n  type: simulation\n}\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nperformanceRequirement req_a {\n  id: 7\n  text: a longer requirement text\n  risk: high\n}\ndesignConstraint payment_req {\n  id: 24\n  risk: medium\n  verifymethod: analysis\n}\npayment_req - copies -> payment_req\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nphysicalRequirement req_a {\n  id: 95\n  text: a longer requirement text\n  risk: high\n  verifymethod: analysis\n}\nfunctionalRequirement entity_a {\n  id: 92\n  text: a longer requirement text\n  risk: low\n}\nreq_a - contains -> req_a\nentity_a - contains -> entity_a\nentity_a - refines -> req_a\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\ninterfaceRequirement checkout_service {\n  id: 66\n  text: a longer requirement text\n  risk: low\n}\nperformanceRequirement req_a {\n  text: Quoted text here\n  verifymethod: analysis\n}\nelement checkout_service {\n  docref: doc1\n}\ninterfaceRequirement payment_req {\n  id: 30\n  text: Quoted text here\n  verifymethod: inspection\n}\ndesignConstraint req_b {\n  id: 54\n  risk: high\n}\nclassDef hot fill:#f9f,stroke:#333\nrequirement test_req {\n  id: 24\n  text: a longer requirement text\n}\nfunctionalRequirement payment_req {\n  id: 16\n  text: the test text\n  verifymethod: test\n}\nreq_a - satisfies -> checkout_service\nreq_b - copies -> checkout_service\nstyle checkout_service fill:#f9f,stroke:#333\n"
+ },
+ {
+  "type": "requirement",
+  "source": "requirementDiagram\nperformanceRequirement req_a {\n  id: 62\n  risk: medium\n}\ninterfaceRequirement checkout_service {\n  id: 92\n  text: a longer requirement text\n  verifymethod: test\n}\nphysicalRequirement payment_req {\n  id: 26\n  text: a longer requirement text\n  risk: high\n}\nfunctionalRequirement test_req {\n  text: the test text\n  risk: low\n}\nstyle test_req fill:#f9f,stroke:#333\n"
+ },
+ {
+  "type": "sankey",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  sankey:\n    nodeColors:\n      __proto__: red\n      constructor: blue\n---\nsankey\n__proto__,constructor,1\nconstructor,toString,2\nhasOwnProperty,__proto__,3\n"
+ },
+ {
+  "type": "sankey",
+  "source": "sankey-beta\nIndustry,日本,20\n"
+ },
+ {
+  "type": "sankey",
+  "source": "---\nconfig:\n  sankey:\n    linkColor: source\n    nodeAlignment: justify\n---\nsankey-beta\nWind,Long node name that goes on and on,1e3\nSolar,Long node name that goes on and on,7.5\nHomes,\"Quoted, with comma\",1e3\n"
+ },
+ {
+  "type": "sankey",
+  "source": "---\nconfig:\n  sankey:\n    prefix: \"$\"\n    suffix: \" kWh\"\n---\nsankey\nLiquid,C,1e3\nGrid,Industry,0.597\nGrid,A,12\nWind,Bio-conversion,124.7\n"
+ },
+ {
+  "type": "sankey",
+  "source": "---\nconfig:\n  sankey:\n    linkColor: gradient\n    nodeColors:\n      Solar: \"#ff0000\"\n      Wind: \"#00ff00\"\n---\nsankey-beta\nHomes,C,5\nIndustry,A,0.597\nIndustry,Transport,7.5\nHomes,C,7.5\nÜnï,Long node name that goes on and on,12\n"
+ },
+ {
+  "type": "sankey",
+  "source": "sankey-beta\nBio-conversion,C,0\n"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n  participant Alice\n  properties Alice: \"abc\"\n  Alice->>Alice: hi"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n  participant Alice\n  participant Bob\n  links Alice: {\"Dashboard\": \"https://dash.example.com\", \"Docs\": \"https://docs.example.com\"}\n  link Alice: Dashboard @ https://dash.example.com\n  Alice->>Bob: hi"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n  participant Alice\n  links Alice: {\"Dashboard\": \"https://dash.example.com\"\n  Alice->>Bob: hi"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect hsla(120deg, 50%, 50%, 0.3)\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    box hsla(120deg, 50%, 50%, 0.3) Group\n    participant B\n    end\n    A->>B: x"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect rgb(a,b,c)\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    box red Group\n    participant B\n    end\n    A->>B: x"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    box red\n    participant A\n    end\n    A->>A: y"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    box none\n    participant A\n    end\n    A->>A: y"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    box hsl(120, 50, 50%) Group\n    participant B\n    end\n    A->>B: x"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect rgb()\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    box rgb(1, none, 3)\n    participant A\n    end\n    A->>A: y"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect hsl(1rad, 2%, 3%)\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    box hsl(1, 2%, 3%)\n    participant A\n    end\n    A->>A: y"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    box AliceBlue Group\n    participant B\n    end\n    A->>B: x"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect hsl(0.5e1 2% 3%)\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    box hsl(0.5e1 2% 3%)\n    participant A\n    end\n    A->>A: y"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    rect rgba(1 2 3 / none)\n    A->>B: x\n    end"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\n    participant A\n    box hsl(1 2% 3%/0.5) Group\n    participant B\n    end\n    A->>B: x"
+ },
+ {
+  "type": "sequence",
+  "source": "sequenceDiagram\naccDescr {\n  multi line\n  description\n}\n  A->>B: hi"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\nscale 3 width 300\n[*] --> A"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\nnote \"floating note\" as N1 \nnote \"second\" as N2\nA --> B"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\nstate A {\n  direction LR\n  X --> Y\n}\nA --> B"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\nclassDef cls fill:#0f0,color:red;stroke:#333\nclass A cls\nstyle B fill:#f9f\nA --> B"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\nstate X {\n  A --> B\n  --\n  C --> D\n}\nX --> Y"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  state C <<fork>>\n  note right of B : multi\n  Running --> [*]\n  S2 --> A\n  [*] --> Wait1\n  state B <<choice>>\n  Done : described\n  note left of Running : multi\n  Long_name : described\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Wait1 --> [*]\n  Done : described\n  Idle : described\n  Wait1 --> [*]\n  note left of C : multi\n  state Done <<fork>>\n  A : Ünï\n  Idle --> Ünï\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Ünï --> B\n  note right of Running : multi\n  state Done {\n    S2 --> Running\n    --\n    B --> [*]\n  }\n  state A {\n    Running --> Wait1\n    --\n    Ünï --> [*]\n  }\n  Done : described\n  state S2 <<choice>>\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Long_name --> [*]\n  B --> Done\n  Long_name --> Wait1\n  [*] --> Wait1\n  note right of C : multi\n  Wait1 --> [*]\n  A : described\n  state Idle <<fork>>\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  state C <<choice>>\n  state Idle <<fork>>\n  B --> Ünï\n  Long_name : described\n  note left of Idle : Ünï note\n  Running : described\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  S2 --> A\n  state Done <<fork>>\n  Done --> [*]\n  note right of Wait1 : Ünï note\n  [*] --> Idle\n  state Running {\n    Running --> Idle\n    --\n    Long_name --> [*]\n  }\n  state C {\n    Done --> C\n    --\n    C --> [*]\n  }\n  Running : described\n  S2 : Ünï\n  S2 --> [*]\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  note right of C : multi\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  note right of S2 : multi\n  Wait1 : Ünï\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  S2 : described\n  Running --> Ünï\n  state C {\n    S2 --> S2\n    --\n    Wait1 --> [*]\n  }\n  note left of Long_name : Ünï note\n  S2 --> B : go\n  [*] --> Long_name\n  [*] --> Wait1\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  note left of Ünï : Ünï note\n  [*] --> S2\n  state Long_name {\n    B --> A\n    --\n    S2 --> [*]\n  }\n  state Done <<choice>>\n  B --> C : go\n  C --> C\n  state Wait1 <<fork>>\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Long_name --> Long_name : go\n  state Running {\n    A --> Long_name\n    --\n    Ünï --> [*]\n  }\n  C --> Long_name\n  Running : Ünï\n  Idle : Ünï\n  state Ünï {\n    Wait1 --> Running\n    --\n    S2 --> [*]\n  }\n  [*] --> Wait1\n  Done --> S2 : go\n  state Done <<join>>\n  [*] --> A\n  [*] --> A\n  A --> Running\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  state B {\n    S2 --> A\n    --\n    Wait1 --> [*]\n  }\n  [*] --> Long_name\n  C --> B\n  Done --> S2\n  Ünï : Ünï\n  Wait1 : described\n  [*] --> S2\n  C : described\n  state S2 <<fork>>\n  Done : described\n  B --> [*]\n  [*] --> Long_name\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Done --> Long_name : go\n  Wait1 --> Done\n  A --> B : go\n  state A <<join>>\n  B --> Wait1 : go\n  state A <<join>>\n  Wait1 --> Idle : Ünï go\n  B : described\n  state Done {\n    A --> Ünï\n    --\n    Ünï --> [*]\n  }\n  state C <<join>>\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  A --> Wait1 : go\n  C : described\n  Wait1 --> Long_name : go\n  C : described\n  S2 --> Done\n  state Long_name {\n    Ünï --> Wait1\n    --\n    B --> [*]\n  }\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n  state Long_name {\n    S2 --> Ünï\n    --\n    Long_name --> [*]\n  }\n"
+ },
+ {
+  "type": "state",
+  "source": "stateDiagram-v2\n  state Wait1 <<fork>>\n  B --> C : go\n  Running : Ünï\n  S2 : described\n  Ünï --> Idle : Ünï go\n  state Ünï {\n    Running --> B\n    --\n    Long_name --> [*]\n  }\n  [*] --> Idle\n  Running : described\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta RL\naccDescr: one line description\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "---\ntitle: Ünï 😀 title\n---\nswimlane-beta LR\n  subgraph Customer\n    request[Request service]\n    receive[Receive update]\n  end\n\n  subgraph Support\n    triage[Triage request]\n    answer[Send answer]\n  end\n\n  subgraph Engineering\n    investigate[Investigate issue]\n    fix[Prepare fix]\n  end\n\n  request --> triage\n  triage -->|Known issue| answer\n  triage -->|Needs code change| investigate\n  investigate --> fix --> answer\n  answer --> receive\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta RL\n  subgraph L3[\"Customer\"]\n    A:::hot\n  end\n  subgraph L1[\"Ünï Team\"]\n    n_2>fa:fa-check step]\n  end\n  subgraph L1[\"Ops\"]\n    x1>Ünï]\n    E(((Ship it)))\n    漢([Ünï])\n  end\n  x1 --> E{**bold** step}\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta TB\n  subgraph L1[\"Customer\"]\n    B[/$$E=mc2$$\\]\n    E((Run tests))\n    Ünï[\\long label that keeps going well past the wrapping width/]\n  end\n  subgraph L1[\"Ünï Team\"]\n    End@{ label: \"Run tests\" }\n  end\n  subgraph L1[\"Ops\"]\n    Start[[tab\there]]\n    A[$$E=mc2$$]\n    Ünï{{Run tests}}\n  end\n  D -. dotted .-> End(Ünï)\n  C ---> n_2([fa:fa-check step])\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta TB\n  subgraph L3[\"Customer\"]\n    End[/Ünï/]\n    E((($$E=mc2$$)))\n    Start{fa:fa-check step}\n  end\n  subgraph L1[\"Ünï Team\"]\n    x1@{ shape: procs, label: \"Run tests\" }\n    Start@{ shape: rect }\n    Ünï[\\**bold** step\\]\n  end\n  漢 -. dotted .-> End:::hot\n  End --> n_2>fa:fa-check step]\n  D --x D@{ shape: h-cyl, label: \"tab\there\" }\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta BT\n  subgraph L2[\"Customer\"]\n    End{{Ship it}}\n    Start{{Run tests}}\n  end\n  subgraph L2[\"Ünï Team\"]\n    B(((fa:fa-check step)))\n    Start[/Run tests\\]\n  end\n  subgraph L3[\"Ops\"]\n    Ünï[$$E=mc2$$]\n  end\n  Start -. dotted .-> E[/tab\there\\]\n  n_2 --x|cross| End[\\$$E=mc2$$/]\n  Ünï ==> 漢(x < y)\n  D ---> B[($$E=mc2$$)]\n  D(Run tests)\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L3[\"Customer\"]\n    A:::hot\n    A(long label that keeps going well past the wrapping width)\n  end\n  subgraph L2[\"Ünï Team\"]\n    x1[/long label that keeps going well past the wrapping width\\]\n    漢[/Plan\\]\n    E[/Plan\\]\n  end\n  D -.- label .- End{{Ship it}}\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L3[\"Customer\"]\n    End@{ label: \"long label that keeps going well past the wrapping width\" }\n  end\n  subgraph L3[\"Ünï Team\"]\n    漢[\"tab\there\"]\n  end\n  x1 e2@==> n_2[\\tab\there/]\n  A -- text --> C[tab\there]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L1[\"Customer\"]\n    D((x < y))\n  end\n  E -- text --> n_2\n  n_2[\"Ship it\"]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta RL\n  subgraph L2[\"Customer\"]\n    Start[[x < y]]\n  end\n  subgraph L3[\"Ünï Team\"]\n    A[\\x < y/]\n  end\n  漢 -- text --> C[\"`**Plan** md`\"]\n  n_2 -. dotted .-> E[\"`**Ünï** md`\"]\n  x1@{ label: \"Run tests\" }\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L3[\"Customer\"]\n    C[\"Ship it\"]\n    D([Ünï])\n    漢{{tab\there}}\n  end\n  End --x D[/$$E=mc2$$\\]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta TB\n  subgraph L3[\"Customer\"]\n    End{x < y}\n  end\n  subgraph L3[\"Ünï Team\"]\n    Start:::hot\n  end\n  n_2 --o 漢[[Ship it]]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L1[\"Customer\"]\n    A(Ship it)\n    Start[\"`****bold** step** md`\"]\n  end\n  subgraph L1[\"Ünï Team\"]\n    End[/a \"quoted\" step/]\n    漢[\"`**long label that keeps going well past the wrapping width** md`\"]\n    D:::hot\n  end\n  A == thick ==> B[\\a \"quoted\" step\\]\n  Ünï -- \"quoted\" --> x1[[**bold** step]]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta BT\n  subgraph L2[\"Customer\"]\n    B:::hot\n    End[\"`**Ünï** md`\"]\n    B\n  end\n  End -- \"quoted\" --> E[/Ship it\\]\n  B -.- label .- Start[\"`**Ship it** md`\"]\n  漢 -->|lbl| n_2@{ shape: lined-cylinder, label: \"Ünï\" }\n  B -. dotted .-> x1:::hot\n  C -->|lbl| 漢[\"`****bold** step** md`\"]\n  End -- \"quoted\" --> x1:::hot\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta BT\n  subgraph L2[\"Customer\"]\n    漢[/Ünï\\]\n    B[($$E=mc2$$)]\n  end\n  subgraph L3[\"Ünï Team\"]\n    E[$$E=mc2$$]\n    n_2[[**bold** step]]\n    D[\"Ship it\"]\n  end\n  漢 --x n_2{{fa:fa-check step}}\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta TB\n  subgraph L1[\"Customer\"]\n    n_2[\"Run tests\"]\n    A{tab\there}\n    B@{ label: \"Plan\" }\n  end\n  subgraph L2[\"Ünï Team\"]\n    E[\\a \"quoted\" step\\]\n    漢[tab\there]\n  end\n  x1 --x D:::hot\n  A --o x1@{ shape: icon }\n  E -->|lbl| Ünï[\\a \"quoted\" step\\]\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta RL\n  subgraph L1[\"Customer\"]\n    x1:::hot\n  end\n  subgraph L1[\"Ünï Team\"]\n    E[\"`****bold** step** md`\"]\n    E[(long label that keeps going well past the wrapping width)]\n  end\n  漢 -- text --> A($$E=mc2$$)\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta TB\n  subgraph L2[\"Customer\"]\n    A@{ shape: h-cyl, label: \"fa:fa-check step\" }\n  end\n  B ==> x1@{ shape: cylinder }\n  A -.- n_2[(**bold** step)]\n  Ünï ==> E[[**bold** step]]\n  n_2 == thick ==> x1((Ship it))\n"
+ },
+ {
+  "type": "swimlane",
+  "source": "swimlane-beta LR\n  subgraph L1[\"Customer\"]\n    B((tab\there))\n  end\n  End --o A[\\a \"quoted\" step\\]\n  A -- text --> D{{long label that keeps going well past the wrapping width}}\n  n_2 --- B{{long label that keeps going well past the wrapping width}}\n  n_2 -.-> x1([long label that keeps going well past the wrapping width])\n  Start e1@--> A@{ label: \"x < y\" }\n"
+ },
+ {
+  "type": "timeline",
+  "source": "---\ntitle: Ünï 😀 title\n---\ntimeline\n  section One\n    A : a\n    B : b\n  section Two\n    C : c\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline\naccDescr: one line description\n  Early : e\n  section Same\n    A\n  section Empty\n  section Same\n    B\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline\naccDescr: one line description\n  2001 : #35;1 &amp; <b>bold</b> [link](http://example.com) fa:fa-check a<T>\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline\naccTitle: Ünï title\n  title Only"
+ },
+ {
+  "type": "timeline",
+  "source": "---\ntitle: Ünï 😀 title\n---\ntimeline\n    title History of Social Media Platform\n    2002 : LinkedIn\n    2004 : Facebook\n         : Google\n    2005 : YouTube\n    2006 : Twitter\n"
+ },
+ {
+  "type": "timeline",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'dark'\n---\n    timeline\n        title History of Social Media Platform\n          2002 : LinkedIn\n          2004 : Facebook : Google\n          2005 : YouTube\n          2006 : Twitter\n          2007 : Tumblr\n          2008 : Instagram\n          2010 : Pinterest\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline\ntitle Timeline of history\nStone age\n    : x&amp;y\n    : <i>italic</i>\n    : Ilad (Sumer)\na\n    : Ilad (Sumer)\nQ1 2024\nemoji 😀\n    : Ünïcode\n    : Event one\n2004\n    : Ilad (Sumer)\n    : $$b^2$$\n    : Long event text that goes on and on to need wrapping lines\n%% note\n日本\n    : Long event text that goes on and on to need wrapping lines\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline TD\ntitle Timeline of history\nQ1 2024\n    : <i>italic</i>\nsection A very long section name that goes on and on\nA very long period label that wraps across lines\n    : fa:fa-check ok\n    : Event one\n    : Ünïcode\nsection Mid\n1900\nsection x&amp;y\n2002\n    : Cats\n%% note\n2002\n    : Tiny\nemoji 😀\n    : Long event text that goes on and on to need wrapping lines\n    : Tiny\n    : Cats\n2002\n    : Ilad (Sumer)\n    : <i>italic</i>\nsection x&amp;y\n日本\n    : Long event text that goes on and on to need wrapping lines\n    : Event one\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\ntitle Timeline of history\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\nQ1 2024\nA very long period label that wraps across lines\n    : Event one\n<b>bold</b>\n    : Dogs\n    : $$b^2$$\n    : Cats\n\n%% note\nsection x&amp;y\n1900\n    : Cats\n    : Long event text that goes on and on to need wrapping lines\n    : fa:fa-check ok\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline TD\ntitle long title text that will wrap across a few lines in the chart\nx&amp;y\nsection Modern\n日本\n    : Event one\n    : x&amp;y\n    : fa:fa-check ok\nÜnïcode\n    : fa:fa-check ok\n<b>bold</b>\n    : Ünïcode\n    : Long event text that goes on and on to need wrapping lines\n    : Ünïcode\n<b>bold</b>\n    : x&amp;y\n    : <i>italic</i>\nBronze Age\n    : Tiny\n    : fa:fa-check ok\n日本\n%% note\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline td\ntitle long title text that will wrap across a few lines in the chart\naccDescr {\n  one\n    two\n}\nemoji 😀\n\na\n    : Ünïcode\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\ntitle A title: colon\n"
+ },
+ {
+  "type": "timeline",
+  "source": "%% comment\ntimeline TD\nQ1 2024\n: x&amp;y : Long event text that goes on and on to need wrapping lines\n    : x&amp;y\n    : Tiny\nemoji 😀\n    : x&amp;y\n    : Ünïcode\n    : <i>italic</i>\na\n    : Cats\n    : Ünïcode\n    : fa:fa-check ok\nQ1 2024\n    : Tiny\n\na\n    : Long event text that goes on and on to need wrapping lines\nÜnïcode\n    : $$b^2$$\n    : Long event text that goes on and on to need wrapping lines\n2004\n    : fa:fa-check ok\n    : Ünïcode\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline\nsection Ünï\nsection x&amp;y\na\n1900\n: a : Dogs\n    : Ilad (Sumer)\n    : Cats\n%% note\n2002\n    : Cats\n    : $$b^2$$\n\n spaced \nBronze Age\n    : a\n    : a\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\ntitle A title: colon\naccTitle:   spaced  \nA very long period label that wraps across lines\n    : 日本語の出来事\n    : Event one\nsection Modern\nx&amp;y\n    : 日本語の出来事\n    : Tiny\n    : $$b^2$$\nsection Ancient\n<b>bold</b>\n    : fa:fa-check ok\n    : Ünïcode\n: <i>italic</i> : Ünïcode\n2002\n    : Dogs\n    : Tiny\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\n日本\n    : $$b^2$$\n: Event one : fa:fa-check ok\nsection Mid\nÜnïcode\nx&amp;y\n    : Ilad (Sumer)\n    : a\n    : $$b^2$$\nsection Ancient\n2002\nStone age\n    : a\nemoji 😀\n"
+ },
+ {
+  "type": "timeline",
+  "source": "%% comment\ntimeline\nÜnïcode\nA very long period label that wraps across lines\nsection A very long section name that goes on and on\na\n%% note\nBronze Age\n    : Long event text that goes on and on to need wrapping lines\n    : Ilad (Sumer)\n    : Long event text that goes on and on to need wrapping lines\n2004\n    : Ilad (Sumer)\n    : Event one\n\nStone age\nA very long period label that wraps across lines\n    : Ünïcode\n    : Cats\n    : <i>italic</i>\na\n    : Event one\n    : 日本語の出来事\n    : Cats\na\n    : Long event text that goes on and on to need wrapping lines\n<b>bold</b>\n    : Tiny\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline LR\n spaced \n    : Dogs\n    : a\n日本\nStone age\n    : 日本語の出来事\nA very long period label that wraps across lines\n    : Dogs\n    : a\n    : x&amp;y\na\n\n2004\n    : x&amp;y\n1900\n    : Event one\n%% note\n spaced \n    : Cats\n    : Dogs\n<b>bold</b>\n    : fa:fa-check ok\n    : a\nsection Ancient\n2004\n    : $$b^2$$\n    : <i>italic</i>\n: $$b^2$$ : Ünïcode\n2004\n    : <i>italic</i>\n    : Ünïcode\n    : <i>italic</i>\n1900\n    : <i>italic</i>\n    : Event one\nsection x&amp;y\n<b>bold</b>\n    : Dogs\n    : Cats\n    : Ilad (Sumer)\nsection Ünï\n日本\n spaced \n    : 日本語の出来事\n    : $$b^2$$\n    : Tiny\nsection Ancient\n1900\n    : x&amp;y\n    : $$b^2$$\n    : Long event text that goes on and on to need wrapping lines\nemoji 😀\n    : a\n%% note\nemoji 😀\n    : Dogs\n"
+ },
+ {
+  "type": "timeline",
+  "source": "timeline TD\nsection x&amp;y\na\nÜnïcode\n: a : Dogs\n    : Ilad (Sumer)\n2002\nsection A very long section name that goes on and on\nA very long period label that wraps across lines\n    : <i>italic</i>\n    : Cats\n日本\n    : Event one\n    : Ilad (Sumer)\n    : Ilad (Sumer)\n spaced \n    : fa:fa-check ok\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\naccDescr {\n  multi line\n  description\n}\ntitle My TreeView Diagram\naccTitle: Accessible Title\naccDescr: This is an accessible description\n\"Root\"\n  \"Child\""
+ },
+ {
+  "type": "treeView",
+  "source": "---\ntitle: Ünï 😀 title\n---\ntreeView-beta\n\"Root\""
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\nfile.ts :::my-class"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\ndata.bin icon(folder)"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n%% a comment line\n  \"my  file  with   spaces.txt\"\n  \"another_really_long_file_name  with  spaces_in_it.txt\"\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n  a.ts\n  Dockerfile\n  notes.txt\n  constructor\n  dir.ts/\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n%% a comment line\n├── src/\n│   ├── index.ts\n│   └── utils.ts\n├── package.json\n└── README.md\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\naccTitle: Ünï title\n├── packages/\n│   ├── mermaid/\n│   │   ├── src/\n│   │   │   ├── parser.ts\n│   │   │   └── renderer.ts\n│   │   └── package.json\n│   └── parser/\n│       └── src/\n└── README.md\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n    src/\n        App.tsx :::highlight\n        index.js\n    package.json\n"
+ },
+ {
+  "type": "treeView",
+  "source": "---\naccDescr: one line description\nconfig:\n  treeView:\n    showIcons: true\n    defaultIconPack: material-icon-theme\n    filenameIcons:\n      Dockerfile: docker\n    extensionIcons:\n      .ts: typescript\n      .tsx: react-ts\n      .txt: none\n---\ntreeView-beta\n    src/\n        App.tsx\n        utils.ts\n    Dockerfile\n    notes.txt\n    README.md\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n    src/\n        App.tsx icon(logos:react)\n        index.js\n    package.json\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\ntitle A title: colon\n    README.md icon(pack:star)\n            Ünï/ :::big\n        \"quoted name\" icon(folder)\n        README.md\n            .hidden\n                data.json\n            deep\n        src/\n    data.json icon(folder)\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\nsrc/\n└── data.json\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\ntitle Project files\nmain.ts\n│   ├── main.ts\n│   ├── main.ts icon(file)\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\na.b.C\n└── index.js icon()\n├── main.ts\n└── Makefile icon(file)\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n    .hidden\n    lib/\ndata.json icon(pack:star)\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n\"quoted name\"\n├── Makefile\n└── a.b.C\n│   └── 'single'\n├── x&amp;y\n├── deep\n├── index.js:::hot cold\n└── main.ts\n│   └── long file name with spaces.txt icon(pack:star)\n│   ├── image.png\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\n    Ünï/\n            data.json\n\n        README.md ## \n        data.json\n    image.png ## \n    data.json\n    deep icon()\n        deep :::big\n        README.md\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\nx&amp;y\n│   ├── data.json icon()\n└── lib/\n├── lib/\n│   └── a.b.C\n│   ├── Ünï/\n└── 'single'\n│   ├── README.md\n│   │   ├── deep\n│   │   └── index.js\n│   │   ├── .hidden\n│   │   │   └── main.ts\n│   │   │   │   └── src/\n│   │   │   │   └── x&amp;y\n│   │   │   └── data.json ## \n│   │   │   └── x&amp;y:::hot cold\n│   │   │   └── Makefile\n│   │   │   │   ├── long file name with spaces.txt\n│   │   │   │   └── index.js\n"
+ },
+ {
+  "type": "treeView",
+  "source": "treeView-beta\naccTitle: Files\n            src/\n        index.js\n            'single'\n'single'\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\ntitle My Treemap Diagram\naccTitle: Accessible Title\naccDescr: This is an accessible description\n\"Root\"\n  \"Child\": 100"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\nclassDef myClass fill:red;"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\n\"a\": 1\n\"b\": 1"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\n\"S\":::titles\n  \"a\": 1:::title_2\nclassDef title_2 fill:red"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\n\"Section\":::big\n  \"Leaf\": 1\nclassDef big font-size:14.4px"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\naccTitle: Ünï title\nclassDef ab ;\n\"A\""
+ },
+ {
+  "type": "treemap",
+  "source": "treemap title Hello\n%% a comment line\n\"A\""
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\naccDescr {\n  multi line\n  description\n}\n\"A\": 1.2.3"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\naccDescr {\n  multi line\n  description\n}\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\naccTitle: Ünï title\n\"a\": 1:::c1\nclassDef c1 "
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\nclassDef c1 fill:red,stroke:blue,color:white\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\n"
+ },
+ {
+  "type": "treemap",
+  "source": "---\nconfig:\n  treemap:\n    valueFormat: '$0,0'\n---\ntreemap-beta\n\"Budget\"\n    \"Operations\"\n        \"Salaries\": 700000\n        \"Equipment\": 200000\n        \"Supplies\": 100000\n    \"Marketing\"\n        \"Advertising\": 400000\n        \"Events\": 100000\n"
+ },
+ {
+  "type": "treemap",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\n\"Market Share\"\n    \"Company A\": 0.35\n    \"Company B\": 0.25\n    \"Company C\": 0.15\n    \"Others\": 0.25\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\nclassDef hot fill:#00f,stroke:#000\n    \"Market Share\": 0\n    \"Market Share\": 2.5:::missing\n    \"Beta\"\n\n        \"$$b^2$$\": 10:::hot\n"
+ },
+ {
+  "type": "treemap",
+  "source": "---\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\naccTitle: Chart\nclassDef hot fill:#0f0;color:#fff\n    \"Tiny\": 0\n    \"emoji 😀\": 0:::cold\n\n    \"emoji 😀\"\n    %% note\n        \"Company B\": 0\n        \"a\": 7.25\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap-beta\ntitle A title: colon\nclassDef big fill:#f00\n\"emoji 😀\": 10\n\"Zed\": 2.5\n    \"a\": 3:::hot\n    \"A very long leaf name that will need to shrink or be cut off\": 10\n    \"fa:fa-check ok\"\n        \"a\": 100000000\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap\ntitle A title: colon\naccTitle: Chart\n\"Market Share\": 0.15\n\"日本語\":::hot\n        \"Market Share\": 1000\n\"$$b^2$$\"\n    \"fa:fa-check ok\"\n        \"<b>tag</b>\": 0.35\n        \"Others\": 12,345.67:::cold\n\"Others\": 2.5\n    \"$$b^2$$\": 100000000:::cold\n    \"Tiny\": 0.15\n"
+ },
+ {
+  "type": "treemap",
+  "source": "%% comment\ntreemap\ntitle long title that might wrap in some configurations of the diagram\n\"Zed\": 1\n\"日本語\": 10\n        \"$$b^2$$\": 0.35\n"
+ },
+ {
+  "type": "treemap",
+  "source": "treemap-beta\nclassDef big stroke-width:4px\n\"Company A\": 0:::missing\n    \"A very long leaf name that will need to shrink or be cut off\": 10\n"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\nactor A\nA --> B\nB --> A\nB(Label)\nA --> B"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\nFoo@{ business: true }\nFoo --> B"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\n        actor User\n        systemBoundary \"Authentication System\"\n          Login\n          Logout\n        end\n        User --> Login"
+ },
+ {
+  "type": "usecase",
+  "source": "---\ntitle: Ünï 😀 title\n---\nusecase-beta\n        direction TB\n        actor User"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\naccDescr {\n  multi line\n  description\n}\n        actor Developer\n        Developer --> LoginSystem\n        Developer --> Authentication"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\naccTitle: Ünï title\n        direction LR\n        actor User"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\naccDescr {\n  multi line\n  description\n}\n  json Payload@{\"$$x$$\":1,\"other\":2}"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\nactor I@{ icon: \"fa:user\" }"
+ },
+ {
+  "type": "usecase",
+  "source": "---\naccDescr {\n  multi line\n  description\n}\ntitle: Ordering\n---\nusecase-beta\naccTitle: Online ordering\naccDescr {\n  A customer orders.\n   Staff review.\n}\nactor A"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\nA -- l"
+ },
+ {
+  "type": "usecase",
+  "source": "---\ntitle: Ünï 😀 title\n---\nusecase-beta\n%% Actors are declared explicitly.\nactor User\n\n%% Each relationship is a separate statement.\nUser --> Login\nLogin --> Dashboard\n"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\n%% a comment line\nactor User\nactor Support\nStart\nFinish\nUser --> Start\nStart <-- Support\nStart -- Finish\nUser --o Start\nStart o-- Support\nUser --x Finish\nFinish x-- Support\n"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\naccDescr {\n  multi line\n  description\n}\nnote for Login \"`Requires an **active session**`\"\nnote for User \"Starts the workflow\"\nactor User\nLogin(\"Sign in\")\nUser --> Login\n"
+ },
+ {
+  "type": "usecase",
+  "source": "usecase-beta\ndirection BT\n  note for Ship \"a note\"\n  Ship --x Customer\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"$$b^2$$\"]\n  set B:1\n  set C:5\n  set D\n  union C,A,B,D[\"日本\"]:3\n  style C,A,B,D fill-opacity:0.3\n  union D,A,C,B[\"日本\"]:2\n  style D,A,C,B fill:#f96\n  union D,B,C[\"Ship it\"]\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"x&amp;y\"]:5\n  set B\n  set C[\"fa:fa-check ok\"]\n  union B,C,A[\"$$b^2$$\"]:3\n  style B,C,A fill-opacity:0.3\n  union B,C,A[\"Buildable\"]:2\n  style B,C,A fill:#f96,stroke:#333\n  union A,B,C[\"Ship it\"]:2\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A\n  set B[\"日本\"]:1\n  set C[\"日本\"]\n  set D\n  set E:12\n  union A,E[\"$$b^2$$\"]:2\n  style A,E fill:#f96,stroke:#333\n  union E,A,D,C[\"fa:fa-check ok\"]\n  style E,A,D,C fill:#f96,stroke:#333\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A:0.5\n  set B[\"fa:fa-check ok\"]:0.5\n  set C[\"fa:fa-check ok\"]\n  set D[\"\"]\n  set E[\"fa:fa-check ok\"]:1\n  set F[\"$$b^2$$\"]:5\n  set G[\"Ship it\"]:5\n  union D,G,B,C:3\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A\n  set B[\"Alpha\"]\n  set C[\"$$b^2$$\"]:12\n  set D:5\n  set E[\"日本\"]\n  set F\n  set G:5\n  union C,E,F\n  style C,E,F fill:#f96,stroke:#333\n  union B,A,C,G[\"\"]\n  style B,A,C,G fill:#f96,stroke:#333\n  union D,B,A[\"\"]:3\n  style D,B,A fill:#f96\n  union A,C:3\n  style A,C fill:#f96,stroke:#333\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A:12\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Ship it\"]\n  set B:0.5\n  set C\n  set D\n  union D,C,A[\"Long label that is quite wide for a region\"]\n  union B,C[\"Buildable\"]\n  style B,C fill:#f96\n  union C,A[\"Buildable\"]\n  style C,A fill-opacity:0.3\n  union C,D,A\n  style C,D,A color:#333,fill-opacity:0.5\n  union D,A,C,B:0.5\n  union C,A,D:3\n  style C,A,D fill-opacity:0.3\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"日本\"]\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Ship it\"]:5\n  set B[\"Beta\"]:0.5\n  set C[\"日本\"]:0.5\n  set D:1\n  set E[\"Alpha\"]\n  set F[\"fa:fa-check ok\"]\n  union C,D[\"\"]\n  style C,D fill:#f96\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A:5\n  set B:12\n  set C[\"Ship it\"]\n  set D:12\n  set E:0.5\n  union C,B[\"x&amp;y\"]:3\n  union E,D,B,A:2\n  style E,D,B,A fill:#f96,stroke:#333\n  union E,A,C[\"Beta\"]:0.5\n  union B,C,A,E:0.5\n  style B,C,A,E fill-opacity:0.3\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Buildable\"]\n  set B[\"Long label that is quite wide for a region\"]:5\n  set C\n  set D:0.5\n  set E[\"Ship it\"]:0.5\n  union E,A,C\n  style E,A,C color:#333,fill-opacity:0.5\n  union A,D,B[\"fa:fa-check ok\"]:0.5\n  style A,D,B fill-opacity:0.3\n  union B,D,A,E[\"\"]\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Beta\"]\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"fa:fa-check ok\"]\n  set B\n  set C[\"Ship it\"]:5\n  set D:5\n  set E:1\n  set F\n  set G\n  set H:1\n  union A,B\n  style A,B fill:#f96,stroke:#333\n  union D,H,A,F[\"Alpha\"]\n  style D,H,A,F color:#333,fill-opacity:0.5\n  union A,G\n  style A,G color:#333,fill-opacity:0.5\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A:5\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Beta\"]:0.5\n  set B[\"Ship it\"]:0.5\n  union B,A:3\n  union A,B:3\n  style A,B fill:#f96,stroke:#333\n  union A,B[\"Long label that is quite wide for a region\"]\n  union A,B[\"emoji 😀\"]\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A:12\n  set B[\"$$b^2$$\"]:5\n  union B,A[\"Buildable\"]\n  style B,A color:#333,fill-opacity:0.5\n  union B,A[\"Long label that is quite wide for a region\"]\n  union B,A\n  style B,A color:#333,fill-opacity:0.5\n  union B,A:3\n  style B,A fill-opacity:0.3\n  union B,A:2\n  style B,A color:#333,fill-opacity:0.5\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"Alpha\"]\n  set B[\"$$b^2$$\"]\n  set C[\"\"]:0.5\n  set D\n  set E\n  set F:1\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"$$b^2$$\"]:12\n  set B:5\n  set C:12\n  set D[\"$$b^2$$\"]\n  set E[\"Long label that is quite wide for a region\"]\n  union D,A,B,E[\"x&amp;y\"]:0.5\n  style D,A,B,E color:#333,fill-opacity:0.5\n  union E,C,D[\"Beta\"]\n  style E,C,D fill-opacity:0.3\n"
+ },
+ {
+  "type": "venn",
+  "source": "venn-beta\n  set A[\"$$b^2$$\"]\n  set B\n  set C\n  set D[\"Long label that is quite wide for a region\"]:1\n  set E[\"Beta\"]:5\n  set F[\"Buildable\"]\n  union A,F,E,B[\"Ship it\"]:2\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\naccDescr {\n  multi line\n  description\n}\ntitle Coordinate Handling\ncomponent \"Mobile App\" [0.2, 0.4] (build) (inertia)\ncomponent API [0.3, 0.5]\n\"Mobile App\" +<> API; constraint\nnote \"Check dependencies\" [0.25, 0.45]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\naccelerator \"Cloud Native\" [0.20, 0.85]\ndeaccelerator \"Legacy Data\" [0.40, 0.35]"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\naccDescr {\n  multi line\n  description\n}\ncomponent foo- [0.2, 0.3]"
+ },
+ {
+  "type": "wardley",
+  "source": "---\nconfig:\n  wardley-beta:\n    showGrid: true\n---\nwardley-beta\ncomponent A [0.5, 0.5]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "---\ntitle: Ünï 😀 title\n---\nwardley-beta\ntitle Tea Shop Value Chain\n\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Tea [0.63, 0.81]\ncomponent Hot Water [0.52, 0.80]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\n\nBusiness -> Cup of Tea\nCup of Tea -> Tea\nCup of Tea -> Hot Water\nHot Water -> Kettle\nKettle -> Power\n\nevolve Kettle 0.62\nevolve Power 0.89\n\nnote \"Standardising power allows Kettles to evolve faster\" [0.30, 0.49]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\naccDescr: one line description\ntitle Evolution\n\ncomponent Database [0.40, 0.50]\ncomponent API [0.55, 0.60]\n\nDatabase -> API\n\nevolve Database 0.75\nevolve API 0.80\n"
+ },
+ {
+  "type": "wardley",
+  "source": "---\ntitle: Ünï 😀 title\n---\nwardley-beta\ntitle Dual Label Stages\n\nevolution Genesis / Concept -> Custom / Emerging -> Product / Converging -> Commodity / Accepted\n\ncomponent Novel Idea [0.05, 0.20]\ncomponent Custom Solution [0.35, 0.50]\ncomponent Product [0.65, 0.70]\ncomponent Utility [0.95, 0.90]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nevolution Genesis -> Custom Built -> Product -> Commodity\nanchor Customer [0.25, 0.1]\ncomponent Data Store [99.9, 40.5] inertia\nCustomer +<> Customer\ncomponent Kettle [0.25, 0.25] label [-10, -8]\nnote \"A note about the map\" [70.0, 1.2]\nannotation 1,[0.62, 0.85] \"Critical part\"\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nsize [1000, 500]\nevolution Novel@0.25 -> Emerging@0.5 -> Good@0.75 -> Mature\nanchor Data Store [0.1, 0.85]\nanchor Kettle [70.0, 70.0]\nData Store +<> Kettle ;data link\nnote \"A note about the map\" [0.85, 40.5]\nannotation 1,[0.85, 0.25] \"Critical part\"\n"
+ },
+ {
+  "type": "wardley",
+  "source": "%% comment\nwardley-beta\ncomponent Power [0.25, 99.9] label [19, 7] (market)\ncomponent Power [0.95, 0.25] label [5, -13] inertia\nnote \"Second note text\" [0.85, 70.0]\nevolve Power 1.2\ncomponent API Gateway [40.5, 40.5] label [-2, -9]\nanchor Business [40.5, 1.2]\nnote \"A note about the map\" [0.95, 0.62]\npipeline API Gateway {\n  component Stage1 [0.2]\n  component Stage2 [0.4] label [5, -8]\n}\n"
+ },
+ {
+  "type": "wardley",
+  "source": "%% comment\nwardley-beta\ncomponent Data Store [0.85, 99.9]\nanchor Customer [99.9, 0.95]\nCustomer --> Data Store ;flows\npipeline Customer {\n  component Stage1 [0.2]\n  component Stage2 [0.6] label [5, -8]\n}\ndeaccelerator Cost [1.2, 0.95]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "%% comment\nwardley-beta\nevolution Build/Buy -> Use/Own -> Share\nanchor Compute [0.95, 0.85]\nanchor Customer [0.62, 0.25]\nanchor Cache layer [0.5, 0.62]\nCustomer +'label'> Cache layer\nanchor Power [0.62, 40.5]\nanchor Customer [0.85, 0.25]\nannotations [0.85, 70.0]\nannotation 1,[0.1, 0.1] \"Critical part\"\ndeaccelerator Cost [0.1, 40.5]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nnote \"A note about the map\" [0.62, 0.95]\ncomponent Power [0.85, 0.62] label [-14, 15]\nanchor Business [0.62, 0.62]\nBusiness +'label'> Business\nBusiness +> Power ;flows\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nsize [1000, 300]\nevolution Build/Buy -> Use/Own -> Share\nanchor Service [0.85, 0.85]\nnote \"A note about the map\" [0.25, 0.1]\nannotations [99.9, 1.2]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nevolution Novel@0.25 -> Emerging@0.5 -> Good@0.75 -> Mature\nanchor Power [0.85, 99.9]\nnote \"A note about the map\" [0.25, 1.2]\ncomponent Service [0.95, 99.9] (market)\nnote \"A note about the map\" [40.5, 99.9]\npipeline Service {\n  component Stage1 [0.2]\n  component Stage2 [0.4] label [5, -8]\n}\ndeaccelerator Risk [0.25, 0.25]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "---\ntitle: Front\n---\nwardley-beta\ntitle Colon: map\nevolution Novel@0.25 -> Emerging@0.5 -> Good@0.75 -> Mature\ncomponent Service [99.9, 0.1] label [-0, -19]\nanchor Kettle [0.1, 70.0]\nevolve Kettle 0.62\naccelerator Scale [1.2, 0.85]\ndeaccelerator Risk [40.5, 70.0]\n"
+ },
+ {
+  "type": "wardley",
+  "source": "wardley-beta\nsize [1000, 300]\nevolution Genesis -> Custom Built -> Product -> Commodity\ncomponent Compute [0.85, 70.0] label [15, 7]\nanchor Data Store [40.5, 40.5]\npipeline Compute {\n  component Stage1 [0.8]\n  component Stage2 [0.6] label [5, -8]\n}\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart\nx-axis xAxisName\ny-axis yAxisName\n line [10 \"First\", 20 \"Second\", 30 \"Third\"]"
+ },
+ {
+  "type": "xychart",
+  "source": "---\ntitle: Ünï 😀 title\n---\nxychart\n x-axis [Q1, Q2, Q3]\n line [25 \"Launch\", 45, 72 \"Target\"]\n bar [1 \"ignored\", 2, 3]"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart\naccDescr {\n  multi line\n  description\n}\n  title \"T\"\n  accTitle: a title\n  accDescr: a description\n  line [1, 2, 3]"
+ },
+ {
+  "type": "xychart",
+  "source": "---\naccDescr: one line description\nconfig:\n    xyChart:\n        showDataLabel: true\n        showDataLabelOutsideBar: true\n---\nxychart\n    title \"Genres in top 100 book survey of 2025\"\n    x-axis [comedy, romance, mystery, crime, \"non fiction\", other]\n    y-axis \"Number of Books\" 0 --> 30\n    bar [12,2,20,25,17,24]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta\n    y-axis \"Revenue\" 0 --> 5\n    bar [9000, 7500, 0]\n    line \"Ünïcode\" [3]\n    line \"$$b^2$$\" [100000, 0, 5000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta\n    title \"Ünïcode\"\n    y-axis \"Y long axis title\" -10 --> 11000\n    bar \"Ünïcode\" [0.25, 3]\n    bar \"Ünïcode\" [5000, 7500, 9000, 12.5, 3, -3]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "---\nconfig:\n  xyChart:\n    showDataLabel: true\n    chartOrientation: horizontal\n---\nxychart-beta vertical\n    x-axis \"Month\" [feb, jan]\n    y-axis \"Y long axis title\" 4000 --> 1\n    line [7500, 0.25, -3, 5000, 7500]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart\n    title \"Ünïcode\"\n    x-axis [Q1 2024, Long category name, apr, mar, a]\n    y-axis \"Revenue\" 0 --> 100\n    bar [0, 6000, 0.25]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta horizontal\n    x-axis \"x&amp;y\" [apr, feb]\n    line \"Sales Revenue\" [5000, 0.25, 9000, -3, 9000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta\n    title \"Sales Revenue\"\n    y-axis \"Y long axis title\" 0.5 --> 100\n    bar [100000, 5000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "---\nconfig:\n  xyChart:\n    showTitle: false\n    showLegend: false\n---\nxychart-beta vertical\n    bar \"A long series title that might be wrapped\" [12.5, 0, 6000, 6000, 7500, 6000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "---\nconfig:\n  xyChart:\n    showDataLabel: true\n    chartOrientation: horizontal\n---\nxychart-beta\n    title \"Sales Revenue\"\n    y-axis \"Revenue\" 0 --> 11000\n    bar [12.5, -3]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta\n    x-axis \"Long x axis title\" [Long category name, mar]\n    y-axis \"Count\" -10 --> 10\n    bar \"$$b^2$$\" [5000, 7500, 5000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "---\nconfig:\n  xyChart:\n    xAxis:\n      showLabel: false\n    yAxis:\n      showTick: false\n---\nxychart-beta horizontal\n    bar \"$$b^2$$\" [0, 12.5, 5000]\n    line [7500]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta vertical\n    x-axis -2 --> 1\n    line [0.25 \"\", 7500 \"\", 7500 \"a\", 6000 \"label b\"]\n    line \"Sales Revenue\" [12.5]\n    bar [3, 6000, 9000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta vertical\n    title \"Sales Revenue\"\n    y-axis \"Revenue\" 0 --> 5\n    line [0, 5000, 5000, 100000, -3, 7500]\n    bar \"fa:fa-check ok\" [9000, 5000, 3]\n    bar \"x < y\" [6000, -3, -3, 100000]\n"
+ },
+ {
+  "type": "xychart",
+  "source": "xychart-beta\n    line [6000, 0.25, 9000]\n    line \"A long series title that might be wrapped\" [-3, 0, 6000]\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 0\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, t000, 2024-04-20, 2w\n    Task 1b :done, t001, after t000, 8d\n    section Phase 2\n    Task 2a :t010, after t001, 2w\n    Task 2b :milestone, active, t011, 2024-06-01, 0d\n    Task 2c :active, t012, after t011, 13d\n    Task 2d :t013, after t012, 3w\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 1\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t100, 2024-09-26, 20d\n    Task 1b :done, t101, 2024-03-21, 1w\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 2\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, t200, 2024-08-21, 23d\n    Task 1b :milestone, active, t201, 2024-06-01, 0d\n    Task 1c :milestone, done, t202, 2024-08-24, 0d\n    Task 1d :t203, 2024-03-01, 25d\n    section Phase 2\n    Task 2a :done, t210, after t203, 29d\n    Task 2b :crit, active, t211, after t210, 5d\n    Task 2c :active, t212, after t211, 11d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 3\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t300, 2024-02-16, 1d\n    section Phase 2\n    Task 2a :milestone, crit, t310, 2024-06-21, 0d\n    Task 2b :t311, after t310, 4w\n    Task 2c :done, crit, t312, after t311, 2d\n    section Phase 3\n    Task 3a :active, t320, 2024-08-24, 11d\n    Task 3b :done, crit, t321, after t320, 3w\n    Task 3c :crit, active, t322, after t321, 22d\n    Task 3d :active, t323, after t322, 3w\n    section Phase 4\n    Task 4a :milestone, t330, 2024-06-01, 0d\n    Task 4b :milestone, done, t331, 2024-06-01, 0d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 4\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, active, t400, 2024-03-06, 1d\n    Task 1b :active, t401, 2024-08-01, 22d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 5\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :milestone, crit, active, t500, 2024-09-18, 0d\n    Task 1b :active, t501, after t500, 26d\n    Task 1c :t502, 2024-02-22, 2d\n    Task 1d :done, crit, t503, 2024-06-22, 14d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 6\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t600, 2024-08-06, 7d\n    Task 1b :done, t601, after t600, 12d\n    section Phase 2\n    Task 2a :crit, t610, after t601, 1w\n    Task 2b :t611, after t610, 13d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 7\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t700, 2024-05-01, 20d\n    Task 1b :t701, after t700, 13d\n    Task 1c :milestone, done, t702, 2024-06-01, 0d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 8\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :milestone, done, crit, t800, 2024-08-09, 0d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 9\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :milestone, active, t900, 2024-08-20, 0d\n    section Phase 2\n    Task 2a :done, t910, 2024-08-21, 21d\n    Task 2b :crit, t911, 2024-07-24, 13d\n    section Phase 3\n    Task 3a :milestone, active, t920, 2024-06-01, 0d\n    section Phase 4\n    Task 4a :crit, t930, 2024-06-03, 21d\n    Task 4b :crit, active, t931, 2024-01-22, 26d\n    Task 4c :done, crit, t932, after t931, 13d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 10\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, t1000, 2024-09-03, 21d\n    Task 1b :milestone, t1001, 2024-08-12, 0d\n    Task 1c :active, t1002, 2024-01-11, 28d\n    Task 1d :milestone, t1003, 2024-06-01, 0d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 11\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :milestone, active, t1100, 2024-08-18, 0d\n    Task 1b :t1101, 2024-09-15, 4w\n    Task 1c :active, t1102, 2024-06-11, 12d\n    Task 1d :crit, t1103, after t1102, 15d\n    section Phase 2\n    Task 2a :crit, active, t1110, after t1103, 24d\n    Task 2b :active, t1111, after t1110, 12d\n    section Phase 3\n    Task 3a :done, crit, t1120, after t1111, 13d\n    Task 3b :done, t1121, after t1120, 24d\n    Task 3c :active, t1122, after t1121, 8d\n    section Phase 4\n    Task 4a :crit, active, t1130, after t1122, 22d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 12\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, t1200, 2024-01-11, 25d\n    Task 1b :t1201, after t1200, 28d\n    Task 1c :t1202, 2024-09-09, 2d\n    section Phase 2\n    Task 2a :done, crit, t1210, after t1202, 10d\n    section Phase 3\n    Task 3a :milestone, t1220, 2024-06-01, 0d\n    Task 3b :active, t1221, after t1220, 8d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 13\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t1300, 2024-02-08, 3d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 14\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :active, t1400, 2024-02-04, 24d\n    Task 1b :t1401, after t1400, 5d\n    section Phase 2\n    Task 2a :crit, t1410, after t1401, 23d\n    Task 2b :milestone, crit, active, t1411, 2024-05-03, 0d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 15\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :t1500, 2024-05-08, 1d\n    Task 1b :milestone, done, crit, t1501, 2024-02-24, 0d\n    Task 1c :crit, active, t1502, after t1501, 19d\n    section Phase 2\n    Task 2a :crit, t1510, 2024-03-12, 18d\n    Task 2b :milestone, crit, t1511, 2024-06-01, 0d\n    Task 2c :done, t1512, after t1511, 11d\n    section Phase 3\n    Task 3a :done, t1520, after t1512, 22d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 16\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t1600, 2024-05-27, 1d\n    Task 1b :done, crit, t1601, after t1600, 8d\n    Task 1c :crit, active, t1602, after t1601, 13d\n    section Phase 2\n    Task 2a :done, t1610, 2024-08-08, 24d\n    Task 2b :active, t1611, 2024-08-21, 16d\n    Task 2c :crit, t1612, 2024-03-15, 19d\n    section Phase 3\n    Task 3a :active, t1620, 2024-04-23, 4w\n    Task 3b :t1621, after t1620, 27d\n    Task 3c :done, crit, t1622, 2024-08-23, 2w\n    section Phase 4\n    Task 4a :done, t1630, after t1622, 10d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 17\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :crit, active, t1700, 2024-02-25, 2w\n    Task 1b :done, t1701, 2024-09-23, 4w\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 18\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t1800, 2024-09-14, 11d\n    Task 1b :done, crit, t1801, after t1800, 4w\n    section Phase 2\n    Task 2a :milestone, done, t1810, 2024-06-01, 0d\n    Task 2b :crit, t1811, after t1810, 16d\n    Task 2c :done, crit, t1812, after t1811, 10d\n    Task 2d :crit, t1813, after t1812, 1w\n    section Phase 3\n    Task 3a :done, t1820, after t1813, 15d\n    section Phase 4\n    Task 4a :crit, active, t1830, 2024-02-23, 21d\n"
+ },
+ {
+  "type": "gantt",
+  "source": "gantt\n    title Plan 19\n    dateFormat YYYY-MM-DD\n    axisFormat %b %d\n    todayMarker off\n    section Phase 1\n    Task 1a :done, crit, t1900, 2024-01-24, 30d\n    Task 1b :done, t1901, after t1900, 29d\n    Task 1c :done, crit, t1902, after t1901, 8d\n"
+ }
+]

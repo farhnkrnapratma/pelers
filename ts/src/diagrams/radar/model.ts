@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { RadarAst } from './parser.js';
 
 export interface RadarAxis {
@@ -32,8 +32,8 @@ export interface RadarModel {
 
 const MAX_TICKS = 32;
 
-function invalid(message: string): PeleError {
-  return new PeleError(message, 'semantic', { type: 'radar' });
+function invalid(message: string): PelersError {
+  return new PelersError(message, 'semantic', { type: 'radar' });
 }
 
 export function buildRadar(ast: RadarAst, title: string | undefined): RadarModel {

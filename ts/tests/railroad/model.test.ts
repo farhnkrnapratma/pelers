@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse } from '../../src/index.js';
+import { PelersError, parse } from '../../src/index.js';
 import type { RailroadModel, RailroadNode } from '../../src/diagrams/railroad/types.js';
 
 // How each notation's syntax tree becomes the common rule model. The expected values follow
@@ -112,7 +112,7 @@ describe('railroad model', () => {
       { name: 'r', definition: seq(n('a'), n('b')) },
       { name: 's', definition: n('c') },
     ]);
-    expect(() => parse('railroad-abnf-beta\nr = a ; \n')).toThrow(PeleError);
+    expect(() => parse('railroad-abnf-beta\nr = a ; \n')).toThrow(PelersError);
   });
 
   it('reads PEG suffixes, and shows predicates as special text', () => {
@@ -122,12 +122,12 @@ describe('railroad model', () => {
     expect(peg('&a')).toEqual(s('&a'));
     expect(peg('!"x"')).toEqual(s('!"x"'));
     expect(peg('!.')).toEqual(s('!.'));
-    expect(() => peg('!&a')).toThrow(PeleError);
+    expect(() => peg('!&a')).toThrow(PelersError);
     expect(peg('!( a b )')).toEqual(s('!(...)'));
     expect(peg('!a*')).toEqual(s('!(...)'));
     expect(peg('&( a )')).toEqual(s('&a'));
     expect(peg('( !a )+')).toEqual(rep(s('!a'), 1));
-    expect(() => peg('a**')).toThrow(PeleError);
+    expect(() => peg('a**')).toThrow(PelersError);
   });
 
   it('reads the title and accessibility statements', () => {
@@ -159,8 +159,8 @@ describe('railroad model', () => {
       title: undefined,
       rules: [{ name: 'titles', definition: n('a') }],
     });
-    expect(() => parse('railroad-ebnf-beta\nr = a ;\ntitle Late')).toThrow(PeleError);
-    expect(() => parse('railroad-ebnf-beta\nr = title ;')).toThrow(PeleError);
+    expect(() => parse('railroad-ebnf-beta\nr = a ;\ntitle Late')).toThrow(PelersError);
+    expect(() => parse('railroad-ebnf-beta\nr = title ;')).toThrow(PelersError);
   });
 
   it('keeps keywords out of names only when they stand alone', () => {
@@ -168,7 +168,7 @@ describe('railroad model', () => {
       name: 'terminals',
       definition: n('choice'),
     });
-    expect(() => parse('railroad-beta\nterminal = terminal("a") ;')).toThrow(PeleError);
+    expect(() => parse('railroad-beta\nterminal = terminal("a") ;')).toThrow(PelersError);
     expect(() => parse('railroad-beta-x\nr = terminal("a") ;')).toThrow(/railroad-beta/);
   });
 
@@ -176,7 +176,7 @@ describe('railroad model', () => {
     expect(ebnf('a (* iso *) /* w3c */ b')).toEqual(seq(n('a'), n('b')));
     expect(ir('/* c */ terminal("a") /* d */')).toEqual(t('a'));
     expect(peg('a # to the end of the line\n b')).toEqual(seq(n('a'), n('b')));
-    expect(() => ebnf('a (*) b')).toThrow(PeleError);
+    expect(() => ebnf('a (*) b')).toThrow(PelersError);
   });
 
   it('rejects what the grammars reject', () => {
@@ -200,7 +200,7 @@ describe('railroad model', () => {
       'railroad-peg-beta\nR <- & ;',
       'r = "a" ;',
     ]) {
-      expect(() => parse(src), src).toThrow(PeleError);
+      expect(() => parse(src), src).toThrow(PelersError);
     }
   });
 });

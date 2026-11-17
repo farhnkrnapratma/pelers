@@ -30,7 +30,7 @@ const create = (): BlockDb => new BlockDb({ warn: (message) => log.warn(message)
 let model = create();
 
 // Mermaid's block database is a module-level singleton. This one exposes the current model
-// through the same method names; `root` is not an id in Pele's model, so it is looked up apart.
+// through the same method names; `root` is not an id in Pelers's model, so it is looked up apart.
 export const db = {
   clear(): void {
     model = create();
@@ -81,5 +81,5 @@ export function layout(source: Pick<BlockDB, 'getBlock'>): { x: number; y: numbe
 }
 
 export function getStyles(_options: unknown): string {
-  throw new Error('Pele has no stylesheet.');
+  throw new Error('Pelers has no stylesheet.');
 }

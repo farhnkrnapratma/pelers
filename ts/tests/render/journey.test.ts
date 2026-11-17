@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { elements } from '../support/xml.js';
 
@@ -7,10 +7,10 @@ const options = { measurer: metricsMeasurer };
 const count = (svg: string, cls: string): number => svg.split(`class="${cls}"`).length - 1;
 const texts = (svg: string): string[] => [...svg.matchAll(/>([^<>]+)</g)].map((m) => m[1]);
 const faceY = (svg: string): number[] =>
-  [...svg.matchAll(/class="pele-face pele-face-\w+" transform="translate\([-\d.]+,([-\d.]+)\)"/g)].map((m) =>
+  [...svg.matchAll(/class="pelers-face pelers-face-\w+" transform="translate\([-\d.]+,([-\d.]+)\)"/g)].map((m) =>
     Number(m[1])
   );
-const moods = (svg: string): string[] => [...svg.matchAll(/class="pele-face pele-face-(\w+)"/g)].map((m) => m[1]);
+const moods = (svg: string): string[] => [...svg.matchAll(/class="pelers-face pelers-face-(\w+)"/g)].map((m) => m[1]);
 
 const DAY =
   'journey\n  title My working day\n  section Go to work\n    Make tea: 5: Me\n    Go upstairs: 3: Me\n    Do work: 1: Me, Cat\n  section Go home\n    Go downstairs: 5: Me\n    Sit down: 5: Me\n';
@@ -21,13 +21,13 @@ describe('journey rendering', () => {
     expect(type).toBe('journey');
     expect(supports(DAY)).toBe(true);
     expect(links).toEqual([]);
-    expect(svg).toContain('class="pele pele-journey"');
+    expect(svg).toContain('class="pelers pelers-journey"');
     expect(svg).toContain('>My working day<');
-    expect(count(svg, 'pele-cluster pele-section')).toBe(2);
-    expect(count(svg, 'pele-node pele-task')).toBe(5);
+    expect(count(svg, 'pelers-cluster pelers-section')).toBe(2);
+    expect(count(svg, 'pelers-node pelers-task')).toBe(5);
     expect(moods(svg)).toEqual(['happy', 'neutral', 'sad', 'happy', 'happy']);
-    expect(count(svg, 'pele-actor')).toBe(6);
-    expect(count(svg, 'pele-legend-item')).toBe(2);
+    expect(count(svg, 'pelers-actor')).toBe(6);
+    expect(count(svg, 'pelers-legend-item')).toBe(2);
     expect(svg).toContain('data-id="Go to work"');
     expect(svg).toContain('data-id="Make tea"');
     expect(svg).toContain('>Do work<');
@@ -65,14 +65,14 @@ describe('journey rendering', () => {
   it('colors actors by their place in the sorted list and marks them on each task', () => {
     const { svg } = render(DAY, options);
     const legend = [
-      ...svg.matchAll(/class="pele-legend-item" data-id="(\w+)"><circle [^>]*fill="var\(--pele-series-(\d)/g),
+      ...svg.matchAll(/class="pelers-legend-item" data-id="(\w+)"><circle [^>]*fill="var\(--pelers-series-(\d)/g),
     ].map((m) => [m[1], m[2]]);
     expect(legend).toEqual([
       ['Cat', '1'],
       ['Me', '2'],
     ]);
     const dots = [
-      ...svg.matchAll(/class="pele-actor"[^>]*fill="var\(--pele-series-(\d),[^>]*><title>(\w+)<\/title>/g),
+      ...svg.matchAll(/class="pelers-actor"[^>]*fill="var\(--pelers-series-(\d),[^>]*><title>(\w+)<\/title>/g),
     ].map((m) => [m[2], m[1]]);
     expect(dots).toEqual([
       ['Me', '2'],
@@ -86,9 +86,9 @@ describe('journey rendering', () => {
 
   it('leaves out the nameless actor of a task that ends in a colon', () => {
     const { svg } = render('journey\n  a: 5:\n  b: 3: , Real,\n', options);
-    expect(count(svg, 'pele-actor')).toBe(1);
-    expect(count(svg, 'pele-legend-item')).toBe(1);
-    expect(render('journey\n  a: 5:\n', options).svg).not.toContain('pele-legend');
+    expect(count(svg, 'pelers-actor')).toBe(1);
+    expect(count(svg, 'pelers-legend-item')).toBe(1);
+    expect(render('journey\n  a: 5:\n', options).svg).not.toContain('pelers-legend');
   });
 
   it('spans each section band over its run of tasks, and draws no band for empty or missing sections', () => {
@@ -96,7 +96,7 @@ describe('journey rendering', () => {
       'journey\n  first: 3\n  section A\n  section B\n    b1: 3\n    b2: 3\n  section C\n    c1: 3\n  section D\n',
       options
     );
-    expect(count(svg, 'pele-cluster pele-section')).toBe(2);
+    expect(count(svg, 'pelers-cluster pelers-section')).toBe(2);
     expect(svg).not.toContain('>A<');
     expect(svg).not.toContain('>D<');
     const rects = elements(svg).filter((el) => el.name === 'rect');
@@ -115,7 +115,7 @@ describe('journey rendering', () => {
       'journey\n  section A\n    a: 3\n  section A\n    b: 3\n  section B\n    c: 3\n  section A\n    d: 3\n',
       options
     );
-    expect(count(svg, 'pele-cluster pele-section')).toBe(3);
+    expect(count(svg, 'pelers-cluster pelers-section')).toBe(3);
   });
 
   it('breaks lines at <br>, wraps long task names, and cuts long words', () => {
@@ -141,7 +141,7 @@ describe('journey rendering', () => {
     expect(svg).toContain('fa:fa-check');
     expect(svg).toContain('a&lt;T&gt;');
     expect(svg).toContain('>&lt;i&gt;Me&lt;/i&gt;<');
-    expect(svg).not.toContain('pele-icon');
+    expect(svg).not.toContain('pelers-icon');
   });
 
   it('keeps many actors inside their card', () => {
@@ -152,7 +152,7 @@ describe('journey rendering', () => {
     const card = elements(svg).filter((el) => el.name === 'rect')[0];
     const x0 = Number(card.attrs.get('x'));
     const x1 = x0 + Number(card.attrs.get('width'));
-    const dots = elements(svg).filter((el) => el.attrs.get('class') === 'pele-actor');
+    const dots = elements(svg).filter((el) => el.attrs.get('class') === 'pelers-actor');
     expect(dots.length).toBe(60);
     for (const dot of dots) {
       expect(Number(dot.attrs.get('cx')) - 5).toBeGreaterThanOrEqual(x0);
@@ -189,8 +189,8 @@ describe('journey rendering', () => {
       'journey\n  accTitle: Short name\n  accDescr {\n    A longer\n    description\n  }\n  a: 3\n',
       options
     );
-    expect(svg).toContain('<title id="pele-title">Short name</title>');
-    expect(svg).toContain('<desc id="pele-desc">A longer\ndescription</desc>');
+    expect(svg).toContain('<title id="pelers-title">Short name</title>');
+    expect(svg).toContain('<desc id="pelers-desc">A longer\ndescription</desc>');
   });
 
   it('draws an empty journey, a lone title, and sections without tasks', () => {
@@ -199,7 +199,7 @@ describe('journey rendering', () => {
       expect(svg).not.toMatch(/NaN|Infinity|undefined/);
       expect(width).toBeGreaterThan(0);
       expect(height).toBeGreaterThan(0);
-      expect(count(svg, 'pele-grid')).toBe(0);
+      expect(count(svg, 'pelers-grid')).toBe(0);
     }
   });
 
@@ -207,8 +207,8 @@ describe('journey rendering', () => {
     expect(() => render('journey\n  A task\n', options)).toThrow(/Expecting 'taskData', got 'NEWLINE'/);
     expect(() => render('journey\n  A task:\n', options)).toThrow(/got ':'/);
     expect(() => render('journey\n  A; B: 3\n', options)).toThrow(/got 'INVALID'/);
-    expect(() => render('journey\n  : 5\n', options)).toThrow(PeleError);
-    expect(() => render('journey\n  accDescr {\n  never closed\n', options)).toThrow(PeleError);
+    expect(() => render('journey\n  : 5\n', options)).toThrow(PelersError);
+    expect(() => render('journey\n  accDescr {\n  never closed\n', options)).toThrow(PelersError);
   });
 
   it('treats a bare title as no title', () => {

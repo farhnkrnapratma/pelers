@@ -2,7 +2,7 @@ import { sanitizeUrl as reference } from '@braintree/sanitize-url';
 import { describe, expect, it } from 'vitest';
 import { internalLink, linkUrl, sanitizeUrl } from '../../src/util/url.js';
 
-// Mermaid sanitizes click targets with @braintree/sanitize-url; Pele must give the same answers,
+// Mermaid sanitizes click targets with @braintree/sanitize-url; Pelers must give the same answers,
 // apart from keeping percent escapes.
 const URLS = [
   'https://example.com',

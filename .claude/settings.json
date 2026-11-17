@@ -1,41 +1,94 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "cargo-agents hook claude post-tool-use",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "Bash|Grep",
         "hooks": [
           {
-            "type": "command",
             "command": "graphify hook-guard search",
-            "timeout": 10
+            "timeout": 10,
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Bash|Grep"
       },
       {
-        "matcher": "Read|Glob",
         "hooks": [
           {
-            "type": "command",
             "command": "graphify hook-guard read",
-            "timeout": 10
+            "timeout": 10,
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Read|Glob"
       },
       {
-        "matcher": "Bash",
         "hooks": [
           {
-            "type": "command",
             "command": "bash .claude/hooks/block-main-commit.sh",
             "if": "Bash(git commit:*)",
-            "timeout": 10
+            "timeout": 10,
+            "type": "command"
           },
           {
-            "type": "command",
-            "command": "d=\"$(pwd)\"; until [ -f \"$d/.claude/hooks/fallow-gate.sh\" ] || [ -e \"$d/.git\" ] || [ \"$d\" = / ]; do d=\"$(dirname \"$d\")\"; done; if [ -f \"$d/.claude/hooks/fallow-gate.sh\" ]; then cd \"$d\" && exec ./.claude/hooks/fallow-gate.sh; fi; exec \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/fallow-gate.sh"
+            "command": "d=\"$(pwd)\"; until [ -f \"$d/.claude/hooks/fallow-gate.sh\" ] || [ -e \"$d/.git\" ] || [ \"$d\" = / ]; do d=\"$(dirname \"$d\")\"; done; if [ -f \"$d/.claude/hooks/fallow-gate.sh\" ]; then cd \"$d\" && exec ./.claude/hooks/fallow-gate.sh; fi; exec \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/fallow-gate.sh",
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "command": "cargo-agents hook claude pre-tool-use",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "cargo-agents hook claude session-start",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "cargo-agents hook claude stop",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "cargo-agents hook claude user-prompt-submit",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
       }
     ]
   }

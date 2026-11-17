@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 
 export interface TimelinePeriod {
   text: string;
@@ -68,7 +68,7 @@ export class TimelineDb implements TimelineModel {
   addEvent(event: string): void {
     const period = this.periods[this.periods.length - 1];
     // Mermaid fails here too, with a TypeError.
-    if (!period) throw new PeleError('An event needs a time period before it.', 'semantic', { type: 'timeline' });
+    if (!period) throw new PelersError('An event needs a time period before it.', 'semantic', { type: 'timeline' });
     period.events.push(event);
   }
 }

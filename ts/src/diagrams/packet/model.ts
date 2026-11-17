@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Config } from '../../preprocess.js';
 import type { PacketAst } from './parser.js';
 
@@ -26,8 +26,8 @@ export function packetOption(config: Config, key: string, fallback: number, min:
   return typeof value === 'number' && value >= min ? Math.min(value, max) : fallback;
 }
 
-function invalid(message: string): PeleError {
-  return new PeleError(message, 'semantic', { type: 'packet' });
+function invalid(message: string): PelersError {
+  return new PelersError(message, 'semantic', { type: 'packet' });
 }
 
 export function buildPacket(ast: PacketAst, config: Config, title: string | undefined): PacketModel {

@@ -3,7 +3,7 @@ import { ClassMember } from '../../src/diagrams/class/members.js';
 import { parseGenericTypes } from '../../src/diagrams/common/generics.js';
 import { random } from '../support/corpus.js';
 
-// Pele splits members and converts generics in one pass each. These are Mermaid's own versions,
+// Pelers splits members and converts generics in one pass each. These are Mermaid's own versions,
 // a backtracking regular expression and a rescanning loop, kept here to compare results with.
 
 const METHOD = /([#+~-])?(.+)\((.*)\)([\s$*])?(.*)([$*])?/;

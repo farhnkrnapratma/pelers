@@ -10,8 +10,8 @@ const LIGHT = new Set(
   )
 );
 
-export const ON_LIGHT = 'var(--pele-fg-on-light,#1f1f1f)';
-export const ON_DARK = 'var(--pele-fg-on-dark,#fff)';
+export const ON_LIGHT = 'var(--pelers-fg-on-light,#1f1f1f)';
+export const ON_DARK = 'var(--pelers-fg-on-dark,#fff)';
 
 const RE_FILL = /[";]fill:([^;"]*)/;
 const RE_OPACITIES = /[";](?:fill-)?opacity:([^;"]*)/g;

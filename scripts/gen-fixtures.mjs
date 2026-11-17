@@ -2,6 +2,8 @@ import { writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
+const OUT = process.env.PELERS_FUZZ_OUT ?? (`${root}tests/fixtures`);
 const { layoutLabel } = await import(`${root}ts/src/text/label.ts`);
 const { metricsMeasurer } = await import(`${root}ts/src/text/measurer.ts`);
 const { esc, labelSvg, num } = await import(`${root}ts/src/svg/builder.ts`);
@@ -14,7 +16,7 @@ function mulberry32(seed) {
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
 }
-const random = mulberry32(20261105);
+const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 20261105));
 const pick = list => list[Math.floor(random() * list.length)];
 
 const FRAGMENTS = [
@@ -33,7 +35,7 @@ const cases = [];
 const sizes = [10, 12, 14, 16, 20, 24];
 const widths = [30, 60, 120, 200, 4000];
 const fixed = [
-    'Start', 'Pele v1.0.0-alpha2', 'A label that is long enough to wrap onto several lines when narrow',
+    'Start', 'Pelers v1.0.0-alpha2', 'A label that is long enough to wrap onto several lines when narrow',
     'line one<br/>line two', '**bold** and *italic*', 'a <b>bold</b> c', 'H<sub>2</sub>O and x<sup>2</sup>',
     '    indented\n    markdown', '', ' ', 'x', 'fa:fa-user Alice', 'Alice fa:fa-user', 'text &amp; more',
 ];
@@ -45,7 +47,7 @@ const narrow = [
 ];
 for (const raw of narrow) for (const markdown of [false, true]) for (const max of [20, 45, 80]) cases.push({ raw, markdown, size: 16, max, base: 0 });
 for (const raw of ['a<br><br>b', '<br>a', 'a<br>', '漢字),漢,字.', 'abc\u200b)def ghi', 'ab\u00ad,cd efg']) for (const max of [-1, 0, 20, 45]) cases.push({ raw, markdown: false, size: 16, max, base: 0 });
-for (let i = 0; i < 1500; i++) {
+for (let i = 0; i < 1500 * SCALE; i++) {
     let raw = '';
     for (let n = 1 + Math.floor(random() * 7); n > 0; n--) raw += pick(FRAGMENTS) + (random() < 0.5 ? ' ' : '');
     cases.push({
@@ -72,9 +74,9 @@ const out = cases.map(({ raw, markdown, size, max, base }) => {
 });
 
 const values = [0, -0, 0.004, 0.005, 0.125, 1.005, 1.006, 25.6, 75, -2.5, -0.125, 1e9, 1e10, 1e11, 1e12, 123456.789, NaN, Infinity, -Infinity];
-for (let i = 0; i < 400; i++) values.push((random() - 0.5) * Math.pow(10, Math.floor(random() * 8)));
+for (let i = 0; i < 400 * SCALE; i++) values.push((random() - 0.5) * Math.pow(10, Math.floor(random() * 8)));
 const numbers = values.map(value => [text(value), num(value)]);
 const escapes = ['plain', 'a<b>&"c', '\u0001\u007fx￾', '&amp;', '😀 <>'].map(s => [s, esc(s)]);
 
-writeFileSync(`${root}tests/fixtures/text.json`, `${JSON.stringify({ labels: out, numbers, escapes })}\n`);
+writeFileSync(`${OUT}/text.json`, `${JSON.stringify({ labels: out, numbers, escapes })}\n`);
 console.log(`fixtures: ${out.length} labels, ${numbers.length} numbers, ${escapes.length} escapes`);

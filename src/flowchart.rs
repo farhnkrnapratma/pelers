@@ -1,4 +1,4 @@
-use crate::errors::{PeleError, syntax_error};
+use crate::errors::{PelersError, syntax_error};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Direction {
@@ -58,7 +58,7 @@ pub struct FlowchartModel {
     pub subgraphs: Vec<Subgraph>,
 }
 
-fn direction(value: &str, source: &str, offset: usize) -> Result<Direction, PeleError> {
+fn direction(value: &str, source: &str, offset: usize) -> Result<Direction, PelersError> {
     match value {
         "TB" | "TD" => Ok(Direction::Tb),
         "BT" => Ok(Direction::Bt),
@@ -116,7 +116,7 @@ fn parse_edge_label<'a>(
     value: &'a str,
     source: &str,
     offset: usize,
-) -> Result<(Option<String>, &'a str), PeleError> {
+) -> Result<(Option<String>, &'a str), PelersError> {
     if let Some(rest) = value.strip_prefix('|') {
         let Some(end) = rest.find('|') else {
             return Err(syntax_error(
@@ -186,7 +186,7 @@ fn split_semicolons(source: &str) -> String {
     result
 }
 
-pub fn parse(source: &str) -> Result<FlowchartModel, PeleError> {
+pub fn parse(source: &str) -> Result<FlowchartModel, PelersError> {
     let normalized = split_semicolons(source);
     let mut lines = normalized.lines();
     let header = lines

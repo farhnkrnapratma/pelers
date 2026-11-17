@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { PeleError, parse } from '../../src/index.js';
+import { PelersError, parse } from '../../src/index.js';
 import type { AgentflowDb } from '../../src/diagrams/agentflow/db.js';
 import { buildAgentGraph } from '../../src/diagrams/agentflow/graph.js';
 import { loadCorpus, mutator, random } from './corpus.js';
@@ -128,13 +128,13 @@ const project = ${PROJECT};
 const PALETTE = 12;
 const CURVE = 'basis';
 
-// Pele's model through the accessors the projection reads.
-export function peleReference(src: string): Reference {
+// Pelers's model through the accessors the projection reads.
+export function pelersReference(src: string): Reference {
   let db: AgentflowDb;
   try {
     db = parse(src, { limit: Infinity }) as unknown as AgentflowDb;
   } catch (error) {
-    if (error instanceof PeleError) return { src, error: error.message.split('\n')[0] };
+    if (error instanceof PelersError) return { src, error: error.message.split('\n')[0] };
     throw error;
   }
   const graph = buildAgentGraph(db, PALETTE, CURVE);
@@ -143,7 +143,7 @@ export function peleReference(src: string): Reference {
   edges.defaultInterpolate = db.defaultInterpolate;
   const view = {
     getData: () => ({
-      // Mermaid marks a node's kind with a class; Pele keeps the kind on the node.
+      // Mermaid marks a node's kind with a class; Pelers keeps the kind on the node.
       nodes: graph.nodes.map((n) => ({
         ...n,
         cssClasses: (n.cssClasses + (n.kind ? ` af-kind-${n.kind}` : '')).replace(/\s+/g, ' ').trim(),
@@ -172,7 +172,7 @@ export function comparable(value: unknown): unknown {
     const out: Record<string, unknown> = {};
     for (const key of Object.keys(value).sort()) {
       const entry = (value as Record<string, unknown>)[key];
-      // Mermaid's DOM ids and click bookkeeping have no counterpart in Pele.
+      // Mermaid's DOM ids and click bookkeeping have no counterpart in Pelers.
       if (entry === undefined || key === 'domId' || key === 'haveCallback') continue;
       out[key] = comparable(entry);
     }

@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import { writtenCodes } from '../../text/entities.js';
 import { isDigit } from '../../util/chars.js';
 
@@ -213,8 +213,8 @@ function locationFromMessage(
   return undefined;
 }
 
-function jsonError(message: string, line: number, column: number): PeleError {
-  return new PeleError(`${message} (line ${line}, column ${column})`, 'syntax', { type: 'usecase', line, column });
+function jsonError(message: string, line: number, column: number): PelersError {
+  return new PelersError(`${message} (line ${line}, column ${column})`, 'syntax', { type: 'usecase', line, column });
 }
 
 // Parses the body of a `json` node. `origin` gives the line and column the text starts at in the diagram.

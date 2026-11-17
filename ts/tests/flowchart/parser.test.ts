@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { FlowDb } from '../../src/diagrams/flowchart/db.js';
 import { parseFlowchart } from '../../src/diagrams/flowchart/parser.js';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 
 function parse(src: string): FlowDb {
   const db = new FlowDb();
@@ -35,8 +35,8 @@ describe('flowchart parser', () => {
       parse('graph TD\nA-->B\nB --> [oops]');
       expect.unreachable();
     } catch (error) {
-      expect(error).toBeInstanceOf(PeleError);
-      const e = error as PeleError;
+      expect(error).toBeInstanceOf(PelersError);
+      const e = error as PelersError;
       expect(e.line).toBe(3);
       expect(e.column).toBe(7);
       expect(e.message).toContain("got 'SQS'");

@@ -8,7 +8,7 @@ export type Diagram = unknown;
 // Mermaid's renderer, which the specs that are skipped draw with.
 export function draw(): void {}
 
-// Exposes Pele's venn model through the names Mermaid's specs call on its DB.
+// Exposes Pelers's venn model through the names Mermaid's specs call on its DB.
 class VennDB extends VennDb {
   getLogger: unknown;
 

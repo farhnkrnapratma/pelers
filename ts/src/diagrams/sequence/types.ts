@@ -86,7 +86,7 @@ export interface SeqActor {
   nextActor?: string;
   links: Map<string, unknown>;
   properties: Map<string, unknown>;
-  // The id of the page element named by a `details` statement. Pele has no page to read it from.
+  // The id of the page element named by a `details` statement. Pelers has no page to read it from.
   details?: string;
   type: string;
 }

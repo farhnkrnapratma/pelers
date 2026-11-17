@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const { render } = await import(join(root, 'ts/dist/pele.js'));
+const { render } = await import(join(root, 'ts/dist/pelers.js'));
 
 function mulberry32(seed) {
     return () => {
@@ -22,7 +22,7 @@ const chance = odds => random() < odds;
 const WORDS = ['Dogs', 'Cats', 'Rats', 'Calcium', 'Iron', 'North', 'Q1 2024', 'a', 'B', 'Übergrößenträger', '日本語', 'emoji 😀', 'a&amp;b', '<b>bold</b>', 'x < y', 'long label that keeps going and going well past any reasonable width', '', ' ', 'with "quote"', "it's", 'back\\slash', 'tab\there', '#fff', '100%'];
 const COLORS = [
     '#ff0000', 'red', 'navy', 'gold', 'Grey', 'rgb(10 20 30)', 'hsl(200, 50%, 60%)', 'rgba(0,0,0,.4)', '#0008', '#abc', '#abcd',
-    'var(--pele-x)', 'var(--other)', 'url(x)', 'calc(1)', 'rebeccapurple', 'transparent', 'currentcolor', 5, true, '',
+    'var(--pelers-x)', 'var(--other)', 'url(x)', 'calc(1)', 'rebeccapurple', 'transparent', 'currentcolor', 5, true, '',
     '#707070', '#767676', '#777777', '#787878', '#7a7a7a', '#808080', '#6e6e6e', '#757575', '#7f7f7f',
     'hsl(0.5turn 50% 50%)', 'hsl(3.14rad 40% 40%)', 'hsl(200grad 60% 70%)', 'hsl(90deg, 100%, 25%)', 'hsl(120 100% 50% / 50%)',
     'hwb(0 0% 0%)', 'color-mix(in srgb, red, blue)', 'light-dark(red, blue)', 'rgb(10% 20% 30%)', 'rgb(none 5 7)',

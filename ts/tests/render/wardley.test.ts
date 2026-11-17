@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 const options = { measurer: metricsMeasurer };
@@ -15,15 +15,15 @@ describe('wardley rendering', () => {
     const { svg, type } = render(TEA, options);
     expect(type).toBe('wardley');
     expect(supports(TEA)).toBe(true);
-    expect(svg).toContain('class="pele-wardley-axis"');
-    expect(count(svg, /class="pele-wardley-stage"/g)).toBe(3);
+    expect(svg).toContain('class="pelers-wardley-axis"');
+    expect(count(svg, /class="pelers-wardley-stage"/g)).toBe(3);
     for (const stage of ['Genesis', 'Custom Built', 'Product', 'Commodity', 'Evolution', 'Visibility'])
       expect(svg).toContain(`>${stage}<`);
-    expect(count(svg, /class="pele-node pele-wardley-component"/g)).toBe(4);
-    expect(count(svg, /class="pele-node pele-wardley-anchor"/g)).toBe(1);
-    expect(count(svg, /class="pele-edge"/g)).toBe(4);
-    expect(count(svg, /class="pele-wardley-trend"/g)).toBe(2);
-    expect(svg).toContain('class="pele-wardley-note"');
+    expect(count(svg, /class="pelers-node pelers-wardley-component"/g)).toBe(4);
+    expect(count(svg, /class="pelers-node pelers-wardley-anchor"/g)).toBe(1);
+    expect(count(svg, /class="pelers-edge"/g)).toBe(4);
+    expect(count(svg, /class="pelers-wardley-trend"/g)).toBe(2);
+    expect(svg).toContain('class="pelers-wardley-note"');
     expect(svg).toContain('>Tea Shop<');
     expect(svg).toContain('data-id="Cup of Tea"');
     expect(svg).not.toContain('NaN');
@@ -62,7 +62,7 @@ describe('wardley rendering', () => {
     );
     expect(svg).toContain('Genesis / Concept');
     expect(svg).toContain('>Utility<');
-    const xs = [...svg.matchAll(/class="pele-wardley-stage" d="M([\d.]+),/g)].map((m) => Number(m[1]));
+    const xs = [...svg.matchAll(/class="pelers-wardley-stage" d="M([\d.]+),/g)].map((m) => Number(m[1]));
     expect(xs).toHaveLength(3);
     expect(xs[0] / xs[1]).toBeCloseTo(0.6, 5);
   });
@@ -73,17 +73,17 @@ describe('wardley rendering', () => {
       options
     );
     for (const strategy of ['build', 'buy', 'outsource', 'market'])
-      expect(svg).toContain(`class="pele-wardley-${strategy}"`);
-    expect(count(svg, /class="pele-wardley-inertia"/g)).toBe(2);
+      expect(svg).toContain(`class="pelers-wardley-${strategy}"`);
+    expect(count(svg, /class="pelers-wardley-inertia"/g)).toBe(2);
   });
 
   it('draws flows, dashed links, and link labels', () => {
     const src =
       "wardley-beta\ncomponent A [0.9, 0.1]\ncomponent B [0.5, 0.5]\ncomponent C [0.1, 0.9]\nA +> B\nB +< C\nA +<> C\nA -.-> B; note here\nB +'cash'> C\nA -> Missing\nA -> A\n";
     const { svg } = render(src, options);
-    expect(count(svg, /class="pele-edge[ "]/g)).toBe(5);
-    expect(count(svg, /class="pele-marker"/g)).toBe(5);
-    expect(count(svg, /class="pele-edge pele-wardley-dashed"/g)).toBe(1);
+    expect(count(svg, /class="pelers-edge[ "]/g)).toBe(5);
+    expect(count(svg, /class="pelers-marker"/g)).toBe(5);
+    expect(count(svg, /class="pelers-edge pelers-wardley-dashed"/g)).toBe(1);
     expect(svg).toContain('>note here</text>');
     expect(svg).toContain('>cash</text>');
   });
@@ -92,11 +92,11 @@ describe('wardley rendering', () => {
     const src =
       'wardley-beta\ncomponent Kettle [0.45, 0.57]\ncomponent Water [0.8, 0.8]\npipeline Kettle {\n  component Campfire Kettle [0.35]\n  component Electric Kettle [0.53]\n}\nWater -> Electric Kettle\nCampfire Kettle -> Kettle\n';
     const { svg } = render(src, options);
-    expect(count(svg, /class="pele-wardley-pipeline"/g)).toBe(1);
-    expect(count(svg, /class="pele-node pele-wardley-pipeline-component"/g)).toBe(2);
-    expect(count(svg, /class="pele-node pele-wardley-pipeline-parent"/g)).toBe(1);
+    expect(count(svg, /class="pelers-wardley-pipeline"/g)).toBe(1);
+    expect(count(svg, /class="pelers-node pelers-wardley-pipeline-component"/g)).toBe(2);
+    expect(count(svg, /class="pelers-node pelers-wardley-pipeline-parent"/g)).toBe(1);
     expect(svg).toContain('data-id="Water-Kettle_Electric Kettle"');
-    expect(count(svg, /class="pele-edge"/g)).toBe(1);
+    expect(count(svg, /class="pelers-edge"/g)).toBe(1);
     const model = parse(src);
     if (model.type === 'wardley')
       expect(model.pipelines).toEqual([
@@ -108,7 +108,7 @@ describe('wardley rendering', () => {
     const body = 'annotation 2,[0.5, 0.5] "Second"\nannotation 1,[0.6, 0.65] "First"\n';
     const boxed = render('wardley-beta\nannotations [0.9, 0.1]\n' + body, options);
     const below = render('wardley-beta\n' + body, options);
-    expect(count(boxed.svg, /class="pele-wardley-annotation"/g)).toBe(2);
+    expect(count(boxed.svg, /class="pelers-wardley-annotation"/g)).toBe(2);
     expect(boxed.svg.indexOf('1. First')).toBeLessThan(boxed.svg.indexOf('2. Second'));
     expect(below.svg).toContain('2. Second');
     expect(below.height).toBeGreaterThan(boxed.height);
@@ -131,8 +131,8 @@ describe('wardley rendering', () => {
       'wardley-beta\naccelerator "AI Adoption" [0.55, 0.25]\ndeaccelerator Legacy [0.15, 0.75]\n',
       options
     );
-    expect(svg).toContain('class="pele-wardley-accelerator" data-id="AI Adoption"');
-    expect(svg).toContain('class="pele-wardley-deaccelerator" data-id="Legacy"');
+    expect(svg).toContain('class="pelers-wardley-accelerator" data-id="AI Adoption"');
+    expect(svg).toContain('class="pelers-wardley-deaccelerator" data-id="Legacy"');
   });
 
   it('honours size, label offsets, and the grid option, and keeps labels inside the picture', () => {
@@ -147,15 +147,15 @@ describe('wardley rendering', () => {
     expect(
       render('---\nconfig:\n  wardley-beta:\n    showGrid: true\n---\nwardley-beta\ncomponent A [0.5, 0.5]\n', options)
         .svg
-    ).toContain('pele-wardley-grid');
-    expect(base.svg).not.toContain('pele-wardley-grid');
+    ).toContain('pelers-wardley-grid');
+    expect(base.svg).not.toContain('pelers-wardley-grid');
   });
 
   it('draws titles and accessible names', () => {
     const { svg } = render('---\ntitle: Front\n---\nwardley-beta\naccTitle: Acc\naccDescr: Described\n', options);
     expect(svg).toContain('>Front<');
-    expect(svg).toContain('<title id="pele-title">Acc</title>');
-    expect(svg).toContain('<desc id="pele-desc">Described</desc>');
+    expect(svg).toContain('<title id="pelers-title">Acc</title>');
+    expect(svg).toContain('<desc id="pelers-desc">Described</desc>');
     expect(render('---\ntitle: Front\n---\nwardley-beta\ntitle Own\n', options).svg).toContain('>Own<');
   });
 
@@ -172,7 +172,7 @@ describe('wardley rendering', () => {
       'wardley-beta\nA B',
       'wardley-beta\nnote text [0.1, 0.2]',
     ]) {
-      expect(() => render(src, options), src).toThrow(PeleError);
+      expect(() => render(src, options), src).toThrow(PelersError);
     }
   });
 });

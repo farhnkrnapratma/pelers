@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const entry = resolve(process.argv[2]);
-const outdir = resolve('node_modules/.cache/pele-run');
+const outdir = resolve('node_modules/.cache/pelers-run');
 mkdirSync(outdir, { recursive: true });
 const outfile = resolve(outdir, `run-${process.pid}.mjs`);
 await build({

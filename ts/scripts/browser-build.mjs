@@ -9,11 +9,11 @@ export const browserBuild = {
   entryPoints: ['src/index.ts'],
   bundle: true,
   format: 'iife',
-  globalName: 'pele',
+  globalName: 'pelers',
   target: 'es2021',
   minify: true,
   charset: 'utf8',
   legalComments: 'none',
   logLevel: 'warning',
-  banner: { js: `/*! Pele ${version} | MIT License | https://github.com/obsidianmd/pele */` },
+  banner: { js: `/*! Pelers ${version} | MIT License | https://github.com/obsidianmd/pelers */` },
 };

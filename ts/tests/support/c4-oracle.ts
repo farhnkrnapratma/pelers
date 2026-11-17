@@ -7,7 +7,7 @@ import { createOracle, recordingYy, type Call, type Outcome, type Pair } from '.
 
 export const oracle = createOracle(resolve('tests/compat/c4/upstream/c4Diagram.jison'));
 
-// Match Pele: titles stay on one line; bare titles are ignored.
+// Match Pelers: titles stay on one line; bare titles are ignored.
 {
   const lexer = oracle.parser.lexer as unknown as { rules: RegExp[]; performAction: (...args: unknown[]) => unknown };
   const titles = lexer.rules.filter((rule) => rule.source === String.raw`^(?:title\s[^#\n;]+)`);
@@ -28,7 +28,7 @@ export function oracleTokens(src: string): Pair[] {
   return oracle.tokens(src, recordingYy(oracle.methods).yy);
 }
 
-export function peleTokens(src: string): Pair[] {
+export function pelersTokens(src: string): Pair[] {
   const { types, starts, ends } = tokenize(src);
   return types.map((t, i) => [TOKEN_NAMES[t], src.slice(starts[i], ends[i])] as Pair);
 }
@@ -40,7 +40,7 @@ export function oracleParse(src: string): Outcome {
 }
 
 // The grammar spreads the argument list into each call and builds a one-key object for a named
-// argument. Pele passes the list as an array of strings and { key, value } pairs; this puts its
+// argument. Pelers passes the list as an array of strings and { key, value } pairs; this puts its
 // calls in the grammar's form. The assignment mirrors the grammar's `kv[key] = value`.
 function spread(call: Call): Call {
   const out: Call = [];
@@ -62,7 +62,7 @@ function spread(call: Call): Call {
   return out;
 }
 
-export function peleParse(src: string): Outcome {
+export function pelersParse(src: string): Outcome {
   const { yy, calls } = recordingYy(oracle.methods);
   try {
     parseC4(src, yy as unknown as C4Db);

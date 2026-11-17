@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports } from '../../src/index.js';
 import type { FlowchartModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
@@ -33,7 +33,7 @@ interface Box {
 function lanes(svg: string): Map<string, Box> {
   const out = new Map<string, Box>();
   for (const m of svg.matchAll(
-    /<g class="pele-cluster pele-lane[^"]*" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
+    /<g class="pelers-cluster pelers-lane[^"]*" data-id="([^"]*)"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/g
   )) {
     out.set(m[1], { x: Number(m[2]), y: Number(m[3]), w: Number(m[4]), h: Number(m[5]) });
   }
@@ -42,7 +42,7 @@ function lanes(svg: string): Map<string, Box> {
 function centers(svg: string): Map<string, [number, number]> {
   const out = new Map<string, [number, number]>();
   for (const m of svg.matchAll(
-    /<g class="pele-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"/g
+    /<g class="pelers-node[^"]*" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"/g
   )) {
     out.set(m[1], [Number(m[2]), Number(m[3])]);
   }
@@ -69,14 +69,14 @@ describe('swimlane rendering', () => {
   });
 
   it('rejects what the flowchart grammar rejects', () => {
-    expect(() => render('swimlane-beta LR\n  a --> ', options)).toThrow(PeleError);
-    expect(() => render('swimlane-beta LR\n  subgraph x\n  a', options)).toThrow(PeleError);
+    expect(() => render('swimlane-beta LR\n  a --> ', options)).toThrow(PelersError);
+    expect(() => render('swimlane-beta LR\n  subgraph x\n  a', options)).toThrow(PelersError);
   });
 
   it('draws one lane per top-level subgraph and keeps each node in its lane', () => {
     const svg = svgOf(ORDER);
     assertWellFormed(svg);
-    expect(svg).toContain('class="pele pele-swimlane"');
+    expect(svg).toContain('class="pelers pelers-swimlane"');
     expect(svg).toContain('aria-roledescription="swimlane"');
     const boxes = lanes(svg);
     const at = centers(svg);
@@ -125,8 +125,8 @@ describe('swimlane rendering', () => {
       for (const lane of model.subgraphs) {
         for (const id of lane.nodes) expect(inside(at.get(id)!, boxes.get(lane.id)!)).toBe(true);
       }
-      expect(count(narrow.svg, 'class="pele-edge"')).toBe(count(wide.svg, 'class="pele-edge"'));
-      expect(count(narrow.svg, 'class="pele-marker"')).toBe(count(wide.svg, 'class="pele-marker"'));
+      expect(count(narrow.svg, 'class="pelers-edge"')).toBe(count(wide.svg, 'class="pelers-edge"'));
+      expect(count(narrow.svg, 'class="pelers-marker"')).toBe(count(wide.svg, 'class="pelers-marker"'));
       const labels = (svg: string) =>
         [...svg.matchAll(/<text\b[^>]*>(.*?)<\/text>/g)].map((match) => match[1].replace(/<[^>]+>|\s/g, ''));
       expect(labels(narrow.svg)).toEqual(labels(wide.svg));
@@ -189,7 +189,7 @@ describe('swimlane rendering', () => {
     expect(narrow.svg).not.toContain('rotate(');
     expect(lanes(narrow.svg).size).toBe(3);
     const inner = narrow.svg.match(
-      /class="pele-cluster" data-id="Inner"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/
+      /class="pelers-cluster" data-id="Inner"><rect x="([-\d.]+)" y="([-\d.]+)" width="([\d.]+)" height="([\d.]+)"/
     )!;
     const b = { x: Number(inner[1]), y: Number(inner[2]), w: Number(inner[3]), h: Number(inner[4]) };
     const at = centers(narrow.svg);
@@ -198,15 +198,15 @@ describe('swimlane rendering', () => {
     expect(narrow.links).toEqual(wide.links);
     for (const value of [
       '>Delivery<',
-      '<title id="pele-title">Accessible delivery</title>',
+      '<title id="pelers-title">Accessible delivery</title>',
       'Delivery process',
       'fill:#f00',
       'stroke:#0f0',
-      'pele-shape-diam',
-      'pele-shape-cyl',
+      'pelers-shape-diam',
+      'pelers-shape-cyl',
     ])
       expect(narrow.svg).toContain(value);
-    expect(count(narrow.svg, 'class="pele-edge"')).toBe(count(wide.svg, 'class="pele-edge"'));
+    expect(count(narrow.svg, 'class="pelers-edge"')).toBe(count(wide.svg, 'class="pelers-edge"'));
   });
 
   it('follows every direction', () => {
@@ -235,7 +235,7 @@ describe('swimlane rendering', () => {
       'swimlane-beta TD\n  subgraph One\n    subgraph Inner\n      a --> b\n    end\n    c\n  end\n  subgraph Two\n  end\n  b --> c'
     );
     expect(lanes(svg).size).toBe(2);
-    expect(count(svg, 'class="pele-cluster"')).toBe(1);
+    expect(count(svg, 'class="pelers-cluster"')).toBe(1);
     expect(svg).toContain('>Inner<');
   });
 
@@ -250,9 +250,9 @@ describe('swimlane rendering', () => {
       '---\ntitle: Orders\n---\nswimlane-beta LR\n  accTitle: Order flow\n  accDescr: Who does what\n  subgraph L[Lane **one**]\n    a{Choice} --> b[(Store)]\n    b --> b\n  end\n  click a "https://example.com" "tip"\n  style a fill:#f00\n  classDef hot stroke:#0f0\n  class b hot\n  style L fill:#00f'
     );
     assertWellFormed(svg);
-    expect(svg).toContain('pele-shape-');
+    expect(svg).toContain('pelers-shape-');
     expect(svg).toContain('>Orders<');
-    expect(svg).toContain('<title id="pele-title">Order flow</title>');
+    expect(svg).toContain('<title id="pelers-title">Order flow</title>');
     expect(svg).toContain('href="https://example.com/"');
     expect(svg).toContain('fill:#f00');
     expect(svg).toContain('fill:#00f');
@@ -265,17 +265,17 @@ describe('swimlane rendering', () => {
     const svg = svgOf(
       'swimlane-beta LR\n  subgraph L[Light]\n    a\n  end\n  subgraph D[Dark]\n    b\n  end\n  subgraph P[Plain]\n    c\n  end\n  style L fill:#BBDEFB\n  style D fill:#1f3a5f'
     );
-    expect(svg).toContain('<text class="pele-cluster-label" fill="var(--pele-fg-on-light,#1f1f1f)"');
-    expect(svg).toMatch(/data-id="D">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(svg).toMatch(/data-id="P">.*?<text class="pele-cluster-label" fill="var\(--_m\)"/);
-    expect(svg).toMatch(/data-id="a"[^>]*><rect [^>]*\/><text class="pele-label" x=/);
+    expect(svg).toContain('<text class="pelers-cluster-label" fill="var(--pelers-fg-on-light,#1f1f1f)"');
+    expect(svg).toMatch(/data-id="D">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(svg).toMatch(/data-id="P">.*?<text class="pelers-cluster-label" fill="var\(--_m\)"/);
+    expect(svg).toMatch(/data-id="a"[^>]*><rect [^>]*\/><text class="pelers-label" x=/);
   });
 
   it('inks or cases edges on a lane band a style fills', () => {
     const src =
       'swimlane-beta TB\nsubgraph S["one<br/>two<br/>three<br/>four<br/>five<br/>six<br/>seven<br/>eight"]\n  A\nend\nS --> S\nstyle S fill:black';
-    expect(svgOf(src)).toMatch(/class="pele-edge[^"]*" data-id="[^"]+" stroke="var\(--pele-fg-on-dark,#fff\)"/);
-    expect(svgOf(src.replace('\nstyle S fill:black', ''))).not.toMatch(/pele-casings|--pele-fg-on/);
+    expect(svgOf(src)).toMatch(/class="pelers-edge[^"]*" data-id="[^"]+" stroke="var\(--pelers-fg-on-dark,#fff\)"/);
+    expect(svgOf(src.replace('\nstyle S fill:black', ''))).not.toMatch(/pelers-casings|--pelers-fg-on/);
   });
 
   it('reads spacing from the swimlane config, then the flowchart config', () => {
@@ -329,7 +329,7 @@ describe('inert swimlane output', () => {
         try {
           svg = svgOf(template(payload));
         } catch (error) {
-          if (error instanceof PeleError) continue;
+          if (error instanceof PelersError) continue;
           throw error;
         }
         assertInert(svg, JSON.stringify(template(payload)).slice(0, 160));

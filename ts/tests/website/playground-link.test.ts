@@ -6,10 +6,10 @@ const hashOf = (href: string) => href.slice(href.indexOf('#'));
 
 describe('playground links', () => {
   it('carries the source and CSS', () => {
-    const href = playgroundHref('flowchart LR\n  a --> b', '.pele { --pele-line: red; }');
+    const href = playgroundHref('flowchart LR\n  a --> b', '.pelers { --pelers-line: red; }');
     expect(readPlaygroundLink(hashOf(href))).toEqual({
       source: 'flowchart LR\n  a --> b',
-      css: '.pele { --pele-line: red; }',
+      css: '.pelers { --pelers-line: red; }',
     });
   });
 

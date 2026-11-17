@@ -4,9 +4,9 @@ import { createOracle, recordingYy, type Outcome, type Pair } from './oracle.js'
 
 export interface OutlineOracle {
   oracleTokens(src: string): Pair[];
-  peleTokens(src: string): Pair[];
+  pelersTokens(src: string): Pair[];
   oracleParse(src: string): Outcome;
-  peleParse(src: string): Outcome;
+  pelersParse(src: string): Outcome;
 }
 
 // What a parse failure was about: a lexical error, or the tokens the parser expected and the one it got.
@@ -33,7 +33,7 @@ export function outlineOracle(diagram: 'mindmap' | 'kanban'): OutlineOracle {
 
   return {
     oracleTokens: (src) => oracle.tokens(src, recorder().yy),
-    peleTokens(src) {
+    pelersTokens(src) {
       const { types, texts } = tokenize(src, kanban);
       return types.map((t, i) => [t === T.END ? '$end' : tokenName(t, kanban), texts[i]] as Pair);
     },
@@ -42,7 +42,7 @@ export function outlineOracle(diagram: 'mindmap' | 'kanban'): OutlineOracle {
       const result = oracle.parse(src, yy);
       return { ok: result.ok, calls: semantic(calls), error: result.error };
     },
-    peleParse(src) {
+    pelersParse(src) {
       const { yy, calls } = recorder();
       try {
         parseOutline(src, yy as unknown as OutlineDb, kanban);

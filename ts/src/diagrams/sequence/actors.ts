@@ -87,7 +87,7 @@ export function drawActor(
   ink = ''
 ): string {
   const { w, h } = size;
-  const text = ' class="pele-label"';
+  const text = ' class="pelers-label"';
   if (isFigure(kind)) {
     return figure(kind, cx, top) + labelSvg(label, cx, top + GLYPH + GLYPH_GAP + label.height / 2, text + ink, icons);
   }

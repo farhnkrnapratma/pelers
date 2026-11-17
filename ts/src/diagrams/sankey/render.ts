@@ -158,7 +158,7 @@ function draw(model: SankeyModel, conf: Config, options: RenderOptions, chartWid
     const id = model.nodes[i].id;
     const name = decodeEntities(id);
     const height = Math.max(node.height, 1);
-    nodesOut += `<rect class="pele-sankey-node" data-id="${escText(id)}" x="${num(node.x)}" y="${num(node.y)}" width="${num(
+    nodesOut += `<rect class="pelers-sankey-node" data-id="${escText(id)}" x="${num(node.x)}" y="${num(node.y)}" width="${num(
       nodeWidth
     )}" height="${num(height)}" rx="${num(Math.min(2, height / 2))}" fill="${seriesColor(i)}"${nodeStyle(i)}/>`;
 
@@ -212,9 +212,9 @@ function draw(model: SankeyModel, conf: Config, options: RenderOptions, chartWid
     const { value, after, y } = label;
     const x = after ? node.x + nodeWidth + LABEL_GAP : node.x - LABEL_GAP;
     const position = ` x="${num(x)}" y="${num(y + small * 0.35)}" text-anchor="${after ? 'start' : 'end'}"`;
-    const text = esc(name) + (value ? ` <tspan class="pele-sankey-value" fill="var(--_m)">${esc(value)}</tspan>` : '');
+    const text = esc(name) + (value ? ` <tspan class="pelers-sankey-value" fill="var(--_m)">${esc(value)}</tspan>` : '');
     labelsOut +=
-      `<g class="pele-label" data-id="${escText(id)}">` +
+      `<g class="pelers-label" data-id="${escText(id)}">` +
       (outlined
         ? `<text${position} fill="none" stroke="var(--_bg)" stroke-width="3" stroke-linejoin="round">${esc(name)}${
             value ? ' ' + esc(value) : ''
@@ -251,7 +251,7 @@ function draw(model: SankeyModel, conf: Config, options: RenderOptions, chartWid
     const from = escText(model.nodes[link.source].id);
     const to = escText(model.nodes[link.target].id);
     linksOut +=
-      `<path class="pele-sankey-link" data-id="${from}-&gt;${to}" d="M${num(x0)},${num(link.sourceY - half)}C${mid},${num(
+      `<path class="pelers-sankey-link" data-id="${from}-&gt;${to}" d="M${num(x0)},${num(link.sourceY - half)}C${mid},${num(
         link.sourceY - half
       )} ${mid},${num(link.targetY - half)} ${num(x1)},${num(link.targetY - half)}L${num(x1)},${num(
         link.targetY + half
@@ -275,12 +275,12 @@ function draw(model: SankeyModel, conf: Config, options: RenderOptions, chartWid
     size,
     options,
     model,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       `<g transform="translate(${num(ox)},${num(oy)})">` +
       (gradients.size > 0 ? `<defs>${[...gradients.values()].join('')}</defs>` : '') +
-      `<g class="pele-sankey-links" fill-opacity="0.4">${linksOut}</g>` +
-      `<g class="pele-sankey-nodes">${nodesOut}</g>` +
-      `<g class="pele-labels" font-size="${small}">${labelsOut}</g>` +
+      `<g class="pelers-sankey-links" fill-opacity="0.4">${linksOut}</g>` +
+      `<g class="pelers-sankey-nodes">${nodesOut}</g>` +
+      `<g class="pelers-labels" font-size="${small}">${labelsOut}</g>` +
       '</g>'
   );
 

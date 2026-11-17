@@ -91,7 +91,7 @@ fn variables_allowed(color: &str) -> bool {
         while end < bytes.len() && (is_word_byte(bytes[end]) || bytes[end] == b'-') {
             end += 1;
         }
-        if !color[at..end].starts_with("--pele-") {
+        if !color[at..end].starts_with("--pelers-") {
             return false;
         }
         from = end;
@@ -201,14 +201,14 @@ pub fn palette(kind: &str, config: &Object) -> Palette {
         let Some(color) = safe_color(&list[i % list.len()]) else {
             continue;
         };
-        style.push_str(&format!(";--pele-series-{}:{color}", i + 1));
+        style.push_str(&format!(";--pelers-series-{}:{color}", i + 1));
         inks[i] = ink(&format!(";fill:{color}"), "");
     }
     if style.is_empty() {
         return Palette::default();
     }
     Palette {
-        style: esc(&style),
+        style: esc(&style).into_owned(),
         inks,
     }
 }
@@ -232,6 +232,14 @@ pub fn with_palette<T>(next: Palette, run: impl FnOnce() -> T) -> T {
 
 pub fn palette_style() -> String {
     CURRENT.with(|current| current.borrow().style.clone())
+}
+
+pub fn push_palette_style(out: &mut String) {
+    CURRENT.with(|current| out.push_str(&current.borrow().style));
+}
+
+pub fn palette_style_len() -> usize {
+    CURRENT.with(|current| current.borrow().style.len())
 }
 
 pub fn series_ink_fill(index: usize) -> String {
@@ -260,7 +268,7 @@ mod tests {
         );
         assert_eq!(
             made.style,
-            ";--pele-series-1:#000;--pele-series-3:rgb(1 2 3)"
+            ";--pelers-series-1:#000;--pelers-series-3:rgb(1 2 3)"
         );
         assert_eq!(made.inks[0], Some(crate::svg::ink::ON_DARK));
         assert_eq!(made.inks[1], None);
@@ -277,7 +285,7 @@ mod tests {
         ] {
             assert_eq!(safe_color(&Value::String(bad.to_owned())), None, "{bad}");
         }
-        assert!(safe_color(&Value::String("var(--pele-a)".to_owned())).is_some());
+        assert!(safe_color(&Value::String("var(--pelers-a)".to_owned())).is_some());
         assert!(safe_color(&Value::String("color-mix(in srgb, red, blue)".to_owned())).is_some());
     }
 
@@ -287,14 +295,14 @@ mod tests {
             "venn",
             &config(r#"{"themeVariables":{"venn1":"red","venn2":""}}"#),
         );
-        assert_eq!(venn.style.matches("--pele-series-").count(), 8);
+        assert_eq!(venn.style.matches("--pelers-series-").count(), 8);
         let xy = palette(
             "xychart",
             &config(
                 r##"{"themeVariables":{"xyChart":{"plotColorPalette":"#111, rgb(1, 2, 3)"}}}"##,
             ),
         );
-        assert!(xy.style.contains("--pele-series-2:rgb(1, 2, 3)"));
+        assert!(xy.style.contains("--pelers-series-2:rgb(1, 2, 3)"));
     }
 
     #[test]

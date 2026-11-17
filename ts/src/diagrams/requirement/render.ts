@@ -101,8 +101,8 @@ function containsMarker(x: number, y: number, dx: number, dy: number): string {
   const cx = x - dx * r;
   const cy = y - dy * r;
   return (
-    `<circle class="pele-marker" cx="${num(cx)}" cy="${num(cy)}" r="${r}"/>` +
-    `<path class="pele-marker" d="M${num(cx - dx * r)},${num(cy - dy * r)}L${num(cx + dx * r)},${num(cy + dy * r)}M${num(
+    `<circle class="pelers-marker" cx="${num(cx)}" cy="${num(cy)}" r="${r}"/>` +
+    `<path class="pelers-marker" d="M${num(cx - dx * r)},${num(cy - dy * r)}L${num(cx + dx * r)},${num(cy + dy * r)}M${num(
       cx + dy * r
     )},${num(cy - dx * r)}L${num(cx - dy * r)},${num(cy + dx * r)}"/>`
   );
@@ -112,7 +112,7 @@ function containsMarker(x: number, y: number, dx: number, dy: number): string {
 function arrowMarker(x: number, y: number, dx: number, dy: number): string {
   const bx = x - dx * ARROW_LENGTH;
   const by = y - dy * ARROW_LENGTH;
-  return `<path class="pele-marker" d="M${num(bx - dy * ARROW_HALF)},${num(by + dx * ARROW_HALF)}L${num(x)},${num(y)}L${num(
+  return `<path class="pelers-marker" d="M${num(bx - dy * ARROW_HALF)},${num(by + dx * ARROW_HALF)}L${num(x)},${num(y)}L${num(
     bx + dy * ARROW_HALF
   )},${num(by - dx * ARROW_HALF)}" stroke-linejoin="round"/>`;
 }
@@ -285,33 +285,33 @@ function draw(model: RequirementModel, _config: Config, options: RenderOptions, 
         view.kind,
         0,
         top + PAD_Y + view.kind.height / 2,
-        ` class="pele-stereotype" font-size="${view.kind.size}"${muted}${style.text}`
+        ` class="pelers-stereotype" font-size="${view.kind.size}"${muted}${style.text}`
       ) +
       labelSvg(
         view.name,
         0,
         top + PAD_Y + view.kind.height + view.name.height / 2,
-        ` class="pele-label" font-size="${view.name.size}" font-weight="var(--_hw)"${color}${style.text}`
+        ` class="pelers-label" font-size="${view.name.size}" font-weight="var(--_hw)"${color}${style.text}`
       );
     if (view.rows.length > 0) {
       const divider = top + view.headHeight;
-      body += `<path class="pele-divider" d="M${num(left)},${num(divider)}H${num(-left)}" stroke="var(--_b)"${style.line}/>`;
+      body += `<path class="pelers-divider" d="M${num(left)},${num(divider)}H${num(-left)}" stroke="var(--_b)"${style.line}/>`;
       let y = divider + PAD_Y;
       let rows = '';
       for (const row of view.rows) {
         rows +=
-          startText(row.key, left + PAD_X, y, ` class="pele-field"${muted}${style.text}`) +
+          startText(row.key, left + PAD_X, y, ` class="pelers-field"${muted}${style.text}`) +
           startText(
             row.value,
             left + PAD_X + view.keyWidth + COLUMN_GAP,
             y,
-            ` class="pele-value"${color}${style.text}`
+            ` class="pelers-value"${color}${style.text}`
           );
         y += row.height + ROW_GAP;
       }
-      body += `<g class="pele-fields" font-size="${view.rows[0].key.size}">${rows}</g>`;
+      body += `<g class="pelers-fields" font-size="${view.rows[0].key.size}">${rows}</g>`;
     }
-    nodesOut += `<g class="pele-node ${view.node.requirement ? 'pele-requirement' : 'pele-element'}${classNames(
+    nodesOut += `<g class="pelers-node ${view.node.requirement ? 'pelers-requirement' : 'pelers-element'}${classNames(
       view.node.cssClasses.replace(/^default\s?/, '')
     )}" data-id="${escText(view.node.id)}" transform="translate(${num(cnodes[i].x + ox)},${num(cnodes[i].y + oy)})">${body}</g>`;
   }
@@ -370,7 +370,7 @@ function draw(model: RequirementModel, _config: Config, options: RenderOptions, 
       path = routePath(route, undefined, startTrim, 0);
     }
     edgesOut +=
-      `<g class="pele-edge pele-relationship-${edge.contains ? 'contains' : 'arrow'}" data-id="${escText(edge.id)}">` +
+      `<g class="pelers-edge pelers-relationship-${edge.contains ? 'contains' : 'arrow'}" data-id="${escText(edge.id)}">` +
       `<path d="${path.d}"${edge.contains ? '' : ' stroke-dasharray="5 4"'}/>` +
       (edge.contains
         ? containsMarker(path.sx, path.sy, path.sdx, path.sdy)
@@ -386,10 +386,10 @@ function draw(model: RequirementModel, _config: Config, options: RenderOptions, 
     size,
     options,
     model,
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${small}" fill="var(--_m)">${labelsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}" fill="var(--_m)">${labelsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
 
   return { svg, width, height, links: [] };

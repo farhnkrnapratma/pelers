@@ -170,7 +170,7 @@ export function renderVenn(model: VennModel, _config: Config, options: RenderOpt
   placed.forEach((c, i) => {
     const color = seriesColor(i);
     const style = regions.get(c.id)?.style ?? NO_STYLE;
-    sets += `<circle class="pele-venn-set" data-id="${escText(c.id)}" cx="${num(c.x)}" cy="${num(c.y)}" r="${num(c.r)}" fill="${color}" fill-opacity="0.2" stroke="${color}"${style.shape}/>`;
+    sets += `<circle class="pelers-venn-set" data-id="${escText(c.id)}" cx="${num(c.x)}" cy="${num(c.y)}" r="${num(c.r)}" fill="${color}" fill-opacity="0.2" stroke="${color}"${style.shape}/>`;
   });
 
   const painted = [...regions.values()].filter((r) => r.sets.length > 1 && r.style.shape !== '');
@@ -193,7 +193,7 @@ export function renderVenn(model: VennModel, _config: Config, options: RenderOpt
         num
       );
       if (d !== '')
-        overlaps += `<path class="pele-venn-overlap" data-id="${id}" d="${d}" fill="none"${region.style.shape}/>`;
+        overlaps += `<path class="pelers-venn-overlap" data-id="${id}" d="${d}" fill="none"${region.style.shape}/>`;
     }
     let total = 0;
     for (const line of region.lines) total += line.label.height;
@@ -207,12 +207,12 @@ export function renderVenn(model: VennModel, _config: Config, options: RenderOpt
       const color = ink(fill, own);
       const attrs =
         line.id === undefined
-          ? ` class="pele-label"${line.size === size ? '' : ` font-size="${line.size}"`}${color ? ` fill="${color}"` : ''}${own}`
-          : ` class="pele-venn-text" data-id="${escText(line.id)}" font-size="${tiny}" fill="${color ?? 'var(--_m)'}"${own}`;
+          ? ` class="pelers-label"${line.size === size ? '' : ` font-size="${line.size}"`}${color ? ` fill="${color}"` : ''}${own}`
+          : ` class="pelers-venn-text" data-id="${escText(line.id)}" font-size="${tiny}" fill="${color ?? 'var(--_m)'}"${own}`;
       content += labelSvg(line.label, x, y + line.label.height / 2, attrs);
       y += line.label.height;
     }
-    labels += `<g class="pele-venn-region" data-id="${id}">${content}</g>`;
+    labels += `<g class="pelers-venn-region" data-id="${id}">${content}</g>`;
   }
 
   const svg = svgDocument(
@@ -222,10 +222,10 @@ export function renderVenn(model: VennModel, _config: Config, options: RenderOpt
     size,
     options,
     {},
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-      `<g class="pele-venn-sets">${sets}</g>` +
-      (overlaps ? `<g class="pele-venn-overlaps">${overlaps}</g>` : '') +
-      (labels ? `<g class="pele-venn-labels">${labels}</g>` : '')
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+      `<g class="pelers-venn-sets">${sets}</g>` +
+      (overlaps ? `<g class="pelers-venn-overlaps">${overlaps}</g>` : '') +
+      (labels ? `<g class="pelers-venn-labels">${labels}</g>` : '')
   );
   return { svg, width, height, links: [] };
 }

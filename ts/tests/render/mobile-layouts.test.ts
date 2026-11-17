@@ -54,8 +54,8 @@ describe('mobile diagram layouts', () => {
     expect(narrow.height).toBeGreaterThan(wide.height);
     const labels = texts(narrow.svg);
     for (const label of texts(wide.svg)) expect(labels).toContain(label);
-    expect(narrow.svg.match(/class="pele-activation"/g)?.length).toBe(
-      wide.svg.match(/class="pele-activation"/g)?.length
+    expect(narrow.svg.match(/class="pelers-activation"/g)?.length).toBe(
+      wide.svg.match(/class="pelers-activation"/g)?.length
     );
   });
 
@@ -80,15 +80,15 @@ describe('mobile diagram layouts', () => {
       for (const b of boxes.slice(i + 1))
         expect(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y).toBe(true);
     }
-    expect(narrow.svg.match(/pele-start/g)?.length).toBe(wide.svg.match(/pele-start/g)?.length);
-    expect(narrow.svg.match(/pele-end/g)?.length).toBe(wide.svg.match(/pele-end/g)?.length);
+    expect(narrow.svg.match(/pelers-start/g)?.length).toBe(wide.svg.match(/pelers-start/g)?.length);
+    expect(narrow.svg.match(/pelers-end/g)?.length).toBe(wide.svg.match(/pelers-end/g)?.length);
   });
 
   it('preserves every bit and field when packet rows split, including descending numbering', () => {
     for (const bitOrder of ['ascending', 'descending']) {
       const source = `---\nconfig:\n  packet:\n    bitOrder: ${bitOrder}\n---\npacket\n0-31: "Header"\n32-39: "Flags"\n40-127: "Payload"`;
       const narrow = render(source, phone);
-      const ranges = [...narrow.svg.matchAll(/class="pele-node" data-id="(\d+)-(\d+)"/g)].map((match) => [
+      const ranges = [...narrow.svg.matchAll(/class="pelers-node" data-id="(\d+)-(\d+)"/g)].map((match) => [
         Number(match[1]),
         Number(match[2]),
       ]);
@@ -135,7 +135,7 @@ describe('mobile diagram layouts', () => {
       '5',
     ])
       expect(labels).toContain(value);
-    const steps = [...narrow.svg.matchAll(/class="pele-node pele-journey-step" data-id="(\d+)"/g)].map((match) =>
+    const steps = [...narrow.svg.matchAll(/class="pelers-node pelers-journey-step" data-id="(\d+)"/g)].map((match) =>
       Number(match[1])
     );
     expect(steps).toEqual([0, 1, 2]);
@@ -153,12 +153,12 @@ describe('mobile diagram layouts', () => {
         expect(labels).toContain(box.lane.label.replace(/\s/g, ''));
       }
       const wide = render(model, options);
-      expect(narrow.svg.match(/class="pele-edge"/g)?.length ?? 0).toBe(
-        wide.svg.match(/class="pele-edge"/g)?.length ?? 0
+      expect(narrow.svg.match(/class="pelers-edge"/g)?.length ?? 0).toBe(
+        wide.svg.match(/class="pelers-edge"/g)?.length ?? 0
       );
-      expect(narrow.svg.match(/pele-em-reset/g)?.length ?? 0).toBe(wide.svg.match(/pele-em-reset/g)?.length ?? 0);
-      expect(narrow.svg.match(/class="pele-em-specification"/g)?.length ?? 0).toBe(model.specifications.length);
-      expect(narrow.svg.match(/class="pele-em-note"/g)?.length ?? 0).toBe(model.notes.length);
+      expect(narrow.svg.match(/pelers-em-reset/g)?.length ?? 0).toBe(wide.svg.match(/pelers-em-reset/g)?.length ?? 0);
+      expect(narrow.svg.match(/class="pelers-em-specification"/g)?.length ?? 0).toBe(model.specifications.length);
+      expect(narrow.svg.match(/class="pelers-em-note"/g)?.length ?? 0).toBe(model.notes.length);
     }
   });
 
@@ -168,13 +168,13 @@ describe('mobile diagram layouts', () => {
     expect(narrow.width).toBeLessThanOrEqual(320);
     expect(narrow.height).toBeGreaterThan(wide.height);
     expect(texts(narrow.svg).join('')).toBe(texts(wide.svg).join(''));
-    expect(narrow.svg.match(/class="pele-node/g)?.length).toBe(wide.svg.match(/class="pele-node/g)?.length);
+    expect(narrow.svg.match(/class="pelers-node/g)?.length).toBe(wide.svg.match(/class="pelers-node/g)?.length);
     expect(narrow.svg.match(/<path/g)?.length).toBe(wide.svg.match(/<path/g)?.length);
     const file = narrow.svg.slice(
       narrow.svg.indexOf('data-id="very_long_filename_that_must_wrap_without_losing_any_characters.ts"')
     );
-    const filenameY = Number(file.match(/<text class="pele-label"[\s\S]*?y="([\d.]+)"/)![1]);
-    const descriptionY = Number(file.match(/<text class="pele-tree-description"[\s\S]*?y="([\d.]+)"/)![1]);
+    const filenameY = Number(file.match(/<text class="pelers-label"[\s\S]*?y="([\d.]+)"/)![1]);
+    const descriptionY = Number(file.match(/<text class="pelers-tree-description"[\s\S]*?y="([\d.]+)"/)![1]);
     expect(descriptionY).toBeGreaterThan(filenameY);
     assertInert(narrow.svg);
   });
@@ -193,7 +193,7 @@ describe('mobile diagram layouts', () => {
       expect(labels).toContain(pending[i].text.replace(/\s/g, ''));
       pending.push(...pending[i].children);
     }
-    expect(narrow.svg.match(/class="pele-edge"/g)?.length).toBe(count - 1);
+    expect(narrow.svg.match(/class="pelers-edge"/g)?.length).toBe(count - 1);
     expect(render(source, { ...phone, autoDirection: false }).svg).toBe(render(source, options).svg);
   });
 
@@ -212,7 +212,7 @@ describe('mobile diagram layouts', () => {
       'packet-beta\n0-15: "Source Port"\n16-31: "Destination Port"\n32-4095: "Payload (variable length)"\n';
     // mount() draws at one pixel to learn whether a diagram adapts.
     const least = render(source, { ...options, maxWidth: 1 });
-    expect(least.svg.match(/class="pele-node"/g)?.length).toBe(4096 / 8);
+    expect(least.svg.match(/class="pelers-node"/g)?.length).toBe(4096 / 8);
     expect(least.width).toBeLessThan(render(source, options).width);
   });
 
@@ -233,7 +233,7 @@ describe('mobile diagram layouts', () => {
     expect(narrow.svg).not.toBe(wide.svg);
     expect(texts(narrow.svg).sort()).toEqual(texts(wide.svg).sort());
     for (const part of ['head', 'category']) {
-      const id = new RegExp(`pele-ishikawa-${part}" data-id="([^"]+)"`);
+      const id = new RegExp(`pelers-ishikawa-${part}" data-id="([^"]+)"`);
       expect(narrow.svg.match(id)?.[1], part).toBe(wide.svg.match(id)![1]);
     }
     const day =
@@ -250,7 +250,7 @@ describe('mobile diagram layouts', () => {
     expect(narrow.width).toBeLessThanOrEqual(320);
     const rails = new Map<string, number>();
     for (const [, id, rail] of narrow.svg.matchAll(
-      /class="pele-edge" data-id="([^"]+)"><path d="M[\d.]+,[\d.]+H([\d.]+)V/g
+      /class="pelers-edge" data-id="([^"]+)"><path d="M[\d.]+,[\d.]+H([\d.]+)V/g
     ))
       rails.set(id, Number(rail));
     expect(rails.size).toBe(4);
@@ -286,7 +286,7 @@ describe('mobile diagram layouts', () => {
     for (const maxWidth of [320, 200]) {
       const narrow = render(source, { ...options, maxWidth });
       const rails = [
-        ...narrow.svg.matchAll(/class="pele-edge" data-id="[^"]+"><path d="M[\d.]+,[\d.]+H([\d.]+)V/g),
+        ...narrow.svg.matchAll(/class="pelers-edge" data-id="[^"]+"><path d="M[\d.]+,[\d.]+H([\d.]+)V/g),
       ].map((match) => Number(match[1]));
       expect(rails.length).toBe(7);
       expect(new Set(rails).size).toBe(7);
@@ -298,7 +298,7 @@ describe('mobile diagram layouts', () => {
   it('splits a packet field only where a narrow row ends, whatever the rows were set to', () => {
     const source = '---\nconfig:\n  packet:\n    bitsPerRow: 20\n---\npacket\n0-39: "Long field"\n40-59: "Next"\n';
     const narrow = render(source, phone);
-    const ranges = [...narrow.svg.matchAll(/class="pele-node" data-id="([\d-]+)"/g)].map((match) => match[1]);
+    const ranges = [...narrow.svg.matchAll(/class="pelers-node" data-id="([\d-]+)"/g)].map((match) => match[1]);
     expect(ranges).toEqual(['0-15', '16-31', '32-39', '40-47', '48-59']);
     expect(narrow.width).toBeLessThanOrEqual(320);
   });
@@ -316,7 +316,7 @@ describe('mobile diagram layouts', () => {
     const scores = (score: string): string[] =>
       [
         ...render(day(score), { ...options, maxWidth: 200 }).svg.matchAll(
-          /<text class="pele-journey-score"[^>]*>([^<]*)</g
+          /<text class="pelers-journey-score"[^>]*>([^<]*)</g
         ),
       ].map((match) => match[1]);
     expect(scores('4')).toEqual(['4', '3', '3', '3']);
@@ -344,7 +344,7 @@ describe('mobile diagram layouts', () => {
       'treeView-beta\n  "my  file  with   spaces.txt"\n  "another_really_long_file_name  with  spaces_in_it.txt"\n',
       { ...options, maxWidth: 200 }
     );
-    const lines = [...narrow.svg.matchAll(/<text class="pele-label"([^>]*)>([^<]*)<\/text>/g)];
+    const lines = [...narrow.svg.matchAll(/<text class="pelers-label"([^>]*)>([^<]*)<\/text>/g)];
     expect(lines.map((match) => match[2])).toEqual([
       'my  file  with   spaces.txt',
       'another_really_long_file',

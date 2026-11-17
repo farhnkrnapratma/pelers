@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { ArchitectureAst, Side } from './parser.js';
 
 export interface ArchService {
@@ -54,7 +54,7 @@ export interface ArchitectureModel {
 }
 
 function fail(message: string): never {
-  throw new PeleError(message, 'semantic', { type: 'architecture' });
+  throw new PelersError(message, 'semantic', { type: 'architecture' });
 }
 
 export class ArchitectureDb implements ArchitectureModel {

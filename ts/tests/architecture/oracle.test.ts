@@ -2,7 +2,7 @@ import * as reference from '@mermaid-js/parser';
 import { describe, expect, it } from 'vitest';
 import { ARCHITECTURE_TOKENS, parseArchitecture } from '../../src/diagrams/architecture/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 import { patchTitle, patchTokens } from '../support/token-patch.js';
 
 patchTokens('ArchitectureModule', (tokens) => patchTitle(tokens, String.raw`[-\w]*\w`));
@@ -123,7 +123,7 @@ const corpus = [
 
 async function compare(src: string): Promise<boolean> {
   const expected = await referenceAst('architecture', src);
-  const actual = peleAst(parseArchitecture, src);
+  const actual = pelersAst(parseArchitecture, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
   return expected.ok;
@@ -280,7 +280,7 @@ interface ReferenceToken {
 
 describe('architecture parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(ARCHITECTURE_TOKENS)).toEqual(referenceTokens('createArchitectureServices', 'Architecture'));
+    expect(pelersTokens(ARCHITECTURE_TOKENS)).toEqual(referenceTokens('createArchitectureServices', 'Architecture'));
   });
 
   it('gives each token type the same longer alternatives', () => {

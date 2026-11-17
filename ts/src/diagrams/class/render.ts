@@ -563,11 +563,11 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
     if (node.isGroup) {
       const titleX = c.isGroup ? clusterTitleX(c, view.label.width, crossings, GROUP_PAD) : c.x;
       const titleY = y - h / 2 + 8 + view.label.height / 2;
-      const titleAttrs = ' class="pele-cluster-label" fill="var(--_m)"';
+      const titleAttrs = ' class="pelers-cluster-label" fill="var(--_m)"';
       const struck = c.isGroup && titleCrossed(c, view.label.width, titleX, crossings);
       if (struck) struckTitles += struckTitle(view.label, titleX + ox, titleY, titleAttrs, id, graph.nodes, i);
       clusters +=
-        `<g class="pele-cluster pele-namespace" data-id="${id}">` +
+        `<g class="pelers-cluster pelers-namespace" data-id="${id}">` +
         `<rect x="${num(x - w / 2)}" y="${num(y - h / 2)}" width="${num(w)}" height="${num(h)}" fill="var(--_a)" fill-opacity="0.5" stroke="var(--_b)"${ROUNDED}/>` +
         (struck ? '' : labelSvg(view.label, titleX + ox, titleY, titleAttrs)) +
         '</g>';
@@ -580,15 +580,15 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
       const r = w / 2;
       const t = -h / 2;
       nodesOut +=
-        `<g class="pele-node pele-note" data-id="${id}"${at}>` +
+        `<g class="pelers-node pelers-note" data-id="${id}"${at}>` +
         `<path d="M${num(-r)},${num(t)}H${num(r - FOLD)}L${num(r)},${num(t + FOLD)}V${num(-t)}H${num(-r)}Z" fill="var(--_a)" stroke="var(--_b)" stroke-linejoin="round"/>` +
         `<path d="M${num(r - FOLD)},${num(t)}V${num(t + FOLD)}H${num(r)}" fill="none" stroke="var(--_b)" stroke-linejoin="round"/>` +
-        labelSvg(view.label, 0, 0, ` class="pele-label" font-size="${small}"`, options.icons) +
+        labelSvg(view.label, 0, 0, ` class="pelers-label" font-size="${small}"`, options.icons) +
         '</g>';
     } else {
       nodesOut +=
-        `<g class="pele-node pele-interface" data-id="${id}"${at}>` +
-        labelSvg(view.label, 0, 0, ` class="pele-label" font-size="${small}"`, options.icons) +
+        `<g class="pelers-node pelers-interface" data-id="${id}"${at}>` +
+        labelSvg(view.label, 0, 0, ` class="pelers-label" font-size="${small}"`, options.icons) +
         '</g>';
     }
   }
@@ -605,12 +605,12 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
     const second = first + view.attributesH;
     if (h > view.titleH) {
       const stroke = style.stroke ? ` style="stroke:${esc(style.stroke)}"` : '';
-      body += `<path class="pele-divider" d="M${num(left)},${num(first)}H${num(-left)}M${num(left)},${num(second)}H${num(-left)}" fill="none" stroke="var(--_b)"${stroke}/>`;
+      body += `<path class="pelers-divider" d="M${num(left)},${num(first)}H${num(-left)}M${num(left)},${num(second)}H${num(-left)}" fill="none" stroke="var(--_b)"${stroke}/>`;
     }
     let y = top + TITLE_PAD;
     for (const annotation of view.annotations) {
       if (typeof annotation === 'string') {
-        body += `<text class="pele-annotation" x="0" y="${num(y + tinyHeight / 2 + tiny * 0.35)}" text-anchor="middle" font-size="${tiny}"${ink || ' fill="var(--_m)"'}>${esc(annotation)}</text>`;
+        body += `<text class="pelers-annotation" x="0" y="${num(y + tinyHeight / 2 + tiny * 0.35)}" text-anchor="middle" font-size="${tiny}"${ink || ' fill="var(--_m)"'}>${esc(annotation)}</text>`;
         y += tinyHeight;
       } else {
         const h = Math.max(tinyHeight, annotation.height);
@@ -618,7 +618,7 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
           annotation,
           0,
           y + h / 2,
-          ` class="pele-annotation" font-size="${tiny}"${ink || ' fill="var(--_m)"'}`,
+          ` class="pelers-annotation" font-size="${tiny}"${ink || ' fill="var(--_m)"'}`,
           options.icons
         );
         y += h;
@@ -629,7 +629,7 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
       view.label,
       0,
       (y + first - TITLE_PAD) / 2,
-      ` class="pele-label"${titleSize} font-weight="var(--_hw)"${ink}${style.text}`,
+      ` class="pelers-label"${titleSize} font-weight="var(--_hw)"${ink}${style.text}`,
       options.icons
     );
     const lines = (list: Line[], kind: string, from: number): string => {
@@ -638,17 +638,17 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
       for (const line of list) {
         const mark =
           line.classifier === '$'
-            ? ` pele-static"${style.text ? style.text.slice(0, -1) + 'text-decoration:underline"' : ' style="text-decoration:underline"'}`
+            ? ` pelers-static"${style.text ? style.text.slice(0, -1) + 'text-decoration:underline"' : ' style="text-decoration:underline"'}`
             : line.classifier === '*'
-              ? ` pele-abstract" font-style="italic"${style.text}`
+              ? ` pelers-abstract" font-style="italic"${style.text}`
               : `"${style.text}`;
-        out += `<text class="pele-member pele-${kind}${mark} x="${num(left + PAD_X)}" y="${num(baseline)}">${esc(line.text)}</text>`;
+        out += `<text class="pelers-member pelers-${kind}${mark} x="${num(left + PAD_X)}" y="${num(baseline)}">${esc(line.text)}</text>`;
         baseline += lineHeight;
       }
       return out;
     };
     if (view.attributes.length > 0 || view.methods.length > 0) {
-      body += `<g class="pele-members" font-size="${memberSize}"${ink}${mono(style) ? ` font-family="${FONT_MONO}"` : ''}>${lines(view.attributes, 'attribute', first)}${lines(view.methods, 'method', second)}</g>`;
+      body += `<g class="pelers-members" font-size="${memberSize}"${ink}${mono(style) ? ` font-family="${FONT_MONO}"` : ''}>${lines(view.attributes, 'attribute', first)}${lines(view.methods, 'method', second)}</g>`;
     }
     if (cls.tooltip) body = `<title>${escText(cls.tooltip)}</title>` + body;
     if (cls.link)
@@ -660,7 +660,7 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
         options,
         cls.linkTarget && TARGETS.has(cls.linkTarget) ? ` target="${cls.linkTarget}"` : ''
       );
-    return `<g class="pele-node pele-class${classNames(cls.cssClasses.replace(/^default\s?/, ''))}" data-id="${id}"${at}>${body}</g>`;
+    return `<g class="pelers-node pelers-class${classNames(cls.cssClasses.replace(/^default\s?/, ''))}" data-id="${id}"${at}>${body}</g>`;
   }
 
   let edgesOut = '';
@@ -710,7 +710,7 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
           ? ' stroke-dasharray="2 4"'
           : '';
     edgesOut +=
-      `<g class="pele-edge${edge.pattern === 'dotted' ? ' pele-note-edge' : ' pele-relation'}" data-id="${escText(edge.id)}">` +
+      `<g class="pelers-edge${edge.pattern === 'dotted' ? ' pelers-note-edge' : ' pelers-relation'}" data-id="${escText(edge.id)}">` +
       `<path d="${path.d}"${attrs}/>` +
       classMarker(startType, path.sx, path.sy, path.sdx, path.sdy, LINE) +
       classMarker(endType, path.ex, path.ey, path.edx, path.edy, LINE) +
@@ -725,8 +725,8 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
   let cardsOut = '';
   for (const item of cards) {
     cardsOut += item.math
-      ? labelSvg(item.math, item.x + ox, item.y + oy, ' class="pele-cardinality"', options.icons)
-      : `<text class="pele-cardinality" x="${num(item.x + ox)}" y="${num(item.y + oy + tiny * 0.35)}" text-anchor="middle">${esc(item.text)}</text>`;
+      ? labelSvg(item.math, item.x + ox, item.y + oy, ' class="pelers-cardinality"', options.icons)
+      : `<text class="pelers-cardinality" x="${num(item.x + ox)}" y="${num(item.y + oy + tiny * 0.35)}" text-anchor="middle">${esc(item.text)}</text>`;
   }
 
   const titled = withTitle(
@@ -736,12 +736,12 @@ function draw(db: ClassDb, config: Config, options: RenderOptions, turned: boole
     pad,
     width,
     height,
-    (clusters ? `<g class="pele-clusters">${clusters}</g>` : '') +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="${LINE}" stroke-linecap="round">${edgesOut}</g>` : '') +
-      (struckTitles ? `<g class="pele-cluster-titles">${struckTitles}</g>` : '') +
-      (labelsOut ? `<g class="pele-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
-      (cardsOut ? `<g class="pele-cardinalities" font-size="${tiny}" fill="var(--_m)">${cardsOut}</g>` : '') +
-      `<g class="pele-nodes">${nodesOut}</g>`
+    (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="${LINE}" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (struckTitles ? `<g class="pelers-cluster-titles">${struckTitles}</g>` : '') +
+      (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
+      (cardsOut ? `<g class="pelers-cardinalities" font-size="${tiny}" fill="var(--_m)">${cardsOut}</g>` : '') +
+      `<g class="pelers-nodes">${nodesOut}</g>`
   );
   const svg = svgDocument('class', titled.width, titled.height, size, options, db, titled.content);
 

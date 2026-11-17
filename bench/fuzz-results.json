@@ -1,0 +1,11 @@
+{
+  "oracle": "bun ts/dist",
+  "seed": 20260513,
+  "perSource": 100,
+  "total": 61913,
+  "identical": 36916,
+  "bothFailed": 24997,
+  "mismatches": 0,
+  "byType": {},
+  "samples": []
+}

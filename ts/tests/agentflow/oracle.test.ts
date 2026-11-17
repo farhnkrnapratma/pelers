@@ -1,9 +1,9 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/agentflow-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/agentflow-oracle.js';
 
-// Compares Pele's agentflow lexer and parser with the parser Mermaid generates from agentflow.jison:
+// Compares Pelers's agentflow lexer and parser with the parser Mermaid generates from agentflow.jison:
 // the same tokens at the same source positions, the same accept or reject decision, and the same
 // calls into the model, positions included.
 // Set FUZZ to raise the number of generated inputs and SEED to change them.
@@ -176,9 +176,9 @@ const SEEDS = [
 const corpus = [...new Set([...loadCorpus('agentflow', /agentflow-beta/), ...fixtures, ...SEEDS, ...fromFlowchart])];
 
 function compare(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
 }

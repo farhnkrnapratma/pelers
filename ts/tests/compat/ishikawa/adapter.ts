@@ -3,7 +3,7 @@ import { parseIshikawa } from '../../../src/diagrams/ishikawa/parser.js';
 
 export function setLogLevel(_level: string): void {}
 
-// Exposes Pele's Ishikawa model through the names Mermaid's specs call on IshikawaDB.
+// Exposes Pelers's Ishikawa model through the names Mermaid's specs call on IshikawaDB.
 export class IshikawaDB extends IshikawaDb {
   clear(): void {
     Object.assign(this, new IshikawaDb());

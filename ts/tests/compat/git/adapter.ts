@@ -4,7 +4,7 @@ import { toResult } from '../../support/langium.js';
 
 export const gitGraphParse = (src: string) => toResult<GitGraphAst>(parseGit, src);
 
-// Pele collects warnings on the model; Mermaid sends them to its logger.
+// Pelers collects warnings on the model; Mermaid sends them to its logger.
 export const log = {
   warn(_message: string): void {},
 };

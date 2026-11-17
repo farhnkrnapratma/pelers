@@ -17,9 +17,9 @@ const shared = {
 };
 
 // One file with every diagram type.
-await build({ ...shared, entryPoints: ['src/index.ts'], outfile: 'dist/pele.js' });
+await build({ ...shared, entryPoints: ['src/index.ts'], outfile: 'dist/pelers.js' });
 
-await build({ ...browserBuild, outfile: 'dist/pele.global.js' });
+await build({ ...browserBuild, outfile: 'dist/pelers.global.js' });
 
 // The same code in pieces: a core, one entry per diagram type, and a loader that fetches a type
 // when it is first needed. Code that several of them use goes into shared chunks.
@@ -68,8 +68,8 @@ function closure(entry) {
   return [...seen];
 }
 
-console.log(`dist/pele.js  ${sizes(['dist/pele.js'])}`);
-console.log(`dist/pele.global.js  ${sizes(['dist/pele.global.js'])}`);
+console.log(`dist/pelers.js  ${sizes(['dist/pelers.js'])}`);
+console.log(`dist/pelers.global.js  ${sizes(['dist/pelers.global.js'])}`);
 console.log(`dist/esm/core.js with its chunks  ${sizes(closure('dist/esm/core.js'))}`);
 console.log(`dist/esm/lazy.js with its chunks  ${sizes(closure('dist/esm/lazy.js'))}`);
 if (process.argv.includes('--sizes')) {

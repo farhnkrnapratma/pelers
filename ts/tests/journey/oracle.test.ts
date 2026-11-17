@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { oracleParse, oracleTokens, peleParse, peleTokens } from '../support/journey-oracle.js';
+import { oracleParse, oracleTokens, pelersParse, pelersTokens } from '../support/journey-oracle.js';
 
-// Compares Pele's journey lexer and parser with the parser Mermaid generates from journey.jison:
+// Compares Pelers's journey lexer and parser with the parser Mermaid generates from journey.jison:
 // the same tokens, the same accept or reject decision, the same calls into the model, and the same
 // "Expecting ..." line on a syntax error. Set FUZZ to raise the number of mutated inputs.
 
@@ -125,9 +125,9 @@ const corpus = [...loadCorpus('journey', /journey/), ...SEEDS];
 const expecting = (message: string | undefined): string => (message ?? '').split('\n').pop() ?? '';
 
 function compare(src: string): void {
-  expect(peleTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
+  expect(pelersTokens(src), `tokens of ${JSON.stringify(src)}`).toEqual(oracleTokens(src));
   const expected = oracleParse(src);
-  const actual = peleParse(src);
+  const actual = pelersParse(src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}`).toBe(expected.ok);
   if (expected.ok) expect(actual.calls, `model calls of ${JSON.stringify(src)}`).toEqual(expected.calls);
   else expect(expecting(actual.error), `error for ${JSON.stringify(src)}`).toBe(expecting(expected.error));

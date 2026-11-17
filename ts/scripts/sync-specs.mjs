@@ -1,4 +1,4 @@
-// Copies Mermaid's parser specs into tests/compat and points their imports at Pele's adapters.
+// Copies Mermaid's parser specs into tests/compat and points their imports at Pelers's adapters.
 // Usage: node scripts/sync-specs.mjs <path to a mermaid checkout at the pinned tag> [suite]
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';

@@ -2,7 +2,7 @@ import * as reference from '@mermaid-js/parser';
 import { describe, expect, it } from 'vitest';
 import { GIT_TOKENS, parseGit } from '../../src/diagrams/git/parser.js';
 import { loadCorpus, mutator, random } from '../support/corpus.js';
-import { peleAst, peleTokens, referenceAst, referenceTokens } from '../support/langium.js';
+import { pelersAst, pelersTokens, referenceAst, referenceTokens } from '../support/langium.js';
 import { patchTitle, patchTokens } from '../support/token-patch.js';
 
 patchTokens('GitGraphModule', (tokens) => patchTitle(tokens, String.raw`[-./\w]*[-\w]`));
@@ -239,7 +239,7 @@ function soup(rnd: () => number): () => string {
 
 async function compare(src: string): Promise<void> {
   const expected = await referenceAst('gitGraph', src);
-  const actual = peleAst(parseGit, src);
+  const actual = pelersAst(parseGit, src);
   expect(actual.ok, `acceptance of ${JSON.stringify(src)}: ${expected.error ?? actual.error}`).toBe(expected.ok);
   if (expected.ok) expect(actual.ast, `tree of ${JSON.stringify(src)}`).toEqual(expected.ast);
 }
@@ -251,7 +251,7 @@ interface ReferenceToken {
 
 describe('git graph parser against the Mermaid grammar', () => {
   it('uses the same token types in the same order', () => {
-    expect(peleTokens(GIT_TOKENS)).toEqual(referenceTokens('createGitGraphServices', 'GitGraph'));
+    expect(pelersTokens(GIT_TOKENS)).toEqual(referenceTokens('createGitGraphServices', 'GitGraph'));
   });
 
   it('gives the same token types a longer alternative', () => {

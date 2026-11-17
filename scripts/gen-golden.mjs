@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const corpus = join(root, 'ts/tests/corpus');
 const out = join(root, 'tests/golden');
-const { render } = await import(join(root, 'ts/dist/pele.js'));
+const { render } = await import(join(root, 'ts/dist/pelers.js'));
 
 mkdirSync(out, { recursive: true });
 for (const entry of readdirSync(out, { withFileTypes: true })) {

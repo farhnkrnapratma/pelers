@@ -15,13 +15,13 @@ export function renderInfo(model: InfoModel, _config: Config, options: RenderOpt
 
   const title = layoutLabel(model.title, false, measurer, size, 4000, Style.Bold);
   const titleHeight = title.height > 0 ? title.height + 8 : 0;
-  const text = layoutLabel(`Pele v${version}`, false, measurer, size, 4000);
+  const text = layoutLabel(`Pelers v${version}`, false, measurer, size, 4000);
 
   const width = Math.ceil(Math.max(title.width, text.width) + 2 * pad);
   const height = Math.ceil(titleHeight + text.height + 2 * pad);
   const content =
-    labelSvg(title, width / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
-    labelSvg(text, width / 2, pad + titleHeight + text.height / 2, ' class="pele-version" fill="var(--_m)"');
+    labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
+    labelSvg(text, width / 2, pad + titleHeight + text.height / 2, ' class="pelers-version" fill="var(--_m)"');
 
   return { svg: svgDocument('info', width, height, size, options, model, content), width, height, links: [] };
 }

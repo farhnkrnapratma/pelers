@@ -8,8 +8,8 @@ import { join, resolve } from 'node:path';
 const tarball = resolve(process.argv[2] ?? '');
 if (!existsSync(tarball)) throw new Error('Usage: node scripts/check-pack.mjs <tarball>');
 
-const root = mkdtempSync(join(tmpdir(), 'pele-pack-'));
-const installed = join(root, 'node_modules', 'pele');
+const root = mkdtempSync(join(tmpdir(), 'pelers-pack-'));
+const installed = join(root, 'node_modules', 'pelers');
 mkdirSync(installed, { recursive: true });
 execFileSync('tar', ['-xzf', tarball, '-C', installed, '--strip-components=1']);
 
@@ -24,21 +24,21 @@ for (const [name, entry] of Object.entries(pkg.exports)) {
 // Bundlers and build scripts find a package with require.resolve, which does not use `import`.
 const resolver = createRequire(join(root, 'check.cjs'));
 for (const name of Object.keys(pkg.exports)) {
-  resolver.resolve(join('pele', name.replace('*', 'flowchart')));
+  resolver.resolve(join('pelers', name.replace('*', 'flowchart')));
 }
 
 writeFileSync(
   join(root, 'check.mjs'),
-  `import { render, mount } from 'pele';
-import { register, supports } from 'pele/core';
-import flowchart from 'pele/diagrams/flowchart';
-import { renderAsync, mountAsync } from 'pele/lazy';
+  `import { render, mount } from 'pelers';
+import { register, supports } from 'pelers/core';
+import flowchart from 'pelers/diagrams/flowchart';
+import { renderAsync, mountAsync } from 'pelers/lazy';
 
 const source = 'flowchart LR\\n  A --> B';
-if (render(source).type !== 'flowchart') throw new Error('pele does not render');
+if (render(source).type !== 'flowchart') throw new Error('pelers does not render');
 register(flowchart);
-if (!supports(source)) throw new Error('pele/core does not take a registered type');
-if ((await renderAsync('pie\\n  "a": 1')).type !== 'pie') throw new Error('pele/lazy does not load a type');
+if (!supports(source)) throw new Error('pelers/core does not take a registered type');
+if ((await renderAsync('pie\\n  "a": 1')).type !== 'pie') throw new Error('pelers/lazy does not load a type');
 if (typeof mount !== 'function' || typeof mountAsync !== 'function') throw new Error('mount is missing');
 `
 );

@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 
 export interface QuadrantText {
   text: string;
@@ -38,8 +38,8 @@ const RE_NUMBER = /^\d+$/;
 const RE_HEX = /^#?([\dA-Fa-f]{6}|[\dA-Fa-f]{3})$/;
 const RE_PIXELS = /^\d+px$/;
 
-function invalid(style: string, value: string, kind: string): PeleError {
-  return new PeleError(`value for ${style} ${value} is invalid, please use a valid ${kind}`, 'semantic', {
+function invalid(style: string, value: string, kind: string): PelersError {
+  return new PelersError(`value for ${style} ${value} is invalid, please use a valid ${kind}`, 'semantic', {
     type: 'quadrantChart',
   });
 }
@@ -71,7 +71,7 @@ export function parseStyles(styles: string[]): PointStyle {
       if (!RE_PIXELS.test(value)) throw invalid(key, value, 'number of pixels (eg. 10px)');
       out.strokeWidth = value;
     } else {
-      throw new PeleError(`style named ${key} is not supported.`, 'semantic', { type: 'quadrantChart' });
+      throw new PelersError(`style named ${key} is not supported.`, 'semantic', { type: 'quadrantChart' });
     }
   }
   return out;

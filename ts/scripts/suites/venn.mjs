@@ -1,5 +1,5 @@
 const DOM =
-  "Draws with Mermaid's renderer into a jsdom document and reads the elements back. Pele's output is covered by its own render tests.";
+  "Draws with Mermaid's renderer into a jsdom document and reads the elements back. Pelers's output is covered by its own render tests.";
 
 export default {
   files: [
@@ -19,7 +19,7 @@ export default {
   notPorted: [
     [
       'vennPalette.spec.ts',
-      'Tests which colors each Mermaid theme gives the circles. Pele takes its circle colors from the --pele-series tokens.',
+      'Tests which colors each Mermaid theme gives the circles. Pelers takes its circle colors from the --pelers-series tokens.',
     ],
   ],
   rewrite: [

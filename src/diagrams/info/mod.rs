@@ -2,7 +2,7 @@ mod parser;
 mod render;
 
 use crate::diagrams::common::{acc_descr, acc_title};
-use crate::errors::PeleError;
+use crate::errors::PelersError;
 
 pub use parser::{InfoAst, parse_info};
 pub use render::render_info;
@@ -22,7 +22,7 @@ pub fn build_info(ast: InfoAst, title: Option<String>) -> InfoModel {
     }
 }
 
-pub fn parse(source: &str, title: Option<String>) -> Result<InfoModel, PeleError> {
+pub fn parse(source: &str, title: Option<String>) -> Result<InfoModel, PelersError> {
     Ok(build_info(parse_info(source)?, title))
 }
 

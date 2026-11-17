@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PeleError, detectType, parse, render, supports, type AgentflowModel } from '../../src/index.js';
+import { PelersError, detectType, parse, render, supports, type AgentflowModel } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { loadCorpus } from '../support/corpus.js';
 import { assertWellFormed } from '../support/xml.js';
@@ -15,7 +15,7 @@ function tryRender(src: string): string | undefined {
   try {
     return render(src, options).svg;
   } catch (error) {
-    if (error instanceof PeleError) return undefined;
+    if (error instanceof PelersError) return undefined;
     throw error;
   }
 }
@@ -23,12 +23,12 @@ function tryRender(src: string): string | undefined {
 const svgOf = (src: string): string => render(src, options).svg;
 const count = (svg: string, needle: string): number => svg.split(needle).length - 1;
 const modelOf = (src: string): AgentflowModel => parse(src) as AgentflowModel;
-const series = (n: number): string => `var(--pele-series-${n},`;
+const series = (n: number): string => `var(--pelers-series-${n},`;
 
 // The group drawn for a node, with its class list and position.
 function node(svg: string, id: string): { classes: string; x: number; y: number; body: string } {
   const m = new RegExp(
-    `<g class="(pele-node[^"]*)" data-id="${id}" transform="translate\\(([-\\d.]+),([-\\d.]+)\\)">(.*?)</g>`
+    `<g class="(pelers-node[^"]*)" data-id="${id}" transform="translate\\(([-\\d.]+),([-\\d.]+)\\)">(.*?)</g>`
   ).exec(svg);
   if (!m) throw new Error(`no node ${id}`);
   return { classes: m[1], x: Number(m[2]), y: Number(m[3]), body: m[4] };
@@ -37,14 +37,14 @@ function node(svg: string, id: string): { classes: string; x: number; y: number;
 // The frame drawn for an open flow.
 function frame(svg: string, id: string): { x: number; y: number; w: number; h: number; rect: string } {
   const m = new RegExp(
-    `<g class="pele-cluster pele-flow[^"]*" data-id="${id}">(<rect x="([-\\d.]+)" y="([-\\d.]+)" width="([\\d.]+)" height="([\\d.]+)"[^>]*/>)`
+    `<g class="pelers-cluster pelers-flow[^"]*" data-id="${id}">(<rect x="([-\\d.]+)" y="([-\\d.]+)" width="([\\d.]+)" height="([\\d.]+)"[^>]*/>)`
   ).exec(svg);
   if (!m) throw new Error(`no flow ${id}`);
   return { x: Number(m[2]), y: Number(m[3]), w: Number(m[4]), h: Number(m[5]), rect: m[1] };
 }
 
 function edges(svg: string): { classes: string; id: string; body: string }[] {
-  return [...svg.matchAll(/<g class="(pele-edge [^"]*)" data-id="([^"]*)"[^>]*>(.*?)<\/g>/g)].map((m) => ({
+  return [...svg.matchAll(/<g class="(pelers-edge [^"]*)" data-id="([^"]*)"[^>]*>(.*?)<\/g>/g)].map((m) => ({
     classes: m[1],
     id: m[2],
     body: m[3],
@@ -77,7 +77,7 @@ describe('agentflow rendering', () => {
     expect(supports(src)).toBe(true);
     const result = render(src, options);
     expect(result.type).toBe('agentflow');
-    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pele pele-agentflow"/);
+    expect(result.svg).toMatch(/^<svg xmlns="http:\/\/www\.w3\.org\/2000\/svg" class="pelers pelers-agentflow"/);
     expect(result.svg).toContain(`viewBox="0 0 ${result.width} ${result.height}"`);
     const model = parse(src);
     expect(model.type).toBe('agentflow');
@@ -113,7 +113,7 @@ describe('agentflow rendering', () => {
     ];
     for (const [id, shape, kind, slot] of expected) {
       const n = node(svg, id);
-      expect(n.classes, id).toBe(`pele-node pele-shape-${shape} pele-kind-${kind}`);
+      expect(n.classes, id).toBe(`pelers-node pelers-shape-${shape} pelers-kind-${kind}`);
       expect(n.body, id).toContain(`fill="${series(slot)}`);
       expect(n.body, id).toContain(`stroke="${series(slot)}`);
       expect(n.body, id).toContain('fill-opacity="0.14"');
@@ -126,7 +126,7 @@ describe('agentflow rendering', () => {
     const src = 'agentflow-beta TB\n  a((circle)) --> b([stadium]) --> c[(db)] --> d>odd] --> e(round)';
     const svg = svgOf(src);
     for (const id of ['a', 'b', 'c', 'd', 'e'])
-      expect(node(svg, id).classes).toBe('pele-node pele-shape-rounded pele-kind-task');
+      expect(node(svg, id).classes).toBe('pelers-node pelers-shape-rounded pelers-kind-task');
     const model = modelOf(src);
     expect(model.diagnostics.map((d) => [d.id, d.severity, d.nodeId])).toEqual([
       ['SHAPE_REMOVED', 'error', 'a'],
@@ -150,7 +150,7 @@ describe('agentflow rendering', () => {
         position: { startLine: 2, startColumn: 2, endLine: 2, endColumn: 8, startIndex: 0, endIndex: 0 },
       },
     ]);
-    expect(node(svgOf(src), 'a').classes).toContain('pele-shape-rounded');
+    expect(node(svgOf(src), 'a').classes).toContain('pelers-shape-rounded');
     // Rendering the same model again does not report it twice.
     render(src, options);
     expect(modelOf(src).diagnostics).toHaveLength(1);
@@ -160,16 +160,16 @@ describe('agentflow rendering', () => {
     const svg = svgOf('agentflow-beta TB\n  a --> b\n  a --x c\n  a -.- d\n  a -- "why" --> e');
     const all = edges(svg);
     expect(all.map((e) => e.classes)).toEqual([
-      'pele-edge pele-edge-sequence',
-      'pele-edge pele-edge-failure',
-      'pele-edge pele-edge-reference',
-      'pele-edge pele-edge-sequence',
+      'pelers-edge pelers-edge-sequence',
+      'pelers-edge pelers-edge-failure',
+      'pelers-edge pelers-edge-reference',
+      'pelers-edge pelers-edge-sequence',
     ]);
     // An arrowhead, a cross, and a dotted line with nothing on its end.
-    expect(all[0].body).toMatch(/<path d="[^"]+"\/><path class="pele-marker" d="[^"]+Z" fill=/);
-    expect(all[1].body).toMatch(/<path d="[^"]+"\/><path class="pele-marker" d="M[^Z"]+"\/>$/);
+    expect(all[0].body).toMatch(/<path d="[^"]+"\/><path class="pelers-marker" d="[^"]+Z" fill=/);
+    expect(all[1].body).toMatch(/<path d="[^"]+"\/><path class="pelers-marker" d="M[^Z"]+"\/>$/);
     expect(all[2].body).toMatch(/^<path d="[^"]+" stroke-dasharray="3 4"\/>$/);
-    expect(svg).toContain('<g class="pele-edge-label" data-id="L_a_e_0">');
+    expect(svg).toContain('<g class="pelers-edge-label" data-id="L_a_e_0">');
     expect(svg).toContain('>why</text>');
   });
 
@@ -193,7 +193,7 @@ describe('agentflow rendering', () => {
     expect(inside(node(svg, 'a'), team)).toBe(true);
     expect(inside(node(svg, 'b'), team)).toBe(true);
     expect(inside(node(svg, 'c'), team)).toBe(false);
-    expect(svg).toMatch(/<text class="pele-cluster-label"[^>]*>Content Team<\/text>/);
+    expect(svg).toMatch(/<text class="pelers-cluster-label"[^>]*>Content Team<\/text>/);
     expect(team.rect).toContain(`stroke="${series(8)}`);
     expect(team.rect).toContain('fill-opacity="0.06"');
   });
@@ -209,7 +209,7 @@ describe('agentflow rendering', () => {
     expect(inside(node(svg, 'a'), inner)).toBe(true);
     expect(inside(node(svg, 'c'), inner)).toBe(false);
     expect(inside(node(svg, 'c'), outer)).toBe(true);
-    expect(count(svg, 'class="pele-cluster-label"')).toBe(1);
+    expect(count(svg, 'class="pelers-cluster-label"')).toBe(1);
   });
 
   it('lays a flow out in its own direction', () => {
@@ -232,7 +232,7 @@ describe('agentflow rendering', () => {
     const corpusNode = node(svg, 'corpus');
     expect(inside(corpusNode, frame(svg, 'one'))).toBe(false);
     expect(inside(corpusNode, frame(svg, 'two'))).toBe(false);
-    expect(count(svg, 'pele-cluster pele-flow')).toBe(2);
+    expect(count(svg, 'pelers-cluster pelers-flow')).toBe(2);
     expect(modelOf(src).subgraphs.map((s) => s.nodes)).toEqual([['a'], ['b']]);
   });
 
@@ -241,12 +241,12 @@ describe('agentflow rendering', () => {
       'agentflow-beta TB\n  in["In"] --> v\n  flow p["Processing"]\n    v["Validate"] --> e["Enrich"]\n  end\n  p@{ view: "collapsed" }\n  e --> out["Out"]';
     const svg = svgOf(src);
     const p = node(svg, 'p');
-    expect(p.classes).toBe('pele-node pele-shape-collapsed');
+    expect(p.classes).toBe('pelers-node pelers-shape-collapsed');
     expect(p.body).toContain('>Processing</text>');
-    expect(p.body).toContain('class="pele-collapsed-mark"');
+    expect(p.body).toContain('class="pelers-collapsed-mark"');
     expect(p.body).toContain(`stroke="${series(8)}`);
     expect(svg).not.toContain('data-id="v"');
-    expect(svg).not.toContain('pele-cluster');
+    expect(svg).not.toContain('pelers-cluster');
     // The edge inside the flow is gone; the two that crossed its border end at the node.
     expect(edges(svg).map((e) => e.id)).toEqual(['L_in_v_0', 'L_e_out_0']);
     expect(node(svg, 'p').y).toBeGreaterThan(node(svg, 'in').y);
@@ -307,15 +307,15 @@ describe('agentflow rendering', () => {
     const plain = render('agentflow-beta TB\n  a --> b', options);
     const titled = render('---\ntitle: Release pipeline\n---\nagentflow-beta TB\n  a --> b', options);
     expect(titled.svg).toMatch(
-      /<text class="pele-title" font-weight="var\(--_tw\)"[^>]*>(?:<tspan[^>]*>)?Release pipeline</
+      /<text class="pelers-title" font-weight="var\(--_tw\)"[^>]*>(?:<tspan[^>]*>)?Release pipeline</
     );
     expect(titled.height).toBeGreaterThan(plain.height);
   });
 
   it('writes the accessible title and description', () => {
     const svg = svgOf('agentflow-beta TB\n  accTitle: Review flow\n  accDescr: How a change is reviewed\n  a --> b');
-    expect(svg).toContain('<title id="pele-title">Review flow</title>');
-    expect(svg).toContain('<desc id="pele-desc">How a change is reviewed</desc>');
+    expect(svg).toContain('<title id="pelers-title">Review flow</title>');
+    expect(svg).toContain('<desc id="pelers-desc">How a change is reviewed</desc>');
   });
 
   it('applies classes, styles and link styles', () => {
@@ -323,44 +323,44 @@ describe('agentflow rendering', () => {
       'agentflow-beta TB\n  classDef hot fill:#fdd,stroke:#c00,color:#900\n  a["A"]:::hot --> b["B"]\n  style b stroke-width:3px\n  linkStyle 0 stroke:#0a0'
     );
     const a = node(svg, 'a');
-    expect(a.classes).toBe('pele-node pele-shape-rounded pele-kind-task hot');
+    expect(a.classes).toBe('pelers-node pelers-shape-rounded pelers-kind-task hot');
     expect(a.body).toContain('style="fill:#fdd;stroke:#c00;"');
     // A fill the author chose is not washed out.
     expect(a.body).not.toContain('fill-opacity');
     expect(a.body).toContain('style="fill:#900;"');
     expect(node(svg, 'b').body).toContain('fill-opacity="0.14"');
     expect(node(svg, 'b').body).toContain('style="stroke-width:3px;"');
-    expect(svg).toMatch(/<g class="pele-edge pele-edge-sequence" data-id="L_a_b_0" style="stroke:#0a0;">/);
+    expect(svg).toMatch(/<g class="pelers-edge pelers-edge-sequence" data-id="L_a_b_0" style="stroke:#0a0;">/);
   });
 
   it('picks a contrasting label color on fills a style sets', () => {
     const svg = svgOf(
       'agentflow-beta TB\n  flow f["Flow"]\n    a["A"] --> b["B"]\n  end\n  flow p["Packed"]\n    c["C"]\n  end\n  p@{ view: "collapsed" }\n  b --> d["D"]\n  style f fill:#FFF9C4\n  style a fill:#1f3a5f\n  style b fill:#1f3a5f,color:#eee\n  style p fill:navy'
     );
-    expect(svg).toMatch(/data-id="f">.*?<text class="pele-cluster-label" fill="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(node(svg, 'a').body).toContain('<text class="pele-label" fill="var(--pele-fg-on-dark,#fff)"');
-    expect(node(svg, 'b').body).not.toContain('--pele-fg-on');
-    expect(node(svg, 'p').body).toContain('<text class="pele-label" fill="var(--pele-fg-on-dark,#fff)"');
-    expect(node(svg, 'd').body).not.toContain('--pele-fg-on');
+    expect(svg).toMatch(/data-id="f">.*?<text class="pelers-cluster-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(node(svg, 'a').body).toContain('<text class="pelers-label" fill="var(--pelers-fg-on-dark,#fff)"');
+    expect(node(svg, 'b').body).not.toContain('--pelers-fg-on');
+    expect(node(svg, 'p').body).toContain('<text class="pelers-label" fill="var(--pelers-fg-on-dark,#fff)"');
+    expect(node(svg, 'd').body).not.toContain('--pelers-fg-on');
   });
 
   it('cases edges that cross a flow fill a style sets and inks those inside it', () => {
     const src =
       'agentflow-beta TB\n  flow f["Flow"]\n    a["A"] --> b["B"]\n  end\n  b --> c["C"]\n  c --> d["D"]\n  style f fill:#FFF9C4';
     const svg = svgOf(src);
-    const casings = /<g class="pele-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
-    const edges = [...svg.matchAll(/class="pele-edge [^"]*" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
+    const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const edges = [...svg.matchAll(/class="pelers-edge [^"]*" data-id="[^"]+"([^>]*)><path d="([^"]+)"/g)].map((m) => [
       m[1],
       m[2],
     ]);
     expect(edges).toHaveLength(3);
     expect(edges.map(([, d]) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false]);
-    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pele-fg-on-light,#1f1f1f)"', '', '']);
-    expect(svgOf(src.replace('\n  style f fill:#FFF9C4', ''))).not.toMatch(/pele-casings|stroke="var\(--pele-fg-on/);
+    expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pelers-fg-on-light,#1f1f1f)"', '', '']);
+    expect(svgOf(src.replace('\n  style f fill:#FFF9C4', ''))).not.toMatch(/pelers-casings|stroke="var\(--pelers-fg-on/);
     // An edge from a flow to a node inside it starts on the flow's border and stays on its fill.
     const held = svgOf('agentflow-beta TB\n  flow f[Flow]\n    a[A]\n  end\n  f --> a\n  style f fill:white');
-    expect(held).toMatch(/data-id="L_f_a_0" stroke="var\(--pele-fg-on-light,#1f1f1f\)"/);
-    expect(held).not.toContain('pele-casings');
+    expect(held).toMatch(/data-id="L_f_a_0" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"/);
+    expect(held).not.toContain('pelers-casings');
   });
 
   it('links a clicked node and never writes a callback', () => {
@@ -420,7 +420,7 @@ describe('agentflow rendering', () => {
     const svg = svgOf('agentflow-beta TB\n  connectors["Mine"] --> b');
     expect(svg).not.toContain('data-id="connectors"');
     expect(edges(svg)).toHaveLength(0);
-    expect(node(svg, 'b').classes).toContain('pele-kind-task');
+    expect(node(svg, 'b').classes).toContain('pelers-kind-task');
   });
 
   it('reports positions in the lines of the original source', () => {
@@ -469,12 +469,12 @@ describe('agentflow rendering', () => {
   });
 
   it('rejects what the grammar rejects, with the line', () => {
-    const fails = (src: string): PeleError => {
+    const fails = (src: string): PelersError => {
       try {
         render(src, options);
       } catch (error) {
-        expect(error).toBeInstanceOf(PeleError);
-        return error as PeleError;
+        expect(error).toBeInstanceOf(PelersError);
+        return error as PelersError;
       }
       throw new Error('expected a failure');
     };
@@ -495,16 +495,16 @@ describe('agentflow rendering', () => {
   });
 
   it('rejects an unknown shape and unreadable metadata, pointing at the block', () => {
-    const fails = (src: string): PeleError => {
+    const fails = (src: string): PelersError => {
       try {
         parse(src);
       } catch (error) {
-        return error as PeleError;
+        return error as PelersError;
       }
       throw new Error('expected a failure');
     };
     const shape = fails('---\ntitle: T\n---\nagentflow-beta TB\n  a["A"]@{ shape: Rounded }');
-    expect(shape).toBeInstanceOf(PeleError);
+    expect(shape).toBeInstanceOf(PelersError);
     expect(shape.code).toBe('semantic');
     expect(shape.message).toBe('No such shape: Rounded. Shape names should be lowercase.');
     expect([shape.line, shape.column]).toEqual([5, 9]);
@@ -512,7 +512,7 @@ describe('agentflow rendering', () => {
     expect(fails('agentflow-beta TB\n  a@{ shape: 123 }').message).toBe('No such shape: 123.');
 
     const yaml = fails('agentflow-beta TB\n  b["B"]\n  a["A"]@{\n\tshape: rounded\n  }');
-    expect(yaml).toBeInstanceOf(PeleError);
+    expect(yaml).toBeInstanceOf(PelersError);
     expect(yaml.code).toBe('syntax');
     expect(yaml.message).toMatch(/^Metadata of "a" is not valid YAML\. .* \(3:9\)$/);
     expect([yaml.line, yaml.column]).toEqual([3, 9]);

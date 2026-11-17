@@ -232,7 +232,7 @@ fn draw(
         }
         let end = angle + share * std::f64::consts::PI * 2.0;
         slices.push_str(&format!(
-            "<path class=\"pele-slice\" data-id=\"{}\" d=\"{}\" fill=\"{}\"/>",
+            "<path class=\"pelers-slice\" data-id=\"{}\" d=\"{}\" fill=\"{}\"/>",
             esc_text(label),
             slice(angle, end, radius, inner),
             series_color(index)
@@ -279,7 +279,7 @@ fn draw(
     }
     if slices.is_empty() {
         slices = format!(
-            "<circle class=\"pele-slice\" r=\"{}\" fill=\"none\" stroke=\"var(--_b)\"/>",
+            "<circle class=\"pelers-slice\" r=\"{}\" fill=\"none\" stroke=\"var(--_b)\"/>",
             js_number_to_string(radius)
         );
     }
@@ -304,7 +304,7 @@ fn draw(
     for (index, label) in legend.iter().enumerate() {
         let y = ly + index as f64 * ROW + ROW / 2.0;
         legend_out.push_str(&format!(
-            "<g class=\"pele-legend-item\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"2\" fill=\"{}\"/>{}</g>",
+            "<g class=\"pelers-legend-item\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"2\" fill=\"{}\"/>{}</g>",
             esc_text(&entries[index].0),
             num(lx),
             num(y - SWATCH / 2.0),
@@ -323,24 +323,24 @@ fn draw(
         &title,
         total_width / 2.0,
         pad + title.height / 2.0,
-        " class=\"pele-title\" font-weight=\"var(--_tw)\"",
+        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     content.push_str(&format!(
-        "<g class=\"pele-slices\" transform=\"{translate}\" stroke=\"var(--_bg)\" stroke-width=\"1\" stroke-linejoin=\"round\">{slices}</g>"
+        "<g class=\"pelers-slices\" transform=\"{translate}\" stroke=\"var(--_bg)\" stroke-width=\"1\" stroke-linejoin=\"round\">{slices}</g>"
     ));
     if !labels.is_empty() {
         content.push_str(&format!(
-            "<g class=\"pele-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\" fill=\"var(--_bg)\">{labels}</g>"
+            "<g class=\"pelers-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\" fill=\"var(--_bg)\">{labels}</g>"
         ));
     }
     if !outside.is_empty() {
         content.push_str(&format!(
-            "<g class=\"pele-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\">{outside}</g>"
+            "<g class=\"pelers-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\">{outside}</g>"
         ));
     }
     if !legend_out.is_empty() {
         content.push_str(&format!(
-            "<g class=\"pele-legend\" font-size=\"{small_text}\">{legend_out}</g>"
+            "<g class=\"pelers-legend\" font-size=\"{small_text}\">{legend_out}</g>"
         ));
     }
 
@@ -349,6 +349,7 @@ fn draw(
         acc_descr: model.acc_descr.as_deref(),
     };
     Drawn {
+        links: Vec::new(),
         svg: svg_document(
             "pie",
             total_width,

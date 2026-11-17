@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { tickStep, tickValue, ticksBetween } from '../../src/diagrams/xychart/ticks.js';
-import { PeleError, parse, render, supports } from '../../src/index.js';
+import { PelersError, parse, render, supports } from '../../src/index.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 import { elements, type XmlElement } from '../support/xml.js';
 
@@ -58,14 +58,14 @@ describe('XY chart rendering', () => {
     expect(type).toBe('xychart');
     expect(supports('xychart-beta\nline [1]')).toBe(true);
     expect([width, height]).toEqual([700, 500]);
-    expect(svg).toContain('class="pele pele-xychart"');
-    expect(svg).toContain('class="pele-grid"');
-    expect(svg).toContain('class="pele-axis"');
-    const bars = /<g class="pele-series pele-bars" data-id="2024" fill="([^"]+)">(.*?)<\/g>/.exec(svg)!;
-    expect(bars[1]).toContain('--pele-series-1');
+    expect(svg).toContain('class="pelers pelers-xychart"');
+    expect(svg).toContain('class="pelers-grid"');
+    expect(svg).toContain('class="pelers-axis"');
+    const bars = /<g class="pelers-series pelers-bars" data-id="2024" fill="([^"]+)">(.*?)<\/g>/.exec(svg)!;
+    expect(bars[1]).toContain('--pelers-series-1');
     expect(bars[2].match(/<rect/g)?.length).toBe(3);
-    const line = /<g class="pele-series pele-line" data-id="2025" fill="([^"]+)">(.*?)<\/g>/.exec(svg)!;
-    expect(line[1]).toContain('--pele-series-2');
+    const line = /<g class="pelers-series pelers-line" data-id="2025" fill="([^"]+)">(.*?)<\/g>/.exec(svg)!;
+    expect(line[1]).toContain('--pelers-series-2');
     expect(line[2]).toMatch(/<path d="M[\d.]+,[\d.]+L[\d.]+,[\d.]+L[\d.]+,[\d.]+" fill="none"/);
     expect(line[2].match(/<circle/g)?.length).toBe(3);
     for (const text of [
@@ -83,13 +83,13 @@ describe('XY chart rendering', () => {
     ]) {
       expect(texts(svg)).toContain(text);
     }
-    expect(svg.match(/class="pele-legend-item"/g)?.length).toBe(2);
+    expect(svg.match(/class="pelers-legend-item"/g)?.length).toBe(2);
   });
 
   it('draws lines over bars, and colors each series by its place in the source', () => {
     const { svg } = render('xychart\n line [1, 2]\n bar [2, 1]\n line [3, 3]\n bar [1, 1]', options);
     expect(
-      [...svg.matchAll(/class="pele-series pele-(\w+)" fill="var\(--pele-series-(\d)/g)].map((m) => m[1] + m[2])
+      [...svg.matchAll(/class="pelers-series pelers-(\w+)" fill="var\(--pelers-series-(\d)/g)].map((m) => m[1] + m[2])
     ).toEqual(['bars2', 'bars4', 'line1', 'line3']);
   });
 
@@ -131,7 +131,7 @@ describe('XY chart rendering', () => {
     expect(over).toBeCloseTo(inside * 2, 1);
     const top = Number(tags(svg, 'rect')[2].attrs.get('y'));
     const ys = [
-      .../[ML][\d.]+,([\d.]+)/g[Symbol.matchAll](/class="pele-series pele-line"[^>]*><path d="([^"]+)"/.exec(svg)![1]),
+      .../[ML][\d.]+,([\d.]+)/g[Symbol.matchAll](/class="pelers-series pelers-line"[^>]*><path d="([^"]+)"/.exec(svg)![1]),
     ].map((m) => +m[1]);
     for (const y of ys) expect(y).toBeGreaterThanOrEqual(top);
     expect(tags(svg, 'circle')).toHaveLength(1);
@@ -191,7 +191,7 @@ describe('XY chart rendering', () => {
       'xychart\n x-axis [Q1, Q2, Q3]\n line [25 "Launch", 45, 72 "Target"]\n bar [1 "ignored", 2, 3]',
       options
     );
-    const labels = /<g class="pele-point-labels"[^>]*>(.*?)<\/g>/.exec(svg)![1];
+    const labels = /<g class="pelers-point-labels"[^>]*>(.*?)<\/g>/.exec(svg)![1];
     expect(texts(labels)).toEqual(['Launch', 'Target']);
     expect(svg).not.toContain('ignored');
   });
@@ -201,7 +201,7 @@ describe('XY chart rendering', () => {
     const sized = render(configured('    width: 900\n    height: 400', CHART), options);
     expect([sized.width, sized.height]).toEqual([900, 400]);
     expect(render(configured('    showTitle: false', CHART), options).svg).not.toContain('Sales Revenue');
-    expect(render(configured('    showLegend: false', CHART), options).svg).not.toContain('pele-legend');
+    expect(render(configured('    showLegend: false', CHART), options).svg).not.toContain('pelers-legend');
     const noX = render(configured('    xAxis:\n      showLabel: false\n      showTitle: false', CHART), options).svg;
     expect(texts(noX)).not.toContain('jan');
     expect(texts(noX)).not.toContain('Month');
@@ -210,7 +210,7 @@ describe('XY chart rendering', () => {
     expect(texts(noY)).not.toContain('7000');
     expect(texts(noY)).not.toContain('Revenue (in $)');
     expect(texts(noY)).toContain('jan');
-    const axis = (svg: string): string => /class="pele-axis" d="([^"]*)"/.exec(svg)?.[1] ?? '';
+    const axis = (svg: string): string => /class="pelers-axis" d="([^"]*)"/.exec(svg)?.[1] ?? '';
     const marks = (body: string): string => axis(render(configured(body, CHART), options).svg);
     expect(marks('    xAxis:\n      showTick: false').length).toBeLessThan(axis(plain).length);
     expect(marks('    yAxis:\n      showTick: false').length).toBeLessThan(axis(plain).length);
@@ -218,15 +218,15 @@ describe('XY chart rendering', () => {
     expect(marks('    yAxis:\n      showAxisLine: false')).not.toMatch(/V/);
     const bare =
       '    xAxis:\n      showTick: false\n      showAxisLine: false\n    yAxis:\n      showTick: false\n      showAxisLine: false';
-    expect(render(configured(bare, CHART), options).svg).not.toContain('pele-axis"');
+    expect(render(configured(bare, CHART), options).svg).not.toContain('pelers-axis"');
     expect(render(configured('    width: wide\n    showTitle: 3', CHART), options).svg).toBe(plain);
   });
 
   it('writes the value of each bar with showDataLabel', () => {
     const chart = 'xychart\n x-axis [a, b, c]\n y-axis 0 --> 30\n bar [12, 2, 25]\n bar [7, 30, 1]';
-    expect(render(chart, options).svg).not.toContain('pele-data-labels');
+    expect(render(chart, options).svg).not.toContain('pelers-data-labels');
     const { svg } = render(configured('    showDataLabel: true', chart), options);
-    const groups = [...svg.matchAll(/<g class="pele-data-labels"[^>]*>(.*?)<\/g>/g)];
+    const groups = [...svg.matchAll(/<g class="pelers-data-labels"[^>]*>(.*?)<\/g>/g)];
     // Each series shows its own values; Mermaid repeats those of the first series.
     expect(groups.flatMap((g) => texts(g[1])).sort()).toEqual(['1', '12', '2', '25', '30', '7']);
     // They are written past the end of the bars in the text color, whichever way Mermaid's setting is.
@@ -254,8 +254,8 @@ describe('XY chart rendering', () => {
     expect(() => render('xychart\n title "Empty"', options)).toThrow(
       'No Plot to render, please provide a plot with some data'
     );
-    expect(() => render('xychart\n line [1, 2', options)).toThrow(PeleError);
-    expect(() => render('xychart\n x-axis [é]\n line [1]', options)).toThrow(PeleError);
+    expect(() => render('xychart\n line [1, 2', options)).toThrow(PelersError);
+    expect(() => render('xychart\n x-axis [é]\n line [1]', options)).toThrow(PelersError);
   });
 
   it('takes the title from front matter unless the chart sets one', () => {
@@ -269,8 +269,8 @@ describe('XY chart rendering', () => {
 
   it('names the chart for assistive technology', () => {
     const { svg } = render('xychart\n accTitle: Sales\n accDescr: By month\n line [1, 2]', options);
-    expect(svg).toContain('<title id="pele-title">Sales</title>');
-    expect(svg).toContain('<desc id="pele-desc">By month</desc>');
+    expect(svg).toContain('<title id="pelers-title">Sales</title>');
+    expect(svg).toContain('<desc id="pelers-desc">By month</desc>');
   });
 
   it('exposes the model', () => {
@@ -317,7 +317,7 @@ describe('XY chart rendering', () => {
         ],
       },
     ]);
-    expect(() => parse('xychart-beta\ntitle Sales:%% note\nbar [1,2]')).toThrow(PeleError);
+    expect(() => parse('xychart-beta\ntitle Sales:%% note\nbar [1,2]')).toThrow(PelersError);
   });
 
   it('gives the same output for the same input', () => {

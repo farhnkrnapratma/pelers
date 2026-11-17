@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { parseGit } from '../../src/diagrams/git/parser.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
 // Inputs of about 50,000 characters built to trigger worst cases: patterns that rescan, lookups
 // that could go quadratic, and oversized layouts. Each must finish quickly and either succeed or
-// fail with a PeleError. The bounds are loose; a regression here is seconds or a hang.
+// fail with a PelersError. The bounds are loose; a regression here is seconds or a hang.
 
 const N = 50000;
 const big = { measurer: metricsMeasurer, limit: Infinity };
@@ -59,7 +59,7 @@ const CASES: [string, () => unknown][] = [
   ],
   ['3,000 commits with one id', () => render('gitGraph\n' + 'commit id:"same"\n'.repeat(3000), big)],
   [
-    '1,500 commits that already have the ids Pele would generate next',
+    '1,500 commits that already have the ids Pelers would generate next',
     () => {
       const model = parse('gitGraph\n' + 'commit\n'.repeat(3000), big);
       if (model.type !== 'gitGraph') throw new Error('not a git graph');
@@ -98,7 +98,7 @@ describe('git graph worst cases', () => {
       try {
         run();
       } catch (error) {
-        expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+        expect(error, (error as Error).message).toBeInstanceOf(PelersError);
       }
       expect(performance.now() - started).toBeLessThan(2000);
     });

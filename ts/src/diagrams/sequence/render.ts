@@ -182,8 +182,8 @@ function option(conf: Config, key: string, fallback: number): number {
 
 function half(x: number, y: number, dir: number, up: number, stick: boolean, color: string): string {
   const bx = num(x - dir * ARROW);
-  if (stick) return `<path class="pele-marker" d="M${num(x)},${num(y)}L${bx},${num(y + up * 5)}"/>`;
-  return `<path class="pele-marker" d="M${num(x)},${num(y)}L${bx},${num(y + up * 4.5)}V${num(y)}Z" fill="${color}" stroke="none"/>`;
+  if (stick) return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${bx},${num(y + up * 5)}"/>`;
+  return `<path class="pelers-marker" d="M${num(x)},${num(y)}L${bx},${num(y + up * 4.5)}V${num(y)}Z" fill="${color}" stroke="none"/>`;
 }
 
 // Draws the head whose tip is at (x, y) and points along dir. `up` is the side a half head sits on.
@@ -194,7 +194,7 @@ function head(type: Head, x: number, y: number, dir: number, up: number, color: 
     case Head.Cross:
       return marker('arrow_cross', x, y, dir, 0, color);
     case Head.Open:
-      return `<path class="pele-marker" d="M${num(x - dir * ARROW)},${num(y - 4.5)}L${num(x)},${num(y)}L${num(x - dir * ARROW)},${num(
+      return `<path class="pelers-marker" d="M${num(x - dir * ARROW)},${num(y - 4.5)}L${num(x)},${num(y)}L${num(x - dir * ARROW)},${num(
         y + 4.5
       )}" stroke-linejoin="round"/>`;
     case Head.HalfSolid:
@@ -237,7 +237,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
       ? Math.max(32, ((options.maxWidth ?? 320) - 2 * pad) / Math.max(1, db.actors.size) - actorMargin - 24)
       : Infinity
   );
-  // Mermaid's default of 35 corresponds to Pele's default gap. Other values move it by the difference.
+  // Mermaid's default of 35 corresponds to Pelers's default gap. Other values move it by the difference.
   const msgGap = Math.max(4, 14 + option(conf, 'messageMargin', 35) - 35);
   const notePad = Math.min(option(conf, 'noteMargin', 10), tight ? 6 : Infinity);
   const boxPad = Math.min(option(conf, 'boxMargin', 10), tight ? 6 : Infinity);
@@ -645,7 +645,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
         label,
         cx,
         cy,
-        frame ? ` class="pele-frame-label"${fill || ' fill="var(--_m)"'} stroke="none"` : fill,
+        frame ? ` class="pelers-frame-label"${fill || ' fill="var(--_m)"'} stroke="none"` : fill,
         icons
       )
     );
@@ -672,7 +672,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     const x = col.x - ACT_W / 2 + col.activations.length * ACT_STEP;
     extend(x, x + ACT_W);
     activationsOut.push(
-      `<rect class="pele-activation" data-id="${escText(col.id)}" x="${num(x)}" y="${num(start)}" width="${ACT_W}" height="${num(
+      `<rect class="pelers-activation" data-id="${escText(col.id)}" x="${num(x)}" y="${num(start)}" width="${ACT_W}" height="${num(
         bottom - start
       )}" rx="2"/>`
     );
@@ -683,7 +683,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     const cx = col.x;
     const cy = lineY + 16;
     col.lifeEnd = cy;
-    crossesOut += `<path class="pele-destroy" data-id="${escText(col.id)}" d="M${num(cx - 6)},${num(cy - 6)}L${num(cx + 6)},${num(
+    crossesOut += `<path class="pelers-destroy" data-id="${escText(col.id)}" d="M${num(cx - 6)},${num(cy - 6)}L${num(cx + 6)},${num(
       cy + 6
     )}M${num(cx + 6)},${num(cy - 6)}L${num(cx - 6)},${num(cy + 6)}"/>`;
     return cy + 6;
@@ -691,7 +691,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
   const actorSvg = (col: Column, top: number, footer: boolean): string => {
     const cls = col.actor.properties.get('class');
     return (
-      `<g class="pele-node pele-actor pele-actor-${col.kind}${footer ? ' pele-actor-footer' : ''}${
+      `<g class="pelers-node pelers-actor pelers-actor-${col.kind}${footer ? ' pelers-actor-footer' : ''}${
         typeof cls === 'string' ? classNames(cls) : ''
       }" data-id="${escText(col.id)}">` +
       drawActor(
@@ -707,7 +707,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     );
   };
   const badge = (i: number, cx: number, cy: number, w: number): string =>
-    `<g class="pele-sequence-number"><rect x="${num(cx - w / 2)}" y="${num(cy - BADGE_H / 2)}" width="${num(w)}" height="${BADGE_H}" rx="${
+    `<g class="pelers-sequence-number"><rect x="${num(cx - w / 2)}" y="${num(cy - BADGE_H / 2)}" width="${num(w)}" height="${BADGE_H}" rx="${
       BADGE_H / 2
     }" fill="var(--_l)" stroke="none"/><text x="${num(cx)}" y="${num(cy + tiny * 0.35)}" text-anchor="middle" font-size="${tiny}" fill="var(--_bg)" stroke="none">${esc(
       String(numbering.index[i])
@@ -743,7 +743,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
       if (frame.kind === 'rect') {
         const fill = frame.fill ? resolveStyle([`fill:${frame.fill}`]).shape : '';
         rectsOut.push(
-          `<rect class="pele-rect" x="${x}" y="${num(frame.top)}" width="${w}" height="${num(bottom - frame.top)}"${rounded((fill ? '' : ' fill-opacity="0.5"') + fill)}/>`
+          `<rect class="pelers-rect" x="${x}" y="${num(frame.top)}" width="${w}" height="${num(bottom - frame.top)}"${rounded((fill ? '' : ' fill-opacity="0.5"') + fill)}/>`
         );
       } else {
         let inner = `<rect x="${x}" y="${num(frame.top)}" width="${w}" height="${num(bottom - frame.top)}" fill="none"${ROUNDED}/>`;
@@ -756,7 +756,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
         }
         inner +=
           `<rect x="${x}" y="${num(frame.top)}" width="${num(frame.tabW)}" height="${TAB_H}" fill="var(--_s)"${ROUNDED}/>` +
-          `<text class="pele-frame-kind" x="${num(frame.x0 + frame.tabW / 2)}" y="${num(
+          `<text class="pelers-frame-kind" x="${num(frame.x0 + frame.tabW / 2)}" y="${num(
             frame.top + TAB_H / 2 + tiny * 0.35
           )}" text-anchor="middle" font-size="${tiny}" font-weight="var(--_hw)" fill="var(--_m)" stroke="none">${frame.kind}</text>` +
           backed(
@@ -765,7 +765,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
             frame.top + Math.max(TAB_H, frame.title.height) / 2,
             true
           );
-        framesOut += `<g class="pele-frame pele-frame-${frame.kind}">${inner}</g>`;
+        framesOut += `<g class="pelers-frame pelers-frame-${frame.kind}">${inner}</g>`;
       }
       y = bottom;
     } else if (type === LINETYPE.ALT_ELSE || type === LINETYPE.PAR_AND || type === LINETYPE.CRITICAL_OPTION) {
@@ -784,13 +784,13 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
       else if (m.placement === PLACEMENT.LEFTOF) x += leftEdge(a) - a.x;
       extend(x, x + view.w);
       notesOut +=
-        `<g class="pele-note" data-id="i${escText(m.id)}">` +
+        `<g class="pelers-note" data-id="i${escText(m.id)}">` +
         `<rect x="${num(x)}" y="${num(top)}" width="${num(view.w)}" height="${num(h)}"${ROUNDED}/>` +
         labelSvg(
           view.label,
           x + view.w / 2,
           top + h / 2,
-          ' class="pele-label" stroke="none" fill="var(--_fg)"',
+          ' class="pelers-label" stroke="none" fill="var(--_fg)"',
           icons
         ) +
         '</g>';
@@ -822,7 +822,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
       let line: string | undefined;
       let color = 'var(--_l)';
       const circle = (cx: number, cy: number): string =>
-        `<circle class="pele-central" cx="${num(cx)}" cy="${num(cy)}" r="${CENTRAL_R}" fill="${color}" stroke="none"/>`;
+        `<circle class="pelers-central" cx="${num(cx)}" cy="${num(cy)}" r="${CENTRAL_R}" fill="${color}" stroke="none"/>`;
       const tailAtEnd = st.atStart && !st.atEnd;
       const headTrim = trim(st.head);
       let inner = '';
@@ -857,7 +857,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
         inner = `<path d="${d}"${attrs}/>` + heads + inner;
         extend(a.x, out + 8 + label.width);
         if (label.width > 0) {
-          labelsOut += `<g class="pele-edge-label" data-id="i${escText(m.id)}">${labelSvg(
+          labelsOut += `<g class="pelers-edge-label" data-id="i${escText(m.id)}">${labelSvg(
             label,
             out + 8 + label.width / 2,
             (top + bottom) / 2,
@@ -912,11 +912,11 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
           const r = Math.max(x0, x1);
           const cx = align < 0 ? l + msgPad + label.width / 2 : align > 0 ? r - msgPad - label.width / 2 : (l + r) / 2;
           extend(cx - label.width / 2, cx + label.width / 2);
-          labelsOut += `<g class="pele-edge-label" data-id="i${escText(m.id)}">${backed(label, cx, lineY - 4 - label.height / 2)}</g>`;
+          labelsOut += `<g class="pelers-edge-label" data-id="i${escText(m.id)}">${backed(label, cx, lineY - 4 - label.height / 2)}</g>`;
         }
         if (creating) y = lineY + b.size.h / 2 - 6;
       }
-      edgesOut += `<g class="pele-edge pele-message" data-id="i${escText(m.id)}"${line ? ` stroke="${line}"` : ''}>${inner}</g>`;
+      edgesOut += `<g class="pelers-edge pelers-message" data-id="i${escText(m.id)}"${line ? ` stroke="${line}"` : ''}>${inner}</g>`;
       y = Math.max(y, lineY);
       if (a.destroyAt === i) y = Math.max(y, destroy(a, lineY));
       if (b.destroyAt === i && b !== a) y = Math.max(y, destroy(b, lineY));
@@ -940,7 +940,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     actorsOut += actorSvg(col, col.top, false);
     const end = col.lifeEnd >= 0 ? col.lifeEnd : y;
     if (end > col.lifeStart) {
-      lifelines += `<path class="pele-lifeline" data-id="${escText(col.id)}" d="M${num(col.x)},${num(col.lifeStart)}V${num(end)}"/>`;
+      lifelines += `<path class="pelers-lifeline" data-id="${escText(col.id)}" d="M${num(col.x)},${num(col.lifeStart)}V${num(end)}"/>`;
     }
   }
 
@@ -949,13 +949,13 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     const [x0, x1] = boxEdges(run);
     const fill = run.box.fill === 'transparent' ? '' : resolveStyle([`fill:${run.box.fill}`]).shape;
     boxesOut +=
-      `<g class="pele-cluster pele-box"${run.box.name ? ` data-id="${escText(run.box.name)}"` : ''}>` +
+      `<g class="pelers-cluster pelers-box"${run.box.name ? ` data-id="${escText(run.box.name)}"` : ''}>` +
       `<rect x="${num(x0)}" y="0" width="${num(x1 - x0)}" height="${num(bottom + boxPad)}" fill="var(--_a)" stroke="var(--_b)"${rounded((fill ? '' : ' fill-opacity="0.5"') + fill)}/>` +
       labelSvg(
         run.title,
         (x0 + x1) / 2,
         boxPad / 2 + 2 + run.title.height / 2,
-        ` class="pele-cluster-label"${inkOn(run.box.fill) || ' fill="var(--_m)"'}`,
+        ` class="pelers-cluster-label"${inkOn(run.box.fill) || ' fill="var(--_m)"'}`,
         icons
       ) +
       '</g>';
@@ -972,7 +972,7 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     const cx = (minX + maxX) / 2;
     extend(cx - title.width / 2, cx + title.width / 2);
     minY = -title.height - 12;
-    titleOut = labelSvg(title, cx, minY + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"', icons);
+    titleOut = labelSvg(title, cx, minY + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"', icons);
   }
 
   const width = Math.ceil(maxX - minX + 2 * pad);
@@ -997,24 +997,24 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
     db,
     `<g transform="translate(${num(pad - minX)},${num(pad - minY)})">` +
       titleOut +
-      (boxesOut ? `<g class="pele-boxes" font-size="${small}">${boxesOut}</g>` : '') +
-      (rectsOut.length > 0 ? `<g class="pele-rects" fill="var(--_a)">${rectsOut.reverse().join('')}</g>` : '') +
-      (lifelines ? `<g class="pele-lifelines" fill="none" stroke="var(--_b)">${lifelines}</g>` : '') +
+      (boxesOut ? `<g class="pelers-boxes" font-size="${small}">${boxesOut}</g>` : '') +
+      (rectsOut.length > 0 ? `<g class="pelers-rects" fill="var(--_a)">${rectsOut.reverse().join('')}</g>` : '') +
+      (lifelines ? `<g class="pelers-lifelines" fill="none" stroke="var(--_b)">${lifelines}</g>` : '') +
       (activationsOut.length > 0
-        ? `<g class="pele-activations" fill="var(--_s)" stroke="var(--_b)">${activationsOut.reverse().join('')}</g>`
+        ? `<g class="pelers-activations" fill="var(--_s)" stroke="var(--_b)">${activationsOut.reverse().join('')}</g>`
         : '') +
-      (framesOut ? `<g class="pele-frames" font-size="${small}" stroke="var(--_b)">${framesOut}</g>` : '') +
-      (edgesOut ? `<g class="pele-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (framesOut ? `<g class="pelers-frames" font-size="${small}" stroke="var(--_b)">${framesOut}</g>` : '') +
+      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
       (crossesOut
-        ? `<g class="pele-destroys" fill="none" stroke="var(--_l)" stroke-width="1.5" stroke-linecap="round">${crossesOut}</g>`
+        ? `<g class="pelers-destroys" fill="none" stroke="var(--_l)" stroke-width="1.5" stroke-linecap="round">${crossesOut}</g>`
         : '') +
       (labelsOut
-        ? `<g class="pele-edge-labels" font-size="${small}"${monospaced ? ` font-family="${FONT_MONO}"` : ''}>${labelsOut}</g>`
+        ? `<g class="pelers-edge-labels" font-size="${small}"${monospaced ? ` font-family="${FONT_MONO}"` : ''}>${labelsOut}</g>`
         : '') +
       (notesOut
-        ? `<g class="pele-notes" font-size="${small}" fill="var(--_a)" stroke="var(--_b)">${notesOut}</g>`
+        ? `<g class="pelers-notes" font-size="${small}" fill="var(--_a)" stroke="var(--_b)">${notesOut}</g>`
         : '') +
-      (actorsOut ? `<g class="pele-nodes">${actorsOut}</g>` : '') +
+      (actorsOut ? `<g class="pelers-nodes">${actorsOut}</g>` : '') +
       '</g>'
   );
   return { svg, width, height, links: [] };

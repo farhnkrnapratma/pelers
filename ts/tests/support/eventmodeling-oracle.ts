@@ -1,5 +1,5 @@
 import * as reference from '@mermaid-js/parser';
-import { PeleError } from '../../src/errors.js';
+import { PelersError } from '../../src/errors.js';
 import { patchTitle, patchTokens } from './token-patch.js';
 
 patchTokens('EventModelingModule', (tokens) => patchTitle(tokens, String.raw`\w`, 'EM_TITLE'));
@@ -29,11 +29,11 @@ export async function referenceTree(src: string): Promise<{ ok: boolean; ast?: u
   }
 }
 
-export function peleTree(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
+export function pelersTree(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
   try {
     return { ok: true, ast: plainTree(parse(src)) };
   } catch (e) {
-    if (!(e instanceof PeleError)) throw e;
+    if (!(e instanceof PelersError)) throw e;
     return { ok: false, error: e.message };
   }
 }

@@ -1,4 +1,4 @@
-use crate::{DiagramType, Model, PeleErrorCode, parse, render};
+use crate::{DiagramType, Model, parse, render};
 
 #[test]
 fn generic_api_parses_and_renders_flowcharts() {
@@ -30,10 +30,32 @@ flowchart TB\n\
 }
 
 #[test]
-fn generic_api_reports_unsupported_detected_diagrams() {
-    let error = parse("sequenceDiagram\n  Alice->>Bob: Hello").unwrap_err();
+fn generic_api_parses_and_renders_agentflow() {
+    let parsed = parse("agentflow-beta LR\n  Start[Start] --> Finish[Finish]").unwrap();
+    let rendered = render(&parsed).unwrap();
 
-    assert_eq!(error.code, PeleErrorCode::UnsupportedDiagram);
-    assert_eq!(error.diagram_type.as_deref(), Some("sequence"));
-    assert_eq!(error.mermaid_type.as_deref(), Some("sequence"));
+    assert_eq!(parsed.diagram_type, DiagramType::Agentflow);
+    assert!(matches!(&parsed.model, Model::Agentflow(m) if m.graph.nodes.len() == 2));
+    assert!(rendered.svg.contains(">Start</text>"));
+}
+
+#[test]
+fn batch_render_matches_sequential_render_in_order() {
+    let sources = [
+        "flowchart TD\n  A --> B",
+        "pie title Pets\n  \"Dogs\" : 3\n  \"Cats\" : 2",
+        "sequenceDiagram\n  Alice->>Bob: Hi",
+        "notADiagram",
+    ];
+    let batch = crate::api::render_batch(&sources, 3);
+    assert_eq!(batch.len(), sources.len());
+    for (source, result) in sources.iter().zip(&batch) {
+        let single = crate::api::render_batch(&[source], 1).remove(0);
+        match (result, &single) {
+            (Ok(a), Ok(b)) => assert_eq!(a.svg, b.svg),
+            (Err(a), Err(b)) => assert_eq!(a, b),
+            _ => panic!("batch and single disagree for {source:?}"),
+        }
+    }
+    assert!(batch[3].is_err());
 }

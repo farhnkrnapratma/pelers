@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/gantt/lexer.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -164,7 +164,7 @@ describe('gantt worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -178,7 +178,7 @@ describe('gantt worst cases', () => {
     try {
       render(src, big);
     } catch (error) {
-      code = (error as PeleError).code;
+      code = (error as PelersError).code;
     }
     expect(code).toBe('limit');
   }, 30_000);

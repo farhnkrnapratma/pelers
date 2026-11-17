@@ -387,7 +387,7 @@ function draw(model: RailroadModel, config: Config, options: RenderOptions, tigh
             `${eastToNorth}V${num(y + arc)}${loopUp}`;
           arrows += `M${num(middle - ARROW / 2)},${num(loopY)}l${ARROW},${-ARROW / 2}v${ARROW}z`;
           if (box.text !== '') {
-            nodes += `<text class="pele-edge-label pele-count" x="${num(middle)}" y="${num(loopY + COUNT_SIZE + 3)}" font-size="${COUNT_SIZE}" fill="var(--_m)">${esc(box.text)}</text>`;
+            nodes += `<text class="pelers-edge-label pelers-count" x="${num(middle)}" y="${num(loopY + COUNT_SIZE + 3)}" font-size="${COUNT_SIZE}" fill="var(--_m)">${esc(box.text)}</text>`;
           }
           boxes.push(kid);
           at.push(kx, y);
@@ -400,12 +400,12 @@ function draw(model: RailroadModel, config: Config, options: RenderOptions, tigh
           const shape = `<rect x="${num(x)}" y="${num(y - boxTop)}" width="${num(box.width)}" height="${num(m.height)}"`;
           const label = `<text x="${num(x + box.width / 2)}" y="${num(y + textShift)}"${space}`;
           if (box.kind === Kind.Terminal) {
-            nodes += `<g class="pele-node pele-terminal">${shape} rx="${num(boxTop)}" fill="var(--_s)" stroke="var(--_b)"${stroke}/>${label} font-family="${FONT_MONO}">${esc(text)}</text></g>`;
+            nodes += `<g class="pelers-node pelers-terminal">${shape} rx="${num(boxTop)}" fill="var(--_s)" stroke="var(--_b)"${stroke}/>${label} font-family="${FONT_MONO}">${esc(text)}</text></g>`;
           } else if (box.kind === Kind.NonTerminal) {
-            nodes += `<g class="pele-node pele-nonterminal" data-id="${escText(box.id)}">${shape} fill="var(--_bg)" stroke="var(--_b)"${stroke}${ROUNDED}/>${label}>${esc(text)}</text></g>`;
+            nodes += `<g class="pelers-node pelers-nonterminal" data-id="${escText(box.id)}">${shape} fill="var(--_bg)" stroke="var(--_b)"${stroke}${ROUNDED}/>${label}>${esc(text)}</text></g>`;
           } else {
             nodes +=
-              `<g class="pele-node pele-special">${shape} fill="var(--_bg)" stroke="var(--_b)" stroke-dasharray="4 3"${stroke}${ROUNDED}/>` +
+              `<g class="pelers-node pelers-special">${shape} fill="var(--_bg)" stroke="var(--_b)" stroke-dasharray="4 3"${stroke}${ROUNDED}/>` +
               `${label} font-style="italic"><tspan fill="var(--_m)">? </tspan>${esc(text.slice(2, -2))}<tspan fill="var(--_m)"> ?</tspan></text></g>`;
           }
         }
@@ -436,14 +436,14 @@ function draw(model: RailroadModel, config: Config, options: RenderOptions, tigh
     place(box, left, baseline);
     const markers =
       radius > 0
-        ? `<circle class="pele-marker pele-start" cx="${num(pad + radius)}" cy="${num(baseline)}" r="${num(radius)}" fill="var(--_l)"/>` +
-          `<circle class="pele-marker pele-end" cx="${num(end + radius)}" cy="${num(baseline)}" r="${num(radius)}" fill="var(--_l)"/>`
+        ? `<circle class="pelers-marker pelers-start" cx="${num(pad + radius)}" cy="${num(baseline)}" r="${num(radius)}" fill="var(--_l)"/>` +
+          `<circle class="pelers-marker pelers-end" cx="${num(end + radius)}" cy="${num(baseline)}" r="${num(radius)}" fill="var(--_l)"/>`
         : '';
     rules +=
-      `<g class="pele-rule" data-id="${escText(rule.name)}">` +
-      `<text class="pele-rule-name" x="${num(pad)}" y="${num(top + headHeight / 2 + headSize * 0.35)}" font-size="${num(headSize)}" font-weight="var(--_hw)" text-anchor="start">${esc(name)}</text>` +
-      `<path class="pele-edge pele-track" d="${track}" fill="none" stroke="var(--_l)"${stroke}/>` +
-      (arrows ? `<path class="pele-marker" d="${arrows}" fill="var(--_l)"/>` : '') +
+      `<g class="pelers-rule" data-id="${escText(rule.name)}">` +
+      `<text class="pelers-rule-name" x="${num(pad)}" y="${num(top + headHeight / 2 + headSize * 0.35)}" font-size="${num(headSize)}" font-weight="var(--_hw)" text-anchor="start">${esc(name)}</text>` +
+      `<path class="pelers-edge pelers-track" d="${track}" fill="none" stroke="var(--_l)"${stroke}/>` +
+      (arrows ? `<path class="pelers-marker" d="${arrows}" fill="var(--_l)"/>` : '') +
       markers +
       nodes +
       '</g>';
@@ -455,9 +455,9 @@ function draw(model: RailroadModel, config: Config, options: RenderOptions, tigh
   const totalWidth = Math.ceil(width + 2 * pad);
   const totalHeight = Math.ceil(bottom + pad);
   const content =
-    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pele-title" font-weight="var(--_tw)"') +
+    labelSvg(title, totalWidth / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
     (rules
-      ? `<g class="pele-rules" transform="translate(0.5,0.5)" font-size="${num(size)}" text-anchor="middle">${rules}</g>`
+      ? `<g class="pelers-rules" transform="translate(0.5,0.5)" font-size="${num(size)}" text-anchor="middle">${rules}</g>`
       : '');
 
   return {

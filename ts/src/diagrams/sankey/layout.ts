@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { SankeyModel } from './db.js';
 
 export type Alignment = 'justify' | 'left' | 'right' | 'center';
@@ -109,7 +109,7 @@ export function layoutSankey(model: SankeyModel, options: LayoutOptions): Sankey
         }
       }
     }
-    throw new PeleError(
+    throw new PelersError(
       `Sankey diagrams cannot have circular links, and "${model.nodes[stuck].id}" is part of one.`,
       'semantic',
       { type: 'sankey' }

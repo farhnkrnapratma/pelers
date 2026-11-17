@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PeleError, parse, render } from '../../src/index.js';
+import { PelersError, parse, render } from '../../src/index.js';
 import { tokenize } from '../../src/diagrams/kanban/parser.js';
 import { metricsMeasurer } from '../../src/text/measurer.js';
 
@@ -74,7 +74,7 @@ describe('kanban worst cases', () => {
         try {
           run();
         } catch (error) {
-          expect(error, (error as Error).message).toBeInstanceOf(PeleError);
+          expect(error, (error as Error).message).toBeInstanceOf(PelersError);
         }
         expect(performance.now() - started).toBeLessThan(3000);
       },
@@ -85,6 +85,6 @@ describe('kanban worst cases', () => {
   it('keeps a long word inside its card', () => {
     const { width, svg } = render('kanban\ntodo\n a[' + 'w'.repeat(N) + ']', big);
     expect(width).toBe(216);
-    expect(svg.match(/class="pele-label"/g)?.length).toBeGreaterThan(1000);
+    expect(svg.match(/class="pelers-label"/g)?.length).toBeGreaterThan(1000);
   });
 });

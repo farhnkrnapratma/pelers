@@ -1,5 +1,5 @@
 const BOUNDS =
-  "Checks pixel positions kept by Mermaid's renderer (`renderer.bounds`). Pele has its own layout and no layout parity. What the test parses is covered in tests/render/sequence.test.ts.";
+  "Checks pixel positions kept by Mermaid's renderer (`renderer.bounds`). Pelers has its own layout and no layout parity. What the test parses is covered in tests/render/sequence.test.ts.";
 const BOUNDS_API = "Exercises the bounds bookkeeping object of Mermaid's renderer directly; no diagram is parsed.";
 
 const bounds = (test) => ({ file: 'sequenceDiagram.spec.js', test, reason: BOUNDS });
@@ -41,13 +41,13 @@ export default {
       file: 'sequenceDiagram.spec.js',
       test: 'should have functions used in sequence JISON as own property',
       reason:
-        'Checks that SequenceDB methods are own properties, a requirement of the Jison runtime. Pele has no Jison runtime.',
+        'Checks that SequenceDB methods are own properties, a requirement of the Jison runtime. Pelers has no Jison runtime.',
     },
     {
       file: 'keywordActors.spec.ts',
       test: 'parses a details statement',
       reason:
-        'Reads the properties from a page element by id. Pele has no page to read; it parses the statement and keeps the id.',
+        'Reads the properties from a page element by id. Pelers has no page to read; it parses the statement and keeps the id.',
     },
   ],
   notPorted: [

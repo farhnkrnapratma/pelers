@@ -2,7 +2,7 @@ import { setFlagsFromString } from 'node:v8';
 import { runInNewContext } from 'node:vm';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
-  PeleError,
+  PelersError,
   mount,
   parse,
   render,
@@ -281,24 +281,24 @@ describe('mount', () => {
   it('takes its fonts from the variables where they are set', () => {
     const { el, seen, spy } = styled({
       fontFamily: 'Georgia',
-      vars: { '--pele-font': ' Inter, sans-serif ', '--pele-font-mono': 'Menlo' },
+      vars: { '--pelers-font': ' Inter, sans-serif ', '--pelers-font-mono': 'Menlo' },
     });
     mountWith(spy, el, FLOW);
     expect([...new Set(seen)]).toEqual(['Inter, sans-serif|Menlo']);
-    expect(el.innerHTML).toContain('font-family:var(--pele-font,Inter, sans-serif)');
-    expect(el.innerHTML).toContain('--_fm:var(--pele-font-mono,Menlo)');
+    expect(el.innerHTML).toContain('font-family:var(--pelers-font,Inter, sans-serif)');
+    expect(el.innerHTML).toContain('--_fm:var(--pelers-font-mono,Menlo)');
   });
 
   it('finds a variable that is set on the drawing and not on the element', () => {
     const { el, seen, spy } = styled(
       { fontFamily: 'Georgia' },
-      { fontFamily: 'Inter', vars: { '--pele-font': 'Inter' } }
+      { fontFamily: 'Inter', vars: { '--pelers-font': 'Inter' } }
     );
     let renders = 0;
     const handle = mountWith(spy, el, FLOW, { onRender: () => renders++ });
     // Drawn for the element's font first, as nothing better is known, then for the one found.
     expect([...new Set(seen)]).toEqual(['Georgia|undefined', 'Inter|undefined']);
-    expect(el.innerHTML).toContain('font-family:var(--pele-font,Inter)');
+    expect(el.innerHTML).toContain('font-family:var(--pelers-font,Inter)');
     expect(renders).toBe(1);
     seen.length = 0;
     handle.update(FLOW);
@@ -347,7 +347,7 @@ describe('mount', () => {
     seen.length = 0;
     resize(el, 500);
     expect([...new Set(seen)]).toEqual(['Georgia|undefined']);
-    expect(el.innerHTML).toContain('font-family:var(--pele-font,Georgia)');
+    expect(el.innerHTML).toContain('font-family:var(--pelers-font,Georgia)');
     expect(renders).toBe(2);
   });
 
@@ -383,15 +383,15 @@ describe('mount', () => {
     expect(handle.result?.mermaidType).toBe('flowchart-v2');
     expect(el.innerHTML).toBe(render(FLOW, { ...options, maxWidth: 320 }).svg);
     handle.update('flowchart LR\n  A -->');
-    expect(handle.error).toBeInstanceOf(PeleError);
-    expect((handle.error as PeleError).mermaidType).toBe('flowchart-v2');
+    expect(handle.error).toBeInstanceOf(PelersError);
+    expect((handle.error as PelersError).mermaidType).toBe('flowchart-v2');
     expect(errors).toEqual([handle.error]);
     expect(handle.source).toBe('flowchart LR\n  A -->');
     expect(handle.result?.type).toBe('flowchart');
     expect(el.innerHTML).toBe(render(FLOW, { ...options, maxWidth: 320 }).svg);
     const nothing = mount(element(300), 'not a diagram', options);
     expect(nothing.result).toBeUndefined();
-    expect(nothing.error).toBeInstanceOf(PeleError);
+    expect(nothing.error).toBeInstanceOf(PelersError);
 
     handle.update(SANKEY);
     handle.destroy();
@@ -582,7 +582,7 @@ describe('mount', () => {
     expect(children.map((node) => node.name)).toEqual(['svg', 'div']);
     const [drawing, error] = children;
     expect(drawing.style.opacity).toBe('0.4');
-    expect(error.className).toBe('pele pele-error');
+    expect(error.className).toBe('pelers pelers-error');
     expect(error.textContent).toBe("Parse error on line 2: Expecting 'NODE_STRING', got 'EOF'");
     expect(error.title).toBe((handle.error as Error).message);
     expect(error.attributes.style).toContain('margin-top:-1.3em');
@@ -623,9 +623,9 @@ describe('mount', () => {
     resize(el, 0);
     handle.update('sankey\n\nA,B,10\nB,A,10\n');
     resize(el, 1000);
-    expect(handle.error).toBeInstanceOf(PeleError);
+    expect(handle.error).toBeInstanceOf(PelersError);
     resize(el, 1100);
-    expect(handle.error).toBeInstanceOf(PeleError);
+    expect(handle.error).toBeInstanceOf(PelersError);
     expect(el.innerHTML).toBe(before);
     handle.update(FLOW);
     expect(handle.error).toBeUndefined();
@@ -665,7 +665,7 @@ describe('mount', () => {
     expect(el.innerHTML).toBe(render(SANKEY, { ...own, maxWidth: 320 }).svg);
     // The error stays with its text, however often that text is given.
     handle.update('flowchart LR\n  A -->');
-    expect(handle.error).toBeInstanceOf(PeleError);
+    expect(handle.error).toBeInstanceOf(PelersError);
     handle.update(SANKEY);
     expect(handle.error).toBeUndefined();
   });
@@ -802,7 +802,7 @@ describe('mount', () => {
     expect(seen).toEqual([]);
     expect(handle.result.type).toBe('sankey');
     handle.update('flowchart LR\n  A -->');
-    expect(handle.error).toBeInstanceOf(PeleError);
+    expect(handle.error).toBeInstanceOf(PelersError);
     resize(el, 500);
     expect([...new Set(seen)]).toEqual(['Inter']);
     expect(handle.result.type).toBe('flowchart');
@@ -873,7 +873,7 @@ describe('mount', () => {
   });
 
   it("keeps the first drawing, and reports it, when the host fails on the one for the drawing's fonts", () => {
-    // The drawing sets --pele-font, so it is drawn a second time, which the sanitizer refuses.
+    // The drawing sets --pelers-font, so it is drawn a second time, which the sanitizer refuses.
     const child = {};
     let made = 0;
     const el = {
@@ -889,7 +889,7 @@ describe('mount', () => {
       fontFamily: target === child ? 'Inter' : 'Georgia',
       paddingLeft: '0px',
       paddingRight: '0px',
-      getPropertyValue: (name: string) => (target === child && name === '--pele-font' ? 'Inter' : ''),
+      getPropertyValue: (name: string) => (target === child && name === '--pelers-font' ? 'Inter' : ''),
     });
     const reported: RenderResult[] = [];
     const handle = mount(el as unknown as HTMLElement, FLOW, {

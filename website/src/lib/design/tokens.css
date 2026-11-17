@@ -1,0 +1,216 @@
+@theme {
+    --font-*: initial;
+    --font-sans:
+        'Paper Mono', ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Roboto Mono',
+        'DejaVu Sans Mono', 'Liberation Mono', Menlo, Monaco, Consolas, monospace;
+    --font-mono:
+        'Martian Mono', ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Roboto Mono',
+        'DejaVu Sans Mono', 'Liberation Mono', Menlo, Monaco, Consolas, monospace;
+    --font-title: 'Archivo Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+    --radius: 0;
+    --radius-xs: 0;
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+    --radius-2xl: 0;
+    --radius-3xl: 0;
+    --radius-4xl: 0;
+
+    --shadow-2xs: none;
+    --shadow-xs: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+    --shadow-2xl: none;
+
+    --text-3xs: 0.5625rem;
+    --text-2xs: 0.625rem;
+    --text-xxs: 0.6875rem;
+    --text-code: 0.8rem;
+
+    --color-canvas: var(--color-white);
+    --color-surface: var(--color-white);
+    --color-surface-subtle: var(--color-neutral-100);
+    --color-surface-muted: color-mix(in srgb, var(--color-fg) 5%, var(--color-surface));
+    --color-surface-hover: color-mix(in oklab, var(--color-neutral-950) 4%, transparent);
+    --color-overlay: color-mix(in oklab, var(--color-neutral-950) 55%, transparent);
+
+    --color-fg: var(--color-neutral-950);
+    --color-fg-secondary: var(--color-neutral-800);
+    --color-fg-muted: var(--color-neutral-600);
+    --color-fg-accent: var(--color-blue-700);
+    --color-fg-success: var(--color-emerald-700);
+    --color-fg-warning: var(--color-orange-700);
+    --color-fg-danger: var(--color-rose-700);
+    --color-on-accent: var(--color-white);
+    --color-on-accent-hover: var(--color-white);
+    --color-on-danger: var(--color-white);
+
+    --color-line-subtle: var(--color-neutral-200);
+    --color-line: var(--color-neutral-300);
+    --color-line-strong: var(--color-neutral-950);
+
+    --color-accent: var(--color-blue-500);
+    --color-accent-hover: var(--color-blue-600);
+    --color-accent-active: var(--color-blue-700);
+    --color-accent-strong: var(--color-blue-700);
+    --color-accent-subtle: color-mix(in oklab, var(--color-blue-500) 8%, transparent);
+    --color-accent-tint: color-mix(in oklab, var(--color-accent) 15%, var(--color-surface));
+    --color-focus-ring: var(--color-blue-700);
+    --color-highlight: var(--color-amber-400);
+
+    --color-info: var(--color-blue-500);
+    --color-info-subtle: color-mix(in oklab, var(--color-blue-500) 8%, transparent);
+    --color-success: var(--color-green-500);
+    --color-success-subtle: color-mix(in oklab, var(--color-green-500) 8%, transparent);
+    --color-warning: var(--color-orange-400);
+    --color-warning-subtle: color-mix(in oklab, var(--color-orange-400) 8%, transparent);
+    --color-danger: var(--color-red-500);
+    --color-danger-subtle: color-mix(in oklab, var(--color-red-500) 8%, transparent);
+    --color-danger-strong: var(--color-red-700);
+    --color-danger-strong-hover: var(--color-red-800);
+    --color-discovery: var(--color-violet-600);
+    --color-discovery-subtle: color-mix(in oklab, var(--color-violet-600) 8%, transparent);
+
+    --color-shimmer: var(--color-mist-400);
+    --color-brand-rss: var(--color-orange-500);
+
+    --color-code-deletion: var(--color-red-700);
+    --color-code-addition: var(--color-emerald-700);
+    --color-code-thumb: color-mix(in oklab, var(--color-mist-800) 35%, transparent);
+    --color-code-thumb-hover: color-mix(in oklab, var(--color-mist-800) 55%, transparent);
+    --color-code-inline: color-mix(in oklab, var(--color-mist-950) 8%, transparent);
+
+    --color-notification-unread: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+    --color-notification-unread-hover: color-mix(
+        in srgb,
+        var(--color-accent) 12%,
+        var(--color-surface)
+    );
+    --color-calendar-0: color-mix(in srgb, var(--color-fg-muted) 10%, var(--color-surface));
+    --color-calendar-1: color-mix(in srgb, var(--color-accent) 25%, var(--color-surface));
+    --color-calendar-2: color-mix(in srgb, var(--color-accent) 45%, var(--color-surface));
+    --color-calendar-3: color-mix(in srgb, var(--color-accent) 70%, var(--color-surface));
+    --color-calendar-4: var(--color-accent);
+
+    --color-activity-comment: var(--color-blue-700);
+    --color-activity-helpful: var(--color-emerald-700);
+    --color-activity-unhelpful: var(--color-rose-700);
+    --color-activity-report: var(--color-amber-800);
+    --color-activity-message: var(--color-violet-700);
+    --color-activity-feedback: var(--color-cyan-700);
+    --color-report-spam: var(--color-red-700);
+    --color-report-harassment: var(--color-amber-800);
+    --color-report-violence: var(--color-orange-700);
+    --color-report-sexual: var(--color-pink-700);
+    --color-report-self-harm: var(--color-purple-700);
+    --color-report-impersonation: var(--color-teal-700);
+    --color-report-privacy: var(--color-blue-700);
+    --color-report-misinformation: var(--color-cyan-700);
+    --color-report-other: var(--color-slate-600);
+
+    --color-button-highlight: color-mix(in oklab, var(--color-white) 30%, transparent);
+    --color-button-edge: color-mix(in oklab, var(--color-black) 8%, transparent);
+    --color-button-contact: color-mix(in oklab, var(--color-mist-950) 12%, transparent);
+    --color-button-sheen: color-mix(in oklab, var(--color-white) 90%, transparent);
+    --color-button-rim: color-mix(in oklab, var(--color-mist-950) 6%, transparent);
+    --color-button-pressed: color-mix(in oklab, var(--color-black) 22%, transparent);
+    --color-accent-sheen: color-mix(in oklab, var(--color-accent-strong), var(--color-white) 14%);
+    --color-accent-hover-sheen: color-mix(
+        in oklab,
+        var(--color-accent-hover),
+        var(--color-white) 14%
+    );
+    --color-danger-sheen: color-mix(in oklab, var(--color-danger-strong), var(--color-white) 14%);
+    --color-danger-hover-sheen: color-mix(
+        in oklab,
+        var(--color-danger-strong-hover),
+        var(--color-white) 14%
+    );
+
+    --inset-shadow-button-fill: none;
+    --inset-shadow-button-surface: none;
+    --inset-shadow-button-pressed: none;
+    --shadow-button-surface: none;
+    --shadow-button-accent: none;
+    --shadow-button-accent-hover: none;
+    --shadow-button-danger: none;
+    --shadow-button-danger-hover: none;
+}
+
+:root.dark {
+    --color-canvas: var(--color-neutral-950);
+    --color-surface: var(--color-neutral-950);
+    --color-surface-subtle: var(--color-neutral-900);
+    --color-surface-muted: color-mix(in srgb, var(--color-fg) 8%, var(--color-surface));
+    --color-surface-hover: color-mix(in oklab, var(--color-neutral-100) 5%, transparent);
+    --color-overlay: color-mix(in oklab, var(--color-black) 85%, transparent);
+
+    --color-fg: var(--color-neutral-100);
+    --color-fg-secondary: var(--color-neutral-300);
+    --color-fg-muted: var(--color-neutral-400);
+    --color-fg-accent: var(--color-blue-400);
+    --color-fg-success: var(--color-emerald-400);
+    --color-fg-warning: var(--color-orange-300);
+    --color-fg-danger: var(--color-rose-400);
+    --color-on-accent-hover: var(--color-neutral-950);
+    --color-on-danger: var(--color-neutral-950);
+
+    --color-line-subtle: color-mix(in oklab, var(--color-neutral-200) 12%, transparent);
+    --color-line: color-mix(in oklab, var(--color-neutral-400) 38%, transparent);
+    --color-line-strong: var(--color-neutral-100);
+
+    --color-accent-hover: var(--color-cyan-200);
+    --color-accent-active: var(--color-blue-600);
+    --color-accent-subtle: color-mix(in oklab, var(--color-blue-500) 14%, transparent);
+    --color-focus-ring: var(--color-blue-400);
+
+    --color-info-subtle: color-mix(in oklab, var(--color-blue-500) 14%, transparent);
+    --color-success: var(--color-green-400);
+    --color-success-subtle: color-mix(in oklab, var(--color-green-400) 14%, transparent);
+    --color-warning-subtle: color-mix(in oklab, var(--color-orange-400) 14%, transparent);
+    --color-danger-subtle: color-mix(in oklab, var(--color-red-500) 14%, transparent);
+    --color-danger-strong: var(--color-red-500);
+    --color-danger-strong-hover: var(--color-red-300);
+    --color-discovery: var(--color-purple-400);
+    --color-discovery-subtle: color-mix(in oklab, var(--color-purple-400) 14%, transparent);
+
+    --color-code-deletion: var(--color-red-400);
+    --color-code-addition: var(--color-emerald-400);
+    --color-code-thumb: color-mix(in oklab, var(--color-white) 35%, transparent);
+    --color-code-thumb-hover: color-mix(in oklab, var(--color-white) 55%, transparent);
+    --color-code-inline: color-mix(in oklab, var(--color-neutral-100) 12%, transparent);
+
+    --color-notification-unread: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+    --color-notification-unread-hover: color-mix(
+        in srgb,
+        var(--color-accent) 16%,
+        var(--color-surface)
+    );
+
+    --color-activity-comment: var(--color-blue-400);
+    --color-activity-helpful: var(--color-emerald-400);
+    --color-activity-unhelpful: var(--color-rose-400);
+    --color-activity-report: var(--color-amber-400);
+    --color-activity-message: var(--color-violet-400);
+    --color-activity-feedback: var(--color-cyan-400);
+    --color-report-spam: var(--color-red-400);
+    --color-report-harassment: var(--color-amber-400);
+    --color-report-violence: var(--color-orange-400);
+    --color-report-sexual: var(--color-pink-400);
+    --color-report-self-harm: var(--color-purple-400);
+    --color-report-impersonation: var(--color-teal-400);
+    --color-report-privacy: var(--color-blue-400);
+    --color-report-misinformation: var(--color-cyan-400);
+    --color-report-other: var(--color-slate-400);
+
+    --color-button-highlight: color-mix(in oklab, var(--color-white) 20%, transparent);
+    --color-button-edge: color-mix(in oklab, var(--color-black) 30%, transparent);
+    --color-button-contact: color-mix(in oklab, var(--color-black) 60%, transparent);
+    --color-button-sheen: color-mix(in oklab, var(--color-white) 6%, transparent);
+    --color-button-rim: color-mix(in oklab, var(--color-black) 35%, transparent);
+    --color-button-pressed: color-mix(in oklab, var(--color-black) 45%, transparent);
+}

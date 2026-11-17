@@ -2,7 +2,7 @@ import { findToken, patchTitle, patchTokens } from './token-patch.js';
 
 type Matched = { tokenType: { name: string } }[];
 
-// Match Pele: allow longer names and preserve glued option values.
+// Match Pelers: allow longer names and preserve glued option values.
 patchTokens('RadarModule', (tokens) => {
   const rest = /[-\w]*\w/y;
   for (const [name, option, source] of [

@@ -8,7 +8,7 @@ export const Architecture = { $type: 'Architecture' };
 
 export const architectureParse = (src: string) => toResult<ArchitectureAst>(parseArchitecture, src);
 
-// Mermaid's defaults, for the specs that read them back. Pele has no config store behind this.
+// Mermaid's defaults, for the specs that read them back. Pelers has no config store behind this.
 const CONFIG: Record<string, unknown> = {
   padding: 40,
   iconSize: 80,

@@ -58,8 +58,8 @@ interface Fonts {
 function fontsFor(style: CSSStyleDeclaration, drawing: HTMLElement | null): Fonts {
   const own = drawing ? windowOf(drawing).getComputedStyle(drawing) : style;
   return {
-    family: own.getPropertyValue('--pele-font').trim() || style.fontFamily || undefined,
-    mono: own.getPropertyValue('--pele-font-mono').trim() || undefined,
+    family: own.getPropertyValue('--pelers-font').trim() || style.fontFamily || undefined,
+    mono: own.getPropertyValue('--pelers-font-mono').trim() || undefined,
   };
 }
 
@@ -99,24 +99,24 @@ function afterFonts(loading: FontFaceSet[], diagram: WeakRef<Mounted>): void {
 
 const mounts = new WeakMap<HTMLElement, Mounted>();
 let mounted = 0;
-// Another copy of Pele on the page counts its own diagrams.
+// Another copy of Pelers on the page counts its own diagrams.
 const copy = Math.random().toString(36).slice(2, 7);
 
 // An error over a drawing takes no room: it is pulled up over the drawing's bottom edge by its own
 // height. One with no drawing above it is shown whole, in the monospace its caret lines up in.
-const OVER_STYLE =
+export const OVER_STYLE =
   'position:relative;height:1.3em;margin-top:-1.3em;line-height:1.3;font-size:0.8em;' +
-  'color:var(--pele-error,#e45756);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
-const ALONE_STYLE =
-  'margin:0;font-size:0.8em;font-family:var(--pele-font-mono,monospace);' +
-  'color:var(--pele-error,#e45756);white-space:pre-wrap;';
+  'color:var(--pelers-error,#e45756);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+export const ALONE_STYLE =
+  'margin:0;font-size:0.8em;font-family:var(--pelers-font-mono,monospace);' +
+  'color:var(--pelers-error,#e45756);white-space:pre-wrap;';
 
-function messageOf(error: unknown): string {
+export function messageOf(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
 // A parse error's first line says where it is, and its last line what is wrong.
-function summary(message: string): string {
+export function summary(message: string): string {
   const lines = message.split('\n').filter((line) => line.trim() !== '');
   return lines.length > 1 ? `${lines[0]} ${lines[lines.length - 1]}` : (lines[0] ?? '');
 }
@@ -138,7 +138,7 @@ export function mountWith(engine: Engine, element: HTMLElement, text: string, op
   let natural: RenderResult;
   let shown: RenderResult | undefined;
   // Ids in one drawing must not be those of another in the same page.
-  const idPrefix = `pele-${copy}-${++mounted}`;
+  const idPrefix = `pelers-${copy}-${++mounted}`;
   let fonts: Fonts = {};
   // Whether the width there is can change how this diagram is drawn. Not known until asked.
   let adapts: boolean | undefined;
@@ -188,7 +188,7 @@ export function mountWith(engine: Engine, element: HTMLElement, text: string, op
     const doc = element.ownerDocument;
     if (!doc) return;
     errorElement ??= doc.createElement('div');
-    errorElement.className = 'pele pele-error';
+    errorElement.className = 'pelers pelers-error';
     const message = messageOf(error);
     if (drawing) {
       errorElement.textContent = summary(message);

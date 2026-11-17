@@ -1,4 +1,4 @@
-import { locate, PeleError } from '../../errors.js';
+import { locate, PelersError } from '../../errors.js';
 import { lineStart, preprocessBoxDrawing, remapErrorLines } from './boxDrawing.js';
 import { parseTreeView, type TreeViewAst } from './parser.js';
 
@@ -73,7 +73,7 @@ export function readTreeView(source: string): TreeViewAst {
     return parseTreeView(text);
   } catch (error) {
     // The parser already located errors in unchanged text.
-    if (!(error instanceof PeleError) || text === source) throw error;
+    if (!(error instanceof PelersError) || text === source) throw error;
     const line = lineMap.get(error.line);
     if (line === undefined) throw error;
     const at = error.column > 0 ? (columns.get(error.line)?.(error.column - 1) ?? error.column - 1) : 0;
@@ -83,7 +83,7 @@ export function readTreeView(source: string): TreeViewAst {
     const message =
       remapErrorLines(error.message.slice(0, head), new Map([[error.line, written.line]])) +
       (error.snippet ? rest.replace(error.snippet, () => written.snippet) : rest);
-    throw new PeleError(message, error.code, {
+    throw new PelersError(message, error.code, {
       type: error.type,
       line: written.line,
       column: error.column > 0 ? written.column : 0,

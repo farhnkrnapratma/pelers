@@ -1,4 +1,4 @@
-import { PeleError } from '../../errors.js';
+import { PelersError } from '../../errors.js';
 import type { Config } from '../../preprocess.js';
 import type { CommitTypeName, GitGraphAst, StatementAst } from './parser.js';
 
@@ -72,7 +72,7 @@ export interface GitDbParseProvider {
 }
 
 function fail(message: string): never {
-  throw new PeleError(message, 'semantic', { type: 'gitGraph' });
+  throw new PelersError(message, 'semantic', { type: 'gitGraph' });
 }
 
 function typeCode(name: CommitTypeName): number {

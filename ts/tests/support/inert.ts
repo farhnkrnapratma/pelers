@@ -1,6 +1,6 @@
 import { assertWellFormed, elements } from './xml.js';
 
-// Pele's output is inserted into pages as markup, so it must be inert whatever the diagram says:
+// Pelers's output is inserted into pages as markup, so it must be inert whatever the diagram says:
 // only drawing elements, only presentation attributes, no script-capable URLs, no way to load a stylesheet.
 // A new diagram type that needs another element or attribute adds it here, with care.
 
@@ -87,7 +87,7 @@ const STYLE_PROPERTIES = new Set([
   'max-width',
 ]);
 const ROOT_STYLES = new Set(['height:auto', 'color:var(--_fg)', 'text-transform:none', 'direction:ltr']);
-const RE_ROOT_SERIES = /^--pele-series-[1-8]$/;
+const RE_ROOT_SERIES = /^--pelers-series-[1-8]$/;
 const RE_ROOT_FONT = /^font:\d+(?:\.\d+)?(?:e[-+]?\d+)?px sans-serif$/;
 const NUMERIC = new Set(['x', 'y', 'width', 'height', 'r', 'cx', 'cy', 'rx', 'ry']);
 
