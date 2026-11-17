@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use super::db::{ArchEdge, ArchGroup, ArchLayoutHint, ArchNode, Direction};
 use super::parser::Side;
+use crate::util::fxhash::FastMap;
 
 pub struct Grid {
     pub col: Vec<i32>,
@@ -54,9 +53,9 @@ struct Layouter<'a> {
     h: Vec<i32>,
     placed: Vec<bool>,
     order: Vec<usize>,
-    cells: HashMap<i64, usize>,
+    cells: FastMap<i64, usize>,
     large: Vec<usize>,
-    reach: HashMap<(i32, i32, i32, i32, i32, i32), i32>,
+    reach: FastMap<(i32, i32, i32, i32, i32, i32), i32>,
     first: usize,
     ax: i32,
     ay: i32,
@@ -404,8 +403,8 @@ pub fn place_on_grid(
     let n = nodes.len();
     let g_count = groups.len();
     let root = g_count;
-    let mut node_index: HashMap<&str, usize> = HashMap::new();
-    let mut group_index: HashMap<&str, usize> = HashMap::new();
+    let mut node_index: FastMap<&str, usize> = FastMap::default();
+    let mut group_index: FastMap<&str, usize> = FastMap::default();
     let mut parent = vec![root; n + g_count];
     let mut depth = vec![0i32; g_count + 1];
     let mut kids: Vec<Vec<usize>> = vec![Vec::new(); g_count + 1];
@@ -459,9 +458,9 @@ pub fn place_on_grid(
         h: vec![1; n + g_count],
         placed: vec![false; n + g_count],
         order: Vec::new(),
-        cells: HashMap::new(),
+        cells: FastMap::default(),
         large: Vec::new(),
-        reach: HashMap::new(),
+        reach: FastMap::default(),
         first: 0,
         ax: 0,
         ay: 0,

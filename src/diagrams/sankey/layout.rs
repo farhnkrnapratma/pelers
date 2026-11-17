@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 
 use super::parser::SankeyDb;
 use crate::errors::{PelersError, PelersErrorCode};
-use crate::util::jsnum::{js_max, js_min};
+use crate::util::jsnum::{js_max, js_min, js_pow};
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Alignment {
@@ -431,7 +431,7 @@ pub fn layout_sankey(
     };
     state.stack_all();
     for pass in 0..PASSES {
-        let pull = 0.99f64.powf(pass as f64);
+        let pull = js_pow(0.99, pass as f64);
         for l in (0..layer_count.saturating_sub(1)).rev() {
             state.settle(l, pull, false);
         }

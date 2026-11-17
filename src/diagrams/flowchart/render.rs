@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use crate::diagrams::common::Drawn;
@@ -31,6 +30,7 @@ use crate::text::icons::{icon_markup, with_icons};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::{image_url, internal_link, linked, rel_attr, safe_url};
 use crate::util::value::{Object, Value};
@@ -183,7 +183,7 @@ fn draw_scene(
     let pad = options.padding.unwrap_or(8.0);
     let icons = options.icons.is_some();
 
-    let index: HashMap<&str, usize> = graph
+    let index: FastMap<&str, usize> = graph
         .nodes
         .iter()
         .enumerate()
@@ -416,7 +416,7 @@ fn draw_scene(
     let height = (layout.height + title_height + 2.0 * pad).ceil();
     let mut links: Vec<LinkInfo> = Vec::new();
 
-    let mut crossings: Crossings = Crossings::new();
+    let mut crossings: Crossings = Crossings::default();
     if cnodes.iter().any(|c| c.is_group) {
         for e in &cedges {
             mark_crossings(&mut crossings, &e.route);
@@ -676,7 +676,7 @@ fn draw_scene(
     let mut casings = String::new();
     let mut edges_out = String::new();
     let mut labels_out = String::new();
-    let mut loop_seen: HashMap<usize, usize> = HashMap::new();
+    let mut loop_seen: FastMap<usize, usize> = FastMap::default();
     for i in 0..cedges.len() {
         let (src, dst) = (cedges[i].src, cedges[i].dst);
         let edge = drawn[i];

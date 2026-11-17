@@ -1,8 +1,7 @@
-use std::collections::{HashMap, HashSet};
-
 use super::types::{Block, BlockClassDef, Statement};
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::trim;
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::js_max;
 use crate::util::ordered::OrderedMap;
 
@@ -90,8 +89,8 @@ pub struct BlockDb {
     pub edges: Vec<usize>,
     pub classes: OrderedMap<BlockClassDef>,
     pub by_id: OrderedMap<usize>,
-    pending: HashSet<String>,
-    edge_count: HashMap<String, usize>,
+    pending: FastSet<String>,
+    edge_count: FastMap<String, usize>,
     ids: usize,
     colors: usize,
     spaces: f64,
@@ -119,8 +118,8 @@ impl BlockDb {
             edges: Vec::new(),
             classes: OrderedMap::default(),
             by_id: OrderedMap::default(),
-            pending: HashSet::new(),
-            edge_count: HashMap::new(),
+            pending: FastSet::default(),
+            edge_count: FastMap::default(),
             ids: 0,
             colors: 0,
             spaces: 0.0,

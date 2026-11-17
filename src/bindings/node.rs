@@ -1,6 +1,4 @@
-use crate::{
-    DiagramType, PelersError, PelersErrorCode, detect_diagram, parse, render as render_model,
-};
+use crate::{PelersError, PelersErrorCode, detect_diagram, parse, render as render_model};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 

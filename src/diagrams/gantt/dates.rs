@@ -1,5 +1,5 @@
+use crate::util::fxhash::FastMap;
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::rc::Rc;
 use std::sync::OnceLock;
 
@@ -483,7 +483,7 @@ enum Step {
 
 fn token_re(pattern: &str) -> &'static Regex {
     thread_local! {
-        static CACHE: RefCell<HashMap<String, &'static Regex>> = RefCell::new(HashMap::new());
+        static CACHE: RefCell<FastMap<String, &'static Regex>> = RefCell::new(FastMap::default());
     }
     CACHE.with(|cache| {
         if let Some(re) = cache.borrow().get(pattern) {
@@ -544,7 +544,7 @@ fn tokens_of(template: &str) -> Vec<String> {
 
 fn compiled(template: &str) -> Option<Rc<Vec<Step>>> {
     thread_local! {
-        static CACHE: RefCell<HashMap<String, Option<Rc<Vec<Step>>>>> = RefCell::new(HashMap::new());
+        static CACHE: RefCell<FastMap<String, Option<Rc<Vec<Step>>>>> = RefCell::new(FastMap::default());
     }
     CACHE.with(|cache| {
         if let Some(steps) = cache.borrow().get(template) {

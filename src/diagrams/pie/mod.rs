@@ -1,10 +1,9 @@
 mod parser;
 mod render;
 
-use std::collections::HashSet;
-
 use crate::diagrams::common::{acc_descr, acc_title};
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::fxhash::FastSet;
 use crate::util::jsnum::js_number_to_string;
 
 pub use parser::{PieAst, parse_pie};
@@ -20,7 +19,7 @@ pub struct PieModel {
 }
 
 pub fn build_pie(ast: PieAst, title: Option<String>) -> Result<PieModel, PelersError> {
-    let mut seen = HashSet::new();
+    let mut seen = FastSet::default();
     let mut sections = Vec::new();
     for (label, value) in ast.sections {
         if value < 0.0 {

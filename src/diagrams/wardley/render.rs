@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 use super::model::{Flow, WardleyModel, WardleyNode};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::fit_width;
@@ -7,6 +5,7 @@ use crate::preprocess::Config;
 use crate::svg::builder::{
     esc, esc_text, label_svg_with, num, shared_style, span_style, text_style,
 };
+use crate::util::fxhash::{FastMap, FastSet};
 
 use crate::svg::edges::{marker, marker_trim};
 use crate::svg::root::{Accessible, RenderOptions, svg_document};
@@ -333,7 +332,7 @@ fn draw(
     let legend_top = stage_bottom + 6.0 + x_title.height + 10.0;
 
     let mut placed: Vec<Placed> = Vec::with_capacity(model.nodes.len());
-    let mut index_of: HashMap<String, usize> = HashMap::new();
+    let mut index_of: FastMap<String, usize> = FastMap::default();
     for (node_index, node) in model.nodes.iter().enumerate() {
         index_of.insert(node.id.clone(), placed.len());
         placed.push(Placed {
@@ -344,7 +343,7 @@ fn draw(
     }
 
     let mut pipelines = String::new();
-    let mut members: HashMap<&str, HashSet<&str>> = HashMap::new();
+    let mut members: FastMap<&str, FastSet<&str>> = FastMap::default();
     for pipeline in &model.pipelines {
         members.insert(
             pipeline.node_id.as_str(),

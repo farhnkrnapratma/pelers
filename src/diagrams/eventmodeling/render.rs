@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::model::{EntityKind, EventModelingModel};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::turn_to_fit;
@@ -11,6 +9,7 @@ use crate::svg::theme::{ROUNDED, series_color};
 use crate::text::entities::decode_entities;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, MONO, width as measure};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 
 const FONT_MONO: &str = "var(--_fm)";
@@ -363,7 +362,7 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
         ));
     }
 
-    let names: HashMap<&str, &str> = model
+    let names: FastMap<&str, &str> = model
         .boxes
         .iter()
         .map(|b| (b.id.as_str(), b.name.as_str()))
@@ -514,7 +513,7 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
     let mut ordered = runs.clone();
     ordered.sort_by_key(|r| r.1);
     let mut rail_ends: Vec<usize> = Vec::new();
-    let mut rail_of: HashMap<usize, usize> = HashMap::new();
+    let mut rail_of: FastMap<usize, usize> = FastMap::default();
     for (target, from, to) in ordered {
         let rail = match rail_ends.iter().position(|&end| end < from) {
             Some(rail) => rail,
@@ -542,7 +541,7 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
     let mut nodes = String::new();
     let mut edges = String::new();
     let mut cards = String::new();
-    let mut placed: HashMap<usize, (f64, f64, f64, usize, f64)> = HashMap::new();
+    let mut placed: FastMap<usize, (f64, f64, f64, usize, f64)> = FastMap::default();
     let text = |raw: &str, font_size: f64, style: u32| -> Label {
         literal_label(&decode_entities(raw), font_size, text_room, style)
     };
@@ -698,7 +697,7 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
         ));
     }
 
-    let names: HashMap<&str, &str> = model
+    let names: FastMap<&str, &str> = model
         .boxes
         .iter()
         .map(|b| (b.id.as_str(), b.name.as_str()))

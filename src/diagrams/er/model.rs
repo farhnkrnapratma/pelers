@@ -1,7 +1,6 @@
-use std::collections::{HashMap, HashSet};
-
 use crate::diagrams::common::dedent_descr;
 use crate::util::chars::{trim, trim_start};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::ordered::OrderedMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -97,8 +96,8 @@ pub struct ErDb {
     pub title: Option<String>,
     pub acc_title: Option<String>,
     pub acc_descr: Option<String>,
-    subgraph_lookup: HashMap<String, usize>,
-    claimed: HashSet<String>,
+    subgraph_lookup: FastMap<String, usize>,
+    claimed: FastSet<String>,
 }
 
 impl Default for ErDb {
@@ -112,8 +111,8 @@ impl Default for ErDb {
             title: None,
             acc_title: None,
             acc_descr: None,
-            subgraph_lookup: HashMap::new(),
-            claimed: HashSet::new(),
+            subgraph_lookup: FastMap::default(),
+            claimed: FastSet::default(),
         }
     }
 }
@@ -227,7 +226,7 @@ impl ErDb {
 
     pub fn add_sub_graph(&mut self, id_text: &str, list: &[DocItem], title_text: &str) -> String {
         let id = trim(id_text).to_owned();
-        let mut seen: HashSet<&str> = HashSet::new();
+        let mut seen: FastSet<&str> = FastSet::default();
         let mut nodes: Vec<String> = Vec::new();
         let mut dir: Option<String> = None;
         for item in list {

@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::errors::{PelersError, PelersErrorCode, locate};
 use crate::util::chars::{is_js_space, trim, trim_end};
+use crate::util::fxhash::FastMap;
 
 const INDENT_UNIT: &str = "    ";
 
@@ -102,8 +101,8 @@ impl ColumnMap {
 #[derive(Clone, Debug, Default)]
 pub struct Preprocessed {
     pub text: String,
-    pub line_map: HashMap<usize, usize>,
-    pub columns: HashMap<usize, ColumnMap>,
+    pub line_map: FastMap<usize, usize>,
+    pub columns: FastMap<usize, ColumnMap>,
 }
 
 fn fail(input: &str, index: usize, message: &str) -> PelersError {

@@ -888,7 +888,7 @@ impl Parser<'_> {
                     frame
                 };
                 open.push(frame);
-                list = Vec::new();
+                list.clear();
                 collect = true;
             } else {
                 let item = self.statement()?;

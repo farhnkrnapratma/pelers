@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 use super::layout::{HEAD_LEFT, HEAD_TOP, Layout, layout_c4};
 use super::model::{C4Db, Element};
 use super::route::{Box, HEAD, LABEL_PAD, LANE, Lanes, Route, crosses, cyl_ry, queue_rx, route};
@@ -19,6 +17,7 @@ use crate::svg::shapes::draw_shape;
 use crate::svg::theme::{ResolvedStyle, resolve_style, rounded};
 use crate::text::label::layout_label;
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{linked, sanitize_url};
 
@@ -189,7 +188,7 @@ fn draw(
     };
 
     let mut ends: Vec<Box> = Vec::new();
-    let mut pairs: HashMap<usize, HashSet<usize>> = HashMap::new();
+    let mut pairs: FastMap<usize, FastSet<usize>> = FastMap::default();
     for rel in &db.rels {
         let from = if rel.from_attr.is_some() {
             None

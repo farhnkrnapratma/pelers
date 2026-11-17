@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::members::ClassMember;
 use super::types::{
     ClassInterface, ClassNode, ClassNote, ClassRelation, Classes, NamespaceNode, Namespaces, Notes,
@@ -7,6 +5,7 @@ use super::types::{
 };
 use crate::text::entities::decode_entities;
 use crate::util::chars::{trim, trim_start};
+use crate::util::fxhash::FastMap;
 use crate::util::url::sanitize_url;
 
 pub const RELATION_LOLLIPOP: u8 = 4;
@@ -59,7 +58,7 @@ pub struct ClassDb {
     pub acc_title: Option<String>,
     pub acc_descr: Option<String>,
     namespace_stack: Vec<String>,
-    with_css_class: HashMap<String, Vec<String>>,
+    with_css_class: FastMap<String, Vec<String>>,
 }
 
 impl ClassDb {
@@ -76,7 +75,7 @@ impl ClassDb {
             acc_title: None,
             acc_descr: None,
             namespace_stack: Vec::new(),
-            with_css_class: HashMap::new(),
+            with_css_class: FastMap::default(),
         }
     }
 

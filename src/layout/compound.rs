@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use super::layered::{chain, ease, layered, orient, rank};
 use super::{
     CEdge, CNode, CompoundResult, Dir, Kind, LEdge, LNode, LayeredOptions, LayeredResult, ledge,
     lnode,
 };
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_round};
 
 const MAX_PORTS: usize = 40000;
@@ -97,8 +96,8 @@ struct Level {
     items: Vec<usize>,
     edges: Vec<LevelEdge>,
     ports: Vec<usize>,
-    port_of: HashMap<usize, usize>,
-    routes: HashMap<usize, Vec<f64>>,
+    port_of: FastMap<usize, usize>,
+    routes: FastMap<usize, Vec<f64>>,
     x: f64,
     y: f64,
 }
@@ -138,7 +137,7 @@ struct Compound<'a> {
     root_dir: Dir,
     n: usize,
     levels: Vec<Level>,
-    level_of: HashMap<i32, usize>,
+    level_of: FastMap<i32, usize>,
     order: Vec<usize>,
     arena: Vec<PortEdge>,
     depth: Vec<usize>,
@@ -148,7 +147,7 @@ struct Compound<'a> {
     key: Vec<f64>,
     far: Option<FarHint>,
     flat_cross: f64,
-    laid: HashMap<i32, Vec<Laid>>,
+    laid: FastMap<i32, Vec<Laid>>,
     total: CompoundResult,
 }
 
@@ -626,7 +625,7 @@ pub(crate) fn compound_layout(
         root_dir,
         n,
         levels: Vec::new(),
-        level_of: HashMap::new(),
+        level_of: FastMap::default(),
         order: Vec::new(),
         arena: Vec::new(),
         depth: vec![0; n],
@@ -636,7 +635,7 @@ pub(crate) fn compound_layout(
         key: vec![f64::NAN; n],
         far: None,
         flat_cross: 0.0,
-        laid: HashMap::new(),
+        laid: FastMap::default(),
         total: CompoundResult::default(),
     };
     c.run()
@@ -675,8 +674,8 @@ impl Compound<'_> {
             items: Vec::new(),
             edges: Vec::new(),
             ports: Vec::new(),
-            port_of: HashMap::new(),
-            routes: HashMap::new(),
+            port_of: FastMap::default(),
+            routes: FastMap::default(),
             x: 0.0,
             y: 0.0,
         });

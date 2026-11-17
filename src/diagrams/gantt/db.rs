@@ -1,4 +1,3 @@
-use std::collections::{HashMap, HashSet};
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -7,6 +6,7 @@ use super::dates::{Unit, WEEKDAYS, add, add_days, format, is_valid, iso_date, pa
 use super::jsdate::JsDate;
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::trim;
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::ordered::OrderedMap;
 use crate::util::url::safe_url;
 
@@ -59,15 +59,15 @@ pub struct GanttDb {
     pub sections: Vec<String>,
     pub links: OrderedMap<String>,
     pub tasks: Vec<Task>,
-    by_id: HashMap<String, usize>,
+    by_id: FastMap<String, usize>,
     current_section: String,
     task_count: usize,
     last_order: i64,
     last_task_id: Option<String>,
     now: f64,
     work: f64,
-    include_set: HashSet<String>,
-    exclude_set: HashSet<String>,
+    include_set: FastSet<String>,
+    exclude_set: FastSet<String>,
     excluded_days: [bool; 7],
     dated_tokens: bool,
 }
@@ -187,15 +187,15 @@ impl GanttDb {
             sections: Vec::new(),
             links: OrderedMap::default(),
             tasks: Vec::new(),
-            by_id: HashMap::new(),
+            by_id: FastMap::default(),
             current_section: String::new(),
             task_count: 0,
             last_order: 0,
             last_task_id: None,
             now: 0.0,
             work: 0.0,
-            include_set: HashSet::new(),
-            exclude_set: HashSet::new(),
+            include_set: FastSet::default(),
+            exclude_set: FastSet::default(),
             excluded_days: [false; 7],
             dated_tokens: false,
         }
@@ -417,7 +417,7 @@ impl GanttDb {
             self.spend(FORMAT_STEP + template.chars().count() as f64 * 8.0)?;
             formatted = format(date, &template);
         }
-        let listed = |set: &HashSet<String>| {
+        let listed = |set: &FastSet<String>| {
             set.contains(&date_only) || formatted.as_ref().is_some_and(|f| set.contains(f))
         };
         if listed(&self.include_set) {

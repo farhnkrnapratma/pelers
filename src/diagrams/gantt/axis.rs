@@ -1,3 +1,4 @@
+use crate::util::jsnum::js_pow;
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -281,7 +282,7 @@ fn range(calendar: &Calendar, start: f64, stop: f64, limit: usize) -> Option<Vec
 fn tick_step(start: f64, stop: f64, count: f64) -> f64 {
     let step = (stop - start) / count.max(0.0);
     let power = step.log10().floor();
-    let error = step / 10f64.powf(power);
+    let error = step / js_pow(10.0, power);
     let factor = if error >= 50f64.sqrt() {
         10.0
     } else if error >= 10f64.sqrt() {
@@ -291,7 +292,7 @@ fn tick_step(start: f64, stop: f64, count: f64) -> f64 {
     } else {
         1.0
     };
-    10f64.powf(power) * factor
+    js_pow(10.0, power) * factor
 }
 
 const AUTO: [(TickUnit, f64, f64); 18] = [

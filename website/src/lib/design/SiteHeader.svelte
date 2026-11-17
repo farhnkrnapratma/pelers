@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { docsPages, repositoryUrl } from '$lib/site';
+    import { docsPages, repositoryUrl } from '#lib/site';
 
     const links = [
         { href: '/', label: 'Home' },

@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::{trim, trim_end, trim_start};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::js_number;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -38,7 +37,7 @@ pub struct QuadrantDb {
     pub y_axis_bottom: Option<QuadrantText>,
     pub y_axis_top: Option<QuadrantText>,
     pub points: Vec<QuadrantPoint>,
-    pub classes: HashMap<String, PointStyle>,
+    pub classes: FastMap<String, PointStyle>,
 }
 
 fn invalid(style: &str, value: &str, kind: &str) -> PelersError {

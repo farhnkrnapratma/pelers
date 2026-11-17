@@ -1,7 +1,7 @@
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::rc::Rc;
 
+use crate::util::fxhash::FastMap;
 use crate::util::hook::Hook;
 use crate::util::jsnum::js_number_to_string;
 
@@ -37,7 +37,7 @@ pub type MathFn = dyn Fn(&str, f64) -> Option<MathMarkup>;
 
 struct Scope {
     resolver: Option<Rc<MathFn>>,
-    found: HashMap<String, Option<MathMarkup>>,
+    found: FastMap<String, Option<MathMarkup>>,
 }
 
 thread_local! {
@@ -56,7 +56,7 @@ pub fn with_math<T>(math: Option<Hook<MathFn>>, run: impl FnOnce() -> T) -> T {
     let outer = SCOPE.with(|scope| {
         scope.replace(Some(Scope {
             resolver: math.map(|hook| hook.0),
-            found: HashMap::new(),
+            found: FastMap::default(),
         }))
     });
     let _restore = Restore(outer);

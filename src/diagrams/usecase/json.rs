@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::fxhash::FastMap;
 use crate::util::ordered::OrderedMap;
 use crate::util::value::Value;
 
@@ -19,7 +18,7 @@ struct Frame {
     object: bool,
     pointer: String,
     keys: Vec<String>,
-    ranges: HashMap<String, (usize, usize)>,
+    ranges: FastMap<String, (usize, usize)>,
     key: String,
     from: usize,
     index: usize,
@@ -218,7 +217,7 @@ fn walk(text: &str) -> Result<OrderedMap<Vec<String>>, WalkError> {
                         object: true,
                         pointer: pointer.clone(),
                         keys: Vec::new(),
-                        ranges: HashMap::new(),
+                        ranges: FastMap::default(),
                         key: String::new(),
                         from: 0,
                         index: 0,
@@ -235,7 +234,7 @@ fn walk(text: &str) -> Result<OrderedMap<Vec<String>>, WalkError> {
                         object: false,
                         pointer: pointer.clone(),
                         keys: Vec::new(),
-                        ranges: HashMap::new(),
+                        ranges: FastMap::default(),
                         key: String::new(),
                         from: 0,
                         index: 0,

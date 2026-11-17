@@ -1,6 +1,5 @@
-use std::collections::{HashMap, HashSet};
-
 use super::model::{ErAttribute, ErDb, Identification};
+use crate::util::fxhash::{FastMap, FastSet};
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GraphNode {
@@ -49,8 +48,8 @@ pub fn build_er_graph(db: &ErDb) -> ErGraph {
     let mut edges = Vec::new();
     let subgraphs = &db.subgraphs;
 
-    let mut parent_of: HashMap<String, String> = HashMap::new();
-    let mut subgraph_ids: HashSet<String> = HashSet::new();
+    let mut parent_of: FastMap<String, String> = FastMap::default();
+    let mut subgraph_ids: FastSet<String> = FastSet::default();
     for subgraph in subgraphs.iter().rev() {
         subgraph_ids.insert(subgraph.id.clone());
         for id in &subgraph.nodes {
@@ -73,7 +72,7 @@ pub fn build_er_graph(db: &ErDb) -> ErGraph {
         });
     }
 
-    let mut moved: HashMap<String, String> = HashMap::new();
+    let mut moved: FastMap<String, String> = FastMap::default();
     for (name, entity) in db.entities.iter() {
         if subgraph_ids.contains(name) {
             moved.insert(entity.id.clone(), name.to_owned());

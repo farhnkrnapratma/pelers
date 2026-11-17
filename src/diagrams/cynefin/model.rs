@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use super::parser::{CynefinAst, DomainName};
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct CynefinItem {
@@ -26,12 +25,12 @@ pub struct CynefinModel {
     pub title: Option<String>,
     pub acc_title: Option<String>,
     pub acc_descr: Option<String>,
-    pub domains: HashMap<DomainName, CynefinDomain>,
+    pub domains: FastMap<DomainName, CynefinDomain>,
     pub transitions: Vec<CynefinTransition>,
 }
 
 pub fn build_cynefin(ast: &CynefinAst, title: Option<&str>) -> CynefinModel {
-    let mut domains = HashMap::new();
+    let mut domains = FastMap::default();
     for block in &ast.domains {
         domains.insert(
             block.name,

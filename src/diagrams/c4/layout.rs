@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use super::model::{C4Db, Element};
 use super::route::{Box, HEAD, LABEL_PAD, LANE, NARROW};
 use crate::svg::edges::ARROW;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::js_max;
 
 const SHAPE_W: f64 = 216.0;
@@ -220,7 +219,7 @@ pub fn layout_c4(db: &C4Db, size: f64, small: f64, room: Option<f64>, gap: f64) 
     }
 
     let mut order: Vec<usize> = vec![0];
-    let mut depths: HashMap<usize, usize> = HashMap::from([(0, 0)]);
+    let mut depths: FastMap<usize, usize> = FastMap::from_iter([(0, 0)]);
     let mut i = 0;
     while i < order.len() {
         let current = order[i];
@@ -250,7 +249,7 @@ pub fn layout_c4(db: &C4Db, size: f64, small: f64, room: Option<f64>, gap: f64) 
 
     let per_row = js_max(1.0, db.shape_in_row).floor() as usize;
     let groups_per_row = js_max(1.0, db.boundary_in_row).floor() as usize;
-    let mut kids_top: HashMap<usize, f64> = HashMap::new();
+    let mut kids_top: FastMap<usize, f64> = FastMap::default();
     for &g in order.iter().rev() {
         let gap_x = if room.is_none() { GAP_X } else { gap };
         let count = |dims: &[Dim], limit: usize, gap: f64| -> usize {

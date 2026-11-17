@@ -1,0 +1,197 @@
+[
+  {
+    "index": 21,
+    "type": "architecture",
+    "ok": false,
+    "source": "architecture-beta\ngroup g1(internet)[Data tier]\ngroup g2(cloud)[Data tier]\ngroup g3(disk)[Edge long title]\nservice s0(database)[Ünï] in g1\nservice s1 \"Ünï\"[Server]\nservice s2(server)[DB]\ns2:L <-- R:s2\ns2:B <-- T:s1\ns2:B -[Ünï]- L:s1\ns0:L <--> L:s2\ns2:B --> B:s0\ns2:L <-- L:s2\ns2:L -[Ünï]- T:s2\ns0:R -- B:s0\ns0:L <--> L:s2\ns2:R --> R:s2\ns0:R <-- B:s2\ns0:B -- B:s0\n",
+    "original": "architecture-beta\ngroup g1(internet)[Data tier]\ngroup g2(cloud)[Data tier]\ngroup g3(disk)[Edge long title]\nservice s0(database)[Ünï] in g1\nservice s1 \"Ünï\"[Server]\nservice s2(server)[DB]\ns2:L <-- R:s2\ns2:B <-- T:s1\ns2:B -[Ünï]- L:s1\ns0:L <--> L:s2\ns2:B --> B:s0\ns2:L <-- L:s2\ns2:L -[Ünï]- T:s2\ns0:R -- B:s0\ns0:L <--> L:s2\ns2:R --> R:s2\ns0:R <-- B:s2\ns0:B -- B:s0\n",
+    "removed": []
+  },
+  {
+    "index": 22,
+    "type": "architecture",
+    "ok": false,
+    "source": "architecture-beta\ngroup g1(cloud)[Edge long title]\ngroup g2(server)[API] in g1\nservice s0(cloud)[Ünï] in g1\njunction s1 in g2\nservice s2(internet)[x y z x y z x y z x y z x y z x y z]\ns0:T <--> B:s2\ns1:L <--> L:s2\ns1:L -[Ünï]- L:s2\ns0:L --> L:s2{group}\ns0:L <--> T:s2{group}\ns2:L --> B:s1{group}\ns0:B <-- B:s2\ns1:T <-- R:s1\ns0:B -- L:s1\ns0:L -[Ünï]- L:s1\ns2{group}:L --> B:s0\ns1{group}:B --> B:s0{group}\ns1:L <-- R:s1\n",
+    "original": "architecture-beta\ngroup g1(cloud)[Edge long title]\ngroup g2(server)[API] in g1\nservice s0(cloud)[Ünï] in g1\njunction s1 in g2\nservice s2(internet)[x y z x y z x y z x y z x y z x y z]\ns0:T <--> B:s2\ns1:L <--> L:s2\ns1:L -[Ünï]- L:s2\ns0:L --> L:s2{group}\ns0:L <--> T:s2{group}\ns2:L --> B:s1{group}\ns0:B <-- B:s2\ns1:T <-- R:s1\ns0:B -- L:s1\ns0:L -[Ünï]- L:s1\ns2{group}:L --> B:s0\ns1{group}:B --> B:s0{group}\ns1:L <-- R:s1\n",
+    "removed": []
+  },
+  {
+    "index": 23,
+    "type": "architecture",
+    "ok": false,
+    "source": "architecture-beta\ngroup g1(disk)[API]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1(unknown-icon)[DB]\nservice s2(cloud)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s3 \"Ünï\"[Ünï] in g1\nservice s4(internet)[x y z x y z x y z x y z x y z x y z]\nservice s5(unknown-icon)[line one<br>line two<br>line three<br>line four] in g1\nservice s6(cloud)[DB] in g1\nservice s7(server)[DB]\ns4:R <--> L:s0\ns5:T <--> B:s7\ns2:B --> R:s2\ns2:L -[Ünï]- R:s2\ns0:T --> R:s6\ns3:R -- L:s5\ns3:B <--> B:s4\ns3:R -[label]- L:s4\ns3:T <-- B:s1\ns6:T -- L:s6\ns6:T -[label]- L:s6\ns4:T --> R:s0\n",
+    "original": "architecture-beta\ngroup g1(disk)[API]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1(unknown-icon)[DB]\nservice s2(cloud)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated]\nservice s3 \"Ünï\"[Ünï] in g1\nservice s4(internet)[x y z x y z x y z x y z x y z x y z]\nservice s5(unknown-icon)[line one<br>line two<br>line three<br>line four] in g1\nservice s6(cloud)[DB] in g1\nservice s7(server)[DB]\ns4:R <--> L:s0\ns5:T <--> B:s7\ns2:B --> R:s2\ns2:L -[Ünï]- R:s2\ns0:T --> R:s6\ns3:R -- L:s5\ns3:B <--> B:s4\ns3:R -[label]- L:s4\ns3:T <-- B:s1\ns6:T -- L:s6\ns6:T -[label]- L:s6\ns4:T --> R:s0\n",
+    "removed": []
+  },
+  {
+    "index": 24,
+    "type": "architecture",
+    "ok": false,
+    "source": "architecture-beta\ngroup g1(database)[API]\nservice s0(unknown-icon)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated] in g1\nservice s1(disk)[Ünï]\nservice s2 \"a very long icon text that cannot fit the icon\"[DB]\nservice s3(disk)[DB] in g1\ns1:B -- T:s3\ns1:B -[label]- R:s3\ns2:L --> B:s0\ns1:L -- T:s0{group}\ns2:B <-- T:s2\ns2:B <-- T:s1\ns0:L <--> R:s0\ns0:T -[Ünï]- R:s0\ns1{group}:B <--> L:s3\ns1:R -[Ünï]- R:s3\n",
+    "original": "architecture-beta\ngroup g1(database)[API]\nservice s0(unknown-icon)[A service label that is extremely long and keeps on going through many words and more words to wrap and be truncated] in g1\nservice s1(disk)[Ünï]\nservice s2 \"a very long icon text that cannot fit the icon\"[DB]\nservice s3(disk)[DB] in g1\ns1:B -- T:s3\ns1:B -[label]- R:s3\ns2:L --> B:s0\ns1:L -- T:s0{group}\ns2:B <-- T:s2\ns2:B <-- T:s1\ns0:L <--> R:s0\ns0:T -[Ünï]- R:s0\ns1{group}:B <--> L:s3\ns1:R -[Ünï]- R:s3\n",
+    "removed": []
+  },
+  {
+    "index": 25,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- R:s3\ns4:L -- L:s4\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
+    "original": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- L:s3{group}\ns2:L -- R:s3\ns4:L -- L:s4\ns2:B <--> L:s5\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
+    "removed": [
+      "s2:L -- L:s3{group}",
+      "s2:B <--> L:s5"
+    ]
+  },
+  {
+    "index": 26,
+    "type": "architecture",
+    "ok": true,
+    "source": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1:L -[Ünï]- L:s1\n",
+    "original": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T <--> B:s3\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1{group}:L -- L:s1\ns1:L -[Ünï]- L:s1\n",
+    "removed": [
+      "s2:T <--> B:s3",
+      "s1{group}:L -- L:s1"
+    ]
+  },
+  {
+    "index": 27,
+    "type": "architecture",
+    "ok": false,
+    "source": "architecture-beta\naccTitle: Ünï title\nservice a\nservice b\na:R >--< L:b\na:T >-[x]-< B:b\na{group}:L <-- R:b\na:B --> T:b{group}\na : L - [ y ] - R : b\n",
+    "original": "architecture-beta\naccTitle: Ünï title\nservice a\nservice b\na:R >--< L:b\na:T >-[x]-< B:b\na{group}:L <-- R:b\na:B --> T:b{group}\na : L - [ y ] - R : b\n",
+    "removed": []
+  },
+  {
+    "index": 44,
+    "type": "block",
+    "ok": true,
+    "source": "block-beta\n  columns 4\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
+    "original": "block-beta\n  columns 4\n  a{\"two words\"}\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  ID{\"x < y\"}:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
+    "removed": [
+      "  a{\"two words\"}",
+      "  ID{\"x < y\"}:3"
+    ]
+  },
+  {
+    "index": 45,
+    "type": "block",
+    "ok": true,
+    "source": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
+    "original": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  b{\"Dogs\"}:2\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  n2{\"fa:fa-check ok\"}\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
+    "removed": [
+      "  b{\"Dogs\"}:2",
+      "  n2{\"fa:fa-check ok\"}"
+    ]
+  },
+  {
+    "index": 95,
+    "type": "class",
+    "ok": true,
+    "source": "classDiagram\n  note for A \"$$h2$$ note\"\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n  }\n  class Fish\n",
+    "original": "classDiagram\n  note for A \"$$h2$$ note\"\n  C : run)\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n    run)\n  }\n  class Fish\n",
+    "removed": [
+      "  C : run)",
+      "    run)"
+    ]
+  },
+  {
+    "index": 177,
+    "type": "flowchart",
+    "ok": true,
+    "source": "flowchart TD\n  a --> b",
+    "original": "flowchart TD\nsubgraph\n  a --> b\nend",
+    "removed": [
+      "subgraph",
+      "end"
+    ]
+  },
+  {
+    "index": 194,
+    "type": "gitGraph",
+    "ok": true,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    rotateCommitLabel: false\n---\ngitGraph\n  commit id: \"feat(api): ...\"\n  commit id: \"a\"\n  commit id: \"b\"\n  commit id: \"fix(client): .extra long label..\"\n  branch c2\n  commit id: \"feat(modules): ...\"\n  commit id: \"test(client): ...\"\n  checkout main\n  commit id: \"fix(api): ...\"\n  commit id: \"ci: ...\"\n  branch b1\n  commit\n  branch b2\n  commit\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'base'\n  gitGraph:\n    rotateCommitLabel: false\n---\ngitGraph\n  commit id: \"feat(api): ...\"\n  commit id: \"a\"\n  commit id: \"b\"\n  commit id: \"fix(client): .extra long label..\"\n  branch c2\n  commit id: \"feat(modules): ...\"\n  commit id: \"test(client): ...\"\n  checkout main\n  commit id: \"fix(api): ...\"\n  commit id: \"ci: ...\"\n  branch b1\n  commit\n  branch b2\n  commit\n",
+    "removed": []
+  },
+  {
+    "index": 265,
+    "type": "kanban",
+    "ok": true,
+    "source": "---\nconfig:\n  kanban:\n    ticketBaseUrl: 'javascript:alert(#TICKET#)'\n---\nkanban\n  todo\n    a[Task]@{ ticket: MC-1 }",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  kanban:\n    ticketBaseUrl: 'javascript:alert(#TICKET#)'\n---\nkanban\n  todo\n    a[Task]@{ ticket: MC-1 }",
+    "removed": []
+  },
+  {
+    "index": 416,
+    "type": "sankey",
+    "ok": true,
+    "source": "---\nconfig:\n  sankey:\n    nodeColors:\n      __proto__: red\n      constructor: blue\n---\nsankey\n__proto__,constructor,1\nconstructor,toString,2\nhasOwnProperty,__proto__,3\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  sankey:\n    nodeColors:\n      __proto__: red\n      constructor: blue\n---\nsankey\n__proto__,constructor,1\nconstructor,toString,2\nhasOwnProperty,__proto__,3\n",
+    "removed": []
+  },
+  {
+    "index": 417,
+    "type": "sankey",
+    "ok": false,
+    "source": "sankey-beta\nIndustry,日本,20\n",
+    "original": "sankey-beta\nIndustry,日本,20\n",
+    "removed": []
+  },
+  {
+    "index": 452,
+    "type": "state",
+    "ok": false,
+    "source": "stateDiagram-v2\n  S2 --> A\n  state Done <<fork>>\n  Done --> [*]\n  note right of Wait1 : Ünï note\n  [*] --> Idle\n  state Running {\n    Running --> Idle\n    --\n    Long_name --> [*]\n  }\n  state C {\n    Done --> C\n    --\n    C --> [*]\n  }\n  Running : described\n  S2 : Ünï\n  S2 --> [*]\n",
+    "original": "stateDiagram-v2\n  S2 --> A\n  state Done <<fork>>\n  Done --> [*]\n  note right of Wait1 : Ünï note\n  [*] --> Idle\n  state Running {\n    Running --> Idle\n    --\n    Long_name --> [*]\n  }\n  state C {\n    Done --> C\n    --\n    C --> [*]\n  }\n  Running : described\n  S2 : Ünï\n  S2 --> [*]\n",
+    "removed": []
+  },
+  {
+    "index": 453,
+    "type": "state",
+    "ok": true,
+    "source": "stateDiagram-v2\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  Wait1 : Ünï\n",
+    "original": "stateDiagram-v2\n  note right of C : multi\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  note right of S2 : multi\n  Wait1 : Ünï\n",
+    "removed": [
+      "  note right of C : multi",
+      "  note right of S2 : multi"
+    ]
+  },
+  {
+    "index": 460,
+    "type": "state",
+    "ok": true,
+    "source": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n    S2 --> Ünï\n    Long_name --> [*]\n  }\n",
+    "original": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n  state Long_name {\n    S2 --> Ünï\n    --\n    Long_name --> [*]\n  }\n",
+    "removed": [
+      "  state Long_name {",
+      "    --"
+    ]
+  },
+  {
+    "index": 487,
+    "type": "timeline",
+    "ok": true,
+    "source": "---\nconfig:\n  logLevel: 'debug'\n  theme: 'dark'\n---\n    timeline\n        title History of Social Media Platform\n          2002 : LinkedIn\n          2004 : Facebook : Google\n          2005 : YouTube\n          2006 : Twitter\n          2007 : Tumblr\n          2008 : Instagram\n          2010 : Pinterest\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  logLevel: 'debug'\n  theme: 'dark'\n---\n    timeline\n        title History of Social Media Platform\n          2002 : LinkedIn\n          2004 : Facebook : Google\n          2005 : YouTube\n          2006 : Twitter\n          2007 : Tumblr\n          2008 : Instagram\n          2010 : Pinterest\n",
+    "removed": []
+  },
+  {
+    "index": 525,
+    "type": "treemap",
+    "ok": true,
+    "source": "treemap\nclassDef title_2 fill:red",
+    "original": "treemap\n\"S\":::titles\n  \"a\": 1:::title_2\nclassDef title_2 fill:red",
+    "removed": [
+      "\"S\":::titles",
+      "  \"a\": 1:::title_2"
+    ]
+  },
+  {
+    "index": 535,
+    "type": "treemap",
+    "ok": true,
+    "source": "---\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\n\"Market Share\"\n    \"Company A\": 0.35\n    \"Company B\": 0.25\n    \"Company C\": 0.15\n    \"Others\": 0.25\n",
+    "original": "---\naccDescr {\n  multi line\n  description\n}\nconfig:\n  treemap:\n    valueFormat: '$.1%'\n---\ntreemap-beta\n\"Market Share\"\n    \"Company A\": 0.35\n    \"Company B\": 0.25\n    \"Company C\": 0.15\n    \"Others\": 0.25\n",
+    "removed": []
+  }
+]

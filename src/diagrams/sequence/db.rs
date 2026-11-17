@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::colors::is_css_color;
 use super::types::{
     Item, MessageBody, SeqActor, SeqBox, SeqBoxData, SeqMessage, SeqNote, SeqNumbering, SeqText,
@@ -7,6 +5,7 @@ use super::types::{
 };
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::{is_js_space, trim, trim_start};
+use crate::util::fxhash::FastMap;
 use crate::util::ordered::OrderedMap;
 use crate::util::value::Value;
 
@@ -33,7 +32,7 @@ pub struct SeqDb {
     last_destroyed: Option<String>,
     wrap_enabled: Option<bool>,
     sequence_wrap: bool,
-    active: HashMap<String, i64>,
+    active: FastMap<String, i64>,
 }
 
 fn semantic(message: String) -> PelersError {

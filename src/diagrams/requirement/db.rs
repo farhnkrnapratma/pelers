@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::FastMap;
 use crate::util::ordered::OrderedMap;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -70,9 +69,9 @@ enum NodeRef {
 pub struct RequirementDb {
     pub direction: String,
     pub requirements: Vec<Requirement>,
-    requirement_index: HashMap<String, usize>,
+    requirement_index: FastMap<String, usize>,
     pub elements: Vec<Element>,
-    element_index: HashMap<String, usize>,
+    element_index: FastMap<String, usize>,
     pub relations: Vec<Relation>,
     pub classes: OrderedMap<RequirementClass>,
     pub title: Option<String>,

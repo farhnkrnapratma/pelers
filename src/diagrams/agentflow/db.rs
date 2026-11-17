@@ -1,5 +1,4 @@
 use std::cell::RefCell;
-use std::collections::{HashMap, HashSet};
 use std::rc::Rc;
 
 use super::shapes::{is_valid_shape, resolve_shape_alias};
@@ -11,6 +10,7 @@ use super::types::{
 };
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::{is_js_space, trim, trim_start, utf16_len, utf16_to_byte};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::js_number_to_string;
 use crate::util::ordered::OrderedMap;
 use crate::util::url::safe_url;
@@ -53,7 +53,7 @@ pub struct AgentflowDb {
     pub nodes: OrderedMap<AgentNode>,
     pub edges: Vec<AgentEdge>,
     pub subgraphs: Vec<AgentSubgraph>,
-    pub connectors: HashSet<String>,
+    pub connectors: FastSet<String>,
     pub classes: OrderedMap<AgentClassDef>,
     pub tooltips: OrderedMap<String>,
     pub default_edge_style: Option<EdgeStyle>,
@@ -65,15 +65,15 @@ pub struct AgentflowDb {
     pub acc_descr: Option<String>,
     pub line_offset: usize,
     options: DbOptions,
-    subgraph_lookup: HashMap<String, usize>,
-    global_nodes: HashSet<String>,
-    members: HashSet<String>,
-    edge_by_id: HashMap<String, usize>,
-    pair_count: HashMap<String, usize>,
+    subgraph_lookup: FastMap<String, usize>,
+    global_nodes: FastSet<String>,
+    members: FastSet<String>,
+    edge_by_id: FastMap<String, usize>,
+    pair_count: FastMap<String, usize>,
     sub_count: usize,
-    bare_mappings: HashSet<usize>,
-    first_mapping: HashMap<String, usize>,
-    reported: HashMap<String, Vec<Diagnostic>>,
+    bare_mappings: FastSet<usize>,
+    first_mapping: FastMap<String, usize>,
+    reported: FastMap<String, Vec<Diagnostic>>,
 }
 
 fn label_type_of(value: Option<&Value>) -> LabelType {
@@ -333,7 +333,7 @@ impl AgentflowDb {
             nodes: OrderedMap::default(),
             edges: Vec::new(),
             subgraphs: Vec::new(),
-            connectors: HashSet::new(),
+            connectors: FastSet::default(),
             classes: OrderedMap::default(),
             tooltips: OrderedMap::default(),
             default_edge_style: None,
@@ -345,15 +345,15 @@ impl AgentflowDb {
             acc_descr: None,
             line_offset,
             options,
-            subgraph_lookup: HashMap::new(),
-            global_nodes: HashSet::new(),
-            members: HashSet::new(),
-            edge_by_id: HashMap::new(),
-            pair_count: HashMap::new(),
+            subgraph_lookup: FastMap::default(),
+            global_nodes: FastSet::default(),
+            members: FastSet::default(),
+            edge_by_id: FastMap::default(),
+            pair_count: FastMap::default(),
             sub_count: 0,
-            bare_mappings: HashSet::new(),
-            first_mapping: HashMap::new(),
-            reported: HashMap::new(),
+            bare_mappings: FastSet::default(),
+            first_mapping: FastMap::default(),
+            reported: FastMap::default(),
         }
     }
 
@@ -846,7 +846,7 @@ impl AgentflowDb {
     ) -> String {
         let title = title_text.map_or(String::new(), |t| t.text.clone());
 
-        let mut seen: HashSet<String> = HashSet::new();
+        let mut seen: FastSet<String> = FastSet::default();
         let mut node_list: Vec<String> = Vec::new();
         let mut dir: Option<String> = None;
         for entry in list {

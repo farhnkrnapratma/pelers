@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use super::jsnum::js_number_to_string;
+use crate::util::fxhash::FastMap;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
@@ -15,7 +14,7 @@ pub enum Value {
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Object {
     entries: Vec<(String, Value)>,
-    index: HashMap<String, usize>,
+    index: FastMap<String, usize>,
     array_keys: bool,
 }
 

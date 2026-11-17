@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
 use super::boxdrawing::{line_start, preprocess_box_drawing};
 use super::parser::{TreeViewAst, parse_treeview};
 use crate::errors::{PelersError, locate};
 use crate::util::chars::{is_js_space, utf16_to_byte};
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NodeType {
@@ -90,7 +89,7 @@ fn is_word_byte(b: u8) -> bool {
     b.is_ascii_alphanumeric() || b == b'_'
 }
 
-fn remap_error_lines(message: &str, lines: &HashMap<usize, usize>) -> String {
+fn remap_error_lines(message: &str, lines: &FastMap<usize, usize>) -> String {
     let bytes = message.as_bytes();
     let mut out = String::with_capacity(message.len());
     let mut at = 0;
@@ -156,7 +155,7 @@ pub fn read_treeview(source: &str) -> Result<TreeViewAst, PelersError> {
 
     let head = error.message.find('\n').unwrap_or(error.message.len());
     let rest = &error.message[head..];
-    let mut lines = HashMap::new();
+    let mut lines = FastMap::default();
     lines.insert(error.line, written_line);
     let remapped = remap_error_lines(&error.message[..head], &lines);
     let tail = if error.snippet.is_empty() {

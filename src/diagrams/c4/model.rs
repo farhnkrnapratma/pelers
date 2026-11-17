@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use crate::diagrams::common::dedent_descr;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::js_parse_int;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -72,9 +71,9 @@ pub struct C4Db {
     pub rels: Vec<Rel>,
     pub shape_in_row: f64,
     pub boundary_in_row: f64,
-    shape_index: HashMap<String, usize>,
-    boundary_index: HashMap<String, usize>,
-    rel_index: HashMap<(String, String), usize>,
+    shape_index: FastMap<String, usize>,
+    boundary_index: FastMap<String, usize>,
+    rel_index: FastMap<(String, String), usize>,
     current: usize,
     stack: Vec<usize>,
 }
@@ -96,9 +95,9 @@ impl Default for C4Db {
             rels: Vec::new(),
             shape_in_row: 4.0,
             boundary_in_row: 2.0,
-            shape_index: HashMap::new(),
-            boundary_index: HashMap::new(),
-            rel_index: HashMap::new(),
+            shape_index: FastMap::default(),
+            boundary_index: FastMap::default(),
+            rel_index: FastMap::default(),
             current: 0,
             stack: Vec::new(),
         }
@@ -307,7 +306,7 @@ impl C4Db {
 
     fn element_in(
         list: &mut Vec<Element>,
-        index: &mut HashMap<String, usize>,
+        index: &mut FastMap<String, usize>,
         alias: Option<&Attr>,
         title: Option<&Attr>,
     ) -> usize {

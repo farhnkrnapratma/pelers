@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
 use super::graph::{StateGraph, build_state_graph};
 use super::types::{StateStmt, Stmt};
 use crate::errors::PelersError;
 use crate::util::chars::{trim, trim_start};
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct StateRec {
@@ -25,9 +24,9 @@ pub struct Link {
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct StateDb {
     pub root_doc: Vec<Stmt>,
-    pub states: HashMap<String, StateRec>,
-    pub classes: HashMap<String, ClassDef>,
-    pub links: HashMap<String, Link>,
+    pub states: FastMap<String, StateRec>,
+    pub classes: FastMap<String, ClassDef>,
+    pub links: FastMap<String, Link>,
     pub graph: StateGraph,
     pub title: Option<String>,
     pub acc_title: Option<String>,

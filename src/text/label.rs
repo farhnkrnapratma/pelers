@@ -51,8 +51,8 @@ const MAX_MARKS: usize = 0x1900;
 const SHIFT: u32 = SUB | SUP;
 const SHY: char = '\u{ad}';
 
-fn html_tags() -> &'static std::collections::HashSet<&'static str> {
-    static SET: std::sync::OnceLock<std::collections::HashSet<&'static str>> =
+fn html_tags() -> &'static crate::util::fxhash::FastSet<&'static str> {
+    static SET: std::sync::OnceLock<crate::util::fxhash::FastSet<&'static str>> =
         std::sync::OnceLock::new();
     SET.get_or_init(|| HTML_TAGS.split(' ').collect())
 }

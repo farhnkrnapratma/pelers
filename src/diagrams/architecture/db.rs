@@ -1,8 +1,7 @@
-use std::collections::{HashMap, HashSet};
-
 use super::parser::{ArchitectureAst, Side};
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::{FastMap, FastSet};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NodeKind {
@@ -85,11 +84,11 @@ pub struct ArchitectureDb {
     pub acc_title: Option<String>,
     pub acc_descr: Option<String>,
     nodes: Vec<ArchNode>,
-    node_index: HashMap<String, usize>,
+    node_index: FastMap<String, usize>,
     groups: Vec<ArchGroup>,
     edges: Vec<ArchEdge>,
     layout_hints: Vec<ArchLayoutHint>,
-    registered: HashMap<String, bool>,
+    registered: FastMap<String, bool>,
 }
 
 impl ArchitectureDb {
@@ -195,7 +194,7 @@ impl ArchitectureDb {
                 hint.members.len()
             )));
         }
-        let mut seen: HashSet<&str> = HashSet::new();
+        let mut seen: FastSet<&str> = FastSet::default();
         for id in &hint.members {
             if self.registered.get(id.as_str()) != Some(&false) {
                 return Err(fail(format!(

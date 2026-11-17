@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::layout::{Alignment, LayoutOptions, SankeyLayout, layout_sankey};
 use super::parser::SankeyDb;
 use crate::diagrams::common::Drawn;
@@ -12,6 +10,7 @@ use crate::svg::theme::{resolve_style, series_color};
 use crate::text::entities::decode_entities;
 use crate::text::label::layout_label;
 use crate::text::measurer::{BOLD_STYLE, width as measure};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
 
@@ -94,7 +93,7 @@ struct LabelPos {
 }
 
 fn overlaps(
-    bands: &HashMap<i64, Vec<usize>>,
+    bands: &FastMap<i64, Vec<usize>>,
     labels: &[LabelPos],
     line_height: f64,
     own: usize,
@@ -195,7 +194,7 @@ fn draw(
         )
     };
     let mut layout = lay(small)?;
-    let mut rows: HashMap<usize, usize> = HashMap::new();
+    let mut rows: FastMap<usize, usize> = FastMap::default();
     let mut fullest = 1usize;
     for node in &layout.nodes {
         let count = rows.get(&node.layer).copied().unwrap_or(0) + 1;
@@ -212,7 +211,7 @@ fn draw(
     let SankeyLayout { nodes, links } = layout;
     let line_height = small * 1.5;
 
-    let mut custom: HashMap<&str, String> = HashMap::new();
+    let mut custom: FastMap<&str, String> = FastMap::default();
     if let Some(Value::Object(colors)) = conf.get("nodeColors") {
         for (id, color) in colors.iter() {
             let style = fill_style(color);
@@ -291,7 +290,7 @@ fn draw(
         });
     }
 
-    let mut bands: HashMap<i64, Vec<usize>> = HashMap::new();
+    let mut bands: FastMap<i64, Vec<usize>> = FastMap::default();
     if nodes.len() <= CAREFUL {
         for (index, label) in labels.iter().enumerate() {
             let band = (label.y / line_height).floor() as i64;
@@ -445,7 +444,10 @@ fn draw(
                 node_color(link.source),
                 node_color(link.target)
             );
-            let id = format!("{id_prefix}-sankey-{}", content_id(&stops));
+            let id = format!(
+                "{id_prefix}-sankey-{}",
+                content_id(&stops.replace("--pelers-series-", "--pele-series-"))
+            );
             if !gradients.iter().any(|(existing, _)| *existing == id) {
                 gradients.push((
                     id.clone(),

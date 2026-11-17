@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
-import { sources } from '$lib/content';
-import { docsPages } from '$lib/site';
+import { sources } from '#lib/content';
+import { docsPages } from '#lib/site';
 import type { EntryGenerator, PageLoad } from './$types';
 
 export const entries: EntryGenerator = () => docsPages.map((doc) => ({ page: doc.id }));

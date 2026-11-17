@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db::{PointStyle, QuadrantDb, QuadrantText};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::cap_width;
@@ -9,6 +7,7 @@ use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::{ROUNDED, class_names, resolve_style, series_color};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number, js_number_to_string, js_round};
 use crate::util::value::Value;
 
@@ -273,7 +272,7 @@ pub fn render_quadrant(model: &QuadrantDb, config: &Config, options: &RenderOpti
     let fill = series_color(0);
     let mut dots: Vec<Dot> = Vec::new();
     let mut circles: Vec<String> = Vec::new();
-    let classes: &HashMap<String, PointStyle> = &model.classes;
+    let classes: &FastMap<String, PointStyle> = &model.classes;
     for point in &model.points {
         if !(point.x >= 0.0 && point.x <= 1.0 && point.y >= 0.0 && point.y <= 1.0) {
             continue;

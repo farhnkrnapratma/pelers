@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
-use std::collections::HashSet;
 
 use super::{Kind, LEdge, LNode, LayeredOptions, LayeredResult};
+use crate::util::fxhash::FastSet;
 use crate::util::jsnum::{js_max, js_min};
 
 mod crossings;
@@ -393,7 +393,7 @@ pub(crate) fn layered(
 
     let mut step: i64 = 1;
     if m > 0 {
-        let mut seen = HashSet::new();
+        let mut seen = FastSet::default();
         for e in edges.iter() {
             let a = e.tail.min(e.head);
             let b = e.tail.max(e.head);
@@ -689,7 +689,7 @@ pub(crate) fn layered(
             }
         }
         let mut layer: Vec<usize> = order[s..e].to_vec();
-        let index: std::collections::HashMap<usize, usize> =
+        let index: crate::util::fxhash::FastMap<usize, usize> =
             layer.iter().enumerate().map(|(i, &v)| (v, i)).collect();
         layer.sort_by(|&a, &b| chain(key(a) - key(b), index[&a].cmp(&index[&b])));
         order[s..e].copy_from_slice(&layer);
@@ -710,7 +710,7 @@ pub(crate) fn layered(
             let s = layer_start[r];
             let e = layer_start[r + 1];
             let mut layer: Vec<usize> = order[s..e].to_vec();
-            let index: std::collections::HashMap<usize, usize> =
+            let index: crate::util::fxhash::FastMap<usize, usize> =
                 layer.iter().enumerate().map(|(i, &v)| (v, i)).collect();
             let pin_of = |v: usize| -> i32 { if v < real { nodes[v].pin } else { 0 } };
             layer.sort_by(|&a, &b| {

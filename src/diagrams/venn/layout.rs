@@ -1,7 +1,7 @@
-use std::collections::{HashMap, HashSet};
 use std::f64::consts::PI;
 
 use super::db::Subset;
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_hypot, js_max, js_min};
 
 const TAU: f64 = PI * 2.0;
@@ -28,7 +28,7 @@ fn sorted_members(sets: &[String]) -> Vec<String> {
 }
 
 pub fn ensure_pairwise_subsets(subsets: &[Subset]) -> Vec<Subset> {
-    let mut present: HashSet<String> = HashSet::new();
+    let mut present: FastSet<String> = FastSet::default();
     let mut sizes: Vec<(String, f64)> = Vec::new();
     for subset in subsets {
         present.insert(sorted_members(&subset.sets).join("\u{0}"));
@@ -243,7 +243,7 @@ pub fn layout_circles(subsets: &[Subset]) -> Vec<Circle> {
         }
     }
 
-    let mut index: HashMap<String, usize> = HashMap::new();
+    let mut index: FastMap<String, usize> = FastMap::default();
     let mut circles: Vec<Circle> = Vec::new();
     let mut largest = 0.0f64;
     for (_, size) in &sizes {
@@ -289,7 +289,7 @@ pub fn layout_circles(subsets: &[Subset]) -> Vec<Circle> {
             }
         }
     }
-    let mut wanted: HashMap<usize, f64> = HashMap::new();
+    let mut wanted: FastMap<usize, f64> = FastMap::default();
     for &(key, area) in &overlaps {
         wanted.insert(
             key,
@@ -315,7 +315,7 @@ pub fn layout_circles(subsets: &[Subset]) -> Vec<Circle> {
         let mut bc = distance(1, 2);
         let triple = subsets
             .iter()
-            .any(|subset| subset.sets.iter().collect::<HashSet<_>>().len() == 3);
+            .any(|subset| subset.sets.iter().collect::<FastSet<_>>().len() == 3);
         for _ in 0..40 {
             let x = if ab > 0.0 {
                 (ab * ab + ac * ac - bc * bc) / (2.0 * ab)

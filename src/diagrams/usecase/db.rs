@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::lexer::{line_column, location_text};
 use super::types::{
     Actor, ActorType, Animation, BoundaryType, ClassDef, GraphStatement, LabelType,
@@ -7,6 +5,7 @@ use super::types::{
     SystemBoundary, UseCase, UseCaseShape, UsecaseJsonNode, UsecaseModel, UsecaseNote, empty_model,
 };
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::fxhash::FastMap;
 use crate::util::ordered::OrderedMap;
 use crate::util::value::Value;
 
@@ -178,6 +177,12 @@ struct ElementState {
     business: Option<bool>,
 }
 
+impl ElementState {
+    fn has_icon(&self) -> bool {
+        self.icon.as_deref().is_some_and(|icon| !icon.is_empty())
+    }
+}
+
 #[derive(Clone, Debug)]
 struct BoundaryState {
     boundary: DraftBoundary,
@@ -259,11 +264,11 @@ fn normalize_description(text: &str) -> String {
 
 struct Resolver<'a> {
     src: &'a str,
-    symbols: HashMap<String, Origin>,
+    symbols: FastMap<String, Origin>,
     elements: OrderedMap<ElementState>,
     boundaries: OrderedMap<BoundaryState>,
-    edges: HashMap<String, usize>,
-    first: HashMap<String, usize>,
+    edges: FastMap<String, usize>,
+    first: FastMap<String, usize>,
     model: UsecaseModel,
 }
 
@@ -528,7 +533,7 @@ impl Resolver<'_> {
                 .get(&state.id)
                 .map(|actor| actor.styles.clone())
                 .unwrap_or_default();
-            let type_ = if state.icon.is_some() {
+            let type_ = if state.has_icon() {
                 ActorType::Icon
             } else {
                 state.actor_type.unwrap_or(ActorType::Normal)
@@ -538,7 +543,7 @@ impl Resolver<'_> {
                 label: state.label.text.clone(),
                 label_type: state.label.type_,
                 type_,
-                icon: state.icon.clone(),
+                icon: state.icon.clone().filter(|icon| !icon.is_empty()),
                 business: state.business.unwrap_or(false),
                 stereotype: None,
                 parent_id: None,
@@ -844,11 +849,11 @@ pub fn resolve_usecase(
     model.statements = Vec::new();
     let mut resolver = Resolver {
         src,
-        symbols: HashMap::new(),
+        symbols: FastMap::default(),
         elements: OrderedMap::default(),
         boundaries: OrderedMap::default(),
-        edges: HashMap::new(),
-        first: HashMap::new(),
+        edges: FastMap::default(),
+        first: FastMap::default(),
         model,
     };
 
@@ -1158,7 +1163,8 @@ pub fn resolve_usecase(
     for id in element_ids(&resolver) {
         let state = resolver.elements.get(&id).cloned().expect("element exists");
         if state.kind == SymbolKind::Actor {
-            if let (Some(_), Some(actor_type)) = (&state.icon, state.actor_type)
+            if let Some(actor_type) = state.actor_type
+                && state.has_icon()
                 && actor_type != ActorType::Normal
             {
                 return Err(resolver.fail(
@@ -1171,7 +1177,7 @@ pub fn resolve_usecase(
                 ));
             }
             if state.business == Some(true)
-                && (state.icon.is_some() || state.actor_type == Some(ActorType::Awesome))
+                && (state.has_icon() || state.actor_type == Some(ActorType::Awesome))
             {
                 return Err(resolver.fail(
                     &format!(

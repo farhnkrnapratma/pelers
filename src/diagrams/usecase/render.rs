@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::graph::{GraphEdge, GraphNode, build_usecase_graph};
 use super::types::{ActorType, BoundaryType, LabelType, UsecaseModel};
 use crate::diagrams::common::Drawn;
@@ -19,7 +17,8 @@ use crate::svg::title::title_label;
 use crate::text::label::{Label, label_line, layout_label, line_middle};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::chars::is_js_space;
-use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
+use crate::util::fxhash::FastMap;
+use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_pow, js_round};
 
 const NODE_SEP: f64 = 32.0;
 const EDGE_SEP: f64 = 16.0;
@@ -108,7 +107,7 @@ fn anchor(view: &View, c: &CNode, side: i32, along: f64) -> (f64, f64) {
         }
         Kind::Ellipse => {
             let span = (if upright { view.h } else { view.w }) / 2.0;
-            reach *= js_max(1.0 - (along / span).powi(2), 0.0).sqrt();
+            reach *= js_max(1.0 - js_pow(along / span, 2.0), 0.0).sqrt();
         }
         _ => {}
     }
@@ -315,7 +314,7 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
     };
     let sideways = root_dir == Dir::LR || root_dir == Dir::RL;
 
-    let mut index: HashMap<String, usize> = HashMap::new();
+    let mut index: FastMap<String, usize> = FastMap::default();
     let mut views: Vec<View> = Vec::new();
     let mut cnodes: Vec<CNode> = Vec::new();
     for (i, node) in graph.nodes.iter().enumerate() {
@@ -538,7 +537,7 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
     let width = (inner + 2.0 * pad).ceil();
     let height = (layout.height + title_height + 2.0 * pad).ceil();
 
-    let mut crossings: HashMap<i64, Vec<f64>> = HashMap::new();
+    let mut crossings: FastMap<i64, Vec<f64>> = FastMap::default();
     for e in &cedges {
         let mut k = 0;
         while k < e.route.len() {
@@ -726,7 +725,7 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
                             let from = w / 2.0 - 15.0;
                             let to = w / 2.0 - 5.0;
                             let arc = |at: f64| {
-                                (h / 2.0) * js_max(1.0 - (at / (w / 2.0)).powi(2), 0.0).sqrt()
+                                (h / 2.0) * js_max(1.0 - js_pow(at / (w / 2.0), 2.0), 0.0).sqrt()
                             };
                             outline.push_str(&format!(
                                 "<path class=\"pelers-business\" d=\"M{},{}L{},{}\" fill=\"none\" stroke=\"var(--_b)\"{}/>",
@@ -810,7 +809,7 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
     let mut casings = String::new();
     let mut edges_out = String::new();
     let mut labels_out = String::new();
-    let mut loop_seen: HashMap<usize, usize> = HashMap::new();
+    let mut loop_seen: FastMap<usize, usize> = FastMap::default();
     for i in 0..cedges.len() {
         let edge = drawn[i].clone();
         let label = edge_labels[i].clone();
@@ -1061,7 +1060,7 @@ fn strip_relationship_defaults(raw: &str) -> String {
     }
 }
 
-fn title_x(c: &CNode, width: f64, crossings: &HashMap<i64, Vec<f64>>) -> f64 {
+fn title_x(c: &CNode, width: f64, crossings: &FastMap<i64, Vec<f64>>) -> f64 {
     let Some(xs) = crossings.get(&(js_round(c.y - c.h / 2.0) as i64)) else {
         return c.x;
     };

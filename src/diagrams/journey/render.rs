@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::{JourneyModel, JourneyTask, journey_actors};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit::{fit_label, plain_label};
@@ -10,6 +8,7 @@ use crate::svg::theme::{ROUNDED, series_color};
 use crate::text::label::Label;
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::chars::trim;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 
 const PAD_X: f64 = 10.0;
@@ -99,7 +98,7 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
         .into_iter()
         .filter(|name| !name.is_empty())
         .collect();
-    let actor: HashMap<&str, usize> = names
+    let actor: FastMap<&str, usize> = names
         .iter()
         .enumerate()
         .map(|(i, name)| (name.as_str(), i))
@@ -408,7 +407,7 @@ fn vertical(model: &JourneyModel, options: &RenderOptions) -> Drawn {
         .into_iter()
         .filter(|name| !name.is_empty())
         .collect();
-    let actors: HashMap<&str, usize> = names
+    let actors: FastMap<&str, usize> = names
         .iter()
         .enumerate()
         .map(|(i, name)| (name.as_str(), i))

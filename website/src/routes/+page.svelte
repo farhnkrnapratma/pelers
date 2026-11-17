@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { renderMarkdown, stripFrontmatter } from '$lib/markdown';
-    import { sources } from '$lib/content';
-    import examples from '$lib/generated/examples.json';
+    import { renderMarkdown, stripFrontmatter } from '#lib/markdown';
+    import { sources } from '#lib/content';
+    import examples from '#lib/generated/examples.json';
 
     const doc = stripFrontmatter(sources.home);
     const html = renderMarkdown(doc.body);

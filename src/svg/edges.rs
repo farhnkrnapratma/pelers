@@ -1,10 +1,10 @@
-use std::collections::HashMap;
 use std::fmt::Write as _;
 
 use crate::layout::layered::ease;
 use crate::svg::builder::{esc_text, label_svg_with, num};
 use crate::svg::ink::ink;
 use crate::text::label::Label;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_hypot, js_max, js_min};
 
 pub const ARROW: f64 = 8.0;
@@ -43,7 +43,7 @@ fn or_one(x: f64) -> f64 {
 
 #[derive(Default)]
 pub struct SideReach {
-    reach: HashMap<i64, f64>,
+    reach: FastMap<i64, f64>,
 }
 
 impl SideReach {

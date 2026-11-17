@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db::{ArchitectureModel, NodeKind};
 use super::layout::{place_on_grid, side_index};
 use crate::diagrams::common::Drawn;
@@ -11,6 +9,7 @@ use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::ROUNDED;
 use crate::text::label::{Label, Span, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
 
@@ -32,10 +31,10 @@ fn setting(config: &Config, key: &str, fallback: f64, min: f64, max: f64) -> f64
     }
 }
 
-fn rank(values: &[i32]) -> HashMap<i32, usize> {
+fn rank(values: &[i32]) -> FastMap<i32, usize> {
     let mut sorted = values.to_vec();
     sorted.sort();
-    let mut out: HashMap<i32, usize> = HashMap::new();
+    let mut out: FastMap<i32, usize> = FastMap::default();
     for value in sorted {
         if !out.contains_key(&value) {
             let next = out.len();
@@ -362,7 +361,7 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
     let n = nodes.len();
     let g_count = groups.len();
     let grid = place_on_grid(nodes, groups, &model.edges, &model.layout_hints);
-    let mut index: HashMap<&str, usize> = HashMap::new();
+    let mut index: FastMap<&str, usize> = FastMap::default();
     for (i, node) in nodes.iter().enumerate() {
         index.insert(node.id.as_str(), i);
     }

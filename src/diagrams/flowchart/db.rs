@@ -1,10 +1,9 @@
-use std::collections::{HashMap, HashSet};
-
 use super::shapes::is_valid_shape;
 use super::types::{
     DocItem, FlowClassDef, FlowEdge, FlowNode, FlowSubgraph, FlowText, LabelType, LinkInfo,
 };
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::url::safe_url;
 use crate::util::value::{Object, Value};
 use crate::util::yaml::parse_yaml;
@@ -169,11 +168,11 @@ pub fn destruct_end_link(raw: &str) -> EndLink {
 pub struct FlowDb {
     pub direction: Option<String>,
     pub nodes: Vec<FlowNode>,
-    node_index: HashMap<String, usize>,
+    node_index: FastMap<String, usize>,
     pub edges: Vec<FlowEdge>,
     pub subgraphs: Vec<FlowSubgraph>,
     pub classes: Vec<FlowClassDef>,
-    class_index: HashMap<String, usize>,
+    class_index: FastMap<String, usize>,
     pub tooltips: Vec<(String, String)>,
     pub default_edge_style: Option<Vec<String>>,
     pub default_interpolate: Option<String>,
@@ -181,10 +180,10 @@ pub struct FlowDb {
     pub acc_title: Option<String>,
     pub acc_descr: Option<String>,
     pub warnings: Vec<String>,
-    subgraph_lookup: HashMap<String, usize>,
-    members: HashSet<String>,
-    edge_by_id: HashMap<String, usize>,
-    pair_count: HashMap<String, usize>,
+    subgraph_lookup: FastMap<String, usize>,
+    members: FastSet<String>,
+    edge_by_id: FastMap<String, usize>,
+    pair_count: FastMap<String, usize>,
     sub_count: usize,
     options: DbOptions,
 }
@@ -674,10 +673,10 @@ impl FlowDb {
             id = None;
         }
 
-        let mut seen: HashSet<String> = HashSet::new();
+        let mut seen: FastSet<String> = FastSet::default();
         let mut node_list: Vec<String> = Vec::new();
         let mut dir: Option<String> = None;
-        let take = |s: &str, seen: &mut HashSet<String>, node_list: &mut Vec<String>| {
+        let take = |s: &str, seen: &mut FastSet<String>, node_list: &mut Vec<String>| {
             if !trim_js(s).is_empty() && !seen.contains(s) {
                 seen.insert(s.to_owned());
                 node_list.push(s.to_owned());

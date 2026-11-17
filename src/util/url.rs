@@ -131,7 +131,11 @@ pub fn sanitize_url(url: &str) -> String {
     }
     if protocol == "http:" || protocol == "https:" {
         return match url::Url::parse(&normalized) {
-            Ok(parsed) => parsed.to_string(),
+            Ok(mut parsed) => {
+                let path = parsed.path().replace('^', "%5E");
+                parsed.set_path(&path);
+                parsed.to_string()
+            }
             Err(_) => BLANK.to_owned(),
         };
     }

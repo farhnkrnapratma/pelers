@@ -287,7 +287,7 @@ pub struct Lanes {
     upright: Vec<f64>,
     level: Vec<f64>,
     frames: [Vec<f64>; 2],
-    taken: std::collections::HashMap<usize, Vec<f64>>,
+    taken: crate::util::fxhash::FastMap<usize, Vec<f64>>,
     pub squeezed: usize,
 }
 

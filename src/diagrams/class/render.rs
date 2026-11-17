@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db::ClassDb;
 use super::graph::{GraphEdge, GraphNode, NodeShape, Pattern, build_class_graph};
 use super::markers::{class_marker, class_marker_trim};
@@ -26,6 +24,7 @@ use crate::text::entities::decode_entities;
 use crate::text::label::{Label, has_math, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC, MONO, width as measure};
 use crate::util::chars::trim;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::linked;
 use crate::util::value::Value;
@@ -222,12 +221,12 @@ fn draw(
     };
 
     let mut kept: Vec<(String, String)> = Vec::new();
-    let mut effect: HashMap<String, String> = HashMap::new();
-    let mut from_defs: HashMap<String, Vec<(String, String)>> = HashMap::new();
+    let mut effect: FastMap<String, String> = FastMap::default();
+    let mut from_defs: FastMap<String, Vec<(String, String)>> = FastMap::default();
     let class_style = |cls: &ClassNode,
                        kept: &mut Vec<(String, String)>,
-                       effect: &mut HashMap<String, String>,
-                       from_defs: &mut HashMap<String, Vec<(String, String)>>|
+                       effect: &mut FastMap<String, String>,
+                       from_defs: &mut FastMap<String, Vec<(String, String)>>|
      -> ResolvedStyle {
         kept.clear();
         let mut keep = |decl: &str, kept: &mut Vec<(String, String)>| {
@@ -308,8 +307,8 @@ fn draw(
     let class_view = |node: &GraphNode,
                       cls: &ClassNode,
                       kept: &mut Vec<(String, String)>,
-                      effect: &mut HashMap<String, String>,
-                      from_defs: &mut HashMap<String, Vec<(String, String)>>|
+                      effect: &mut FastMap<String, String>,
+                      from_defs: &mut FastMap<String, Vec<(String, String)>>|
      -> View {
         let style = class_style(cls, kept, effect, from_defs);
         let font_size = style.font_size.unwrap_or(size);
@@ -591,12 +590,12 @@ fn draw(
         },
     );
 
-    let mut sides: HashMap<usize, Vec<End>> = HashMap::new();
+    let mut sides: FastMap<usize, Vec<End>> = FastMap::default();
     let mut side_order: Vec<usize> = Vec::new();
     let attach = |cedges: &mut [CEdge],
                   views: &[View],
                   cnodes: &[CNode],
-                  sides: &mut HashMap<usize, Vec<End>>,
+                  sides: &mut FastMap<usize, Vec<End>>,
                   side_order: &mut Vec<usize>,
                   edge: usize,
                   at: usize,
@@ -862,7 +861,7 @@ fn draw(
         bounds.min_y = js_min(bounds.min_y, cy - h / 2.0);
         bounds.max_y = js_max(bounds.max_y, cy + h / 2.0);
     };
-    let mut loop_seen: HashMap<usize, usize> = HashMap::new();
+    let mut loop_seen: FastMap<usize, usize> = FastMap::default();
     let mut loop_at = vec![0usize; cedges.len()];
     for i in 0..cedges.len() {
         let (src, dst, route_len) = (cedges[i].src, cedges[i].dst, cedges[i].route.len());
@@ -978,7 +977,7 @@ fn draw(
         tiny_height,
     };
 
-    let mut crossings: Crossings = Crossings::new();
+    let mut crossings: Crossings = Crossings::default();
     if graph.nodes.first().is_some_and(|node| node.is_group) {
         for e in &cedges {
             mark_crossings(&mut crossings, &e.route);

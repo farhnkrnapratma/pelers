@@ -1,4 +1,4 @@
-use std::cell::Cell;
+use std::cell::RefCell;
 
 use chrono::{Local, TimeZone};
 
@@ -73,28 +73,33 @@ pub struct Fields {
     pub weekday: i64,
 }
 
+const SLOTS: usize = 256;
+
 fn offset_at(utc_ms: f64) -> f64 {
     thread_local! {
-        static LAST: Cell<Option<(i64, f64)>> = const { Cell::new(None) };
+        static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
     }
     if !utc_ms.is_finite() {
         return 0.0;
     }
     let seconds = (utc_ms / 1000.0).floor() as i64;
-    if let Some((last, offset)) = LAST.get()
-        && last == seconds
-    {
-        return offset;
-    }
-    let offset = match Local.timestamp_opt(seconds, 0).single() {
-        Some(local) => {
-            let offset = chrono::Offset::fix(local.offset());
-            f64::from(offset.local_minus_utc()) * 1000.0
+    let slot = ((seconds as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15) >> 56) as usize;
+    CACHE.with(|cache| {
+        let mut cache = cache.borrow_mut();
+        let cell = &mut cache[slot];
+        if cell.0 == seconds {
+            return cell.1;
         }
-        None => 0.0,
-    };
-    LAST.set(Some((seconds, offset)));
-    offset
+        let offset = match Local.timestamp_opt(seconds, 0).single() {
+            Some(local) => {
+                let offset = chrono::Offset::fix(local.offset());
+                f64::from(offset.local_minus_utc()) * 1000.0
+            }
+            None => 0.0,
+        };
+        *cell = (seconds, offset);
+        offset
+    })
 }
 
 impl JsDate {

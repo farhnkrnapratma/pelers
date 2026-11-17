@@ -1,7 +1,6 @@
-use std::collections::HashMap;
-
 use super::db::{ClassDb, RELATION_LOLLIPOP};
 use super::types::RelationEnd;
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NodeShape {
@@ -76,13 +75,13 @@ fn marker(kind: RelationEnd) -> EndMarker {
 pub fn build_class_graph(model: &ClassDb, hierarchical: bool) -> ClassGraph {
     let mut nodes: Vec<GraphNode> = Vec::new();
     let mut edges: Vec<GraphEdge> = Vec::new();
-    let mut namespace_at: HashMap<String, i64> = HashMap::new();
-    let mut class_at: HashMap<String, i64> = HashMap::new();
-    let mut interface_at: HashMap<String, i64> = HashMap::new();
-    let mut declared: HashMap<String, Option<String>> = HashMap::new();
+    let mut namespace_at: FastMap<String, i64> = FastMap::default();
+    let mut class_at: FastMap<String, i64> = FastMap::default();
+    let mut interface_at: FastMap<String, i64> = FastMap::default();
+    let mut declared: FastMap<String, Option<String>> = FastMap::default();
 
     let declared_ancestor =
-        |declared: &mut HashMap<String, Option<String>>, id: Option<&str>| -> Option<String> {
+        |declared: &mut FastMap<String, Option<String>>, id: Option<&str>| -> Option<String> {
             if hierarchical {
                 return id.map(str::to_owned);
             }
@@ -109,7 +108,7 @@ pub fn build_class_graph(model: &ClassDb, hierarchical: bool) -> ClassGraph {
             }
             found
         };
-    let group = |namespace_at: &HashMap<String, i64>, id: Option<&str>| -> i64 {
+    let group = |namespace_at: &FastMap<String, i64>, id: Option<&str>| -> i64 {
         match id {
             None => -1,
             Some(id) => namespace_at.get(id).copied().unwrap_or(-1),

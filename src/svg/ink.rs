@@ -1,9 +1,9 @@
 use std::borrow::Cow;
-use std::collections::HashSet;
 use std::sync::OnceLock;
 
 use crate::util::chars::{is_js_space, trim};
-use crate::util::jsnum::{js_max, js_min};
+use crate::util::fxhash::FastSet;
+use crate::util::jsnum::{js_max, js_min, js_pow};
 
 const DARK: &str = "black blue blueviolet brown crimson darkblue darkcyan darkgreen darkmagenta darkolivegreen darkorchid darkred darkslateblue darkslategray darkviolet dimgray firebrick forestgreen green indigo maroon mediumblue mediumslateblue mediumvioletred midnightblue navy olive purple rebeccapurple royalblue saddlebrown seagreen sienna slateblue steelblue teal";
 const LIGHT: &str = "aliceblue antiquewhite aqua aquamarine azure beige bisque blanchedalmond burlywood cadetblue chartreuse chocolate coral cornflowerblue cornsilk cyan darkgoldenrod darkgray darkkhaki darkorange darksalmon darkseagreen darkturquoise deeppink deepskyblue dodgerblue floralwhite fuchsia gainsboro ghostwhite gold goldenrod gray greenyellow honeydew hotpink indianred ivory khaki lavender lavenderblush lawngreen lemonchiffon lightblue lightcoral lightcyan lightgoldenrodyellow lightgray lightgreen lightpink lightsalmon lightseagreen lightskyblue lightslategray lightsteelblue lightyellow lime limegreen linen magenta mediumaquamarine mediumorchid mediumpurple mediumseagreen mediumspringgreen mediumturquoise mintcream mistyrose moccasin navajowhite oldlace olivedrab orange orangered orchid palegoldenrod palegreen paleturquoise palevioletred papayawhip peachpuff peru pink plum powderblue red rosybrown salmon sandybrown seashell silver skyblue slategray snow springgreen tan thistle tomato turquoise violet wheat white whitesmoke yellow yellowgreen";
@@ -11,13 +11,13 @@ const LIGHT: &str = "aliceblue antiquewhite aqua aquamarine azure beige bisque b
 pub const ON_LIGHT: &str = "var(--pelers-fg-on-light,#1f1f1f)";
 pub const ON_DARK: &str = "var(--pelers-fg-on-dark,#fff)";
 
-fn dark_names() -> &'static HashSet<&'static str> {
-    static SET: OnceLock<HashSet<&'static str>> = OnceLock::new();
+fn dark_names() -> &'static FastSet<&'static str> {
+    static SET: OnceLock<FastSet<&'static str>> = OnceLock::new();
     SET.get_or_init(|| DARK.split(' ').collect())
 }
 
-fn light_names() -> &'static HashSet<&'static str> {
-    static SET: OnceLock<HashSet<&'static str>> = OnceLock::new();
+fn light_names() -> &'static FastSet<&'static str> {
+    static SET: OnceLock<FastSet<&'static str>> = OnceLock::new();
     SET.get_or_init(|| LIGHT.split(' ').collect())
 }
 
@@ -34,7 +34,7 @@ fn linear(c: f64) -> f64 {
     if c <= 0.04045 {
         c / 12.92
     } else {
-        ((c + 0.055) / 1.055).powf(2.4)
+        js_pow((c + 0.055) / 1.055, 2.4)
     }
 }
 

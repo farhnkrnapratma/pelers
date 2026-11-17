@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::AgentflowModel;
 use super::color_slots::{KIND_COUNT, kind_slot};
 use super::db::AgentflowDb;
@@ -26,6 +24,7 @@ use crate::svg::theme::{
 use crate::text::entities::decode_entities;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{internal_link, linked, rel_attr};
 use crate::util::value::{Object, Value};
@@ -281,7 +280,7 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
     let pad = options.padding.unwrap_or(8.0);
     let icons = options.icons.is_some();
 
-    let index: HashMap<&str, usize> = graph
+    let index: FastMap<&str, usize> = graph
         .nodes
         .iter()
         .enumerate()
@@ -537,7 +536,7 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
         ));
     }
 
-    let mut crossings: Crossings = Crossings::new();
+    let mut crossings: Crossings = Crossings::default();
     if cnodes.iter().any(|c| c.is_group) {
         for e in &cedges {
             mark_crossings(&mut crossings, &e.route);
@@ -685,7 +684,7 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
     }
 
     let mut out = Out::default();
-    let mut loop_seen: HashMap<usize, usize> = HashMap::new();
+    let mut loop_seen: FastMap<usize, usize> = FastMap::default();
     for i in 0..cedges.len() {
         let src = cedges[i].src;
         let dst = cedges[i].dst;

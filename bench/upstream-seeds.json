@@ -1,0 +1,2498 @@
+[
+ {
+  "source": "classDiagram\n          direction TB\n          class Student {\n            -idCard : IdCard\n          }\n          class IdCard{\n            -id : int\n            -name : string\n          }\n          class Bike{\n            -id : int\n            -name : string\n          }\n          Student \"1\" --o \"1\" IdCard : carries\n          Student \"1\" --o \"1\" Bike : rides",
+  "file": "class/parser.test.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n\nflow demo\n  helper[\"Helper\"]\nend\n\nhelper@{ instruction: \"Answer precisely.\" }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline[\"Pipeline\"]\n    a --> b\n  end\n  pipeline@{ view: \"collapsed\" }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]\n  github@{ protocol: \"mcp\", transport: \"stdio\" }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  b[\"B\"]\n  a e1@--> b\n  e1@{ instruction: \"hand off\" }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    instruction: \"do the thing\"\n  }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  b[\"B\"]@{ shape: rect }\n  a --> b",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow p[\"P\"]\n    a --> b\n  end\n  p@{ view: \"collapsed\" }",
+  "file": "compat/agentflow/agentflow-attachment-mapping.spec.ts"
+ },
+ {
+  "source": "block was\n// swallowed. Every position downstream of that fold (element mappings,\n//",
+  "file": "compat/agentflow/agentflow-blank-line-fold.spec.ts"
+ },
+ {
+  "source": "%% leading comment\nagentflow-beta TB\n  a --> b",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "%% first\n%% second\n%% third\nagentflow-beta TB\n  a --> b",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n%% trailing header comment\n  a --> b",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n%% mid comment\n  b --> c",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n%% first mid comment\n%% second mid comment\n  b --> c",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n%% trailing comment",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n%%no-space comment\n  b --> c",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n%%\n  b --> c",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[Plain %% not part of the label\nlabel]\n  b --> a",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a(-ellipse %% not part of the label\nlabel-)\n  b --> a",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[/trap %% not part of the label\nlabel/]\n  b --> a",
+  "file": "compat/agentflow/agentflow-comments.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow A[\"A\"]@{ view: collapsed }\n    a1[\"a1\"]\n    a1 --> B\n  end\n  flow B[\"B\"]\n    b1[\"b1\"]\n    b1 --> C\n  end\n  flow C[\"C\"]\n    c1[\"c1\"]\n    c1 --> A\n  end",
+  "file": "compat/agentflow/agentflow-containment-cycle.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{ shape: \"triangle\" }\n  b[\"Beta\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-diagnostics-lifecycle.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{ shape: \"cylinder\" }\n  b[\"Beta\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-diagnostics-lifecycle.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-edge-instruction.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  b[\"B\"]\n  c[\"C\"]\n  a --> b\n  b --x c",
+  "file": "compat/agentflow/agentflow-edge-semantic.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  newtask[\"Example\"]@{\n}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{\n\n}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{   }",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{\n}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end\n  f@{}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end\n  f@{\n}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{\n:\n}",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ shape: 123 }",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ shape: task }",
+  "file": "compat/agentflow/agentflow-empty-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow article_generation@{\n         model: \"claude-opus-4\"\n       }\n        A --> B\n  end",
+  "file": "compat/agentflow/agentflow-flow-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f@{ model: \"claude-opus-4\", memory: \"shared\" }\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-flow-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"Article Generation\"]@{ model: \"claude-opus-4\" }\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-flow-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f@{ model: \"m\", memory: \"shared\", execution: \"parallel\", custom: 1 }\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-flow-metadata.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow myFlow[\"My Flow\"]\n    a[\"Task A\"]\n    a --> myFlow\n  end",
+  "file": "compat/agentflow/agentflow-flow-self-reference.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow outer[\"Outer\"]\n    flow inner[\"Inner\"]\n      b[\"Task B\"]\n      b --> inner\n    end\n  end",
+  "file": "compat/agentflow/agentflow-flow-self-reference.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow top[\"Top\"]\n    flow mid[\"Mid\"]\n      flow leafFlow[\"Leaf\"]\n        c[\"Task C\"]\n      end\n      m[\"Task M\"]\n      m --> mid\n    end\n  end",
+  "file": "compat/agentflow/agentflow-flow-self-reference.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow outer[\"Outer\"]\n    flow inner[\"Inner\"]\n      b[\"Task B\"]\n      b --> inner\n    end\n    a[\"Task A\"]\n    a --> outer\n  end",
+  "file": "compat/agentflow/agentflow-flow-self-reference.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-flow-self-reference.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nglobal\n  A\nend\n\nflow\n A --> B --> C\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nflow pipeline[\"Pipeline\"]\n  A --> B\nend\n\nglobal\n  A\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nglobal\n  A --> X\nend\n\nflow f[\"Flow\"]\n  A --> B\n  X --> B\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nflow f[\"Flow\"]\n  global\n    A\n  end\n  A --> B\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nglobal\n  A[\"Shared input\"]\n  D{\"Decision\"}\nend\n\nflow f[\"Flow\"]\n  A --> B --> D\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nglobal\n  A\nend\n\nglobal\n  B\nend\n\nflow f[\"Flow\"]\n  A --> B --> C\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta\n\nflow f[\"global settings\"]\n  a[\"a global thing\"] --> b\nend",
+  "file": "compat/agentflow/agentflow-global.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a[\"Alpha\"]@{\n      instruction: \"do the thing\"\n    }\n  end",
+  "file": "compat/agentflow/agentflow-inline-metadata-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  x --> b[\"Beta\"]@{\n    instruction: \"hand off\"\n  }",
+  "file": "compat/agentflow/agentflow-inline-metadata-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-inline-metadata-mapping.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  b[\"Beta\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-link-style.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  b --> a",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"sq\"]\n  c{\"diamond\"}\n  d[/\"trap\"/]\n  f --> a",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n  b --> c\n  c --> d",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline[\"Pipeline\"]\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow outer[\"Outer\"]\n    flow inner[\"Inner\"]\n      n1 --> n2\n    end\n  end",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b\n  c --> d",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline[\"Pipeline\"]\n    inner --> next\n  end",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow p[\"P\"]\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  c --> d",
+  "file": "compat/agentflow/agentflow-mappings.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ myExtension: 42 }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end\n  f@{ totallyCustomKey: \"opaque\" }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end\n  f@{ execution: \"parallel\" }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a e1@--> b\n  e1@{ instruction: \"hand off\", weight: 5 }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ prompt: \"do the thing\" }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  call[\"call\"]@{ shape: action, connectorRef: \"nonexistent.op\" }\n  input[\"in\"]@{ shape: input }\n  input --> call",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"First\"]\n  a[\"Second\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connectors[\"My group\"]\n  connectors --> b",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ shape: NotAShape }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"F\"]\n    a --> b\n  end\n  f@{ view: \"collapsed\" }",
+  "file": "compat/agentflow/agentflow-metadata-no-validation.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{\n    __proto__:\n      polluted: true\n  }",
+  "file": "compat/agentflow/agentflow-metadata-prototype-keys.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ constructor: \"x\", prototype: \"y\", description: \"kept\" }",
+  "file": "compat/agentflow/agentflow-metadata-prototype-keys.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{\n    params:\n      - name: first\n        __proto__:\n          polluted: true\n    description: \"kept\"\n  }",
+  "file": "compat/agentflow/agentflow-metadata-prototype-keys.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ shape: rounded, description: \"hello\", myExtension: 42 }",
+  "file": "compat/agentflow/agentflow-metadata-prototype-keys.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{\n    protocol: \"mcp\",\n    transport: \"stdio\",\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{\n    protocol: \"mcp\",\n    endpoint: \"https://api.github.com\"\n    token_required: true,\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    description: \"alpha node\",\n    instruction: \"be careful\",\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow f[\"Flow\"]@{\n    model: \"claude-opus-4\",\n    memory: \"shared\",\n  }\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{\n    protocol: \"mcp\", # main protocol\n    transport: \"stdio\"\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    instruction: |\n      Do a thing,\n      then stop\n    protocol: \"mcp\",\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    tools: [\"read\",\n      \"write\"],\n    protocol: \"mcp\"\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    note: 'first,\n      second',\n    protocol: \"mcp\"\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta LR\n  connector github[\"GitHub API\"]@{\n    protocol: \"http\",\n    endpoint: \"https://api.github.com\",\n    token_required: true,\n  }\n\n  query[\"query\"]\n  query@{ shape: input }\n  fetch_issues[\"fetch_issues\"]\n  fetch_issues@{ shape: tool, connectorRef: \"github.list_issues\" }\n  query --> fetch_issues",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{ protocol: \"mcp\", }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{\n    protocol: *undefined_alias,\n  }",
+  "file": "compat/agentflow/agentflow-metadata-trailing-comma.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  classDef highlight fill:#f9f,stroke:#333,stroke-width:2px\n  a:::highlight --> b\n  style a fill:#0f0\n  linkStyle 0 stroke:red,stroke-width:3px",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{ icon: \"star\", img: \"http://example/a.png\", w: 100, h: 50, view: \"collapsed\" }\n  a:::highlight\n  a --> b",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow researcher[\"Researcher\"]\n    a --> b\n  end\n  researcher@{ model: \"claude-opus-4-6\", memory: \"shared\" }",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]\n  github@{ protocol: \"mcp\", transport: \"stdio\" }\n  connector slack[\"Slack\"]\n  slack@{ protocol: \"http\" }",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  file_path[\"file_path\"]\n  file_path@{ shape: input, value: \"src/HelloWorld.java\" }",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a -- yes --> b\n  a --x c\n  refdoc1[\"RefDoc\"]\n  refdoc1@{ shape: refdoc }\n  a -.- refdoc1",
+  "file": "compat/agentflow/agentflow-semantic-model.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ icon: \"fa:bell\", form: circle }\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ img: \"https://example.com/x.png\", w: 40, h: 40 }\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Real label\"]@{ icon: \"fa:bell\" }\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ shape: icon, icon: \"fa:bell\" }\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]@{ icon: \"fa:bell\", img: \"x.png\", form: circle, pos: t, w: 40, h: 40, description: \"kept\" }\n  b[\"B\"]\n  a --> b",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  t[\"T\"]@{ shape: task }\n  o[\"O\"]@{ shape: tool }\n  i[\"I\"]@{ shape: input }\n  d[\"D\"]@{ shape: decision }\n  r[\"R\"]@{ shape: refdoc }\n  c[\"C\"]@{ shape: action }\n  t --> o --> i --> d --> r --> c",
+  "file": "compat/agentflow/agentflow-shape-catalogue.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  search[\"search\"]\n  search@{ shape: subroutine, returns: \"Result\" }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  search[\"search\"]\n  search@{ shape: tool }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  search[\"search\"]\n  search@{ shape: subprocess }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  plain[\"plain node\"]",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  i[\"i\"]\n  i@{ shape: input }\n  h[\"h\"]\n  h@{ shape: action }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"a\"]\n  a@{ shape: subroutine }\n  b[\"b\"]\n  b@{ shape: tool }\n  c[\"c\"]\n  d[\"d\"]\n  d@{ shape: framed-rectangle }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  search[\"search\"]\n  search@{ shape: tool, returns: \"Result\" }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"a\"]\n  a@{ shape: subprocess }\n  b[\"b\"]\n  b@{ shape: framed-rectangle }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  search[\"search\"]\n  search@{ shape: tool, retry: 3, cache: \"24h\", returns: \"Result\" }",
+  "file": "compat/agentflow/agentflow-tool-validators.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  research[\"Research\"]\n  research --> write",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta LR\n  a --> b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a --> a",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  b[\"Beta\"]\n  a --> b\n  b --> b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline\n    a --> b\n  end",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow outer[\"Outer\"]\n    flow inner[\"Inner\"]\n      a --> b\n    end\n  end",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --x b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a -.- b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a -- yes --> b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  s[\"Search\"]\n  s@{ shape: tool, returns: \"Result\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Action\"]\n  a@{ shape: action }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  i[\"x\"]\n  i@{ shape: input, value: \"literal\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  r[\"Guide\"]\n  r@{ shape: refdoc }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  d{\"is_valid?\"}",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]\n  connector slack[\"Slack\"]",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{ protocol: \"mcp\", transport: \"stdio\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github@{ protocol: \"mcp\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{ protocol: \"mcp\" }\n  github@{ transport: \"stdio\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  connector github[\"GitHub\"]@{\n    protocol: \"mcp\"\n    transport: \"stdio\"\n  }\n  a --> b",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a --> b & c",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"Alpha\"]\n  a@{ description: \"alpha node\", instruction: \"be careful\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  a[\"A\"]\n  a@{ description: \"first\" }\n  a@{ instruction: \"second\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline[\"P\"]\n    a --> b\n  end\n  pipeline@{ model: \"claude-opus-4-6\", memory: \"shared\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow pipeline[\"P\"]\n    a --> b\n  end\n  pipeline@{ view: \"collapsed\" }",
+  "file": "compat/agentflow/agentflow.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n      flow first[\"First\"]\n        a[\"a\"]\n      end\n      flow second[\"Second\"]\n        b[\"b\"]\n      end\n      flow third[\"Third\"]\n        c[\"c\"]\n      end",
+  "file": "compat/agentflow/containerOrder.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n      flow outer[\"Outer\"]\n        flow inner[\"Inner\"]\n          a[\"a\"]\n        end\n      end\n      flow sibling[\"Sibling\"]\n        b[\"b\"]\n      end",
+  "file": "compat/agentflow/containerOrder.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n      flow one[\"One\"]\n        a[\"a\"]\n      end\n      flow two[\"Two\"]\n        b[\"b\"]\n      end\n      two@{ view: \"collapsed\" }\n      flow three[\"Three\"]\n        c[\"c\"]\n      end",
+  "file": "compat/agentflow/containerOrder.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow A[\"Flow A\"]\n    a1[\"Task A1\"]\n    a1 --> B\n  end\n  flow B[\"Flow B\"]\n    b1[\"Task B1\"]\n    b1 --> A\n  end",
+  "file": "compat/agentflow/diagnostics.spec.ts"
+ },
+ {
+  "source": "agentflow-beta TB\n  flow orphan[\"Orphan\"]\n    a[\"Alpha\"]",
+  "file": "compat/agentflow/runner.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n            service db",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n            title Simple Architecture Diagram",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n            accTitle: Accessibility Title\n            accDescr: Accessibility Description",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n            accDescr {\n                Accessibility Description\n            }",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n    group sub1(cloud)[Subscription A]\n    group vnet1(cloud)[VNet A] in sub1\n    service vm1(server)[VM] in vnet1\n\n    group sub2(cloud)[Subscription B]\n    group shared(cloud)[Shared] in sub2\n    service reg(database)[Registry] in shared\n\n    group env(cloud)[Environment] in sub2\n    group vnet(cloud)[VNet] in env\n    group snet1(cloud)[App Subnet] in vnet\n    service nsg(server)[NSG] in snet1\n    service asp(server)[App Plan] in snet1\n    service web(server)[Web App] in snet1\n\n    group snet2(cloud)[PE Subnet] in vnet\n    service pe1(server)[PE Blob] in snet2\n    service pe2(server)[PE Bus] in snet2\n\n    service storage(disk)[Storage] in env\n    service container(disk)[Container] in env\n    service bus(server)[Service Bus] in env\n    service dns(server)[DNS Zone] in env\n\n    service client(internet)[Client]\n\n    reg:B --> T:web\n    nsg:R --> L:asp\n    asp:R --> L:web\n    web:R --> L:pe1\n    pe1:R --> L:storage\n    storage:B --> T:container\n    web:B --> T:pe2\n    pe2:R --> L:bus\n    vm1:R --> L:pe2",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n      group mermaidPrototypePollutionMarker(cloud)[Marker]\n      service a(server)[A] in __proto__\n      service b(server)[B] in mermaidPrototypePollutionMarker\n      a:R -- L:b",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n      group __proto__(cloud)[Marker]\n      service a(server)[A] in __proto__\n      service b(server)[B] in __proto__\n      a:R -- L:b",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n      group __proto__(cloud)[P]\n      group myPrototypePollutionKey(cloud)[Real]\n      service a(server)[A] in __proto__\n      service b(server)[B] in myPrototypePollutionKey\n      a:R -- L:b",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n      service a(server)[A]\n      service 20(server)[B]\n      service 10(server)[C]",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  group api(cloud)[API]\n  service db1(database)[DB1] in api\n  service db2(database)[DB2] in api\n  service db3(database)[DB3] in api\n  align row db1 db2 db3",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  service a(server)[A]\n  service b(server)[B]\n  align column a b",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  service a(server)[A]\n  service b(server)[B]\n  align row a b ghost",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  service a(server)[A]\n  align row a a",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  service rowspan(server)[Rowspan]\n  service columnar(server)[Columnar]\n  align row rowspan columnar",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "architecture-beta\n  group app_env(cloud)[App Env]\n  service app(server)[Web App] in app_env\n  service db(database)[DB] in app_env\n  service api(server)[API] in app_env\n  junction mid in app_env\n  app:B -- T:mid\n  mid:R -- L:db\n  mid:B -- T:api",
+  "file": "compat/architecture/architecture.spec.ts"
+ },
+ {
+  "source": "block-beta\n          id",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id[\"A label\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id[\"<b>Bold</b>\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id1\n          id2",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id1\n          id2\n          id3",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id[\"A label\"]\n          id2",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id1[\"first\"]  -->   id2[\"second\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          id1[\"first\"]  -- \"a label\" -->   id2[\"second\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          columns 2\n          block1[\"Block 1\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          block1[\"Block 1\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          columns auto\n          block1[\"Block 1\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          columns 2\n          block1[\"Block 1\"]\n          block2[\"Block 2\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          columns 1\n          block1[\"Block 1\"]\n          block2[\"Block 2\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          block\n            aBlock[\"ABlock\"]\n            bBlock[\"BBlock\"]\n          end",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          block\n            aBlock[\"ABlock\"]\n            block\n              bBlock[\"BBlock\"]\n            end\n          end",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          block:compoundBlock[\"Compound block\"]\n            columns 1\n            block2[\"Block 2\"]\n          end",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n          columns 1\n          block1[\"Block 1\"]\n\n          block\n            columns 2\n            block2[\"Block 2\"]\n            block3[\"Block 3\"]\n          end",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n        columns 3\n        block1[\"Block 1\"]\n        blockArrow<[\"&nbsp;&nbsp;&nbsp;\"]>(right)\n        block2[\"Block 2\"]",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n        columns 1\n        A\n        blockArrow<[\"&nbsp;&nbsp;&nbsp;\"]>(up, down)\n        block\n          columns 3\n            B\n            C\n            D\n        end",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n        columns 3\n        one[\"One Slot\"]\n        two[\"Two slots\"]:2",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n        columns 3\n        space\n        middle[\"In the middle\"]\n        space",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\n        classDef black color:#ffffff, fill:#000000;\n\n        mc[\"Memcache\"]\n        class mc black",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block\ncolumns 1\n    B[\"A wide one in the middle\"]\n  style B fill:#f9F,stroke:#333,stroke-width:4px",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block-beta\n  columns 1\n  A:1\n  B:2\n  C:3\n  D:4\n  E:3\n  F:2\n  G:1",
+  "file": "compat/block/block.spec.ts"
+ },
+ {
+  "source": "block-beta\n      block:first\n        a\n      end\n      block:second\n        b\n      end\n      block:third\n        c\n      end",
+  "file": "compat/block/blockColorIndex.spec.ts"
+ },
+ {
+  "source": "block-beta\n      a\n      b\n      block:group\n        c\n      end",
+  "file": "compat/block/blockColorIndex.spec.ts"
+ },
+ {
+  "source": "block-beta\n      block:outer\n        block:inner\n          a\n        end\n      end\n      block:sibling\n        b\n      end",
+  "file": "compat/block/blockColorIndex.spec.ts"
+ },
+ {
+  "source": "block-beta\n      block:a1\n        block:a2\n          x\n        end\n      end\n      block:b1\n        block:b2\n          y\n        end\n      end",
+  "file": "compat/block/blockColorIndex.spec.ts"
+ },
+ {
+  "source": "C4Context\ntitle title\nPerson(Person, \"Person\", \"Person\")",
+  "file": "compat/c4/c4Diagram.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(default, \"default\", \"default\")",
+  "file": "compat/c4/c4Diagram.spec.ts"
+ },
+ {
+  "source": "C4Context\ntitle System Context diagram for Internet Banking System\nPerson(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, \"Banking Customer A\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, \"\", \"A customer of the bank, with personal bank accounts.\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, $sprite=\"users\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, $link=\"https://github.com/mermaidjs\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, $tags=\"tag1,tag2\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson(customerA, \"Banking Customer A\", \"A customer.\", $tags=\"v1.0+internal\", $link=\"https://example.com\")",
+  "file": "compat/c4/c4Person.spec.ts"
+ },
+ {
+  "source": "C4Context\ntitle System Context diagram for Internet Banking System\nPerson_Ext(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson_Ext(customerA, \"Banking Customer A\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson_Ext(customerA, \"\", \"A customer of the bank, with personal bank accounts.\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson_Ext(customerA, $sprite=\"users\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson_Ext(customerA, $link=\"https://github.com/mermaidjs\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "C4Context\nPerson_Ext(customerA, $tags=\"tag1,tag2\")",
+  "file": "compat/c4/c4PersonExt.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace Company.Project {\n          class User {\n            +login(username: String, password: String)\n            +logout()\n          }\n        }\n        namespace Company.Project.Module {\n          class Admin {\n            +addUser(user: User)\n            +removeUser(user: User)\n          }\n        }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n    namespace Company.Project.Module {\n        class GenericClass~T~ {\n            +addItem(item: T)\n            +getItem() T\n        }\n    }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace Company.Project.Module.SubModule {\n          class Report {\n            +generatePDF(data: List)\n            +generateCSV(data: List)\n          }\n        }\n        namespace Company.Project.Module {\n          class Admin {\n            +generateReport()\n          }\n        }\n        Admin --> Report : generates",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace Outer {\n          namespace Inner {\n            class Foo {\n              +bar()\n            }\n          }\n          class Baz {\n            +qux()\n          }\n        }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n          namespace Company.Engineering.Backend {\n            class Developer {\n              +writeCode()\n            }\n          }\n          namespace Company {\n            class CEO {\n              +makeDecisions()\n            }\n          }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n          namespace Company.Engineering.Backend {\n            class Developer\n          }\n          namespace Company {\n            class CEO\n          }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace A.B {\n          class Foo\n        }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace Auth[\"Authentication Service\"] {\n          class UserService {\n            +login()\n          }\n        }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n            accTitle: My Title\n            accDescr: My Description",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n            accTitle: My Title\n            accDescr {\n              This is my multi\n              line description\n            }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n        namespace Company.Project.Module {\n          class User\n          class Admin\n        }\n          Admin --> User : manages",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class with text label\"]\nclass C2[\"Class with text label\"]\nclass C3[\"Class with text label\"]",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"OneWord\"]\nclass C2[\"With, Comma\"]\nclass C3[\"With (Brackets)\"]\nclass C4[\"With [Brackets]\"]\nclass C5[\"With {Brackets}\"]\nclass C6[\" \"]\nclass C7[\"With 1 number\"]\nclass C8[\"With . period...\"]\nclass C9[\"With - dash\"]\nclass C10[\"With _ underscore\"]\nclass C11[\"With ' single quote\"]\nclass C12[\"With ~!@#$%^&*()_+=-/?\"]\nclass C13[\"With Città foreign language\"]",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "%% Comment\n        classDiagram\n        class Class1 {\n          int : test\n          string : foo\n          test()\n          foo()\n        }",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n\n}\n%% Comment",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}\n%% Comment",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n\n\n%% Comment\n\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n%% Comment Class1 <|-- Class02\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nnamespace Namespace1 { class Class1 }\nnamespace Namespace2 { class Class1\n}\nnamespace Namespace3 {\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}\n}\nnamespace Namespace4 {\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}\nclass Class2 {\nint : test\nstring : foo\ntest()\nfoo()\n}\n}",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n\nnamespace space {\n    class Square~Shape~{\n        int id\n        List~int~ position\n        setPoints(List~int~ points)\n        getPoints() List~int~\n    }\n}",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nnamespace Namespace1 {\nclass Class1 {\nint : test\nstring : foo\ntest()\nfoo()\n}\nclass Class2\n}",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n      A1 --> B1\n      namespace A {\n        class A1 {\n          +foo : string\n        }\n        class A2 {\n          +bar : int\n        }\n      }\n      namespace B {\n        class B1 {\n          +foo : bool\n        }\n        class B2 {\n          +bar : float\n        }\n      }\n      A2 --> B2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n  class C1[\"Class 1 with text label\"]\n  C1 -->  C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n  class C1[\"Class 1 with text label\"]\n  class C2[\"Class 2 with chars @?\"]\n  C1 -->  C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n  class C1[\"Class 1 with text label\"] {\n    +member1\n  }\n  C1 -->  C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\n  class C1[\"Class 1 with text label\"] {\n    <<interface>>\n    +member1\n  }\n  C1 -->  C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class 1 with text label\"]:::styleClass {\n  +member1\n}\nC1 -->  C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class 1 with text label\"] {\n  +member1\n}\nC1 --> C2\ncssClass \"C1\" styleClass",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class 1 with text label\"] {\n  +member1\n}\nclass C2[\"Long long long long long long long long long long label\"]\nC1 --> C2\ncssClass \"C1,C2\" styleClass",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class 1 with text label\"]:::styleClass1 {\n  +member1\n}\nclass C2[\"Class 2 !@#$%^&*() label\"]:::styleClass2\nC1 --> C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "classDiagram\nclass C1[\"Class with text label\"]\nclass C2[\"Class with text label\"]\nclass C3[\"Class with text label\"]\nC1 --> C2\nC3 ..> C2",
+  "file": "compat/class/classDiagram.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"Emergent practice\"\n    \"Probe-sense-respond\"\n  clear\n    \"Best practice\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"A\"\n  complicated\n    \"B\"\n  clear\n    \"C\"\n  chaotic\n    \"D\"\n  confusion\n    \"E\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"First item\"\n    \"Second item\"\n    \"Third item\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  %% This is a comment\n  complex\n    \"Item\"\n  %% Another comment",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"Practice\"\n  complicated\n    \"Analysis\"\n  complex --> complicated : \"Pattern found\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"A\"\n  complicated\n    \"B\"\n  complex --> complicated",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"A\"\n  complicated\n    \"B\"\n  clear\n    \"C\"\n  complex --> complicated : \"Analyzed\"\n  complicated --> clear : \"Codified\"\n  chaotic --> complex : \"Stabilized\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  accTitle: Cynefin Framework Overview\n  complex\n    \"Emergent\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  accDescr: A diagram showing the five Cynefin domains\n  complex\n    \"Emergent\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  title My Cynefin Map\n  complex\n    \"Emergent\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  title Team Practices\n  accTitle: Cynefin for team practices\n  complex\n    \"Retrospectives\"\n    \"Pair programming\"\n  complicated\n    \"Code review\"\n    \"Architecture decisions\"\n  clear\n    \"Deployment checklist\"\n  chaotic\n    \"Incident response\"\n  confusion\n    \"New initiative\"\n  complex --> complicated : \"Pattern emerges\"\n  complicated --> clear : \"Best practice found\"\n  chaotic --> complex : \"Stabilized\"\n  confusion --> chaotic : \"Crisis detected\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"A\"\n  complicated\n    \"B\"\n  complex --> complex : \"Self-reflection\"\n  complex --> complicated : \"Pattern found\"\n  complicated --> complicated",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  complex\n    \"A\"\n  complex --> complex",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  title First Diagram\n  complex\n    \"Alpha\"\n    \"Beta\"\n  complicated\n    \"Gamma\"\n  complex --> complicated : \"Move\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "cynefin-beta\n  title Second Diagram\n  chaotic\n    \"Delta\"",
+  "file": "compat/cynefin/cynefin.integration.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 ui UI\n    tf 02 cmd RunAction\n    tf 03 evt ActionExecuted",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 cmd AddItem { productId: 7 }\n    tf 02 evt ItemAdded { productId: 7 }",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 cmd AddItem\n    tf 02 evt ItemAdded [[ItemAddedData]]\n\ndata ItemAddedData\n{\n  productId: 7\n}",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 ui CartUI\n    tf 02 cmd Inventory.AddItem\n    tf 03 evt Inventory.ItemAdded",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 ui CartUI\n    tf 02 cmd AddItem\n    tf 03 cmd RemoveItem\n    tf 04 evt ItemChanged ->> 02 ->> 03",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    rf 01 ui CartUI\n    rf 02 cmd AddItem\n    rf 03 evt ItemAdded",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n      tf 09 ui PreviousDiagram",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n        tf 01 ui UI\n        tf 02 cmd Command\n        rf 01 evt Event",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n        tf 01 ui UI\n        %% This comment occupies a source line.\n        rf 01 evt Event",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n      tf 01 ui UI\n      tf 02 cmd Command\n      tf 03 evt Event\n      rf 04 rmo ReadModel ->> 03\n      rf 05 ui OtherUI",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\n    tf 01 ui UI\n    tf 02 ui UI2\n    tf 03 cmd Command\n    tf 04 command Command2\n    tf 05 evt Event\n    tf 06 event Event2\n    tf 07 pcr Processor\n    tf 08 processor Processor2\n    tf 09 rmo ReadModel\n    tf 10 readmodel ReadModel2",
+  "file": "compat/eventmodeling/eventmodeling.spec.ts"
+ },
+ {
+  "source": "eventmodeling\ntimeframe 01 event Start",
+  "file": "compat/eventmodeling/eventmodeling.test.ts"
+ },
+ {
+  "source": "eventmodeling\n\ntimeframe 02 ui UI\ntf 01 evt Product.PriceChanged\ntf 03 evt Cart.ItemAdded",
+  "file": "compat/eventmodeling/eventmodeling.test.ts"
+ },
+ {
+  "source": "eventmodeling\n\ntf 02 ui UI\nresetframe 01 evt Product.PriceChanged\ntf 03 evt Cart.ItemAdded",
+  "file": "compat/eventmodeling/eventmodeling.test.ts"
+ },
+ {
+  "source": "eventmodeling\ntf 01 evt Start\ntf 02 evt End\nrf 03 readmodel ReadModel01 ->> 01 ->> 02 { a: true }\nrf 04 rmo ReadModel02 ->> 01 ->> 02",
+  "file": "compat/eventmodeling/eventmodeling.test.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit id:\"1111\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit tag:\"test\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit type: HIGHLIGHT",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit type: REVERSE",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit type: NORMAL",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit \"test commit\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit msg: \"test commit\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit id:\"1111\" tag: \"test tag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit type:HIGHLIGHT tag: \"test tag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit tag: \"test tag\" type:HIGHLIGHT",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit id:\"1111\" type:REVERSE tag: \"test tag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit id:\"1111\" type:REVERSE tag: \"test tag\" msg:\"test msg\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit type:REVERSE tag: \"test tag\" msg: \"test msg\" id: \"1111\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit  tag: \"test tag\" msg:\"test msg\" id:\"1111\" type:REVERSE",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit msg:\"test msg\" id:\"1111\" type:REVERSE tag: \"test tag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        commit\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch \"branch\"\n        checkout \"branch\"\n        commit\n        checkout main\n        merge \"branch\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch azAZ_-./test",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        %% branch names starting with numbers are not recommended, but are supported by git\n        branch 1.0.1",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        %% branch names starting with numbers are not recommended, but are supported by git\n        branch branch01\n        branch checkout02\n        branch cherry-pick03\n        branch branch/example-branch\n        branch merge/test_merge\n        %% single character branch name\n        branch A",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        checkout testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch test1 order: 3\n        branch test2 order: 2\n        branch test3 order: 1",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch test1 order: 1\n        branch test2\n        branch test3",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        checkout testBranch\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        checkout testBranch\n        commit\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        switch testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        switch testBranch\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        switch testBranch\n        commit\n        commit\n        switch main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n        commit\n        branch testBranch\n        checkout testBranch\n        commit\n        checkout main\n        merge testBranch tag: \"merge-tag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n          commit\n          branch testBranch\n          checkout testBranch\n          commit\n          checkout main\n          %% Merge Tag and ID\n          merge testBranch tag: \"merge-tag\" id: \"2-222\"\n          branch testBranch2\n          checkout testBranch2\n          commit\n          checkout main\n          %% Merge ID and Tag (reverse order)\n          merge testBranch2 id: \"4-444\" tag: \"merge-tag2\" type:HIGHLIGHT\n          branch testBranch3\n          checkout testBranch3\n          commit\n          checkout main\n          %% just Merge ID\n          merge testBranch3 id: \"6-666\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch develop\n        commit id:\"A\"\n        checkout main\n        cherry-pick id:\"A\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch develop\n        commit id:\"A\"\n        checkout main\n        cherry-pick id:\"A\" tag:\"MyTag\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch develop\n        commit id:\"A\"\n        checkout main\n        cherry-pick id:\"A\" tag:\"\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        cherry-pick id: \"M\" parent:\"B\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        cherry-pick id: \"M\" parent:\"ZERO\" tag: \"v1.0\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        commit id: \"C\"\n        cherry-pick id: \"M\" tag: \"v2.1:ZERO\" parent:\"ZERO\"\n        commit id: \"D\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        commit id: \"C\"\n        cherry-pick id:\"M\" parent: \"ZERO\" tag:\"\"\n        commit id: \"D\"\n        cherry-pick id:\"M\" tag:\"\" parent: \"B\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        commit id: \"C\"\n        cherry-pick id:\"M\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"ZERO\"\n        branch feature\n        branch release\n        checkout feature\n        commit id: \"A\"\n        commit id: \"B\"\n        checkout main\n        merge feature id: \"M\"\n        checkout release\n        commit id: \"C\"\n        cherry-pick id:\"M\" parent: \"A\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        branch testBranch\n        commit\n        branch main\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        branch testBranch\n        commit\n        branch testBranch\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        checkout testBranch\n        commit\n        branch testBranch\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        merge testBranch\n        commit\n        checkout testBranch\n        commit\n        branch testBranch\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        merge testBranch\n        commit\n        checkout testBranch\n        commit\n        branch testBranch\n        commit\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        branch testBranch\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit id: \"1-111\"\n        branch testBranch\n        commit id: \"2-222\"\n        commit id: \"3-333\"\n        checkout main\n        merge testBranch id: \"1-111\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        commit\n        branch testBranch\n        checkout main\n        merge testBranch",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n        branch test1\n\n        checkout main\n        commit\n        merge test1",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n          accTitle: This is a title\n          accDescr: This is a description\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph:\n          accTitle: This is a title\n          accDescr {\n            This is a description\n            using multiple lines\n          }\n        commit",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph\n     commit id:\"initial commit\"\n     commit id:\"work on first release\"\n     commit id:\"design freeze from here\"\n     branch v1-rc\n     checkout v1-rc\n     commit id:\"bugfix 1\"\n     commit id:\"bigfix 2\" tag:\"v1.0.1\"\n     branch FORK-v1.0-MDR\n     checkout FORK-v1.0-MDR\n     commit id:\"working on MDR\"\n     checkout v1-rc\n     commit id:\"minor design changes for MDR\" tag:\"v1.0.2\"\n     checkout FORK-v1.0-MDR\n     merge v1-rc\n     checkout main\n     commit id:\"new feature for v1.1…\"\n     checkout FORK-v1.0-MDR\n     commit id:\"working on MDR\"\n     commit id:\"finishing MDR\"\n     branch v1.0-MDR\n     checkout v1.0-MDR\n     commit id:\"brush up release\" tag:\"v1.0.2-MDR\"\n     checkout v1-rc\n     commit id:\"bugfix without MDR\"\n     checkout main\n     commit id:\"work on v1.1\"",
+  "file": "compat/git/gitGraph.spec.ts"
+ },
+ {
+  "source": "gitGraph TB:\n        accTitle: Complex Example\n        commit id:\"init\" type:NORMAL\n        branch feature\n        commit id:\"feat1\" msg:\"Add feature\"\n        checkout main\n        merge feature tag:\"v1.0\"\n        cherry-pick id:\"feat1\" tag:\"critical fix\"",
+  "file": "compat/git/gitGraph.test.ts"
+ },
+ {
+  "source": "info\n    showInfo",
+  "file": "compat/info/info.test.ts"
+ },
+ {
+  "source": "ishikawa-beta\n    Blurry Photo\n        Process\n            Out of focus\n        User\n            Shaky hands",
+  "file": "compat/ishikawa/ishikawa.spec.ts"
+ },
+ {
+  "source": "ishikawa-beta\nProblem\nCause A\n  Subcause A1\nCause B",
+  "file": "compat/ishikawa/ishikawa.spec.ts"
+ },
+ {
+  "source": "ishikawa-beta\n    Problem\nCause A\n  Subcause A1\nCause B",
+  "file": "compat/ishikawa/ishikawa.spec.ts"
+ },
+ {
+  "source": "kanban\n    root",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root\n      child1\n      child2",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    (root)",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root\n      child1\n        leaf1\n      child2",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    section1\n    section2",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n          root\n        fakeRoot\n    realRootWrongPlace",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[The root]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root\n      theId(child1)",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\nroot\n      theId(child1)",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[The root]\n    ::icon(bomb)",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[The root]\n    :::m-4 p-8",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[The root]\n    :::m-4 p-8\n    ::icon(bomb)",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[The root]\n    ::icon(bomb)\n    :::m-4 p-8",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[\"String containing []\"]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n    root[\"String containing []\"]\n      child1[\"String containing ()\"]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n  root(Root)\n    Child(Child)\n    :::hot\n      a(a)\n      b[New Stuff]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n  root(Root)\n    Child(Child)\n      a(a)\n\n      b[New Stuff]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n  root(Root)\n    Child(Child)\n      a(a)\n\n      %% This is a comment\n      b[New Stuff]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n  root(Root)\n    Child(Child)\n      a(a) %% This is a comment\n      b[New Stuff]",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ priority: high }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ assigned: knsv }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ icon: star }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{\n          icon: star\n          assigned: knsv\n        }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ icon: star, assigned: knsv }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ icon: star, label: 'fix things' }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "kanban\n        root@{ ticket: MC-1234 }",
+  "file": "compat/kanban/kanban.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root\n      child1\n      child2",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    (root)",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root\n      child1\n        leaf1\n      child2",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root\n    fakeRoot",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n          root\n        fakeRoot\n    realRootWrongPlace",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[The root]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root\n      theId(child1)",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\nroot\n      theId(child1)",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n root((the root))",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n root)the root(",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n root))the root((",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n root{{the root}}",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[The root]\n    ::icon(bomb)",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[The root]\n    :::m-4 p-8",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[The root]\n    :::m-4 p-8\n    ::icon(bomb)",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[The root]\n    ::icon(bomb)\n    :::m-4 p-8",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[\"String containing []\"]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n    root[\"String containing []\"]\n      child1[\"String containing ()\"]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n  root(Root)\n    Child(Child)\n    :::hot\n      a(a)\n      b[New Stuff]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n  root(Root)\n    Child(Child)\n      a(a)\n\n      b[New Stuff]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n  root(Root)\n    Child(Child)\n      a(a)\n\n      %% This is a comment\n      b[New Stuff]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "mindmap\n  root(Root)\n    Child(Child)\n      a(a) %% This is a comment\n      b[New Stuff]",
+  "file": "compat/mindmap/mindmap.spec.ts"
+ },
+ {
+  "source": "packet\n    title Packet diagram\n    accTitle: Packet accTitle\n    accDescr: Packet accDescription\n    0-10: \"test\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-10: \"test\"\n    11: \"single\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    +8: \"byte\"\n    +16: \"word\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-10: \"test\"\n    11-90: \"multiple\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-16: \"test\"\n    17-63: \"multiple\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-16: \"test\"\n    18-20: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    +16: \"test\"\n    18-20: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-16: \"test\"\n    18: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    +16: \"test\"\n    18: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-16: \"test\"\n    17: \"good\"\n    19: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    0-16: \"test\"\n    25-20: \"error\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "packet\n    +0: \"test\"",
+  "file": "compat/packet/packet.spec.ts"
+ },
+ {
+  "source": "pie\n      \"ash\": 100",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie showData\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie\n      %% comments\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title a 60/40 pie\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title a neat chart\n      accTitle: a neat acc title\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title a neat chart\n      accDescr: a neat description\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title a neat chart\n      accDescr {\n        a neat description\n        on multiple lines\n      }\n      \"ash\" : 60\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie\n      \"ash\" : 60.67\n      \"bat\" : 40",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie\n        \"ash\" : -60.67\n        \"bat\" : 40.12",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title Default text position: Animal adoption\n        accTitle: simple pie char demo\n        accDescr: pie chart with 3 sections: dogs, cats, rats. Most are dogs.\n         \"dogs\" : 0\n        \"rats\" : 40.12",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title Default text position: Animal adoption\n        accTitle: simple pie char demo\n        accDescr: pie chart with 3 sections: dogs, cats, rats. Most are dogs.\n         \"dogs\" : -60.67\n        \"rats\" : 40.12",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "pie title Unsafe props test\n        \"__proto__\" : 386\n        \"constructor\" : 85\n        \"prototype\" : 15",
+  "file": "compat/pie/pie.spec.ts"
+ },
+ {
+  "source": "quadrantChart\n      title Analytics and Business Intelligence Platforms\n      x-axis \"Completeness of Vision ❤\" --> \"x-axis-2\"\n      y-axis Ability to Execute --> \"y-axis-2\"\n      quadrant-1 Leaders\n      quadrant-2 Challengers\n      quadrant-3 Niche\n      quadrant-4 Visionaries\n      Microsoft: [0.75, 0.75]\n      Salesforce: [0.55, 0.60]\n      IBM: [0.51, 0.40]\n      Incorta: [0.20, 0.30]",
+  "file": "compat/quadrant/quadrant.jison.spec.ts"
+ },
+ {
+  "source": "quadrantChart\n      title Analytics and Business Intelligence Platforms\n      x-axis \"Completeness of Vision ❤\" --> \"x-axis-2\"\n      y-axis Ability to Execute --> \"y-axis-2\"\n      quadrant-1 Leaders\n      quadrant-2 Challengers\n      quadrant-3 Niche\n      quadrant-4 Visionaries\n      Microsoft: [0.75, 0.75] radius: 10\n      Salesforce: [0.55, 0.60] radius: 10, color: #ff0000\n      IBM: [0.51, 0.40] radius: 10, color: #ff0000, stroke-color: #ff00ff\n      Incorta: [0.20, 0.30] radius: 10 ,color: #ff0000 ,stroke-color: #ff00ff ,stroke-width: 10px",
+  "file": "compat/quadrant/quadrant.jison.spec.ts"
+ },
+ {
+  "source": "quadrantChart\n      title Analytics and Business Intelligence Platforms\n      x-axis \"Completeness of Vision ❤\" --> \"x-axis-2\"\n      y-axis Ability to Execute --> \"y-axis-2\"\n      quadrant-1 Leaders\n      quadrant-2 Challengers\n      quadrant-3 Niche\n      quadrant-4 Visionaries\n      Microsoft: [0.75, 0.75] stroke-color: #ff00ff ,stroke-width: 10px, color: #ff0000, radius: 10\n      Salesforce:::class1: [0.55, 0.60] radius: 10, color: #ff0000\n      IBM: [0.51, 0.40] stroke-color: #ff00ff ,stroke-width: 10px\n      Incorta: [0.20, 0.30] stroke-width: 10px",
+  "file": "compat/quadrant/quadrant.jison.spec.ts"
+ },
+ {
+  "source": "quadrantChart\n    classDef constructor fill:#ff0000\n    Microsoft:::constructor: [0.75, 0.75]",
+  "file": "compat/quadrant/quadrant.jison.spec.ts"
+ },
+ {
+  "source": "quadrantChart\ntitle 分析象限图\nx-axis 低覆盖率 --> 高覆盖率\ny-axis 低参与度 --> 高参与度\nquadrant-1 需要扩展\nquadrant-2 需要推广\nquadrant-3 重新评估\nquadrant-4 可以改进\n产品A: [0.3, 0.6]\n产品B: [0.45, 0.23]",
+  "file": "compat/quadrant/quadrant.jison.spec.ts"
+ },
+ {
+  "source": "radar-beta\n    axis A,B,C\n    curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n    title Radar diagram\n    accTitle: Radar accTitle\n    accDescr: Radar accDescription\n    axis A[\"Axis A\"], B[\"Axis B\"] ,C[\"Axis C\"]\n    curve mycurve[\"My Curve\"]{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n    ticks 10\n    showLegend false\n    graticule polygon\n    min 1\n    max 10",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n    axis A,B,C\n    curve mycurve{ C: 3, A: 1, B: 2 }",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n    %% This is a comment\n    axis A,B,C\n    %% This is another comment\n    curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "%%{init: {'radar': {'marginTop': 80, 'axisLabelFactor': 1.25}}}%%\n    radar-beta\n    axis A,B,C\n    curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "%%{init: { \"theme\": \"base\", \"themeVariables\": {'fontSize': 80, 'cScale0': '#123456' }}}%%\n    radar-beta:\n    axis A,B,C\n    curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "%%{init: { \"theme\": \"base\", \"themeVariables\": {'fontSize': 10, 'radar': { 'axisColor': '#FF0000' }}}}%%\n    radar-beta\n    axis A,B,C\n    curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n        axis A,B,C\n        curve mycurve{1,2,3}",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n        title Radar diagram\n        accTitle: Radar accTitle\n        accDescr: Radar accDescription\n        axis A[\"Axis A\"], B[\"Axis B\"] ,C[\"Axis C\"]\n        curve mycurve[\"My Curve\"]{1,2,3}\n        curve mycurve2[\"My Curve 2\"]{ C: 1, A: 2, B: 3 }\n        graticule polygon",
+  "file": "compat/radar/radar.spec.ts"
+ },
+ {
+  "source": "radar-beta\n  axis my-axis\n  curve my-curve",
+  "file": "compat/radar/radar.test.ts"
+ },
+ {
+  "source": "radar-beta\n  axis my-axis my-axis2",
+  "file": "compat/radar/radar.test.ts"
+ },
+ {
+  "source": "radar-beta\n  axis A\n  curve B{1}\n  invalid@symbol",
+  "file": "compat/radar/radar.test.ts"
+ },
+ {
+  "source": "radar-beta\n  axis",
+  "file": "compat/radar/radar.test.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = \"hello\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = %x41 ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = other-rule ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = \"a\" \"b\" \"c\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = \"a\" / \"b\" / \"c\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = [ \"a\" ] ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = *\"a\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        rule = 1*\"a\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        title \"Test Grammar\"\n        rule = \"a\" ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-abnf-beta\n        title \"URI\"\n        URI = scheme \":\" hier-part ;\n        scheme = ALPHA *( ALPHA / DIGIT / \"+\" / \"-\" / \".\" ) ;\n        hier-part = \"//\" authority path-abempty ;",
+  "file": "compat/railroad/abnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"terminal\" ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = other_rule ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"a\" \"b\" \"c\" ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"a\" | \"b\" | \"c\" ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"a\"? ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = [ \"a\" ] ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"a\"* ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = \"a\"+ ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = { \"a\" } ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        title \"Test Grammar\"\n        rule = \"a\" ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        rule = ? special ? ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-ebnf-beta\n        title \"Simple Expression\"\n        expression = term ( \"+\" term | \"-\" term )* ;\n        term = factor ( \"*\" factor | \"/\" factor )* ;\n        factor = number | \"(\" expression \")\" ;\n        number = digit+ ;\n        digit = \"0\" | \"1\" | \"2\" | \"3\" | \"4\" | \"5\" | \"6\" | \"7\" | \"8\" | \"9\" ;",
+  "file": "compat/railroad/ebnfDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"hello\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- other_rule ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"a\" \"b\" \"c\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"a\" / \"b\" / \"c\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"a\"? ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"a\"* ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- \"a\"+ ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- . ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- &\"a\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        rule <- !\"a\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        title \"Test Grammar\"\n        rule <- \"a\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-peg-beta\n        title \"Calculator\"\n        Expression <- Term ((\"+\" / \"-\") Term)* ;\n        Term <- Factor ((\"*\" / \"/\") Factor)* ;\n        Factor <- Number / \"(\" Expression \")\" ;\n        Number <- Digit+ ;\n        Digit <- \"0\" / \"1\" / \"2\" / \"3\" / \"4\" / \"5\" / \"6\" / \"7\" / \"8\" / \"9\" ;",
+  "file": "compat/railroad/pegDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\ntitle Example Grammar\naccTitle: Accessible Railroad\naccDescr: Railroad description\nrule = terminal(\"a\") ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\nrule = sequence(terminal(\"a\"), nonterminal(\"b\")) ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\nrule = choice(terminal(\"a\"), terminal(\"b\"), terminal(\"c\")) ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\nr1 = optional(terminal(\"a\")) ;\nr2 = oneOrMore(terminal(\"b\")) ;\nr3 = zeroOrMore(terminal(\"c\")) ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\nrule = special(\"any character\") ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\n/* comment before the first rule */\nrule = terminal(\"a\") ;\nnext = nonterminal(\"rule\") ;",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\nrule = terminal(\"a\")",
+  "file": "compat/railroad/railroad.test.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = terminal(\"hello\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = nonterminal(\"expression\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = sequence(terminal(\"a\"), terminal(\"b\"), terminal(\"c\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = sequence(terminal(\"a\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = choice(terminal(\"a\"), terminal(\"b\"), terminal(\"c\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = choice(terminal(\"a\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = optional(terminal(\"a\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = zeroOrMore(terminal(\"a\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = oneOrMore(terminal(\"a\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = special(\"any character\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        title \"Test Grammar\"\n        rule = terminal(\"a\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule1 = terminal(\"a\") ;\n        rule2 = terminal(\"b\") ;\n        rule3 = terminal(\"c\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = sequence(\n            choice(terminal(\"a\"), terminal(\"b\")),\n            oneOrMore(choice(terminal(\"c\"), terminal(\"d\")))\n        ) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        digit = choice(\n            terminal(\"0\"), terminal(\"1\"), terminal(\"2\"),\n            terminal(\"3\"), terminal(\"4\"), terminal(\"5\"),\n            terminal(\"6\"), terminal(\"7\"), terminal(\"8\"), terminal(\"9\")\n        ) ;\n        number = oneOrMore(nonterminal(\"digit\")) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = terminal(\"a\")",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = terminal(\"unclosed) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        title \"Empty Grammar\"",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = terminal(\"hello world\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        my_rule = terminal(\"test\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule123 = terminal(\"test\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = sequence(\n            choice(terminal(\"a\"), terminal(\"b\")),\n            choice(terminal(\"c\"), terminal(\"d\"))\n        ) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        rule = zeroOrMore(choice(terminal(\"a\"), terminal(\"b\"))) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        /* this is a comment */\n        rule = terminal(\"a\") ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "railroad-beta\n        title \"Simple Expression\"\n        expression = sequence(\n            nonterminal(\"term\"),\n            zeroOrMore(sequence(\n                choice(terminal(\"+\"), terminal(\"-\")),\n                nonterminal(\"term\")\n            ))\n        ) ;\n        term = sequence(\n            nonterminal(\"factor\"),\n            zeroOrMore(sequence(\n                choice(terminal(\"*\"), terminal(\"/\")),\n                nonterminal(\"factor\")\n            ))\n        ) ;\n        factor = choice(\n            nonterminal(\"number\"),\n            sequence(terminal(\"(\"), nonterminal(\"expression\"), terminal(\")\"))\n        ) ;\n        number = oneOrMore(nonterminal(\"digit\")) ;\n        digit = choice(\n            terminal(\"0\"), terminal(\"1\"), terminal(\"2\"),\n            terminal(\"3\"), terminal(\"4\"), terminal(\"5\"),\n            terminal(\"6\"), terminal(\"7\"), terminal(\"8\"), terminal(\"9\")\n        ) ;",
+  "file": "compat/railroad/railroadDiagram.spec.ts"
+ },
+ {
+  "source": "sankey-beta\n      __proto__,A,0.597\n      A,__proto__,0.403",
+  "file": "compat/sankey/sankey.spec.ts"
+ },
+ {
+  "source": "sankey\n      __proto__,A,0.597\n      A,__proto__,0.403",
+  "file": "compat/sankey/sankey.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant Link as Channel\n    A->>Link: message",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant Link as Channel\n    Link->>A: message",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant Link as Channel\n    Link  -->>A: message",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant Link as Channel\n    A->>Link : message",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant LINK as Channel\n    A->>LINK: message",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    participant B\n    A->>B: see the link page",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    link A: Help @ https://example.com",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    link A : Help @ https://example.com",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    links A: {\"help\": \"https://example.com\"}",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    properties A: {\"color\": \"red\"}",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "sequenceDiagram\n    participant A\n    details A: details-1",
+  "file": "compat/sequence/keywordActors.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      [*] --> Boot\n      state Boot {\n        [*] --> Firmware\n        state Kernel {\n          [*] --> Scheduler\n          state Drivers {\n            [*] --> Probe\n          }\n        }\n      }\n      Boot --> Running\n      state Running {\n        [*] --> Serving\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state Outer {\n        [*] --> Inner\n        Inner --> Done\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state Active {\n        [*] --> NumLockOff\n        --\n        [*] --> CapsLockOff\n        --\n        [*] --> ScrollLockOff\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state First {\n        [*] --> A\n      }\n      state Second {\n        [*] --> B\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state First {\n        [*] --> A\n        --\n        [*] --> C\n      }\n      state Second {\n        [*] --> B\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      classDef pinned fill:#111827,stroke:#F59E0B\n      state Active {\n        [*] --> A\n        --\n        [*] --> B\n      }\n      class Active pinned",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state First {\n        [*] --> A\n        --\n        [*] --> B\n      }\n      state Second {\n        [*] --> C\n        --\n        [*] --> D\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      classDef pinned fill:#111827,stroke:#F59E0B\n      state First {\n        [*] --> A\n      }\n      state Second {\n        [*] --> B\n      }\n      state Third {\n        [*] --> C\n      }\n      class Second pinned",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      state First {\n        [*] --> A\n      }\n      state Second {\n        [*] --> B\n      }\n      style Second fill:#111827",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n      [*] --> Loop\n      state Loop {\n        [*] --> Spin\n      }\n      Loop --> Loop\n      Loop --> Exit\n      state Exit {\n        [*] --> Bye\n      }",
+  "file": "compat/state/stateDiagram-colorIndex.spec.ts"
+ },
+ {
+  "source": "stateDiagram-v2\n    [*] --> Active\n    Active --> Idle\n    note right of Active\n      A note\n    end note",
+  "file": "compat/state/stateNoteEdge.spec.ts"
+ },
+ {
+  "source": "treemap\n\"Root\"\n  \"Child1\" , 100\n  \"Child2\" : 200",
+  "file": "compat/treemap/treemap.test.ts"
+ },
+ {
+  "source": "treemap\ntitle My Treemap Diagram\naccTitle: Accessible Title\naccDescr: This is an accessible description\n\"Root\"\n  \"Child\": 100",
+  "file": "compat/treemap/treemap.test.ts"
+ },
+ {
+  "source": "treeView-beta\ntitle My TreeView Diagram\naccTitle: Accessible Title\naccDescr: This is an accessible description\n\"Root\"\n  \"Child\"",
+  "file": "compat/treeview/treeView.test.ts"
+ },
+ {
+  "source": "usecase-beta\naccTitle: Authentication use cases\naccDescr {\n  First line\n  Second line\n}\nactor User",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\naccTitle: Draft title\naccDescr: Draft description\nnote for Missing \"invalid\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor First\nFirst --> Login\nnote for Login \"First note\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor Draft\nDraft --> Pending\nnote for Missing \"invalid\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor Second\nSecond --> Done\nnote for Done \"Second note\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor User@{ type: giant }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor User@{ fillColor: red }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor User@{ icon: \"fa:user\", type: awesome }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor User\nLogin\nUser --|> Login",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor User\nactor Admin\nUser ..> : include Admin",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA link@--> B\nB link@--> C",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA known@--> B\nclass missingEdge decorated",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA known@--> B\nstyle missingEdge stroke:red",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA trueEdge@--> B\ntrueEdge@{ animate: true }\nA fastEdge@--> B\nfastEdge@{ animation: fast }\nA slowEdge@--> B\nslowEdge@{ animation: slow }\nA offEdge@--> B\noffEdge@{ animate: false }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA link@--> B\nlink@{ animation: medium }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA link@--> B\nlink@{ animate: fast }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\njson Payload@{}\nnote for Payload \"invalid\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary Auth\nLogin\nend\nnote for Auth \"invalid\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA link@--> B\nnote for link \"invalid\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor Icon@{ icon: \"fa:user\", business: true }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor Awesome@{ type: awesome, business: true }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nReport[Generate report]@{ business: true }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary Auth\njson Payload@{}\nend",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\njson Payload@{}\nInspect\nPayload ..> : include Inspect",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\njson Payload@{}\nInspect --o Payload",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nclassDef system fill:#f8f8ff\nsystemBoundary sb1[\"Payment service\"]@{ type: package }:::system\n  actor Clerk(\"Payment clerk\")\n  Authorize(\"Authorize payment\")\nend\nClerk --> Authorize",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nclassDef system fill:#f8f8ff\nsystemBoundary \"Payment service\":::system\n  Authorize(\"Authorize payment\")\nend\nsystemBoundary Billing\n  Invoice[Create invoice]\nend\nPayment_service@{ type: package }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary \"Payment service\"@{ type: package }\n  Authorize(\"Authorize payment\")\nend\nPayment_service@{ type: rect }",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary sb1[\"Payment service\"]@{ type: package }\nAuthorize(\"Authorize payment\")\nend",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary sb1:::system@{ type: package }\nAuthorize(\"Authorize payment\")\nend\nclassDef system fill:#f8f8ff",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nsystemBoundary sb1[\"Payment service\"]@{ animate: true }\nAuthorize(\"Authorize payment\")\nend",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n\n%% representative\nsystemBoundary Auth\nactor User@{ type: hollow } <<Human>>\nLogin[Sign in]\nend\nAuth@{ type: package }\njson Payload@{\"ok\": true}\nLogin includeEdge@..> : include Login\nincludeEdge@{ animation: fast }\nnote for Login \"Remember\"",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor 1(\"Customer\")\nactor 1mg(\"Milligram\")\n2(\"Place order\")\n3rd(\"Third party\")\n1 --> 2\n1mg --> 3rd\njson 4 @{\"a\": 1}\n2 --> 4",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA(\"x\")\nstyle A stroke-width:1.5px,opacity:0.5,margin:2",
+  "file": "compat/usecase/usecase.parser.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        actor Admin\n        actor Guest",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor SystemUser",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        User --> Login",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        User --> Login\n        User --> Logout\n        User --> Register",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        User --> UserLoginProcess",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor \"Customer Service\"\n        actor \"System Administrator\"\n        \"Customer Service\" --> \"Handle Tickets\"\n        \"System Administrator\" --> \"Manage System\"",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        User --> Login\n        User --> Logout",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor Developer\n        Developer --important--> WriteCode",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        actor Admin\n        User --> Login\n        Admin <-- Logout\n        User -- ViewData",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor Admin, User\n        systemBoundary \"Authentication\"\n          Login\n          Logout\n        end\n        Admin --> Login\n        User --> Login",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        systemBoundary \"Authentication System\"\n          Login\n          Logout\n        end\n        User --> Login",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        systemBoundary sb1[\"Payment service\"]@{ type: package }\n          actor Clerk(\"Payment clerk\")\n          Authorize(\"Authorize payment\")\n        end\n        Clerk --> Authorize",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        direction TB\n        actor User",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        direction LR\n        actor User",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        direction TD\n        actor User",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User@{ \"type\" : \"normal\", \"icon\" : \"user\" }\n        User --> Login",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User@{ \"icon\" : \"user\" }\n        actor Admin@{ \"type\" : \"hollow\" }\n        User --> Login\n        Admin --> ManageUsers",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        actor Admin\n\n        systemBoundary \"Authentication System\"\n          Login\n          Logout\n          Register\n          ResetPassword\n        end\n\n        User --> Login\n        User --> Register\n        User --> Logout\n        Admin --> Login",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor Developer\n        Developer --> LoginSystem\n        Developer --> Authentication",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        User --> Login\n        classDef important fill:#f96,stroke:#333,stroke-width:4px\n        class Login important",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\n        actor User\n        actor Admin",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nactor Normal\nactor Hollow@{ type: hollow, business: true }\nBusiness(Business)@{ business: true }\nEllipse\nRectCase[Rectangle]",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nA base@--> B\nB two@---> C\nC many@-----> D\nD labelled@-- \"long\" ----> E",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "usecase-beta\nclassDef data fill:#eef,stroke:#369\njson Payload@{\n  \"2\": \"second\",\n  \"1\": \"first\",\n  \"colors\": [\"Red\", \"Green\"],\n  \"items\": [{ \"name\": \"A\" }, {}],\n  \"empty\": {},\n  \"duplicate\": \"old\",\n  \"duplicate\": \"new\"\n}:::data\nstyle Payload stroke-width:4px\nInspect payloadEdge@--> Payload\nclass payloadEdge data\nstyle payloadEdge stroke:#f00",
+  "file": "compat/usecase/usecase.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          title foo bar\n          set A\n          set B\n          union A,B",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A[\"Alpha\"]\n          set B[\"Beta\"]\n          union A,B[\"AB\"]",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A[Alpha]\n          set B[Beta]\n          union A,B[AB]",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A:20\n          set B:12\n          union A,B:3",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          title foo bar\n          set A[\"Alpha\"]:20\n          set B[\"Beta\"]:12\n          set C[\"Gamma\"]:30\n          union A,B[\"AB\"]:5.3\n          union C,A,B:1",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n            text A1[\"foo bar\"]\n          set B\n            text B1[\"hello, world\"]\n          union A,B\n            text AB1[\"shared note\"]",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A[\"Frontend\"]\n            text A1\n            text A2\n          set B[\"Backend\"]\n            text B1\n          union A,B[\"APIs\"]",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A fill:#ff6b6b",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A,B color:#333",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n            text A1[\"React\"]\n          style A1 color:red",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n          set B\n          union A,B\n          style A fill:#ff6b6b, color:#333",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A\n          set B\n          style A fill:rgb(255, 0, 128)\n          style B fill:rgba(255, 0, 128, 0.5)",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n          set A[\"Frontend\"]:20\n            text A1[\"React\"]\n          set B[\"Backend\"]:12\n          union A,B[\"Shared\"]:3\n            text AB1[\"OpenAPI\"]\n          style A fill:#ff6b6b\n          style A,B color:#333\n          style A1 color:red",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n        set A,B",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n        union A",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n        set Foo\n        union Foo,Buz",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "venn-beta\n        set \"Foo Bar\"\n        set Buz\n        union \"Foo Bar\",Buz",
+  "file": "compat/venn/venn.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test\nevolution Genesis -> Custom -> Product -> Commodity\ncomponent A [0.5, 0.5]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test\nevolution Genesis / Concept -> Custom / Emerging -> Product / Converging -> Commodity / Accepted\ncomponent A [0.5, 0.5]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Pipeline\ncomponent Kettle [0.45, 0.57]\npipeline Kettle {\n  component Campfire Kettle [0.35] label [-60, 35]\n  component Electric Kettle [0.53]\n}",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Custom Widths\nevolution Genesis@0.3 -> Custom@0.6 -> Product@0.85 -> Commodity@1.0\ncomponent A [0.5, 0.5]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Notes\ncomponent API [0.6, 0.7]\nnote \"Critical decision point\" [0.65, 0.55]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Annotations\ncomponent API [0.6, 0.7]\nannotations [0.1, 0.9]\nannotation 1,[0.6, 0.65] \"Critical component\"\nannotation 2,[0.5, 0.5] \"Performance layer\"",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Anchors\nanchor Business [0.95, 0.63]\nanchor Public [0.95, 0.78]\ncomponent Tea [0.63, 0.81]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Evolve\ncomponent Kettle [0.35, 0.43]\nevolve Kettle 0.62",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Decorators\ncomponent API [0.6, 0.7] (build)\ncomponent Database [0.4, 0.5] (buy)\ncomponent Cache [0.5, 0.6] (outsource)",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Test Size\nsize [1200, 900]\ncomponent A [0.5, 0.5]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ntitle Coordinate Handling\ncomponent \"Mobile App\" [0.2, 0.4] (build) (inertia)\ncomponent API [0.3, 0.5]\n\"Mobile App\" +<> API; constraint\nnote \"Check dependencies\" [0.25, 0.45]\nannotations [0.10, 0.90]\nannotation 1,[0.60, 0.65] \"Critical component\"\naccelerator \"Cloud Native\" [0.20, 0.85]\ndeaccelerator \"Legacy Data\" [0.40, 0.35]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent real-time processing [0.5, 0.5]\ncomponent end-user [0.8, 0.9]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent real-time processing [0.5, 0.5]\ncomponent end-user [0.8, 0.9]\nreal-time processing -> end-user",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\nanchor on-call engineer [0.9, 0.95]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent A [0.1, 0.1]\ncomponent B [0.2, 0.2]\nA->B",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent foo-bar [0.3, 0.3]\ncomponent baz [0.6, 0.6]\nfoo-bar->baz",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent Data Store [0.5, 0.5]\npipeline Data Store {\n  component real-time queue [0.3] label [-40, 20]\n  component batch-loader [0.7]\n}",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent foo--bar [0.3, 0.4]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "wardley-beta\ncomponent foo- [0.2, 0.3]",
+  "file": "compat/wardley/wardleyParser.spec.ts"
+ },
+ {
+  "source": "xychart horizontal\n    title \"Basic xychart\"\n    x-axis \"this is x axis\" [category1, \"category 2\", category3]\n    y-axis yaxisText 10 --> 150\n bar barTitle1 [23, 45, 56.6]\n line lineTitle1 [11, 45.5, 67, 23]\n bar barTitle2 [13, 42, 56.89]\n    line lineTitle2 [45, 99, 012]",
+  "file": "compat/xychart/xychart.jison.spec.ts"
+ },
+ {
+  "source": "xychart\naccDescr {\n  This is a multiline\n  description\n}\nx-axis [Q1, Q2]\nline [1, 2]",
+  "file": "compat/xychart/xychart.jison.spec.ts"
+ },
+ {
+  "source": "xychart\naccTitle: Sales Overview\naccDescr: Revenue report for Q1-Q4\ntitle \"Revenue Report\"\nx-axis [Q1, Q2, Q3, Q4]\nline [45, 67, 89, 55]",
+  "file": "compat/xychart/xychart.jison.spec.ts"
+ },
+ {
+  "source": "C4Context\nSystem(a, \"A\", $tags=\"v1, cylinder\")\nSystem(b, \"B\", $sprite=\"queue\")\nSystem(c, \"C\")\nUpdateElementStyle(c, $shape=\"Person\")\nSystem(d, \"D\", $tags=\"constructor\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Container\nEnterprise_Boundary(e, \"E\") {\n  System_Boundary(s, \"S\") {\n    Container_Boundary(c, \"C\") {\n      Boundary(b, \"B\") {\n        Boundary(t, \"T\", \"custom\") {\n          System(x, \"X\")\n        }\n      }\n    }\n  }\n}",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nSystem(out, \"Out\")\nBoundary(b, \"B\") {\n  System(in, \"In\")\n}\nRel(out, b, \"to boundary\")\nRel(b, in, \"into\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nPerson(a, \"A\", \"desc\")\nBoundary(b, \"B\") {\n  System(c, \"C\")\n}\nUpdateElementStyle(a, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"blue\")\nUpdateElementStyle(b, \"#eee\", \"green\", \"orange\")\nUpdateElementStyle(nobody, \"red\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nBoundary(b, \"B\", \"Kind\") {\n  System(c, \"C\", \"about c\")\n}\nSystem(d, \"D\", \"about d\")\nSystem(e, \"E\")\nUpdateElementStyle(b, $bgColor=\"lightyellow\")\nUpdateElementStyle(c, $bgColor=\"navy\")\nUpdateElementStyle(d, $bgColor=\"navy\", $fontColor=\"#ddd\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nBoundary(b, \"B\") {\n  System(x, \"X\")\n  System(y, \"Y\")\n}\nSystem(z, \"Z\")\nSystem(w, \"W\")\nRel(x, y, \"in\")\nRel(y, z, \"out\")\nRel(z, w, \"away\")\nUpdateElementStyle(b, $bgColor=\"lightyellow\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nSystem(top, \"Top\")\nBoundary(b, \"Boundary name\") {\n  System(in, \"In\")\n  System(other, \"Other\")\n}\nRel(top, in, \"x\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nSystem(a, \"A\", $link=\"https://example.com/a\")\nBoundary(b, \"B\", $link=\"https://example.com/b\") {\n  System(c, \"C\", $link=\"javascript:alert(1)\")\n}\nRel(a, c, \"x\", $link=\"https://example.com/rel\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Container\nPerson(a, $sprite=\"users\")\nContainer(b, \"B\", $descr=\"described\")\nContainer($tags=\"t\", \"Anonymous\")\nNode(n, \"N\", \"t\", \"d\", $link=\"https://example.com\") {\n  Container(c, \"C\", $unknown=\"kept\", $__proto__=\"safe\")\n}\nRel(a, b, $techn=\"HTTP\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nSystem(a, \"First\", \"d1\")\nSystem(b, \"B\")\nBoundary(x, \"X\") {\n  Person(a, \"Second\")\n}\nRel(a, b, \"one\", \"t\")\nBiRel(a, b, \"two\")",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "C4Context\nSystem(ok, \"OK\")\nBoundary(a, \"A\") {\n  Boundary(b, \"B\") {\n    Boundary(a, \"A again\") {\n      System(lost, \"Lost\")\n    }\n  }\n}",
+  "file": "render/c4.test.ts"
+ },
+ {
+  "source": "gantt\n  title A Gantt Diagram\n  dateFormat YYYY-MM-DD\n  section Section\n  A task :a1, 2014-01-01, 30d\n  Another task :after a1, 20d\n  section Another\n  Task in Another :2014-01-12, 12d\n  another task :24d",
+  "file": "render/gantt.test.ts"
+ },
+ {
+  "source": "---\nconfig:\n  themeVariables:\n    xyChart:\n      plotColorPalette: '#000000, #0000FF, #00FF00, #FF0000'\n---\nxychart\ntitle \"Different Colors in xyChart\"\nx-axis \"categoriesX\" [\"Category 1\", \"Category 2\", \"Category 3\", \"Category 4\"]\ny-axis \"valuesY\" 0 --> 50\nline [10,20,30,40]\nbar [20,30,25,35]\nbar [15,25,20,30]\nline [5,15,25,35]",
+  "file": "render/palette.test.ts"
+ },
+ {
+  "source": "quadrantChart\n  title Reach and engagement\n  x-axis Low Reach --> High Reach\n  y-axis Low Engagement --> High Engagement\n  quadrant-1 Expand\n  quadrant-2 Promote\n  quadrant-3 Re-evaluate\n  quadrant-4 Improve\n  Campaign A: [0.25, 0.75]\n  Campaign B: [0.75, 0.25]",
+  "file": "render/quadrant.test.ts"
+ },
+ {
+  "source": "quadrantChart\n        A: [0.1, 0.1] radius: 12\n        B:::c1: [0.2, 0.2] color: #ff3300, radius: 10\n        C:::c2: [0.3, 0.3]\n        D: [0.4, 0.4] color: 00f, stroke-width: 3px\n        E: [0.5, 0.5] stroke-color: #00ff00\n        classDef c1 color: #109060\n        classDef c2 color: #908342, radius : 9, stroke-color: #310085, stroke-width: 10px",
+  "file": "render/quadrant.test.ts"
+ },
+ {
+  "source": "quadrantChart\n  title Garden plan\n  x-axis Low effort --> High effort\n  y-axis Low value --> High value\n  quadrant-1 Big bets\n  Herb spiral: [0.3, 0.7]",
+  "file": "render/quadrant.test.ts"
+ },
+ {
+  "source": "quadrantChart\n      title Q4 candidates by effort and impact\n      x-axis Low effort --> High effort\n      y-axis Low impact --> High impact\n      quadrant-1 Plan carefully\n      quadrant-2 Do first\n      quadrant-3 Reconsider\n      quadrant-4 Quick wins\n      Chart gallery editor: [0.72, 0.85]\n      First-run onboarding: [0.35, 0.78]\n      Shared folders: [0.88, 0.70]\n      Export to PDF: [0.30, 0.55]\n      Custom themes: [0.45, 0.20]\n      Calendar sync: [0.65, 0.30]\n      Keyboard shortcut sheet: [0.12, 0.48]",
+  "file": "render/quadrant.test.ts"
+ },
+ {
+  "source": "quadrantChart\n      title Q4 candidates by effort and impact\n      x-axis Low effort --> High effort\n      y-axis Low impact --> High impact\n      quadrant-1 Plan carefully\n      quadrant-2 Do first\n      quadrant-3 Reconsider\n      quadrant-4 Quick wins\n      Left edge: [0, 0.5]",
+  "file": "render/quadrant.test.ts"
+ },
+ {
+  "source": "requirementDiagram\n\nrequirement test_req {\nid: 1\ntext: the test text.\nrisk: high\nverifymethod: test\n}\n\nelement test_entity {\ntype: simulation\ndocRef: reqs/test_entity\n}\n\ntest_entity - satisfies -> test_req",
+  "file": "render/requirement.test.ts"
+ },
+ {
+  "source": "requirementDiagram\nrequirement a:::hot {\nid: 1\n}\nelement b {\ntype: t\n}\nelement c {\n}\nclassDef hot fill:#f96,stroke:#333,stroke-width:4px\nclassDef cold color:blue\nclass b cold\nc:::hot,cold\nstyle c stroke:#0a0",
+  "file": "render/requirement.test.ts"
+ },
+ {
+  "source": "sankey-beta\nVisitors,Signed up,3200\nVisitors,Bounced,9800\nSigned up,Opened a folder,2100\nSigned up,Never returned,1100\nOpened a folder,Ran Agency,1450\nOpened a folder,Write-only,650\nRan Agency,Upgraded to Pro,380\nRan Agency,Stayed free,1070\nUpgraded to Pro,Upgraded to Team,96\nUpgraded to Pro,Stayed on Pro,284",
+  "file": "render/sankey.test.ts"
+ },
+ {
+  "source": "swimlane-beta LR\n  subgraph Customer\n    browse[Browse] --> pay[Pay]\n  end\n  subgraph Warehouse\n    pick[Pick] --> ship[Ship]\n  end\n  pay -- paid --> pick",
+  "file": "render/swimlane.test.ts"
+ },
+ {
+  "source": "xychart\n  title \"Sales Revenue\"\n  x-axis \"Month\" [jan, feb, mar]\n  y-axis \"Revenue (in $)\" 4000 --> 10000\n  bar \"2024\" [5000, 6000, 7500]\n  line \"2025\" [5500, 7000, 9000]",
+  "file": "render/xychart.test.ts"
+ }
+]

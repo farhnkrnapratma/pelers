@@ -11,6 +11,7 @@ mod layout_components_oracle;
 mod layout_compound_oracle;
 mod layout_lanes_oracle;
 mod layout_oracle;
+mod mutants_oracle;
 mod numfmt_oracle;
 mod palette_oracle;
 mod pelers_corpus;

@@ -11,7 +11,7 @@ use crate::text::entities::decode_entities;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::chars::trim;
-use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
+use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_pow, js_round};
 use crate::util::value::Value;
 
 pub fn render_packet(model: &PacketModel, config: &Config, options: &RenderOptions) -> Drawn {
@@ -87,7 +87,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
             1.0,
             ((available - 2.0 * pad) / js_min(bit_width, 18.0)).floor(),
         );
-        bits_per_row = js_min(bits_per_row, js_max(8.0, 2f64.powf(count.log2().floor())));
+        bits_per_row = js_min(bits_per_row, js_max(8.0, js_pow(2.0, count.log2().floor())));
         let last = model
             .rows
             .last()

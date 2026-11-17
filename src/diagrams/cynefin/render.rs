@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::boundaries::{
     FOLD, HORIZON, WaveOptions, backward, cliff, curve_path, ellipse_path, forward, resolve_seed,
     wave,
@@ -14,7 +12,8 @@ use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::{ROUNDED, series_color};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
-use crate::util::jsnum::{js_hypot, js_max, js_min, js_round};
+use crate::util::fxhash::FastMap;
+use crate::util::jsnum::{js_hypot, js_max, js_min, js_pow, js_round};
 use crate::util::value::{Object, Value};
 
 const QUADRANTS: [(DomainName, usize, usize, usize); 4] = [
@@ -177,7 +176,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
     for b in &quadrants {
         let dx = (quad_w - b.w) / 2.0;
         let dy = (quad_h - b.h) / 2.0;
-        if (dx / (rx + CLEARANCE)).powf(2.0) + (dy / (ry + CLEARANCE)).powf(2.0) >= 1.0 {
+        if js_pow(dx / (rx + CLEARANCE), 2.0) + js_pow(dy / (ry + CLEARANCE), 2.0) >= 1.0 {
             continue;
         }
         let wider = b.w + 2.0 * (rx + CLEARANCE);
@@ -253,7 +252,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
         }
     };
 
-    let mut regions: HashMap<DomainName, String> = HashMap::new();
+    let mut regions: FastMap<DomainName, String> = FastMap::default();
     regions.insert(
         DomainName::Complex,
         format!(
@@ -392,7 +391,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
         )
     };
 
-    let mut blocks: HashMap<DomainName, usize> = HashMap::new();
+    let mut blocks: FastMap<DomainName, usize> = FastMap::default();
     let mut domains = String::new();
     for (index, (name, col, row, _)) in QUADRANTS.iter().enumerate() {
         let b = &mut quadrants[index];
@@ -407,7 +406,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
 
     let inside = |b: &Block, x: f64, y: f64| -> bool {
         if b.name == DomainName::Confusion {
-            ((x - cx) / (rx + 4.0)).powf(2.0) + ((y - cy) / (ry + 4.0)).powf(2.0) <= 1.0
+            js_pow((x - cx) / (rx + 4.0), 2.0) + js_pow((y - cy) / (ry + 4.0), 2.0) <= 1.0
         } else {
             (x - b.cx).abs() <= b.w / 2.0 + 8.0 && (y - b.cy).abs() <= b.h / 2.0 + 8.0
         }
@@ -421,7 +420,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
     };
 
     let mut edges = String::new();
-    let mut seen: HashMap<String, usize> = HashMap::new();
+    let mut seen: FastMap<String, usize> = FastMap::default();
     for transition in &model.transitions {
         let from = block_of(transition.from);
         let to = block_of(transition.to);

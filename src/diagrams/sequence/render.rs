@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 use super::actors::{ActorSize, actor_kind, actor_size, draw_actor, is_figure};
 use super::db::SeqDb;
 use super::types::{MessageBody, SeqActor, SeqMessage, linetype, placement};
@@ -15,6 +13,7 @@ use crate::svg::theme::{ROUNDED, class_names, resolve_style, rounded};
 use crate::svg::title::title_label;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, MEASURE_MONO, width as measure};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
 
@@ -147,8 +146,8 @@ fn number_messages(messages: &[SeqMessage], always: bool) -> Numbering {
 
 fn fill_ink(fill: &str) -> Option<String> {
     thread_local! {
-        static CACHE: std::cell::RefCell<std::collections::HashMap<String, Option<String>>> =
-            std::cell::RefCell::new(std::collections::HashMap::new());
+        static CACHE: std::cell::RefCell<crate::util::fxhash::FastMap<String, Option<String>>> =
+            std::cell::RefCell::new(crate::util::fxhash::FastMap::default());
     }
     CACHE.with(|cache| {
         if let Some(color) = cache.borrow().get(fill) {
@@ -319,8 +318,8 @@ struct Ctx<'a> {
     frame_nest: f64,
     numbering: Numbering,
     cols: Vec<Column>,
-    col_of: HashMap<String, usize>,
-    needs: HashMap<(usize, usize), f64>,
+    col_of: FastMap<String, usize>,
+    needs: FastMap<(usize, usize), f64>,
     views: Vec<Option<View>>,
     sized: Vec<Vec<(f64, Label)>>,
     runs: Vec<BoxRun>,
@@ -329,7 +328,7 @@ struct Ctx<'a> {
     frame_at: Vec<Option<usize>>,
     min_x: f64,
     max_x: f64,
-    inks: HashMap<String, Option<String>>,
+    inks: FastMap<String, Option<String>>,
     stack: Vec<usize>,
     xs: Vec<f64>,
 }
@@ -786,8 +785,8 @@ fn draw(
         conf_bool(conf, "showSequenceNumbers") == Some(true),
     );
 
-    let used: Option<HashSet<String>> = if conf_bool(conf, "hideUnusedParticipants") == Some(true) {
-        let mut set = HashSet::new();
+    let used: Option<FastSet<String>> = if conf_bool(conf, "hideUnusedParticipants") == Some(true) {
+        let mut set = FastSet::default();
         for m in messages {
             if let Some(from) = &m.from {
                 set.insert(from.clone());
@@ -829,8 +828,8 @@ fn draw(
         frame_nest,
         numbering,
         cols: Vec::new(),
-        col_of: HashMap::new(),
-        needs: HashMap::new(),
+        col_of: FastMap::default(),
+        needs: FastMap::default(),
         views: vec![None; count],
         sized: vec![Vec::new(); count],
         runs: Vec::new(),
@@ -839,7 +838,7 @@ fn draw(
         frame_at: vec![None; count],
         min_x: f64::INFINITY,
         max_x: f64::NEG_INFINITY,
-        inks: HashMap::new(),
+        inks: FastMap::default(),
         stack: Vec::new(),
         xs: Vec::new(),
     };

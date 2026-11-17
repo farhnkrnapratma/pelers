@@ -1,6 +1,6 @@
 <script lang="ts">
-    import examples from '$lib/generated/examples.json';
-    import sources from '$lib/content/examples.json';
+    import examples from '#lib/generated/examples.json';
+    import sources from '#lib/content/examples.json';
 
     const items = [
         { id: 'homeExample', title: 'Flowchart' },

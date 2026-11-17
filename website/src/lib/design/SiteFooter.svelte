@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { packageName, repositoryUrl } from '$lib/site';
+    import { packageName, repositoryUrl } from '#lib/site';
 </script>
 
 <footer class="mt-16 border-t border-line-subtle bg-surface-subtle">

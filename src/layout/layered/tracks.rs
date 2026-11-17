@@ -1,9 +1,10 @@
-use std::collections::{BTreeMap, HashSet};
+use std::collections::BTreeMap;
 
 use super::{
     CROSSED_SLOPE, IN_LINE, LEVEL_CLEAR, LEVEL_LEAD, LEVEL_TOUCH, MAX_WEIGHED, Pieces, SAMPLES,
     chain, ease,
 };
+use crate::util::fxhash::FastSet;
 use crate::util::jsnum::{js_hypot, js_max, js_min};
 
 fn within(x: f64, lo: f64, hi: f64) -> i32 {
@@ -211,7 +212,7 @@ pub(crate) fn assign_tracks(
                 }
             }
         }
-        let mut taken: HashSet<i32> = HashSet::new();
+        let mut taken: FastSet<i32> = FastSet::default();
         let mut on_track: Vec<Vec<usize>> = Vec::new();
         let mut rows = 0i32;
         for &at in &sequence {
@@ -282,7 +283,7 @@ pub(crate) fn assign_tracks(
         }
         let mut far: Vec<usize> = all.iter().copied().filter(|&k| wide[k]).collect();
         lay(&mut far, &mut track, &mut levels);
-        let mut level: HashSet<usize> = far.iter().copied().filter(|&k| levels[k] > 1).collect();
+        let mut level: FastSet<usize> = far.iter().copied().filter(|&k| levels[k] > 1).collect();
         let pairs = near_pairs(all);
         for &(pi, pj) in &pairs {
             let a = all[pi];
@@ -312,7 +313,7 @@ pub(crate) fn assign_tracks(
         }
         let mut crossing = 0usize;
         let mut alongside = 0usize;
-        let mut beside: HashSet<usize> = HashSet::new();
+        let mut beside: FastSet<usize> = FastSet::default();
         for &(pi, pj) in &pairs {
             let a = all[pi];
             let b = all[pj];

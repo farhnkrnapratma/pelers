@@ -1,16 +1,16 @@
-use std::collections::HashMap;
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct OrderedMap<V> {
     entries: Vec<(String, V)>,
-    index: HashMap<String, usize>,
+    index: FastMap<String, usize>,
 }
 
 impl<V> Default for OrderedMap<V> {
     fn default() -> Self {
         Self {
             entries: Vec::new(),
-            index: HashMap::new(),
+            index: FastMap::default(),
         }
     }
 }

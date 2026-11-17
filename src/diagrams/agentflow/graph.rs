@@ -1,9 +1,8 @@
-use std::collections::{HashMap, HashSet};
-
 use super::color_slots::{container_slot, kind_slot};
 use super::db::AgentflowDb;
 use super::shapes::{DEFAULT_SHAPE, is_allowed_shape, is_removed_shape, resolve_shape_alias};
 use super::types::{AgentSubgraph, DiagnosticId, LabelType, Metadata};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::value::{Object, Value};
 
 #[derive(Clone, Debug, PartialEq)]
@@ -127,16 +126,16 @@ pub fn build_agent_graph(
     default_curve: Option<&str>,
 ) -> AgentGraph {
     let subgraphs: Vec<AgentSubgraph> = db.subgraphs.clone();
-    let lookup: HashMap<String, usize> = subgraphs
+    let lookup: FastMap<String, usize> = subgraphs
         .iter()
         .enumerate()
         .map(|(i, sg)| (sg.id.clone(), i))
         .collect();
 
-    let mut hidden: HashSet<String> = HashSet::new();
+    let mut hidden: FastSet<String> = FastSet::default();
     let mut hidden_order: Vec<String> = Vec::new();
-    let mut owner: HashMap<String, String> = HashMap::new();
-    let mut walked: HashSet<String> = HashSet::new();
+    let mut owner: FastMap<String, String> = FastMap::default();
+    let mut walked: FastSet<String> = FastSet::default();
     for sg in &subgraphs {
         if !view_is_collapsed(&sg.metadata) || hidden.contains(&sg.id) {
             continue;
@@ -160,7 +159,7 @@ pub fn build_agent_graph(
         }
         walked.insert(sg.id.clone());
     }
-    let mut collapsed_into: HashMap<String, String> = HashMap::new();
+    let mut collapsed_into: FastMap<String, String> = FastMap::default();
     for id in &hidden_order {
         let mut path = vec![id.clone()];
         let mut top = owner[id].clone();
@@ -183,14 +182,14 @@ pub fn build_agent_graph(
         }
     }
 
-    let position: HashMap<String, usize> = subgraphs
+    let position: FastMap<String, usize> = subgraphs
         .iter()
         .enumerate()
         .map(|(i, sg)| (sg.id.clone(), i))
         .collect();
-    let mut parent_of: HashMap<String, String> = HashMap::new();
+    let mut parent_of: FastMap<String, String> = FastMap::default();
     let closes_loop =
-        |parent_of: &HashMap<String, String>, child: &str, parent: &str, at: usize| -> bool {
+        |parent_of: &FastMap<String, String>, child: &str, parent: &str, at: usize| -> bool {
             let Some(&child_at) = position.get(child) else {
                 return false;
             };
@@ -235,7 +234,7 @@ pub fn build_agent_graph(
     }
 
     let mut nodes: Vec<GraphNode> = Vec::new();
-    let mut by_id: HashMap<String, usize> = HashMap::new();
+    let mut by_id: FastMap<String, usize> = FastMap::default();
     for i in (0..subgraphs.len()).rev() {
         let sg = &subgraphs[i];
         if hidden.contains(&sg.id) {
@@ -385,7 +384,7 @@ pub fn build_agent_graph(
 
     normalise_node_shapes(&mut nodes, db);
 
-    let mut children: HashMap<String, Vec<String>> = HashMap::new();
+    let mut children: FastMap<String, Vec<String>> = FastMap::default();
     for sg in &subgraphs {
         if let Some(parent) = parent_of.get(&sg.id) {
             children
@@ -394,7 +393,7 @@ pub fn build_agent_graph(
                 .push(sg.id.clone());
         }
     }
-    let mut order: HashMap<String, usize> = HashMap::new();
+    let mut order: FastMap<String, usize> = FastMap::default();
     for sg in &subgraphs {
         if parent_of.contains_key(&sg.id) {
             continue;

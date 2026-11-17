@@ -1,4 +1,5 @@
 pub mod chars;
+pub mod fxhash;
 pub mod hook;
 pub mod jsnum;
 pub mod json;

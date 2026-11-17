@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -17,6 +16,7 @@ use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::{CRITICAL, ROUNDED, resolve_style};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::linked;
 use crate::util::value::Value;
@@ -94,7 +94,7 @@ fn pack_rows(
     tasks: &[usize],
     all: &[Task],
     offset: usize,
-    row_of: &mut HashMap<usize, usize>,
+    row_of: &mut FastMap<usize, usize>,
 ) -> usize {
     let mut sorted: Vec<usize> = tasks
         .iter()
@@ -196,7 +196,7 @@ pub fn render_gantt(
         }
     }
 
-    let mut row_of: HashMap<usize, usize> = HashMap::new();
+    let mut row_of: FastMap<usize, usize> = FastMap::default();
     let mut row_section: Vec<String> = Vec::new();
     if compact {
         let mut groups: Vec<(String, Vec<usize>)> = Vec::new();

@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-
 use super::parser::{EventModelAst, Ref};
 use crate::diagrams::common::tokens::{acc_descr_value, acc_title_value, title_value};
 use crate::errors::{PelersError, PelersErrorCode, locate};
 use crate::util::chars::{is_js_space, trim, trim_end};
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum EntityKind {
@@ -169,8 +168,8 @@ fn block_text(raw: &str) -> String {
 
 struct LaneTable {
     lanes: Vec<EmLane>,
-    by_key: HashMap<String, usize>,
-    next: HashMap<&'static str, i64>,
+    by_key: FastMap<String, usize>,
+    next: FastMap<&'static str, i64>,
 }
 
 impl LaneTable {
@@ -235,7 +234,7 @@ pub fn build_eventmodel(
         ids.push(&frame.name);
     }
 
-    let mut data: HashMap<&str, &str> = HashMap::new();
+    let mut data: FastMap<&str, &str> = FastMap::default();
     for entity in &ast.data_entities {
         data.entry(entity.name.as_str())
             .or_insert(entity.data_block_value.as_str());
@@ -243,8 +242,8 @@ pub fn build_eventmodel(
 
     let mut table = LaneTable {
         lanes: Vec::new(),
-        by_key: HashMap::new(),
-        next: HashMap::new(),
+        by_key: FastMap::default(),
+        next: FastMap::default(),
     };
     let mut boxes: Vec<EmBox> = Vec::new();
     let mut relations: Vec<EmRelation> = Vec::new();

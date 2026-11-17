@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db::StateDb;
 use super::graph::{StateEdge, StateNode};
 use crate::diagrams::common::Drawn;
@@ -20,6 +18,7 @@ use crate::svg::title::with_title;
 use crate::text::entities::decode_entities;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{linked, safe_url};
 use crate::util::value::Value;
@@ -182,7 +181,7 @@ fn group(dir: Dir, pad_x: f64, pad_top: f64, pad_bottom: f64) -> CNode {
     c
 }
 
-fn title_x(c: &CNode, width: f64, crossings: &HashMap<i64, Vec<f64>>) -> f64 {
+fn title_x(c: &CNode, width: f64, crossings: &FastMap<i64, Vec<f64>>) -> f64 {
     let Some(xs) = crossings.get(&(js_round(c.y - c.h / 2.0) as i64)) else {
         return c.x;
     };
@@ -336,7 +335,7 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
         layout_label(raw, true, font_size, wrap, style)
     };
 
-    let mut index: HashMap<&str, usize> = HashMap::new();
+    let mut index: FastMap<&str, usize> = FastMap::default();
     let mut views: Vec<View> = Vec::new();
     let mut cnodes: Vec<CNode> = Vec::new();
     for node in &graph.nodes {
@@ -578,7 +577,7 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
     let mut loop_count = vec![0i64; states];
     let mut loop_width = vec![0.0f64; states];
     let mut loop_height = vec![0.0f64; states];
-    let mut anchors: HashMap<usize, usize> = HashMap::new();
+    let mut anchors: FastMap<usize, usize> = FastMap::default();
     let encloses = |composite: usize, item: usize, logical: &[i64], cnodes: &[CNode]| -> bool {
         if !cnodes[composite].is_group {
             return false;
@@ -772,7 +771,7 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
     let width = (layout.width + 2.0 * pad).ceil();
     let height = (layout.height + 2.0 * pad).ceil();
 
-    let mut crossings: HashMap<i64, Vec<f64>> = HashMap::new();
+    let mut crossings: FastMap<i64, Vec<f64>> = FastMap::default();
     for e in &cedges {
         let route = &e.route;
         let mut k = 3;

@@ -48,6 +48,38 @@ pub fn js_hypot(a: f64, b: f64) -> f64 {
     a.hypot(b)
 }
 
+pub fn js_pow(base: f64, exponent: f64) -> f64 {
+    if exponent.is_nan() {
+        return f64::NAN;
+    }
+    if exponent == 0.0 {
+        return 1.0;
+    }
+    if exponent.is_infinite() && base.abs() == 1.0 {
+        return f64::NAN;
+    }
+    if exponent > 0.0 && exponent.fract() == 0.0 && exponent <= f64::from(i32::MAX) {
+        return pow_by_squaring(base, exponent as u32);
+    }
+    base.powf(exponent)
+}
+
+fn pow_by_squaring(base: f64, exponent: u32) -> f64 {
+    let mut result = 1.0;
+    let mut n = exponent;
+    let mut m = base;
+    while n > 0 {
+        if n & 1 == 1 {
+            result *= m;
+        }
+        n >>= 1;
+        if n > 0 {
+            m *= m;
+        }
+    }
+    result
+}
+
 pub fn to_fixed_0(value: f64) -> String {
     if value.is_nan() {
         return "NaN".to_owned();

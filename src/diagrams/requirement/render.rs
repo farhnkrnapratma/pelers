@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db::RequirementModel;
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::{runs_across, turn_to_fit};
@@ -14,6 +12,7 @@ use crate::svg::theme::{ResolvedStyle, class_names, resolve_style, rounded};
 use crate::svg::title::title_label;
 use crate::text::label::{Label, has_math, label_line, layout_label, line_middle};
 use crate::text::measurer::{BOLD_STYLE, ITALIC, width as measure};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
 
 const NODE_SEP: f64 = 40.0;
@@ -240,7 +239,7 @@ struct End {
 
 fn spread_ends(cnodes: &mut [CNode], cedges: &mut [CEdge], views: &[NodeView]) {
     let mut sides: Vec<(usize, Vec<End>)> = Vec::new();
-    let mut index: HashMap<usize, usize> = HashMap::new();
+    let mut index: FastMap<usize, usize> = FastMap::default();
     for (edge_index, edge) in cedges.iter().enumerate() {
         let route_len = edge.route.len();
         if edge.src == edge.dst || route_len < 6 {
@@ -335,7 +334,7 @@ fn draw(
     let small = js_round(size * 0.875);
     let pad = options.padding.unwrap_or(8.0);
 
-    let mut index: HashMap<String, usize> = HashMap::new();
+    let mut index: FastMap<String, usize> = FastMap::default();
     let mut views: Vec<NodeView> = Vec::new();
     let mut cnodes: Vec<CNode> = Vec::new();
     for node in &graph_nodes {
@@ -569,7 +568,7 @@ fn draw(
 
     let mut edges_out = String::new();
     let mut labels_out = String::new();
-    let mut loop_seen: HashMap<usize, usize> = HashMap::new();
+    let mut loop_seen: FastMap<usize, usize> = FastMap::default();
     for i in 0..cedges.len() {
         let ce = cedges[i].clone();
         let edge = drawn[i];

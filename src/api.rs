@@ -297,6 +297,26 @@ pub fn render(model: &ParsedDiagram) -> Result<RenderResult, PelersError> {
     render_with(model, &RenderOptions::default())
 }
 
+fn math_hook(
+    diagram: DiagramType,
+    options: &RenderOptions,
+) -> Option<crate::util::hook::Hook<crate::text::math::MathFn>> {
+    match diagram {
+        DiagramType::Block
+        | DiagramType::Class
+        | DiagramType::Er
+        | DiagramType::Flowchart
+        | DiagramType::Kanban
+        | DiagramType::Mindmap
+        | DiagramType::Requirement
+        | DiagramType::Sequence
+        | DiagramType::State
+        | DiagramType::Swimlane
+        | DiagramType::Usecase => options.math.clone(),
+        _ => None,
+    }
+}
+
 pub fn render_with(
     model: &ParsedDiagram,
     options: &RenderOptions,
@@ -311,7 +331,7 @@ pub fn render_with(
         config_section(model.diagram_type),
     ));
     let (svg, width, height) = with_measurer(options.measurer.clone(), || {
-        with_math(options.math.clone(), || {
+        with_math(math_hook(model.diagram_type, &options), || {
             with_icons(options.icons.clone(), || {
                 with_palette(palette(model.diagram_type.as_str(), &model.config), || {
                     render_model(model, &options)

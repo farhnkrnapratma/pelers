@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::graph::{GraphEdge, build_er_graph};
 use super::markers::{MARKER_LENGTH, er_marker};
 use super::model::{ErAttribute, ErDb};
@@ -27,6 +25,7 @@ use crate::text::icons::icon_markup;
 use crate::text::label::{Label, has_math, label_line, layout_label, line_middle};
 use crate::text::measurer::{BOLD_STYLE, ITALIC, MONO};
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::{internal_link, rel_attr};
 use crate::util::value::Value;
@@ -201,7 +200,7 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
     let pad = options.padding.unwrap_or(8.0);
     let icons = options.icons.is_some();
 
-    let index: HashMap<&str, usize> = graph
+    let index: FastMap<&str, usize> = graph
         .nodes
         .iter()
         .enumerate()
@@ -497,7 +496,7 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
     let height = (layout.height + title_height + 2.0 * pad).ceil();
     let mut links: Vec<LinkInfo> = Vec::new();
 
-    let mut crossings: Crossings = Crossings::new();
+    let mut crossings: Crossings = Crossings::default();
     if cnodes.iter().any(|c| c.is_group) {
         for e in &cedges {
             mark_crossings(&mut crossings, &e.route);
@@ -952,7 +951,7 @@ fn straighten(route: &[f64]) -> Vec<f64> {
 }
 
 fn spread_ends(cedges: &mut [CEdge], cnodes: &[CNode], views: &[NodeView]) {
-    let mut sides: HashMap<usize, Vec<(usize, usize, f64)>> = HashMap::new();
+    let mut sides: FastMap<usize, Vec<(usize, usize, f64)>> = FastMap::default();
     let mut add = |node: usize, edge: usize, route: &[f64], at: usize, next: usize| {
         let c = &cnodes[node];
         let dx = route[at] - c.x;

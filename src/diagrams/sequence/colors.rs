@@ -1,8 +1,8 @@
 use regex::Regex;
-use std::collections::HashSet;
 use std::sync::OnceLock;
 
 use crate::util::chars::is_js_space;
+use crate::util::fxhash::FastSet;
 
 const KEYWORDS: &str = "
     aliceblue antiquewhite aqua aquamarine azure beige bisque black blanchedalmond blue
@@ -50,8 +50,8 @@ fn term_pattern() -> &'static Regex {
     })
 }
 
-fn keywords() -> &'static HashSet<&'static str> {
-    static WORDS: OnceLock<HashSet<&'static str>> = OnceLock::new();
+fn keywords() -> &'static FastSet<&'static str> {
+    static WORDS: OnceLock<FastSet<&'static str>> = OnceLock::new();
     WORDS.get_or_init(|| KEYWORDS.split(' ').collect())
 }
 

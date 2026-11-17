@@ -1,5 +1,3 @@
-use std::collections::{HashMap, HashSet};
-
 use super::arrows::{Axis, OVERHANG, arrow_axis, arrow_mask, arrow_size, draw_arrow};
 use super::db::BlockDb;
 use super::layout::{Cell, layout};
@@ -20,6 +18,7 @@ use crate::svg::theme::{ResolvedStyle, class_names, resolve_style, rounded, sets
 use crate::svg::title::title_label;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_number_to_string, js_round};
 use crate::util::ordered::OrderedMap;
 use crate::util::value::Value;
@@ -637,9 +636,9 @@ fn widen(
     t: usize,
     vertical: bool,
     short: f64,
-    base: &mut HashMap<(usize, bool), Vec<f64>>,
+    base: &mut FastMap<(usize, bool), Vec<f64>>,
 ) -> bool {
-    let mut chain: HashSet<usize> = HashSet::new();
+    let mut chain: FastSet<usize> = FastSet::default();
     let mut at_view = Some(s);
     while let Some(at) = at_view {
         chain.insert(at);
@@ -917,8 +916,8 @@ fn new_view(db: &BlockDb, block_index: usize, tight: bool, size: f64, gap: f64, 
 struct Plan {
     drawn: Vec<usize>,
     ends: Vec<(usize, usize)>,
-    pairs: HashMap<usize, usize>,
-    labelled: HashSet<usize>,
+    pairs: FastMap<usize, usize>,
+    labelled: FastSet<usize>,
     check: Option<Vec<usize>>,
     order_len: usize,
     edge_size: f64,
@@ -936,7 +935,7 @@ fn route_all(
     views: &[View],
     legs: &mut [Vec<f64>],
 ) -> (Vec<Route>, Vec<(usize, Vec<usize>)>) {
-    let mut seen: HashMap<usize, usize> = HashMap::new();
+    let mut seen: FastMap<usize, usize> = FastMap::default();
     let mut routes: Vec<Route> = Vec::new();
     let mut stacks: Vec<(usize, Vec<usize>)> = Vec::new();
     for i in 0..plan.drawn.len() {
@@ -1025,7 +1024,7 @@ fn settle(
         .check
         .as_ref()
         .map(|list| boxes_of(views, list, titles, true));
-    let mut base: HashMap<(usize, bool), Vec<f64>> = HashMap::new();
+    let mut base: FastMap<(usize, bool), Vec<f64>> = FastMap::default();
     let mut grown = false;
     for (_, stack) in stacks {
         if stack.len() < 2 {
@@ -1140,7 +1139,7 @@ fn draw(
     views[0].cell.nh = 0.0;
     let mut order: Vec<usize> = vec![0];
     let mut parents: Vec<usize> = vec![0];
-    let mut by_id: HashMap<String, usize> = HashMap::new();
+    let mut by_id: FastMap<String, usize> = FastMap::default();
     let mut i = 0;
     while i < order.len() {
         let parent = order[i];
@@ -1179,8 +1178,8 @@ fn draw(
     let mut plan = Plan {
         drawn: Vec::new(),
         ends: Vec::new(),
-        pairs: HashMap::new(),
-        labelled: HashSet::new(),
+        pairs: FastMap::default(),
+        labelled: FastSet::default(),
         check: None,
         order_len: order.len(),
         edge_size,

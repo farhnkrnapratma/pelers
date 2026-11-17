@@ -1,14 +1,14 @@
 use std::cell::RefCell;
-use std::collections::HashMap;
 use std::rc::Rc;
 
+use crate::util::fxhash::FastMap;
 use crate::util::hook::Hook;
 
 pub type IconFn = dyn Fn(&str) -> Option<String>;
 
 struct Scope {
     resolver: Option<Rc<IconFn>>,
-    found: HashMap<String, String>,
+    found: FastMap<String, String>,
 }
 
 thread_local! {
@@ -27,7 +27,7 @@ pub fn with_icons<T>(icons: Option<Hook<IconFn>>, run: impl FnOnce() -> T) -> T 
     let outer = SCOPE.with(|scope| {
         scope.replace(Some(Scope {
             resolver: icons.map(|hook| hook.0),
-            found: HashMap::new(),
+            found: FastMap::default(),
         }))
     });
     let _restore = Restore(outer);

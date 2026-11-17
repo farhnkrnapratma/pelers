@@ -1137,7 +1137,7 @@ pub(crate) fn lane_layout(
     let mut edge_of: Vec<usize> = Vec::new();
     let mut step: i64 = 1;
     {
-        let mut seen = std::collections::HashSet::new();
+        let mut seen = crate::util::fxhash::FastSet::default();
         for (ei, e) in edges.iter().enumerate() {
             let a = item_of[e.src];
             let b = item_of[e.dst];

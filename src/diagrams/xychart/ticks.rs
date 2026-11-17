@@ -1,9 +1,9 @@
-use crate::util::jsnum::{js_max, js_round};
+use crate::util::jsnum::{js_max, js_pow, js_round};
 
 pub fn tick_step(span: f64, count: f64) -> f64 {
     let raw = span / js_max(count, 1.0);
     let power = raw.log10().floor();
-    let unit = raw / 10f64.powf(power);
+    let unit = raw / js_pow(10.0, power);
     let factor = if unit >= 7.07 {
         10.0
     } else if unit >= 3.16 {
@@ -14,9 +14,9 @@ pub fn tick_step(span: f64, count: f64) -> f64 {
         1.0
     };
     if power < 0.0 {
-        -(10f64.powf(-power)) / factor
+        -(js_pow(10.0, -power)) / factor
     } else {
-        factor * 10f64.powf(power)
+        factor * js_pow(10.0, power)
     }
 }
 

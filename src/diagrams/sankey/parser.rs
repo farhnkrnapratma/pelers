@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::lexer::{
     COMMA, DQUOTE, END, EOF, ESCAPED_TEXT, NEWLINE, NON_ESCAPED_TEXT, SANKEY, STUCK, TOKEN_NAMES,
     tokenize,
@@ -7,6 +5,7 @@ use super::lexer::{
 use crate::errors::{Edit, PelersError, input_offset, syntax_error};
 use crate::text::entities::decode_entities;
 use crate::util::chars::{is_js_space, utf16_to_byte};
+use crate::util::fxhash::FastMap;
 use crate::util::jsnum::js_parse_float;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -27,7 +26,7 @@ pub struct SankeyDb {
     pub title: Option<String>,
     pub nodes: Vec<SankeyNode>,
     pub links: Vec<SankeyLink>,
-    lookup: HashMap<String, usize>,
+    lookup: FastMap<String, usize>,
 }
 
 impl SankeyDb {

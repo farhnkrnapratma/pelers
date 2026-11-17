@@ -1,7 +1,6 @@
-use std::collections::{HashMap, HashSet};
-
 use super::db::FlowDb;
 use super::types::{FlowNode, LabelType};
+use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::value::Value;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -117,7 +116,7 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
         out
     };
 
-    let mut subgraph_parent: HashMap<String, String> = HashMap::new();
+    let mut subgraph_parent: FastMap<String, String> = FastMap::default();
     for sg in subgraphs {
         for child in &sg.nodes {
             if db.subgraph(child).is_some() {
@@ -126,8 +125,8 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
         }
     }
 
-    let mut declaration_index: HashMap<String, usize> = HashMap::new();
-    let mut children_of: HashMap<String, Vec<String>> = HashMap::new();
+    let mut declaration_index: FastMap<String, usize> = FastMap::default();
+    let mut children_of: FastMap<String, Vec<String>> = FastMap::default();
     for sg in subgraphs {
         if let Some(parent) = subgraph_parent.get(&sg.id) {
             children_of
@@ -163,11 +162,11 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
     let any_collapsed = subgraphs
         .iter()
         .any(|sg| is_collapsed_meta(sg.metadata_ref()));
-    let mut outermost: HashMap<String, Option<String>> = HashMap::new();
+    let mut outermost: FastMap<String, Option<String>> = FastMap::default();
     let outermost_collapsed =
-        |id: &str, outermost: &mut HashMap<String, Option<String>>| -> Option<String> {
+        |id: &str, outermost: &mut FastMap<String, Option<String>>| -> Option<String> {
             let mut chain: Vec<String> = Vec::new();
-            let mut seen: HashSet<String> = HashSet::new();
+            let mut seen: FastSet<String> = FastSet::default();
             let mut current: Option<String> = Some(id.to_owned());
             while let Some(cur) = current.clone() {
                 if outermost.contains_key(&cur) || seen.contains(&cur) {
@@ -190,8 +189,8 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
             result
         };
 
-    let mut hidden: HashSet<String> = HashSet::new();
-    let mut collapsed_into: HashMap<String, String> = HashMap::new();
+    let mut hidden: FastSet<String> = FastSet::default();
+    let mut collapsed_into: FastMap<String, String> = FastMap::default();
     if any_collapsed {
         for sg in subgraphs {
             let Some(ancestor) = outermost_collapsed(&sg.id, &mut outermost) else {
@@ -211,8 +210,8 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
         }
     }
 
-    let mut parent_of: HashMap<String, String> = HashMap::new();
-    let mut groups: HashSet<String> = HashSet::new();
+    let mut parent_of: FastMap<String, String> = FastMap::default();
+    let mut groups: FastSet<String> = FastSet::default();
     for sg in subgraphs.iter().rev() {
         if hidden.contains(&sg.id) {
             continue;
@@ -225,7 +224,7 @@ pub fn build_flow_graph(db: &FlowDb, default_curve: Option<&str>) -> FlowGraph {
         }
     }
 
-    let mut by_id: HashMap<String, usize> = HashMap::new();
+    let mut by_id: FastMap<String, usize> = FastMap::default();
     for sg in subgraphs.iter().rev() {
         if hidden.contains(&sg.id) {
             continue;

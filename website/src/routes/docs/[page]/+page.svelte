@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { renderMarkdown, stripFrontmatter } from '$lib/markdown';
+    import { renderMarkdown, stripFrontmatter } from '#lib/markdown';
     let { data } = $props();
     const doc = $derived(stripFrontmatter(data.source));
     const html = $derived(renderMarkdown(doc.body));

@@ -1,11 +1,10 @@
-use std::collections::HashMap;
-
 use crate::layout::CNode;
 use crate::svg::builder::{label_svg, num};
 use crate::text::label::Label;
-use crate::util::jsnum::{js_min, js_round};
+use crate::util::fxhash::FastMap;
+use crate::util::jsnum::{js_min, js_pow, js_round};
 
-pub type Crossings = HashMap<u64, Vec<f64>>;
+pub type Crossings = FastMap<u64, Vec<f64>>;
 
 fn key(value: f64) -> u64 {
     let rounded = js_round(value);
@@ -87,7 +86,7 @@ pub fn struck_title(
     }
     let fill = format!(
         "color-mix(in srgb,var(--_a) {}%,var(--_bg))",
-        num(100.0 * (1.0 - 0.5f64.powi(depth)))
+        num(100.0 * (1.0 - js_pow(0.5, f64::from(depth))))
     );
     format!(
         "<g class=\"pelers-cluster-title\" data-id=\"{id}\">{}{}</g>",

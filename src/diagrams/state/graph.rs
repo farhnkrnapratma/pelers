@@ -1,8 +1,7 @@
-use std::collections::HashMap;
-
 use super::db::{ClassDef, StateRec};
 use super::types::{Desc, StateStmt, Stmt, truthy};
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::fxhash::FastMap;
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct StateNode {
@@ -64,12 +63,12 @@ struct Frame<'a> {
 }
 
 struct Builder<'a> {
-    states: &'a HashMap<String, StateRec>,
-    classes: &'a HashMap<String, ClassDef>,
+    states: &'a FastMap<String, StateRec>,
+    classes: &'a FastMap<String, ClassDef>,
     nodes: Vec<StateNode>,
     edges: Vec<StateEdge>,
-    by_id: HashMap<String, usize>,
-    drafts: HashMap<String, Draft>,
+    by_id: FastMap<String, usize>,
+    drafts: FastMap<String, Draft>,
     counter: usize,
 }
 
@@ -297,16 +296,16 @@ fn push_desc(list: &mut Vec<String>, incoming: Desc) {
 
 pub fn build_state_graph(
     root: &[Stmt],
-    states: &HashMap<String, StateRec>,
-    classes: &HashMap<String, ClassDef>,
+    states: &FastMap<String, StateRec>,
+    classes: &FastMap<String, ClassDef>,
 ) -> Result<StateGraph, PelersError> {
     let mut builder = Builder {
         states,
         classes,
         nodes: Vec::new(),
         edges: Vec::new(),
-        by_id: HashMap::new(),
-        drafts: HashMap::new(),
+        by_id: FastMap::default(),
+        drafts: FastMap::default(),
         counter: 0,
     };
     let mut stack = vec![Frame {
