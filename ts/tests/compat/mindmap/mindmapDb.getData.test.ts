@@ -265,21 +265,11 @@ describe('MindmapDb getData function', () => {
       expect(result.edges).toHaveLength(5);
 
       // Find edges by their start and end nodes
-      const edgeA_a0 = result.edges.find(
-        (e) => e.start === '0' && e.end === '1'
-      ) as MindmapLayoutEdge;
-      const edgeA0_aa0 = result.edges.find(
-        (e) => e.start === '1' && e.end === '2'
-      ) as MindmapLayoutEdge;
-      const edgeA_a1 = result.edges.find(
-        (e) => e.start === '0' && e.end === '3'
-      ) as MindmapLayoutEdge;
-      const edgeA1_aaa = result.edges.find(
-        (e) => e.start === '3' && e.end === '4'
-      ) as MindmapLayoutEdge;
-      const edgeA_a2 = result.edges.find(
-        (e) => e.start === '0' && e.end === '5'
-      ) as MindmapLayoutEdge;
+      const edgeA_a0 = result.edges.find((e) => e.start === '0' && e.end === '1') as MindmapLayoutEdge;
+      const edgeA0_aa0 = result.edges.find((e) => e.start === '1' && e.end === '2') as MindmapLayoutEdge;
+      const edgeA_a1 = result.edges.find((e) => e.start === '0' && e.end === '3') as MindmapLayoutEdge;
+      const edgeA1_aaa = result.edges.find((e) => e.start === '3' && e.end === '4') as MindmapLayoutEdge;
+      const edgeA_a2 = result.edges.find((e) => e.start === '0' && e.end === '5') as MindmapLayoutEdge;
 
       // Check edge classes
       expect(edgeA_a0.classes).toBe('edge section-edge-0 edge-depth-1'); // A->a0: section-0, depth-1

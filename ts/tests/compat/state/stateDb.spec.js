@@ -62,10 +62,7 @@ describe('State Diagram stateDb', () => {
     });
 
     it.skip('sanitizes on the description', () => {
-      stateDb.addDescription(
-        testStateId,
-        'desc outside the script <script>the description</script>'
-      );
+      stateDb.addDescription(testStateId, 'desc outside the script <script>the description</script>');
       let states = stateDb.getStates();
       expect(states.get(testStateId).descriptions[0]).toEqual('desc outside the script ');
     });

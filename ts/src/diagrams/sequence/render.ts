@@ -1004,7 +1004,9 @@ function draw(db: SeqDb, config: Config, options: RenderOptions, tight: boolean,
         ? `<g class="pelers-activations" fill="var(--_s)" stroke="var(--_b)">${activationsOut.reverse().join('')}</g>`
         : '') +
       (framesOut ? `<g class="pelers-frames" font-size="${small}" stroke="var(--_b)">${framesOut}</g>` : '') +
-      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (edgesOut
+        ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>`
+        : '') +
       (crossesOut
         ? `<g class="pelers-destroys" fill="none" stroke="var(--_l)" stroke-width="1.5" stroke-linecap="round">${crossesOut}</g>`
         : '') +

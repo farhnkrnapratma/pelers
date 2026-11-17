@@ -151,7 +151,8 @@ describe('ER diagram rendering', () => {
       'classDef serif color:black,font-family:serif\n  class A serif',
     ]) {
       const src = `erDiagram\n  A {\n    string name PK\n  }\n  B {\n    string name PK\n  }\n  ${rule}`;
-      const attributes = (svg: string): string => /data-id="A".*?(<g class="pelers-er-attributes".*?<\/g>)/.exec(svg)![1];
+      const attributes = (svg: string): string =>
+        /data-id="A".*?(<g class="pelers-er-attributes".*?<\/g>)/.exec(svg)![1];
       const svg = render(src, { ...options, monospace: ['attributes'] }).svg;
       expect(attributes(svg)).toBe(attributes(svgOf(src)));
       expect(/data-id="B".*$/.exec(svg)![0]).toContain('font-family="var(--_fm)"');
@@ -309,7 +310,9 @@ describe('ER diagram rendering', () => {
       'erDiagram\n A { int id PK "key" }\n B { int id }\n C { int id }\n D { int id }\n subgraph G\n  E\n end\n style A fill:navy\n style B fill:#BBDEFB\n style C fill:#BBDEFB,color:#333\n style G fill:#FFF9C4'
     );
     const entity = (id: string): string => new RegExp(`data-id="${id}"[^>]*>(.*?)</g></g>`).exec(svg)![1];
-    expect(entity('A')).toContain('<g class="pelers-er-stripes" fill="var(--pelers-fg-on-light,#1f1f1f)" opacity="0.6">');
+    expect(entity('A')).toContain(
+      '<g class="pelers-er-stripes" fill="var(--pelers-fg-on-light,#1f1f1f)" opacity="0.6">'
+    );
     for (const cell of ['pelers-label', 'pelers-er-type', 'pelers-er-name', 'pelers-er-keys', 'pelers-er-comment']) {
       expect(entity('A')).toMatch(new RegExp(`<text class="${cell}"[^>]* fill="var\\(--pelers-fg-on-dark,#fff\\)"`));
     }
@@ -386,7 +389,9 @@ describe('ER diagram rendering', () => {
       'erDiagram\n subgraph g\n  A ||--o{ B : has\n end\n B ||--|| C : is\n C ||--|| D : of\n C ||--o{ C : self\n style g fill:#BBDEFB';
     const { svg } = render(src, options);
     const casings = /<g class="pelers-casings"[^>]*>(.*?)<\/g>/.exec(svg)![1];
-    const edges = [...svg.matchAll(/class="pelers-edge [^"]*" data-id="[^"]+"[^>]*><path d="([^"]+)"/g)].map((m) => m[1]);
+    const edges = [...svg.matchAll(/class="pelers-edge [^"]*" data-id="[^"]+"[^>]*><path d="([^"]+)"/g)].map(
+      (m) => m[1]
+    );
     expect(edges.map((d) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false, false]);
     // A --> B lies inside the subgraph, so it takes the fill's ink instead.
     expect(svg).toMatch(

@@ -387,7 +387,9 @@ function draw(model: RequirementModel, _config: Config, options: RenderOptions, 
     options,
     model,
     labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
-      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (edgesOut
+        ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>`
+        : '') +
       (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}" fill="var(--_m)">${labelsOut}</g>` : '') +
       `<g class="pelers-nodes">${nodesOut}</g>`
   );

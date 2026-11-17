@@ -100,7 +100,9 @@ describe('Ishikawa diagram rendering', () => {
     const s = spine(svg);
     expect(s.to).toBeGreaterThan(s.from);
     expect(svg).toContain('<g class="pelers-ishikawa-head" data-id="Late delivery">');
-    expect(svg).toMatch(/<text class="pelers-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Late delivery<\/tspan>/);
+    expect(svg).toMatch(
+      /<text class="pelers-label" font-weight="var\(--_hw\)"[^>]*><tspan[^>]*>Late delivery<\/tspan>/
+    );
     // The head starts where the spine's arrowhead ends, and every category is to its left.
     const head = /<g class="pelers-ishikawa-head"[^>]*><path d="M([-\d.]+),/.exec(svg)!;
     expect(Number(head[1])).toBeCloseTo(s.to + 7, 1);

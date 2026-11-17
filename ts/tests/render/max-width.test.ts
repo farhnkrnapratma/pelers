@@ -128,7 +128,9 @@ describe('the maxWidth option', () => {
     const wide = render(board, options);
     const tops = (svg: string): number[] =>
       [
-        ...svg.matchAll(/class="pelers-cluster pelers-column" data-id="[^"]*" transform="translate\([\d.]+,([\d.]+)\)"/g),
+        ...svg.matchAll(
+          /class="pelers-cluster pelers-column" data-id="[^"]*" transform="translate\([\d.]+,([\d.]+)\)"/g
+        ),
       ].map((m) => Number(m[1]));
     expect(new Set(tops(wide.svg)).size).toBe(1);
     const phone = render(board, { ...options, maxWidth: PHONE });

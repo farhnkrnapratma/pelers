@@ -102,8 +102,7 @@ Rel(a, b, "uses", $descr="how it is used")`);
     };
 
     const shape = () => c4.parser.yy.getC4ShapeArray()[0];
-    const boundary = () =>
-      c4.parser.yy.getBoundaries().find((b: { alias: string }) => b.alias !== 'global');
+    const boundary = () => c4.parser.yy.getBoundaries().find((b: { alias: string }) => b.alias !== 'global');
 
     const elements: [string, string, string[]][] = [
       ['C4Context', 'System(x, "L", $F="V")', ['descr', 'tags', 'sprite', 'link']],
@@ -127,22 +126,17 @@ Rel(a, b, "uses", $descr="how it is used")`);
     ];
     for (const [header, template, fields] of boundaries) {
       it.each(fields)(`${template.replace('$F', '$%s')}`, function (field) {
-        c4.parser.parse(
-          `${header}\n${template.replace('$F', `$${field}`)} {\nContainer(i, "I")\n}`
-        );
+        c4.parser.parse(`${header}\n${template.replace('$F', `$${field}`)} {\nContainer(i, "I")\n}`);
         expectField(boundary(), field);
       });
     }
 
-    it.each(['techn', 'descr', 'tags', 'sprite', 'link'])(
-      'Rel(a, b, "uses", $%s="V")',
-      function (field) {
-        c4.parser.parse(`C4Context
+    it.each(['techn', 'descr', 'tags', 'sprite', 'link'])('Rel(a, b, "uses", $%s="V")', function (field) {
+      c4.parser.parse(`C4Context
 Person(a, "A")
 Person(b, "B")
 Rel(a, b, "uses", $${field}="V")`);
-        expectField(c4.parser.yy.getRels()[0], field);
-      }
-    );
+      expectField(c4.parser.yy.getRels()[0], field);
+    });
   });
 });

@@ -124,8 +124,12 @@ describe('sankey rendering', () => {
     expect(link(render(configured('linkColor: gradient'), options).svg)).toContain(
       'fill="var(--pelers-series-1,#4c78a8)"'
     );
-    expect(link(render(configured('linkColor: source'), options).svg)).toContain('fill="var(--pelers-series-1,#4c78a8)"');
-    expect(link(render(configured('linkColor: target'), options).svg)).toContain('fill="var(--pelers-series-2,#f58518)"');
+    expect(link(render(configured('linkColor: source'), options).svg)).toContain(
+      'fill="var(--pelers-series-1,#4c78a8)"'
+    );
+    expect(link(render(configured('linkColor: target'), options).svg)).toContain(
+      'fill="var(--pelers-series-2,#f58518)"'
+    );
     expect(link(render(configured('linkColor: "#a1a1a1"'), options).svg)).toContain('style="fill:#a1a1a1;"');
     expect(link(render(configured('linkColor: "url(#x)"'), options).svg)).not.toContain('style=');
     expect(render(BASIC, options).svg).not.toMatch(/<defs|<linearGradient|url\(/);

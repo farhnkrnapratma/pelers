@@ -2,17 +2,16 @@
 
 [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main) [![npm](https://img.shields.io/npm/v/pelers?label=npm)](https://www.npmjs.com/package/pelers) [![crates.io](https://img.shields.io/crates/v/pelers?label=crates.io)](https://crates.io/crates/pelers) ![Language](https://img.shields.io/badge/language-Rust-orange?logo=rust) ![Tests](https://img.shields.io/badge/tests-cargo%20test-orange?logo=rust) ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue) [![Coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/farhnkrnapratma/pelers/develop/.github/badges/coverage.json)](https://github.com/farhnkrnapratma/pelers/actions)
 
-
 A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is a Rust rewrite of [Pele](https://github.com/obsidianmd/pele), a Mermaid renderer by [kepano](https://github.com/kepano) (Obsidian) released under the MIT License. See [NOTICE](NOTICE) for credits and the original license text. It is being ported from TypeScript to Rust, and will expose only a JavaScript/TypeScript binding (native addon for Node, Bun and Deno, WebAssembly for browsers), like [`markers`](https://github.com/farhnkrnapratma/markers) and [`mdrs`](https://github.com/farhnkrnapratma/mdrs).
 
 ## Status
 
 Alpha. The port is in progress; the TypeScript renderer in [`ts/`](ts) is the reference until each diagram type matches it byte for byte.
 
-| Registry  | Name                                             | State                                                                                                                                                                    |
-| --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Registry  | Name                                             | State                                                                                                                                                                                      |
+| --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the TypeScript renderer (33 diagram types). The next version is the Rust binding and starts with flowcharts only; other types return `unsupported-diagram` until ported. |
-| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. There is no command-line interface.                                    |
+| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. There is no command-line interface.                                                      |
 
 The npm API of the Rust-backed version is `render` (returns the SVG string), `renderFull` (returns `{ svg, width, height, title }`), `detectType`, `supports` and `PelersError`. `register()` and the per-diagram `pelers/diagrams/*` entry points of the TypeScript package go away.
 
@@ -28,10 +27,10 @@ cargo add pelers        # Rust
 JavaScript / TypeScript (Rust-backed version):
 
 ```ts
-import { render, renderFull } from 'pelers';
+import { render, renderFull } from "pelers";
 
-const svg = render('flowchart LR\n  A --> B');
-const { svg: sized, width, height } = renderFull('flowchart LR\n  A --> B');
+const svg = render("flowchart LR\n  A --> B");
+const { svg: sized, width, height } = renderFull("flowchart LR\n  A --> B");
 ```
 
 Rust:

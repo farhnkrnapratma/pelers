@@ -179,11 +179,7 @@ function classify(diagnostics: readonly AgentflowDiagnostic[]): 'valid' | 'warni
 
 export interface MatchFailure {
   kind:
-    | 'outcome-mismatch'
-    | 'missing-diagnostic'
-    | 'unexpected-diagnostic'
-    | 'semantic-mismatch'
-    | 'parse-error-mismatch';
+    'outcome-mismatch' | 'missing-diagnostic' | 'unexpected-diagnostic' | 'semantic-mismatch' | 'parse-error-mismatch';
   message: string;
 }
 
@@ -196,18 +192,13 @@ export function matchExpected(result: FixtureResult, expected: FixtureExpectatio
   const failures: MatchFailure[] = [];
   if (result.outcome !== expected.outcome) {
     const parseDetail =
-      result.outcome === 'parse-error' && result.parseError
-        ? ` (parse error: ${result.parseError})`
-        : '';
+      result.outcome === 'parse-error' && result.parseError ? ` (parse error: ${result.parseError})` : '';
     failures.push({
       kind: 'outcome-mismatch',
       message: `expected outcome "${expected.outcome}", got "${result.outcome}"${parseDetail}`,
     });
   }
-  if (
-    expected.parseErrorContains !== undefined &&
-    !result.parseError?.includes(expected.parseErrorContains)
-  ) {
+  if (expected.parseErrorContains !== undefined && !result.parseError?.includes(expected.parseErrorContains)) {
     failures.push({
       kind: 'parse-error-mismatch',
       message: `expected the parse error to contain "${expected.parseErrorContains}", got ${
@@ -229,9 +220,7 @@ export function matchExpected(result: FixtureResult, expected: FixtureExpectatio
   // than pass unnoticed. Opt out with `"allowExtraDiagnostics": true`.
   if (expected.diagnostics && !expected.allowExtraDiagnostics) {
     for (const actual of result.diagnostics) {
-      const anticipated = expected.diagnostics.some((expectedDiag) =>
-        diagnosticMatches(actual, expectedDiag)
-      );
+      const anticipated = expected.diagnostics.some((expectedDiag) => diagnosticMatches(actual, expectedDiag));
       if (!anticipated) {
         failures.push({
           kind: 'unexpected-diagnostic',
@@ -253,10 +242,7 @@ export function matchExpected(result: FixtureResult, expected: FixtureExpectatio
   return failures;
 }
 
-function matchSemanticAssertions(
-  model: AgentflowSemanticModel,
-  expected: ExpectedSemanticAssertions
-): MatchFailure[] {
+function matchSemanticAssertions(model: AgentflowSemanticModel, expected: ExpectedSemanticAssertions): MatchFailure[] {
   const failures: MatchFailure[] = [];
   for (const expectedVertex of expected.vertices ?? []) {
     const actual = model.vertices.find((v) => v.id === expectedVertex.id);
@@ -267,10 +253,7 @@ function matchSemanticAssertions(
       });
       continue;
     }
-    if (
-      expectedVertex.vertexKind !== undefined &&
-      actual.vertexKind !== expectedVertex.vertexKind
-    ) {
+    if (expectedVertex.vertexKind !== undefined && actual.vertexKind !== expectedVertex.vertexKind) {
       failures.push({
         kind: 'semantic-mismatch',
         message: `vertex "${expectedVertex.id}" expected vertexKind="${expectedVertex.vertexKind}" but got "${String(actual.vertexKind)}"`,
@@ -298,10 +281,7 @@ function matchSemanticAssertions(
       });
       continue;
     }
-    if (
-      expectedEdge.edgeSemantic !== undefined &&
-      actual.edgeSemantic !== expectedEdge.edgeSemantic
-    ) {
+    if (expectedEdge.edgeSemantic !== undefined && actual.edgeSemantic !== expectedEdge.edgeSemantic) {
       failures.push({
         kind: 'semantic-mismatch',
         message: `edge ${describeEdge(expectedEdge)} expected edgeSemantic="${expectedEdge.edgeSemantic}" but got "${String(actual.edgeSemantic)}"`,
@@ -311,10 +291,7 @@ function matchSemanticAssertions(
   return failures;
 }
 
-function edgeMatches(
-  actual: AgentflowSemanticModel['edges'][number],
-  expected: ExpectedEdge
-): boolean {
+function edgeMatches(actual: AgentflowSemanticModel['edges'][number], expected: ExpectedEdge): boolean {
   if (expected.id !== undefined) {
     return actual.id === expected.id;
   }
@@ -347,9 +324,7 @@ function deepEqual(a: unknown, b: unknown): boolean {
     if (ka.length !== kb.length) {
       return false;
     }
-    return ka.every((k) =>
-      deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k])
-    );
+    return ka.every((k) => deepEqual((a as Record<string, unknown>)[k], (b as Record<string, unknown>)[k]));
   }
   return false;
 }

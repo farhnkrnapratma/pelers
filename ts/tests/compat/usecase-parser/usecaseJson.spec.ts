@@ -74,11 +74,7 @@ describe('parseOrderedJsonObject', () => {
   });
 
   it('records empty objects and accepts empty arrays and strings as property values', () => {
-    const result = parseOrderedJsonObject(
-      '{"emptyObject":{},"emptyArray":[],"emptyString":""}',
-      4,
-      9
-    );
+    const result = parseOrderedJsonObject('{"emptyObject":{},"emptyArray":[],"emptyString":""}', 4, 9);
 
     expect(result.value).toEqual({ emptyObject: {}, emptyArray: [], emptyString: '' });
     expect(result.propertyOrder).toEqual({

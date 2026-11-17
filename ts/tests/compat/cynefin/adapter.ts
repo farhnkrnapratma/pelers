@@ -8,9 +8,14 @@ export { hashString, resolveSeed, seededRandom } from '../../../src/diagrams/cyn
 // Mermaid's boundary functions return path strings for a diagram of the given size.
 export const generateFoldPath = (width: number, height: number, seed: number, amplitude = width * 0.015): string =>
   curvePath(wave(0, height, width / 2, seed, amplitude, FOLD));
-export const generateHorizontalBoundary = (width: number, height: number, seed: number, amplitude = height * 0.015): string =>
-  curvePath(wave(0, width, height / 2, seed, amplitude, HORIZON));
-export const generateCliffPath = (width: number, height: number): string => curvePath(cliff(width / 2, height * 0.5, height, width * 0.03));
+export const generateHorizontalBoundary = (
+  width: number,
+  height: number,
+  seed: number,
+  amplitude = height * 0.015
+): string => curvePath(wave(0, width, height / 2, seed, amplitude, HORIZON));
+export const generateCliffPath = (width: number, height: number): string =>
+  curvePath(cliff(width / 2, height * 0.5, height, width * 0.03));
 export const generateConfusionPath = ellipsePath;
 
 let state = new CynefinDb();

@@ -1,4 +1,10 @@
-import { Relationships, RequirementDb, RequirementType, RiskLevel, VerifyType } from '../../../src/diagrams/requirement/db.js';
+import {
+  Relationships,
+  RequirementDb,
+  RequirementType,
+  RiskLevel,
+  VerifyType,
+} from '../../../src/diagrams/requirement/db.js';
 import { buildRequirementGraph } from '../../../src/diagrams/requirement/graph.js';
 import { parseRequirement } from '../../../src/diagrams/requirement/parser.js';
 

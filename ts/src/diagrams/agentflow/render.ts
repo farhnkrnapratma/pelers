@@ -445,7 +445,9 @@ function draw(db: AgentflowDb, config: Config, options: RenderOptions, turned: b
     labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"') +
       (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (edgesOut
+        ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>`
+        : '') +
       (labelsOut ? `<g class="pelers-edge-labels" font-size="${edgeSize}">${labelsOut}</g>` : '') +
       `<g class="pelers-nodes">${nodesOut}</g>`
   );

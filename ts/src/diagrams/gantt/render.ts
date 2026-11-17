@@ -134,7 +134,12 @@ export function renderGantt(model: GanttDb, config: Config, options: RenderOptio
   if (!hasPlot) {
     const width = Math.ceil(Math.max(title.width, 1) + 2 * pad);
     const height = Math.ceil(Math.max(title.height, 1) + 2 * pad);
-    const content = labelSvg(title, width / 2, pad + title.height / 2, ' class="pelers-title" font-weight="var(--_tw)"');
+    const content = labelSvg(
+      title,
+      width / 2,
+      pad + title.height / 2,
+      ' class="pelers-title" font-weight="var(--_tw)"'
+    );
     return { svg: svgDocument('gantt', width, height, size, options, model, content), width, height, links: [] };
   }
 

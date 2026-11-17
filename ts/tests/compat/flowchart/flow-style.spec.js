@@ -40,9 +40,7 @@ describe('[Style] when parsing', () => {
   });
 
   it('should handle multiple styles in a graph', function () {
-    const res = flow.parser.parse(
-      'graph TD;style S background:#aaa;\nstyle T background:#bbb,border:1px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;style S background:#aaa;\nstyle T background:#bbb,border:1px solid red;');
 
     const vert = flow.parser.yy.getVertices();
     const edges = flow.parser.yy.getEdges();
@@ -81,9 +79,7 @@ describe('[Style] when parsing', () => {
   });
 
   it('should keep node label text (if already defined) when a style is applied', function () {
-    const res = flow.parser.parse(
-      'graph TD;A(( ));B((Test));C;style A background:#fff;style D border:1px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;A(( ));B((Test));C;style A background:#fff;style D border:1px solid red;');
 
     const vert = flow.parser.yy.getVertices();
 
@@ -94,9 +90,7 @@ describe('[Style] when parsing', () => {
   });
 
   it('should be possible to declare a class', function () {
-    const res = flow.parser.parse(
-      'graph TD;classDef exClass background:#bbb,border:1px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;classDef exClass background:#bbb,border:1px solid red;');
     // const res = flow.parser.parse('graph TD;style T background: #bbb;');
 
     const classes = flow.parser.yy.getClasses();
@@ -107,9 +101,7 @@ describe('[Style] when parsing', () => {
   });
 
   it('should be possible to declare multiple classes', function () {
-    const res = flow.parser.parse(
-      'graph TD;classDef firstClass,secondClass background:#bbb,border:1px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;classDef firstClass,secondClass background:#bbb,border:1px solid red;');
 
     const classes = flow.parser.yy.getClasses();
 
@@ -123,9 +115,7 @@ describe('[Style] when parsing', () => {
   });
 
   it('should be possible to declare a class with a dot in the style', function () {
-    const res = flow.parser.parse(
-      'graph TD;classDef exClass background:#bbb,border:1.5px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;classDef exClass background:#bbb,border:1.5px solid red;');
     // const res = flow.parser.parse('graph TD;style T background: #bbb;');
 
     const classes = flow.parser.yy.getClasses();
@@ -135,9 +125,7 @@ describe('[Style] when parsing', () => {
     expect(classes.get('exClass').styles[1]).toBe('border:1.5px solid red');
   });
   it('should be possible to declare a class with a space in the style', function () {
-    const res = flow.parser.parse(
-      'graph TD;classDef exClass background:  #bbb,border:1.5px solid red;'
-    );
+    const res = flow.parser.parse('graph TD;classDef exClass background:  #bbb,border:1.5px solid red;');
     // const res = flow.parser.parse('graph TD;style T background  :  #bbb;');
 
     const classes = flow.parser.yy.getClasses();

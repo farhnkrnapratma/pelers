@@ -86,7 +86,8 @@ export function populate(db: RailroadDb, source: string, notation: Notation): vo
 
 export function parseRailroad(source: string, title: string | undefined): RailroadDb {
   const notation = notationOf(source);
-  if (notation === undefined) throw new PelersError('No railroad diagram keyword found.', 'syntax', { type: 'railroad' });
+  if (notation === undefined)
+    throw new PelersError('No railroad diagram keyword found.', 'syntax', { type: 'railroad' });
   const db = new RailroadDb();
   if (title) db.title = title;
   populate(db, source, notation);

@@ -344,30 +344,21 @@ describe('[Singlenodes] when parsing', () => {
     expect(vert.get(`${keyword}/node`).text).toBe(`${keyword}/node`);
   });
 
-  it.each(specialChars)(
-    'should allow node ids of single special characters',
-    function (specialChar) {
-      flow.parser.parse(`graph TD; ${specialChar} --> A`);
-      const vert = flow.parser.yy.getVertices();
-      expect(vert.get(`${specialChar}`).text).toBe(`${specialChar}`);
-    }
-  );
+  it.each(specialChars)('should allow node ids of single special characters', function (specialChar) {
+    flow.parser.parse(`graph TD; ${specialChar} --> A`);
+    const vert = flow.parser.yy.getVertices();
+    expect(vert.get(`${specialChar}`).text).toBe(`${specialChar}`);
+  });
 
-  it.each(specialChars)(
-    'should allow node ids with special characters at start of id',
-    function (specialChar) {
-      flow.parser.parse(`graph TD; ${specialChar}node --> A`);
-      const vert = flow.parser.yy.getVertices();
-      expect(vert.get(`${specialChar}node`).text).toBe(`${specialChar}node`);
-    }
-  );
+  it.each(specialChars)('should allow node ids with special characters at start of id', function (specialChar) {
+    flow.parser.parse(`graph TD; ${specialChar}node --> A`);
+    const vert = flow.parser.yy.getVertices();
+    expect(vert.get(`${specialChar}node`).text).toBe(`${specialChar}node`);
+  });
 
-  it.each(specialChars)(
-    'should allow node ids with special characters at end of id',
-    function (specialChar) {
-      flow.parser.parse(`graph TD; node${specialChar} --> A`);
-      const vert = flow.parser.yy.getVertices();
-      expect(vert.get(`node${specialChar}`).text).toBe(`node${specialChar}`);
-    }
-  );
+  it.each(specialChars)('should allow node ids with special characters at end of id', function (specialChar) {
+    flow.parser.parse(`graph TD; node${specialChar} --> A`);
+    const vert = flow.parser.yy.getVertices();
+    expect(vert.get(`node${specialChar}`).text).toBe(`node${specialChar}`);
+  });
 });

@@ -33,9 +33,7 @@ describe('usecase Chevrotain lexer', () => {
   });
 
   it('keeps exact keywords out of longer identifiers and matches semantic words case-insensitively', () => {
-    expect(
-      tokenImages('actor actorName include INCLUDE Include included extend EXTEND extended')
-    ).toEqual([
+    expect(tokenImages('actor actorName include INCLUDE Include included extend EXTEND extended')).toEqual([
       ['ACTOR', 'actor'],
       ['IDENTIFIER', 'actorName'],
       ['INCLUDE', 'include'],

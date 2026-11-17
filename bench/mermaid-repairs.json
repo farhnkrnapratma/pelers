@@ -37,10 +37,7 @@
     "ok": true,
     "source": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- R:s3\ns4:L -- L:s4\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
     "original": "architecture-beta\ngroup g1(server)[Edge long title]\ngroup g2(server)[Data tier] in g1\njunction s0 in g2\nservice s1(internet)[Server] in g2\nservice s2 \"Multi word\"[DB] in g2\nservice s3 \"Ünï\"[Server] in g1\nservice s4 \"Ünï\"[Ünï] in g1\nservice s5 \"a very long icon text that cannot fit the icon\"[Server]\ns2:B -- B:s0\ns2:L -- L:s3{group}\ns2:L -- R:s3\ns4:L -- L:s4\ns2:B <--> L:s5\ns0:T <-- R:s2\ns3:R <--> R:s0\ns1:R <--> L:s0\ns2:L --> L:s5\n",
-    "removed": [
-      "s2:L -- L:s3{group}",
-      "s2:B <--> L:s5"
-    ]
+    "removed": ["s2:L -- L:s3{group}", "s2:B <--> L:s5"]
   },
   {
     "index": 26,
@@ -48,10 +45,7 @@
     "ok": true,
     "source": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1:L -[Ünï]- L:s1\n",
     "original": "architecture-beta\ngroup g1(server)[API]\ngroup g2(server)[Data tier]\nservice s0 \"a very long icon text that cannot fit the icon\"[line one<br>line two<br>line three<br>line four]\nservice s1 \"a very long icon text that cannot fit the icon\"[Server]\nservice s2 \"PG\"[x y z x y z x y z x y z x y z x y z] in g1\nservice s3(internet)[x y z x y z x y z x y z x y z x y z] in g1\njunction s4\ns4:B -- R:s2\ns2:T <--> B:s3\ns2:T -[label]- B:s3\ns2:R --> T:s4\ns1{group}:L -- L:s1\ns1:L -[Ünï]- L:s1\n",
-    "removed": [
-      "s2:T <--> B:s3",
-      "s1{group}:L -- L:s1"
-    ]
+    "removed": ["s2:T <--> B:s3", "s1{group}:L -- L:s1"]
   },
   {
     "index": 27,
@@ -67,10 +61,7 @@
     "ok": true,
     "source": "block-beta\n  columns 4\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
     "original": "block-beta\n  columns 4\n  a{\"two words\"}\n  b[[\"A wide one in the middle\"]]\n  c((\"emoji 😀\"))\n  A((\"Dogs\")):1\n  B[\\\"A wide one in the middle\"\\]\n  id1(\"emoji 😀\")\n  n2[/\"日本\"\\]:3\n  ID{\"x < y\"}:3\n  x(\"Ünï label\")\n  x ==> a\n  ID -- \"x&amp;y\" -.-> A\n  x --x x\n  ID ==> n2\n  b -.-> x\n  x --> n2\n  n2 --x A\n  x ==> x\n  ID --- B\n  id1 -- \"Database\" ==> c\n  A --- A\n  b <--> B\n  space\n",
-    "removed": [
-      "  a{\"two words\"}",
-      "  ID{\"x < y\"}:3"
-    ]
+    "removed": ["  a{\"two words\"}", "  ID{\"x < y\"}:3"]
   },
   {
     "index": 45,
@@ -78,10 +69,7 @@
     "ok": true,
     "source": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
     "original": "block-beta\n  columns 5\n  a{{\"two words\"}}\n  b{\"Dogs\"}:2\n  c{{\"x < y\"}}\n  A[/\"two words\"\\]\n  B[[\"日本\"]]\n  id1[/\"Ünï label\"\\]:3\n  n2{\"fa:fa-check ok\"}\n  ID((\"A wide one in the middle\")):2\n  x[\\\"Dogs\"/]\n  group_one((\"日本\"))\n  id1 ==> b\n  id1 -- \"two words\" ==> a\n  a <--> id1\n  B --- group_one\n  b -- \"Ünï label\" -.-> group_one\n  A === A\n  A --x x\n  id1 === A\n  c === a\n  id1 --o n2\n  group_one --x n2\n  n2 -- \"A wide one in the middle\" --- a\n  b -.-> x\n  A ---> A\n  space\n",
-    "removed": [
-      "  b{\"Dogs\"}:2",
-      "  n2{\"fa:fa-check ok\"}"
-    ]
+    "removed": ["  b{\"Dogs\"}:2", "  n2{\"fa:fa-check ok\"}"]
   },
   {
     "index": 95,
@@ -89,10 +77,7 @@
     "ok": true,
     "source": "classDiagram\n  note for A \"$$h2$$ note\"\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n  }\n  class Fish\n",
     "original": "classDiagram\n  note for A \"$$h2$$ note\"\n  C : run)\n  click Animal href \"https://example.com/x\" \"tip\"\n  classDef cold fill:#f96\n  List~int~ <|-- C\n  class Duck {\n    run)\n  }\n  class Fish\n",
-    "removed": [
-      "  C : run)",
-      "    run)"
-    ]
+    "removed": ["  C : run)", "    run)"]
   },
   {
     "index": 177,
@@ -100,10 +85,7 @@
     "ok": true,
     "source": "flowchart TD\n  a --> b",
     "original": "flowchart TD\nsubgraph\n  a --> b\nend",
-    "removed": [
-      "subgraph",
-      "end"
-    ]
+    "removed": ["subgraph", "end"]
   },
   {
     "index": 194,
@@ -151,10 +133,7 @@
     "ok": true,
     "source": "stateDiagram-v2\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  Wait1 : Ünï\n",
     "original": "stateDiagram-v2\n  note right of C : multi\n  Done : Ünï\n  B --> Wait1\n  state B <<choice>>\n  Ünï : described\n  B --> A\n  note right of S2 : multi\n  Wait1 : Ünï\n",
-    "removed": [
-      "  note right of C : multi",
-      "  note right of S2 : multi"
-    ]
+    "removed": ["  note right of C : multi", "  note right of S2 : multi"]
   },
   {
     "index": 460,
@@ -162,10 +141,7 @@
     "ok": true,
     "source": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n    S2 --> Ünï\n    Long_name --> [*]\n  }\n",
     "original": "stateDiagram-v2\n  Ünï : Ünï\n  state B {\n    Ünï --> Long_name\n    --\n    Idle --> [*]\n  }\n  note right of Long_name : Ünï note\n  Running --> [*]\n  [*] --> Ünï\n  C : described\n  A : Ünï\n  [*] --> B\n  Ünï : described\n  state Long_name {\n    S2 --> Ünï\n    --\n    Long_name --> [*]\n  }\n",
-    "removed": [
-      "  state Long_name {",
-      "    --"
-    ]
+    "removed": ["  state Long_name {", "    --"]
   },
   {
     "index": 487,
@@ -181,10 +157,7 @@
     "ok": true,
     "source": "treemap\nclassDef title_2 fill:red",
     "original": "treemap\n\"S\":::titles\n  \"a\": 1:::title_2\nclassDef title_2 fill:red",
-    "removed": [
-      "\"S\":::titles",
-      "  \"a\": 1:::title_2"
-    ]
+    "removed": ["\"S\":::titles", "  \"a\": 1:::title_2"]
   },
   {
     "index": 535,

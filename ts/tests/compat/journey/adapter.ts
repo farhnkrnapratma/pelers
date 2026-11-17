@@ -33,7 +33,10 @@ export const parser = {
 
 // Mermaid's test helper that turns a tagged table into the rows `it.each` takes.
 export function convert(template: TemplateStringsArray, ...params: unknown[]): Record<string, unknown>[] {
-  const header = template[0].trim().split('|').map((s) => s.trim());
+  const header = template[0]
+    .trim()
+    .split('|')
+    .map((s) => s.trim());
   const rows: Record<string, unknown>[] = [];
   for (let i = 0; i < params.length; i += header.length) {
     rows.push(Object.fromEntries(params.slice(i, i + header.length).map((value, k) => [header[k], value])));

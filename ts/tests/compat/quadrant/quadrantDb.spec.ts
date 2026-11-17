@@ -19,9 +19,7 @@ describe('quadrant unit tests', () => {
 
   it('should throw an error for non supported style name', () => {
     const styles: string[] = ['test_name: value'];
-    expect(() => quadrantDb.parseStyles(styles)).toThrowError(
-      'style named test_name is not supported.'
-    );
+    expect(() => quadrantDb.parseStyles(styles)).toThrowError('style named test_name is not supported.');
   });
 
   it('should return an empty StylesObject for an empty input array', () => {

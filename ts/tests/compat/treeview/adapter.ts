@@ -5,7 +5,11 @@ import { treeSettings } from '../../../src/diagrams/treeview/render.js';
 import { toResult } from '../../support/langium.js';
 
 export { expectNoErrorsOrAlternatives } from '../../support/langium.js';
-export { isBoxDrawingFormat, preprocessBoxDrawing, remapErrorLines } from '../../../src/diagrams/treeview/boxDrawing.js';
+export {
+  isBoxDrawingFormat,
+  preprocessBoxDrawing,
+  remapErrorLines,
+} from '../../../src/diagrams/treeview/boxDrawing.js';
 export { detectIcon, getNodeIcon } from '../../../src/diagrams/treeview/icons.js';
 
 // Mermaid's built-in icons as an Iconify pack; Pelers keeps only the path data.
@@ -15,7 +19,14 @@ export const treeViewIcons = {
 };
 
 export const createTreeViewServices = () => ({
-  TreeView: { parser: { LangiumParser: { parse: <T>(src: string) => toResult(parseTreeView, src) as { value: T & TreeViewAst; lexerErrors: unknown[]; parserErrors: unknown[] } } } },
+  TreeView: {
+    parser: {
+      LangiumParser: {
+        parse: <T>(src: string) =>
+          toResult(parseTreeView, src) as { value: T & TreeViewAst; lexerErrors: unknown[]; parserErrors: unknown[] },
+      },
+    },
+  },
 });
 
 export class TreeViewValueConverter {

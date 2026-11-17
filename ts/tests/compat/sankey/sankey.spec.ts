@@ -84,9 +84,7 @@ describe('Sankey diagram', function () {
         const graph = sankey.parser.yy.getGraph();
         expect(graph.nodes).toHaveLength(19);
         expect(graph.links).toHaveLength(16);
-        expect(graph.nodes).toEqual(
-          expect.arrayContaining(issue7528SpecialCharacterNodes.map((id) => ({ id })))
-        );
+        expect(graph.nodes).toEqual(expect.arrayContaining(issue7528SpecialCharacterNodes.map((id) => ({ id }))));
       });
     }
   });

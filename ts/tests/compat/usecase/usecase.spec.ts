@@ -863,8 +863,7 @@ style payloadEdge stroke:#f00`);
         business: true,
         stereotype: 'Human',
         parentId: 'rectBoundary',
-        cssClasses:
-          'default usecase-actor usecase-actor-normal usecase-business first host-only second',
+        cssClasses: 'default usecase-actor usecase-actor-normal usecase-business first host-only second',
         cssStyles: ['fill: pink'],
         cssCompiledStyles: ['fill: yellow', 'stroke: green', 'color: blue'],
       });
@@ -983,11 +982,7 @@ style payloadEdge stroke:#f00`);
       db.commit(model);
 
       const data = db.getData();
-      expect(
-        data.edges
-          .slice(0, 7)
-          .map(({ arrowTypeStart, arrowTypeEnd }) => [arrowTypeStart, arrowTypeEnd])
-      ).toEqual([
+      expect(data.edges.slice(0, 7).map(({ arrowTypeStart, arrowTypeEnd }) => [arrowTypeStart, arrowTypeEnd])).toEqual([
         ['none', 'arrow_point'],
         ['arrow_point', 'none'],
         ['none', 'none'],
@@ -1008,8 +1003,7 @@ style payloadEdge stroke:#f00`);
         pattern: 'solid',
         minlen: 1,
         internal: false,
-        classes:
-          'default relationship relationship-association edgeClass host-edge edge-animation-slow',
+        classes: 'default relationship relationship-association edgeClass host-edge edge-animation-slow',
         style: ['stroke: red'],
         cssCompiledStyles: ['stroke: blue', 'stroke-width: 3px'],
         animate: true,
@@ -1071,18 +1065,7 @@ style payloadEdge stroke:#f00`);
           nothing: null,
         },
         propertyOrder: {
-          '': [
-            '2',
-            '1',
-            'colors',
-            'address',
-            'items',
-            'emptyArray',
-            'emptyObject',
-            'enabled',
-            'count',
-            'nothing',
-          ],
+          '': ['2', '1', 'colors', 'address', 'items', 'emptyArray', 'emptyObject', 'enabled', 'count', 'nothing'],
           '/address': ['city'],
           '/items/0': ['name'],
           '/items/1': [],

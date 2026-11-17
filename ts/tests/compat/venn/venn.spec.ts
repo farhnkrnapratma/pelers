@@ -131,9 +131,7 @@ describe('Venn diagram', function () {
           style A fill:#ff6b6b
       `;
     venn.parse(str);
-    expect(db.getStyleData()).toEqual([
-      expect.objectContaining({ targets: ['A'], styles: { fill: '#ff6b6b' } }),
-    ]);
+    expect(db.getStyleData()).toEqual([expect.objectContaining({ targets: ['A'], styles: { fill: '#ff6b6b' } })]);
   });
 
   test('with style statement for intersection', () => {
@@ -144,9 +142,7 @@ describe('Venn diagram', function () {
           style A,B color:#333
       `;
     venn.parse(str);
-    expect(db.getStyleData()).toEqual([
-      expect.objectContaining({ targets: ['A', 'B'], styles: { color: '#333' } }),
-    ]);
+    expect(db.getStyleData()).toEqual([expect.objectContaining({ targets: ['A', 'B'], styles: { color: '#333' } })]);
   });
 
   test('with style statement for text node', () => {
@@ -156,9 +152,7 @@ describe('Venn diagram', function () {
           style A1 color:red
       `;
     venn.parse(str);
-    expect(db.getStyleData()).toEqual([
-      expect.objectContaining({ targets: ['A1'], styles: { color: 'red' } }),
-    ]);
+    expect(db.getStyleData()).toEqual([expect.objectContaining({ targets: ['A1'], styles: { color: 'red' } })]);
   });
 
   test('with multiple style properties', () => {

@@ -131,7 +131,9 @@ describe('XY chart rendering', () => {
     expect(over).toBeCloseTo(inside * 2, 1);
     const top = Number(tags(svg, 'rect')[2].attrs.get('y'));
     const ys = [
-      .../[ML][\d.]+,([\d.]+)/g[Symbol.matchAll](/class="pelers-series pelers-line"[^>]*><path d="([^"]+)"/.exec(svg)![1]),
+      .../[ML][\d.]+,([\d.]+)/g[Symbol.matchAll](
+        /class="pelers-series pelers-line"[^>]*><path d="([^"]+)"/.exec(svg)![1]
+      ),
     ].map((m) => +m[1]);
     for (const y of ys) expect(y).toBeGreaterThanOrEqual(top);
     expect(tags(svg, 'circle')).toHaveLength(1);

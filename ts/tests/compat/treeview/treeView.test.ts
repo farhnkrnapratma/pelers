@@ -87,9 +87,7 @@ describe('TreeView Parser', () => {
     });
 
     it('should parse quoted labels with annotations', () => {
-      const result = parse(
-        'treeView-beta\n"my file.js" :::highlight icon(javascript) ## entry point'
-      );
+      const result = parse('treeView-beta\n"my file.js" :::highlight icon(javascript) ## entry point');
       expectNoErrorsOrAlternatives(result);
       expect(result.value.nodes).toHaveLength(1);
       const node = result.value.nodes[0];
@@ -223,9 +221,7 @@ describe('TreeView Parser', () => {
     });
 
     it('should parse a treeView with accDescr', () => {
-      const result = parse(
-        'treeView-beta\naccDescr: This is an accessible description\n"Root"\n  "Child"'
-      );
+      const result = parse('treeView-beta\naccDescr: This is an accessible description\n"Root"\n  "Child"');
       expectNoErrorsOrAlternatives(result);
       expect(result.value.$type).toBe('TreeView');
       expect(result.value.accDescr).toBe('This is an accessible description');

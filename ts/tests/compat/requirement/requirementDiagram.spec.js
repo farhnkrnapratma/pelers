@@ -672,12 +672,7 @@ line 2`;
   it('will accept defining a class', function () {
     const expectedName = 'myClass';
 
-    let lines = [
-      `requirementDiagram`,
-      ``,
-      `classDef ${expectedName} fill:#f9f,stroke:#333,stroke-width:4px`,
-      ``,
-    ];
+    let lines = [`requirementDiagram`, ``, `classDef ${expectedName} fill:#f9f,stroke:#333,stroke-width:4px`, ``];
     let doc = lines.join('\n');
 
     reqDiagram.parser.parse(doc);

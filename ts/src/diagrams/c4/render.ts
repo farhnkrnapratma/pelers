@@ -298,11 +298,26 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
         ` class="pelers-c4-type" font-size="${small - 1}"${muted}`
       );
       y += labels[0].height;
-      text += labelSvg(labels[1], dx, y + labels[1].height / 2, ` class="pelers-label" font-weight="var(--_hw)"${color}`);
+      text += labelSvg(
+        labels[1],
+        dx,
+        y + labels[1].height / 2,
+        ` class="pelers-label" font-weight="var(--_hw)"${color}`
+      );
       y += labels[1].height;
-      text += labelSvg(labels[2], dx, y + labels[2].height / 2, ` class="pelers-c4-techn" font-size="${small}"${muted}`);
+      text += labelSvg(
+        labels[2],
+        dx,
+        y + labels[2].height / 2,
+        ` class="pelers-c4-techn" font-size="${small}"${muted}`
+      );
       y += labels[2].height + 4;
-      text += labelSvg(labels[3], dx, y + labels[3].height / 2, ` class="pelers-c4-descr" font-size="${small}"${color}`);
+      text += labelSvg(
+        labels[3],
+        dx,
+        y + labels[3].height / 2,
+        ` class="pelers-c4-descr" font-size="${small}"${color}`
+      );
       nodesOut +=
         `<g class="pelers-node pelers-shape-${form} pelers-c4-${shape.kind}${external ? ' pelers-c4-external' : ''}" data-id="${escText(
           shape.alias
@@ -343,7 +358,9 @@ function draw(db: C4Db, _config: Config, options: RenderOptions, tight: boolean,
       `<g transform="translate(${num(ox)},${num(oy)})">` +
       (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (edgesOut
+        ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>`
+        : '') +
       (nodesOut ? `<g class="pelers-nodes">${nodesOut}</g>` : '') +
       (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
       '</g>'

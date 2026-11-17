@@ -7,19 +7,20 @@
  * flavor napi-rs can build is listed, because `NAPI_RS_NATIVE_LIBRARY_PATH`
  * can point the loader at a WASI artifact this package does not build itself.
  */
-export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
+export declare const __napiBindingTarget:
+  "native" | "wasm32-wasi" | "wasm32-wasip1";
 
-export declare function detectType(source: string): string | null
+export declare function detectType(source: string): string | null;
 
-export declare function render(source: string): string
+export declare function render(source: string): string;
 
-export declare function renderFull(source: string): RenderResult
+export declare function renderFull(source: string): RenderResult;
 
 export interface RenderResult {
-  svg: string
-  width: number
-  height: number
-  title?: string
+  svg: string;
+  width: number;
+  height: number;
+  title?: string;
 }
 
-export declare function supports(source: string): boolean
+export declare function supports(source: string): boolean;

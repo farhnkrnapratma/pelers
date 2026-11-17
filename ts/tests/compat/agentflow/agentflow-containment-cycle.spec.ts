@@ -69,9 +69,7 @@ describe('mutual containment between two flow containers', () => {
     it('reports the dropped nesting as a containment violation', () => {
       const db = parse(mutual());
       db.getData();
-      const diagnostic = db
-        .getDiagnostics()
-        .find((d) => d.id === 'CONTAINMENT_VIOLATION' && d.nodeId === 'B');
+      const diagnostic = db.getDiagnostics().find((d) => d.id === 'CONTAINMENT_VIOLATION' && d.nodeId === 'B');
       expect(diagnostic).toBeDefined();
       expect(diagnostic?.severity).toBe('warning');
     });
@@ -93,9 +91,7 @@ describe('mutual containment between two flow containers', () => {
 
   describe('both containers collapsed', () => {
     it('does not recurse forever', () => {
-      expect(() =>
-        parse(mutual('@{ view: collapsed }', '@{ view: collapsed }')).getData()
-      ).not.toThrow();
+      expect(() => parse(mutual('@{ view: collapsed }', '@{ view: collapsed }')).getData()).not.toThrow();
     });
 
     it('draws at least one of the two containers rather than blanking', () => {

@@ -1,15 +1,16 @@
-export type PelersErrorCode = 'unsupported-diagram' | 'syntax' | 'semantic' | 'limit';
+export type PelersErrorCode =
+  "unsupported-diagram" | "syntax" | "semantic" | "limit";
 
 export declare class PelersError extends Error {
-    readonly code: PelersErrorCode;
-    constructor(message: string, code: PelersErrorCode);
+  readonly code: PelersErrorCode;
+  constructor(message: string, code: PelersErrorCode);
 }
 
 export interface RenderResult {
-    svg: string;
-    width: number;
-    height: number;
-    title?: string;
+  svg: string;
+  width: number;
+  height: number;
+  title?: string;
 }
 
 export declare function render(source: string): string;

@@ -356,7 +356,9 @@ describe('agentflow rendering', () => {
     expect(edges).toHaveLength(3);
     expect(edges.map(([, d]) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false]);
     expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pelers-fg-on-light,#1f1f1f)"', '', '']);
-    expect(svgOf(src.replace('\n  style f fill:#FFF9C4', ''))).not.toMatch(/pelers-casings|stroke="var\(--pelers-fg-on/);
+    expect(svgOf(src.replace('\n  style f fill:#FFF9C4', ''))).not.toMatch(
+      /pelers-casings|stroke="var\(--pelers-fg-on/
+    );
     // An edge from a flow to a node inside it starts on the flow's border and stays on its fill.
     const held = svgOf('agentflow-beta TB\n  flow f[Flow]\n    a[A]\n  end\n  f --> a\n  style f fill:white');
     expect(held).toMatch(/data-id="L_f_a_0" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"/);

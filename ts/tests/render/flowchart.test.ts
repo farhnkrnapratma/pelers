@@ -53,7 +53,14 @@ describe('flowchart rendering', () => {
 
   it('themes through custom properties with fallbacks and no style element', () => {
     const { svg } = render('flowchart TD\n  A --> B', options);
-    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-font']) {
+    for (const token of [
+      '--pelers-bg',
+      '--pelers-fg',
+      '--pelers-line',
+      '--pelers-surface',
+      '--pelers-border',
+      '--pelers-font',
+    ]) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');
@@ -222,7 +229,9 @@ describe('flowchart rendering', () => {
     expect(svg).toMatch(
       /data-id="C"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Output</
     );
-    expect(svg).toMatch(/data-id="D"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</);
+    expect(svg).toMatch(
+      /data-id="D"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</
+    );
     expect(svg).toMatch(/data-id="E"[^>]*>.*?<text class="pelers-label" style="fill:#333;"[^>]*>Own</);
     expect(svg).toMatch(/data-id="F"[^>]*>.*?<text class="pelers-label" x=[^>]*>Plain</);
     expect(svg).toMatch(/data-id="G"[^>]*>.*?<text class="pelers-label" x=[^>]*>Words</);

@@ -102,9 +102,7 @@ describe('when parsing a kanban ', function () {
           root
         fakeRoot
     realRootWrongPlace`;
-      expect(() => kanban.parse(str)).toThrow(
-        'Items without section detected, found section ("fakeRoot")'
-      );
+      expect(() => kanban.parse(str)).toThrow('Items without section detected, found section ("fakeRoot")');
     });
   });
   describe('nodes', function () {

@@ -31,7 +31,10 @@ function at(svg: string, id: string): { x: number; y: number } {
 function nodeGroup(svg: string, id: string): string {
   const start = svg.indexOf(`data-id="${id}" transform=`);
   if (start === -1) throw new Error(`no node ${id}`);
-  return svg.slice(svg.lastIndexOf('<g class="pelers-node', start), svg.indexOf('<g class="pelers-node', start + 1) >>> 0);
+  return svg.slice(
+    svg.lastIndexOf('<g class="pelers-node', start),
+    svg.indexOf('<g class="pelers-node', start + 1) >>> 0
+  );
 }
 
 function ellipse(svg: string, id: string): { x: number; y: number; rx: number; ry: number } {
@@ -205,7 +208,9 @@ describe('use case diagram rendering', () => {
   it('draws a boundary around its members and leaves the rest outside', () => {
     const svg = svgOf('actor User\nsystemBoundary Shop["The shop"]\n  Browse\n  actor Clerk\nend\nUser --> Browse');
     const [box] = boundary(svg, 'Shop');
-    expect(svg).toContain('<g class="pelers-cluster pelers-boundary system-boundary system-boundary-rect" data-id="Shop">');
+    expect(svg).toContain(
+      '<g class="pelers-cluster pelers-boundary system-boundary system-boundary-rect" data-id="Shop">'
+    );
     expect(svg).toContain('>The shop</text>');
     const inside = (id: string): boolean => {
       const p = at(svg, id);
@@ -345,7 +350,9 @@ describe('use case diagram rendering', () => {
   it('labels an association and keeps the label off the nodes', () => {
     const svg = svgOf('actor User\nUser -- "starts a session" --> Login');
     expect(svg).toContain('>starts a session</text>');
-    const m = /<g class="pelers-edge-label" data-id="edge-0"><rect x="([-\d.]+)" y="[-\d.]+" width="([\d.]+)"/.exec(svg)!;
+    const m = /<g class="pelers-edge-label" data-id="edge-0"><rect x="([-\d.]+)" y="[-\d.]+" width="([\d.]+)"/.exec(
+      svg
+    )!;
     const left = Number(m[1]);
     const right = left + Number(m[2]);
     const login = ellipse(svg, 'Login');

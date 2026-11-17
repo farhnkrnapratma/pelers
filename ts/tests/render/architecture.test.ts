@@ -16,7 +16,9 @@ interface Box {
 
 // Icon squares of the services and junctions, by id.
 function nodeBoxes(svg: string): Map<string, Box> {
-  const size = Number(/class="pelers-node pelers-service"[^>]*><rect x="[-\d.]+" width="([\d.]+)"/.exec(svg)?.[1] ?? 48);
+  const size = Number(
+    /class="pelers-node pelers-service"[^>]*><rect x="[-\d.]+" width="([\d.]+)"/.exec(svg)?.[1] ?? 48
+  );
   const out = new Map<string, Box>();
   for (const m of svg.matchAll(
     /class="pelers-node pelers-(?:service|junction)" data-id="([^"]*)" transform="translate\(([-\d.]+),([-\d.]+)\)"/g

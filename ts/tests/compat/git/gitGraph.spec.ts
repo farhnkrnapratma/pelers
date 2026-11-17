@@ -218,13 +218,7 @@ describe('when parsing a gitGraph', function () {
 
     it('should generate an array of known branches', async () => {
       const str =
-        'gitGraph:\n' +
-        'commit\n' +
-        'branch b1\n' +
-        'checkout b1\n' +
-        'commit\n' +
-        'commit\n' +
-        'branch b2\n';
+        'gitGraph:\n' + 'commit\n' + 'branch b1\n' + 'checkout b1\n' + 'commit\n' + 'commit\n' + 'branch b2\n';
 
       await parser.parse(str);
       const branches = db.getBranchesAsObjArray();
@@ -738,10 +732,7 @@ describe('when parsing a gitGraph', function () {
       expect(commits.get(commit3)?.branch).toBe('testBranch');
       expect(commits.get(commit3)?.parents).toStrictEqual([commits.get(commit2)?.id]);
       expect(commits.get(commit4)?.branch).toBe('main');
-      expect(commits.get(commit4)?.parents).toStrictEqual([
-        commits.get(commit1)?.id,
-        commits.get(commit3)?.id,
-      ]);
+      expect(commits.get(commit4)?.parents).toStrictEqual([commits.get(commit1)?.id, commits.get(commit3)?.id]);
       expect(db.getBranchesAsObjArray()).toStrictEqual([{ name: 'main' }, { name: 'testBranch' }]);
     });
 
@@ -806,10 +797,7 @@ describe('when parsing a gitGraph', function () {
       expect(commits.get(commit3)?.branch).toBe('testBranch');
       expect(commits.get(commit3)?.parents).toStrictEqual([commits.get(commit2)?.id]);
       expect(commits.get(commit4)?.branch).toBe('main');
-      expect(commits.get(commit4)?.parents).toStrictEqual([
-        commits.get(commit1)?.id,
-        commits.get(commit3)?.id,
-      ]);
+      expect(commits.get(commit4)?.parents).toStrictEqual([commits.get(commit1)?.id, commits.get(commit3)?.id]);
       expect(db.getBranchesAsObjArray()).toStrictEqual([{ name: 'main' }, { name: 'testBranch' }]);
     });
 
@@ -837,10 +825,7 @@ describe('when parsing a gitGraph', function () {
       expect(commits.get(commit2)?.parents).toStrictEqual([commits.get(commit1)?.id]);
 
       expect(commits.get(commit3)?.branch).toBe('main');
-      expect(commits.get(commit3)?.parents).toStrictEqual([
-        commits.get(commit1)?.id,
-        commits.get(commit2)?.id,
-      ]);
+      expect(commits.get(commit3)?.parents).toStrictEqual([commits.get(commit1)?.id, commits.get(commit2)?.id]);
       expect(commits.get(commit3)?.tags).toStrictEqual(['merge-tag']);
       expect(db.getBranchesAsObjArray()).toStrictEqual([{ name: 'main' }, { name: 'testBranch' }]);
     });
@@ -1197,9 +1182,7 @@ describe('when parsing a gitGraph', function () {
         await parser.parse(str);
         expect(true).toBe(false);
       } catch (e: any) {
-        expect(e.message).toBe(
-          'Incorrect usage of "merge". Branch to be merged (testBranch) does not exist'
-        );
+        expect(e.message).toBe('Incorrect usage of "merge". Branch to be merged (testBranch) does not exist');
       }
     });
     it('should throw error when trying to merge branch to itself', async () => {
@@ -1268,9 +1251,7 @@ describe('when parsing a gitGraph', function () {
         // Fail test if above expression doesn't throw anything.
         expect(true).toBe(false);
       } catch (e: any) {
-        expect(e.message).toBe(
-          'Incorrect usage of "merge". Branch to be merged (test1) has no commits'
-        );
+        expect(e.message).toBe('Incorrect usage of "merge". Branch to be merged (test1) has no commits');
       }
     });
     describe('accessibility', () => {

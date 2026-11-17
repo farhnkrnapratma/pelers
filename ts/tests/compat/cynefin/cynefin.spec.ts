@@ -51,11 +51,7 @@ describe('Cynefin Database', () => {
   });
 
   it('should filter out self-loop transitions', () => {
-    db.setTransitions([
-      tx('complex', 'complex'),
-      tx('complex', 'complicated', 'Pattern found'),
-      tx('clear', 'clear'),
-    ]);
+    db.setTransitions([tx('complex', 'complex'), tx('complex', 'complicated', 'Pattern found'), tx('clear', 'clear')]);
     const transitions = db.getTransitions();
     expect(transitions).toHaveLength(1);
     expect(transitions[0].from).toBe('complex');
@@ -81,20 +77,12 @@ describe('Cynefin Database', () => {
   });
 
   it('should handle multiple domains', () => {
-    db.setDomains([
-      block('complex'),
-      block('complicated'),
-      block('clear'),
-      block('chaotic'),
-      block('confusion'),
-    ]);
+    db.setDomains([block('complex'), block('complicated'), block('clear'), block('chaotic'), block('confusion')]);
     expect(db.getDomains().size).toBe(5);
   });
 
   it('should handle domain with multiple items', () => {
-    db.setDomains([
-      block('complex', [{ label: 'A' }, { label: 'B' }, { label: 'C' }, { label: 'D' }]),
-    ]);
+    db.setDomains([block('complex', [{ label: 'A' }, { label: 'B' }, { label: 'C' }, { label: 'D' }])]);
     expect(db.getDomains().get('complex')!.items).toHaveLength(4);
   });
 

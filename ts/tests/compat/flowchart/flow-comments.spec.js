@@ -137,9 +137,7 @@ describe('[Comments] when parsing', () => {
 
   it('should handle a comment with mermaid flowchart code in them', function () {
     const res = flow.parser.parse(
-      cleanupComments(
-        'graph TD;\n\n\n %% Test od>Odd shape]-->|Two line<br>edge comment|ro;\n A-->B;'
-      )
+      cleanupComments('graph TD;\n\n\n %% Test od>Odd shape]-->|Two line<br>edge comment|ro;\n A-->B;')
     );
 
     const vert = flow.parser.yy.getVertices();

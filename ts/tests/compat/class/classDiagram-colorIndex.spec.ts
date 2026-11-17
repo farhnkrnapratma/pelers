@@ -19,8 +19,7 @@ describe('class diagram colour slots', () => {
     classDb = new ClassDB();
   });
 
-  const colorIndexById = () =>
-    new Map(classDb.getData().nodes.map((node) => [node.id, node.colorIndex]));
+  const colorIndexById = () => new Map(classDb.getData().nodes.map((node) => [node.id, node.colorIndex]));
 
   it('gives each class its own slot in declaration order', () => {
     classDb.addClass('Order');

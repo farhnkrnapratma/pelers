@@ -44,7 +44,13 @@ let model = emptyModel();
 let parsed = false;
 
 function labelOf(id: string): string {
-  return model.actors.get(id)?.label ?? model.useCases.get(id)?.label ?? model.jsonNodes.get(id)?.id ?? model.notes.get(id)?.label ?? id;
+  return (
+    model.actors.get(id)?.label ??
+    model.useCases.get(id)?.label ??
+    model.jsonNodes.get(id)?.id ??
+    model.notes.get(id)?.label ??
+    id
+  );
 }
 
 export const db = {
@@ -61,14 +67,15 @@ export const db = {
     model = next;
     parsed = false;
   },
-  getAST: () => (parsed ? mermaidAst(model) : undefined) as
-    | {
-        source: string;
-        nodes: Record<string, unknown>;
-        edges: { id: string; label?: string; attrs?: Record<string, unknown> }[];
-        statements: Record<string, unknown>[];
-      }
-    | undefined,
+  getAST: () =>
+    (parsed ? mermaidAst(model) : undefined) as
+      | {
+          source: string;
+          nodes: Record<string, unknown>;
+          edges: { id: string; label?: string; attrs?: Record<string, unknown> }[];
+          statements: Record<string, unknown>[];
+        }
+      | undefined,
   getActors: () => model.actors,
   getActor: (id: string) => model.actors.get(id),
   getUseCases: () => model.useCases,

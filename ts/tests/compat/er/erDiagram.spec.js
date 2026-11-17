@@ -189,9 +189,7 @@ describe('when parsing ER diagram it...', function () {
       const attribute2 = 'string MYBOOKSUBTITLE_1';
       const attribute3 = 'string author-ref[name](1)';
 
-      erDiagram.parser.parse(
-        `erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`
-      );
+      erDiagram.parser.parse(`erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`);
       const entities = erDb.getEntities();
 
       expect(entities.size).toBe(1);
@@ -357,9 +355,7 @@ describe('when parsing ER diagram it...', function () {
     const attribute3 = 'string uk_address UK';
     const attribute4 = 'float pk_price PK "comment"';
 
-    erDiagram.parser.parse(
-      `erDiagram\n${entity} {\n${attribute1} \n\n${attribute2}\n${attribute3}\n${attribute4}\n}`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entity} {\n${attribute1} \n\n${attribute2}\n${attribute3}\n${attribute4}\n}`);
     const entities = erDb.getEntities();
     expect(entities.get(entity).attributes.length).toBe(4);
   });
@@ -392,9 +388,7 @@ describe('when parsing ER diagram it...', function () {
     const attribute2 = 'option~T~ readable "comment"';
     const attribute3 = 'string id PK';
 
-    erDiagram.parser.parse(
-      `erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`);
     const entities = erDb.getEntities();
     expect(entities.size).toBe(1);
     expect(entities.get(entity).attributes.length).toBe(3);
@@ -430,9 +424,7 @@ describe('when parsing ER diagram it...', function () {
     const attribute2 = 'string author';
     const attribute3 = 'float price';
 
-    erDiagram.parser.parse(
-      `erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entity} {\n${attribute1}\n${attribute2}\n${attribute3}\n}`);
     const entities = erDb.getEntities();
     expect(entities.get(entity).attributes.length).toBe(3);
   });
@@ -443,9 +435,7 @@ describe('when parsing ER diagram it...', function () {
     const attribute2 = 'string author';
     const attribute3 = 'float price';
 
-    erDiagram.parser.parse(
-      `erDiagram\n${entity} {\n${attribute1}\n}\n${entity} {\n${attribute2}\n${attribute3}\n}`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entity} {\n${attribute1}\n}\n${entity} {\n${attribute2}\n${attribute3}\n}`);
     const entities = erDb.getEntities();
     expect(entities.get(entity).attributes.length).toBe(3);
   });
@@ -973,18 +963,14 @@ describe('when parsing ER diagram it...', function () {
 
   it('should be possible to assign multiple classes to an entity at the same time', function () {
     const entityName = 'CUSTOMER';
-    erDiagram.parser.parse(
-      `erDiagram\n${entityName}\nclass ${entityName} firstClass, secondClass, thirdClass`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entityName}\nclass ${entityName} firstClass, secondClass, thirdClass`);
 
     expect(erDb.getEntity(entityName).cssClasses).toBe('default firstClass secondClass thirdClass');
   });
 
   it('should be possible to assign multiple separately defined classes to an entity', function () {
     const entityName = 'CUSTOMER';
-    erDiagram.parser.parse(
-      `erDiagram\n${entityName}\nclass ${entityName} firstClass\nclass ${entityName} secondClass`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entityName}\nclass ${entityName} firstClass\nclass ${entityName} secondClass`);
 
     expect(erDb.getEntity(entityName).cssClasses).toBe('default firstClass secondClass');
   });
@@ -1118,9 +1104,7 @@ describe('when parsing ER diagram it...', function () {
     const entityName = 'CUSTOMER';
     const otherEntity = 'PERSON';
     const myClass = 'myClass';
-    erDiagram.parser.parse(
-      `erDiagram\n${entityName}:::${myClass} ||--o{ ${otherEntity}:::${myClass} : allows`
-    );
+    erDiagram.parser.parse(`erDiagram\n${entityName}:::${myClass} ||--o{ ${otherEntity}:::${myClass} : allows`);
 
     expect(erDb.getEntity(entityName).cssClasses).toBe('default myClass');
     expect(erDb.getEntity(otherEntity).cssClasses).toBe('default myClass');
@@ -1156,14 +1140,9 @@ describe('when parsing ER diagram it...', function () {
   });
 
   describe('prototype properties', function () {
-    it.each(['__proto__', 'constructor', 'prototype'])(
-      'should work with a %s property',
-      function (prop) {
-        expect(() =>
-          erDiagram.parser.parse(`erDiagram\n${prop} ||--|{ ORDER : place`)
-        ).not.toThrow();
-      }
-    );
+    it.each(['__proto__', 'constructor', 'prototype'])('should work with a %s property', function (prop) {
+      expect(() => erDiagram.parser.parse(`erDiagram\n${prop} ||--|{ ORDER : place`)).not.toThrow();
+    });
   });
 
   describe('syntax fixes for special characters and numbers', function () {

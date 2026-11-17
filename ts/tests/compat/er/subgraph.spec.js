@@ -198,12 +198,7 @@ describe('when parsing ER subgraphs', function () {
   });
 
   it('should handle multiple relationships inside a subgraph', function () {
-    const str =
-      'erDiagram\n' +
-      'subgraph Group\n' +
-      '  A }|--|| B : "r1"\n' +
-      '  B }|--|| C : "r2"\n' +
-      'end';
+    const str = 'erDiagram\n' + 'subgraph Group\n' + '  A }|--|| B : "r1"\n' + '  B }|--|| C : "r2"\n' + 'end';
     erDiagram.parser.parse(str);
     const subgraphs = erDiagram.parser.yy.getSubGraphs();
     const relationships = erDiagram.parser.yy.getRelationships();
@@ -227,14 +222,7 @@ describe('when parsing ER nested subgraphs', function () {
   });
 
   it('should handle nested subgraphs correctly', function () {
-    const str =
-      'erDiagram\n' +
-      'subgraph outer\n' +
-      '  A\n' +
-      '  subgraph inner\n' +
-      '    B\n' +
-      '  end\n' +
-      'end';
+    const str = 'erDiagram\n' + 'subgraph outer\n' + '  A\n' + '  subgraph inner\n' + '    B\n' + '  end\n' + 'end';
 
     erDiagram.parser.parse(str);
     const subgraphs = erDiagram.parser.yy.getSubGraphs();
@@ -278,12 +266,7 @@ describe('when parsing ER nested subgraphs', function () {
 
   it('should handle relationships inside nested subgraphs', function () {
     const str =
-      'erDiagram\n' +
-      'subgraph outer\n' +
-      '  subgraph inner\n' +
-      '    A }|--|| B : "relates to"\n' +
-      '  end\n' +
-      'end';
+      'erDiagram\n' + 'subgraph outer\n' + '  subgraph inner\n' + '    A }|--|| B : "relates to"\n' + '  end\n' + 'end';
 
     erDiagram.parser.parse(str);
     const subgraphs = erDiagram.parser.yy.getSubGraphs();

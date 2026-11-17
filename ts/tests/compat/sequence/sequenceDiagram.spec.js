@@ -798,9 +798,7 @@ Alice->>Bob:Hello Bob, how are you?`);
     expect(messages[0].type).toBe(diagram.db.LINETYPE.SOLID);
   });
   it('should handle in arrow messages', async () => {
-    const diagram = await Diagram.fromText(
-      'sequenceDiagram\n' + 'Alice-->>Bob:Hello Bob, how are you?'
-    );
+    const diagram = await Diagram.fromText('sequenceDiagram\n' + 'Alice-->>Bob:Hello Bob, how are you?');
 
     const actors = diagram.db.getActors();
     expect(actors.get('Alice').description).toBe('Alice');
@@ -2380,9 +2378,7 @@ participant Alice`;
       expect(bounds.startx).toBe(0);
       expect(bounds.starty).toBe(0);
       expect(bounds.stopx).toBe(conf.width);
-      expect(bounds.stopy).toBe(
-        models.lastActor().stopy + models.lastActor().height + conf.boxMargin
-      );
+      expect(bounds.stopy).toBe(models.lastActor().stopy + models.lastActor().height + conf.boxMargin);
     });
   });
 

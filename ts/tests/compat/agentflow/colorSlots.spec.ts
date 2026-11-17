@@ -5,13 +5,7 @@ import * as configApi from './adapter.js';
 import { getConfig } from './adapter.js';
 import type { LayoutData } from './adapter.js';
 import { getStyles } from './adapter.js';
-import {
-  KIND_COUNT,
-  KIND_SLOT,
-  assignColorSlots,
-  containerSlot,
-  containerSlotCount,
-} from './adapter.js';
+import { KIND_COUNT, KIND_SLOT, assignColorSlots, containerSlot, containerSlotCount } from './adapter.js';
 
 /**
  * Two rules, and the point of the tests is that they stay apart:
@@ -35,11 +29,7 @@ const layout = (nodes: any[]) => ({ nodes, edges: [], config: {} }) as unknown a
  * index is the same thing.
  */
 const orderOf = (nodes: any[]) =>
-  new Map(
-    nodes
-      .filter((n) => n.isGroup || n.shape === 'collapsedGroup')
-      .map((n, i) => [String(n.id), i] as const)
-  );
+  new Map(nodes.filter((n) => n.isGroup || n.shape === 'collapsedGroup').map((n, i) => [String(n.id), i] as const));
 
 describe('agentflow colour slots', () => {
   beforeEach(() => {
@@ -102,8 +92,7 @@ describe('agentflow colour slots', () => {
       // back on the `tool` colour. The effective length is read from config rather than
       // assumed: `setSiteConfig` merges into the theme's own array.
       withPalette(12);
-      const palette =
-        (getConfig().themeVariables as { borderColorArray?: string[] }).borderColorArray ?? [];
+      const palette = (getConfig().themeVariables as { borderColorArray?: string[] }).borderColorArray ?? [];
       const data = layout(Array.from({ length: palette.length * 2 }, (_, i) => group(`g${i}`)));
 
       assignColorSlots(data.nodes as any, kindOf(data.nodes as any), orderOf(data.nodes as any));
@@ -125,8 +114,7 @@ describe('agentflow colour slots', () => {
 
       assignColorSlots(data.nodes as any, kindOf(data.nodes as any), orderOf(data.nodes as any));
 
-      const palette = (getConfig().themeVariables as { borderColorArray?: string[] })
-        .borderColorArray!;
+      const palette = (getConfig().themeVariables as { borderColorArray?: string[] }).borderColorArray!;
       for (const n of data.nodes) {
         // What `stampColorSlot` will write, and what `genColor` will have named.
         expect(n.colorIndex! % palette.length).toBe(n.colorIndex);
@@ -210,9 +198,7 @@ describe('agentflow colour slots', () => {
       const css = getStyles(paletteOptions);
 
       for (let slot = 0; slot < KIND_COUNT; slot++) {
-        expect(css, `slot ${slot} belongs to a kind`).not.toContain(
-          `[data-color-id="color-${slot}"]`
-        );
+        expect(css, `slot ${slot} belongs to a kind`).not.toContain(`[data-color-id="color-${slot}"]`);
       }
     });
 

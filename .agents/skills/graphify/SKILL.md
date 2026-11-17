@@ -145,6 +145,7 @@ Corpus: X files · ~Y words
 Omit any category with 0 files from the summary.
 
 Then act on it:
+
 - If `total_files` is 0: stop with "No supported files found in [path]."
 - If `skipped_sensitive` is non-empty: report the count and list the skipped file names, so a wrongly-flagged source or doc is visible and can be renamed or moved (#2106).
 - If `total_words` > 2,000,000 OR `total_files` > 500: show the warning. Then compute the top 5 first-level subdirectories by file count:
@@ -169,6 +170,7 @@ This step has two parts: **structural extraction** (deterministic, free) and **s
 > **graphify needs no API key. Never ask the user for one, and never block on one.** Code is extracted structurally (AST) with no LLM and no key at all — a code-only corpus (the common `/graphify .` on a repo) skips semantic extraction entirely, so it needs nothing here: go straight to Part A and skip Part B. Semantic extraction (only for docs, papers, and images) uses Gemini **only if** `GEMINI_API_KEY`/`GOOGLE_API_KEY` is already set; otherwise the host agent itself is the LLM. graphify does **not** read `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, or any other provider key. If you catch yourself about to prompt for, wait on, or stop because of a missing API key, that is a misread of this skill — proceed without one.
 
 **Before semantic extraction:** check whether `GEMINI_API_KEY` or `GOOGLE_API_KEY` is set. If neither is set, print this one-liner to the user:
+
 > Tip: set `GEMINI_API_KEY` or `GOOGLE_API_KEY` to use Gemini for semantic extraction (`pip install 'graphifyy[gemini]'`).
 
 Print it once, then continue — do not wait for the user to supply a key. If `GEMINI_API_KEY` or `GOOGLE_API_KEY` IS set, use `graphify.llm.extract_corpus_parallel(files, backend="gemini")` for semantic extraction instead of dispatching subagents. The default Gemini model is `gemini-3-flash-preview`; set `GRAPHIFY_GEMINI_MODEL` or pass `--model` in headless CLI flows to override it.
@@ -223,6 +225,7 @@ Path('graphify-out/.graphify_semantic.json').write_text(json.dumps({'nodes':[],'
 **MANDATORY: You MUST use the Agent tool here. Reading files yourself one-by-one is forbidden - it is 5-10x slower. If you do not use the Agent tool you are doing this wrong.**
 
 Before dispatching subagents, print a timing estimate:
+
 - Load `total_words` and file counts from `graphify-out/.graphify_detect.json`
 - Estimate agents needed: `ceil(uncached_non_code_files / 22)` (chunk size is 20-25 files, capped at ~6000 total lines)
 - Estimate time: ~45s per agent batch (they run in parallel, so total ≈ 45s × ceil(agents/parallel_limit))
@@ -285,6 +288,7 @@ Task(description="Your task is to perform the following. Follow the instructions
 Each subagent writes its result to its own `graphify-out/.graphify_chunk_NN.json`. Collect results as each `Task` completes and parse each as JSON.
 
 CHUNK_PATH must be an **absolute** path — derive it before dispatching:
+
 ```bash
 PROJECT_ROOT=$(pwd)  # cwd — where Part C globs graphify-out/ (NOT .graphify_root/scan dir, #1392)
 # Then for chunk N: CHUNK_PATH="${PROJECT_ROOT}/graphify-out/.graphify_chunk_0N.json"
@@ -297,6 +301,7 @@ See `references/extraction-spec.md` for the exact subagent prompt (JSON schema, 
 **Step B3 - Collect, cache, and merge**
 
 Wait for all subagents. For each result:
+
 - Check that `graphify-out/.graphify_chunk_NN.json` exists on disk — this is the success signal
 - If the file exists and contains valid JSON with `nodes` and `edges`, include it and save to cache
 - If the file is missing, the subagent was likely dispatched as read-only (Explore type) — print a warning: "chunk N missing from disk — subagent may have been read-only. Re-run with general-purpose agent." Do not silently skip.
@@ -343,6 +348,7 @@ else:
 Tell the user which files came up short and what was lost (the line counts are printed above). The nodes already extracted for those files are kept - they are still true - but the file is cached as partial and left unstamped in the manifest below, so the next `--update` re-dispatches it and replace-on-re-extract swaps the partial node set for a complete one. This is the same mechanism the library path uses for a truncated LLM response (#933, #1950), so both paths now recover instead of silently keeping a half-read file forever. A file a subagent did not report at all is not counted as partial - there is nothing to compare against - which is why the prompt rule in `references/extraction-spec.md` asks for the count in the first place.
 
 Merge all chunk files into `.graphify_semantic_new.json`. **After each Agent call completes, read the real token counts from the Agent tool result's `usage` field and write them back into the chunk JSON before merging** — the chunk JSON itself always has placeholder zeros. Then run:
+
 ```bash
 $(cat graphify-out/.graphify_python) -c "
 import json, glob
@@ -367,6 +373,7 @@ print(f'Merged {len(chunks)} chunks: {total_in:,} in / {total_out:,} out tokens'
 ```
 
 Save new results to cache. Pass the same SPEC_PATH as Step B0 — it stamps each entry with the prompt that produced it, and a write under a different prompt than the read lands where the next run won't look (#1939):
+
 ```bash
 $(cat graphify-out/.graphify_python) -c "
 import json
@@ -386,6 +393,7 @@ print(f'Cached {saved} files' + note)
 ```
 
 Merge cached + new results into `graphify-out/.graphify_semantic.json`:
+
 ```bash
 $(cat graphify-out/.graphify_python) -c "
 import json
@@ -415,6 +423,7 @@ Path('graphify-out/.graphify_semantic.json').write_text(json.dumps(merged, inden
 print(f'Extraction complete - {len(deduped)} nodes, {len(all_edges)} edges ({len(cached[\"nodes\"])} from cache, {len(new.get(\"nodes\",[]))} new)')
 "
 ```
+
 Clean up temp files: `rm -f graphify-out/.graphify_cached.json graphify-out/.graphify_uncached.txt graphify-out/.graphify_semantic_new.json`
 
 #### Part C - Merge AST + semantic into final extraction
@@ -705,6 +714,7 @@ rm -f graphify-out/.needs_update 2>/dev/null || true
 Replace INPUT_PATH with the actual path (same value used in Steps 4-5) so the manifest is relativized to the scan root.
 
 Tell the user (omit the obsidian line unless --obsidian was given):
+
 ```
 Graph complete. Outputs in PATH_TO_DIR/graphify-out/
 
@@ -721,6 +731,7 @@ Replace PATH_TO_DIR with the actual absolute path of the directory that was proc
 If PATH_TO_DIR is inside a git repository, add one line to the report: `graphify-out/` was written into the working tree, so unless the repository already ignores it, it will show in `git status`; the user can add `graphify-out/` to `.gitignore`, or commit only the outputs their team should share (see https://docs.graphify.com/guides/team-workflows).
 
 Then paste these sections from GRAPH_REPORT.md directly into the chat:
+
 - God Nodes
 - Surprising Connections
 - Suggested Questions

@@ -65,18 +65,14 @@ describe('when parsing a mindmap ', function () {
     root
     fakeRoot`;
 
-      expect(() => mindmap.parse(str)).toThrow(
-        'There can be only one root. No parent could be found for ("fakeRoot")'
-      );
+      expect(() => mindmap.parse(str)).toThrow('There can be only one root. No parent could be found for ("fakeRoot")');
     });
     it('MMP-6 real root in wrong place', function () {
       const str = `mindmap
           root
         fakeRoot
     realRootWrongPlace`;
-      expect(() => mindmap.parse(str)).toThrow(
-        'There can be only one root. No parent could be found for ("fakeRoot")'
-      );
+      expect(() => mindmap.parse(str)).toThrow('There can be only one root. No parent could be found for ("fakeRoot")');
     });
   });
   describe('nodes', function () {

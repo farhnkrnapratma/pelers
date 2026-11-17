@@ -119,7 +119,9 @@ describe('gantt rendering', () => {
       'gantt\n dateFormat HH:mm\n axisFormat %H:%M\n M : milestone, m1, 17:49, 2m\n Task A : 10m',
       options
     );
-    expect(svg).toMatch(/class="pelers-task pelers-milestone" data-id="m1"><path d="M[\d.,]+L[\d.,]+L[\d.,]+L[\d.,]+Z"/);
+    expect(svg).toMatch(
+      /class="pelers-task pelers-milestone" data-id="m1"><path d="M[\d.,]+L[\d.,]+L[\d.,]+L[\d.,]+Z"/
+    );
     expect(count(svg, 'pelers-task')).toBe(2);
     expect(svg).toContain('>17:50<');
   });

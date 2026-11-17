@@ -35,30 +35,18 @@ const expectEmptyPublication = (): void => {
   expect(getAccDescription()).toBe('');
 };
 
-const expectRejectedWithoutPublication = async (
-  source: string,
-  expectedReference: string
-): Promise<void> => {
+const expectRejectedWithoutPublication = async (source: string, expectedReference: string): Promise<void> => {
   await expect(parser.parse(source)).rejects.toThrow(expectedReference);
   expectEmptyPublication();
 };
 
 const sourceLocation = (source: string, start: number, end: number): string => {
-  const lineStart = Math.max(
-    source.lastIndexOf('\n', start - 1),
-    source.lastIndexOf('\r', start - 1)
-  );
+  const lineStart = Math.max(source.lastIndexOf('\n', start - 1), source.lastIndexOf('\r', start - 1));
   const line = source.slice(0, start).split(/\r\n|\r|\n/).length;
   return `line ${line}, column ${start - lineStart} [${start},${end})`;
 };
 
-const occurrenceLocation = (
-  source: string,
-  text: string,
-  occurrence = 1,
-  trimStart = 0,
-  trimEnd = 0
-): string => {
+const occurrenceLocation = (source: string, text: string, occurrence = 1, trimStart = 0, trimEnd = 0): string => {
   let start = -1;
   for (let index = 0; index < occurrence; index++) {
     start = source.indexOf(text, start + 1);
@@ -79,11 +67,7 @@ const expectExactSemanticError = async (source: string, expectedMessage: string)
   expectEmptyPublication();
 };
 
-const expectGrammarErrorAt = async (
-  source: string,
-  tokenImage: string,
-  locationText: string
-): Promise<void> => {
+const expectGrammarErrorAt = async (source: string, tokenImage: string, locationText: string): Promise<void> => {
   let error: unknown;
   try {
     await parser.parse(source);
@@ -93,9 +77,7 @@ const expectGrammarErrorAt = async (
   expect(error).toBeInstanceOf(Error);
   const message = (error as Error).message;
   expect(
-    [`but found: '${tokenImage}'`, `but found --> '${tokenImage}' <--`].some((fragment) =>
-      message.includes(fragment)
-    )
+    [`but found: '${tokenImage}'`, `but found --> '${tokenImage}' <--`].some((fragment) => message.includes(fragment))
   ).toBe(true);
   expect(message.endsWith(`at ${locationText}`)).toBe(true);
   expectEmptyPublication();
@@ -148,10 +130,7 @@ actor User`;
       statements: [
         {
           kind: 'accTitle',
-          span: [
-            source.indexOf('accTitle'),
-            source.indexOf('accTitle') + 'accTitle: Authentication use cases'.length,
-          ],
+          span: [source.indexOf('accTitle'), source.indexOf('accTitle') + 'accTitle: Authentication use cases'.length],
         },
         {
           kind: 'accDescr',
@@ -248,22 +227,17 @@ note for Done "Second note"`);
       expectedUseCase: 'Login',
       expectedShape: 'rect',
     },
-  ])(
-    'resolves forward $refinement refinement independently of declaration order',
-    async (testCase) => {
-      await parser.parse(`usecase-beta\n${testCase.declaration}\n${testCase.relation}`);
-      const declarationFirst = publishedModel();
+  ])('resolves forward $refinement refinement independently of declaration order', async (testCase) => {
+    await parser.parse(`usecase-beta\n${testCase.declaration}\n${testCase.relation}`);
+    const declarationFirst = publishedModel();
 
-      await parser.parse(`usecase-beta\n${testCase.relation}\n${testCase.declaration}`);
-      const relationFirst = publishedModel();
+    await parser.parse(`usecase-beta\n${testCase.relation}\n${testCase.declaration}`);
+    const relationFirst = publishedModel();
 
-      expect(relationFirst).toEqual(declarationFirst);
-      expect([...db.getActors().keys()]).toEqual(
-        testCase.expectedActor ? [testCase.expectedActor] : []
-      );
-      expect(db.getUseCases().get(testCase.expectedUseCase)?.shape).toBe(testCase.expectedShape);
-    }
-  );
+    expect(relationFirst).toEqual(declarationFirst);
+    expect([...db.getActors().keys()]).toEqual(testCase.expectedActor ? [testCase.expectedActor] : []);
+    expect(db.getUseCases().get(testCase.expectedUseCase)?.shape).toBe(testCase.expectedShape);
+  });
 
   it('finalizes unresolved relation endpoints as ellipse use cases without actor inference', async () => {
     await parser.parse(`usecase-beta
@@ -431,14 +405,8 @@ Login("Reset password")`;
         nodes: [
           {
             id: 'Reset_password',
-            idSpan: [
-              source.indexOf('"Reset password"') + 1,
-              source.indexOf('"Reset password"') + 15,
-            ],
-            labelSpan: [
-              source.indexOf('"Reset password"') + 1,
-              source.indexOf('"Reset password"') + 15,
-            ],
+            idSpan: [source.indexOf('"Reset password"') + 1, source.indexOf('"Reset password"') + 15],
+            labelSpan: [source.indexOf('"Reset password"') + 1, source.indexOf('"Reset password"') + 15],
           },
         ],
       },
@@ -592,10 +560,7 @@ B link@--> C`;
     ['a double quote', 'Literal(Literal "markers)'],
     ['a single quote', "Literal(Reviewer's markers)"],
   ])('still rejects %s inside an unquoted label', async (_name, statement) => {
-    await expectRejectedWithoutPublication(
-      ['usecase-beta', statement].join('\n'),
-      'Error lexing usecase diagram'
-    );
+    await expectRejectedWithoutPublication(['usecase-beta', statement].join('\n'), 'Error lexing usecase diagram');
   });
 
   it('reports exact actor metadata and incompatible icon locations', async () => {
@@ -679,9 +644,7 @@ A offEdge@--> B
 offEdge@{ animate: false }`;
     await parser.parse(source);
 
-    expect(
-      db.getRelationships().map(({ id, animate, animation }) => ({ id, animate, animation }))
-    ).toEqual([
+    expect(db.getRelationships().map(({ id, animate, animation }) => ({ id, animate, animation }))).toEqual([
       { id: 'trueEdge', animate: true, animation: undefined },
       { id: 'fastEdge', animate: true, animation: 'fast' },
       { id: 'slowEdge', animate: true, animation: 'slow' },
@@ -727,20 +690,13 @@ link@{ animate: fast }`;
       unexpected: 'systemBoundary',
       occurrence: 2,
     },
-  ])(
-    'locates rejected $kind content inside a boundary',
-    async ({ statement, unexpected, occurrence }) => {
-      const source = `usecase-beta
+  ])('locates rejected $kind content inside a boundary', async ({ statement, unexpected, occurrence }) => {
+    const source = `usecase-beta
 systemBoundary Auth
 ${statement}
 end`;
-      await expectGrammarErrorAt(
-        source,
-        unexpected,
-        occurrenceLocation(source, unexpected, occurrence)
-      );
-    }
-  );
+    await expectGrammarErrorAt(source, unexpected, occurrenceLocation(source, unexpected, occurrence));
+  });
 
   it('rejects notes targeting JSON, boundary, and explicit edge IDs with both locations', async () => {
     const json = `usecase-beta
@@ -818,11 +774,7 @@ Report[Generate report]@{ business: true }`;
 systemBoundary Auth
 json Payload@{}
 end`;
-    await expectGrammarErrorAt(
-      boundary,
-      'json Payload@',
-      occurrenceLocation(boundary, 'json Payload@')
-    );
+    await expectGrammarErrorAt(boundary, 'json Payload@', occurrenceLocation(boundary, 'json Payload@'));
 
     const semantic = `usecase-beta
 json Payload@{}
@@ -865,20 +817,10 @@ Clerk --> Authorize`);
   it.each([
     ['bracketed text', 'sb1[Payment service]', 'Payment service', 'text'],
     ['bracketed plain string', 'sb1["Payment service"]', 'Payment service', 'text'],
-    [
-      'bracketed Markdown string',
-      'sb1["`**Payment** service`"]',
-      '**Payment** service',
-      'markdown',
-    ],
+    ['bracketed Markdown string', 'sb1["`**Payment** service`"]', '**Payment** service', 'markdown'],
     ['parenthesized text', 'sb1(Payment service)', 'Payment service', 'text'],
     ['parenthesized plain string', 'sb1("Payment service")', 'Payment service', 'text'],
-    [
-      'parenthesized Markdown string',
-      'sb1("`**Payment** service`")',
-      '**Payment** service',
-      'markdown',
-    ],
+    ['parenthesized Markdown string', 'sb1("`**Payment** service`")', '**Payment** service', 'markdown'],
   ])('accepts a %s boundary label', async (_form, declaration, label, labelType) => {
     await parser.parse(`usecase-beta
 systemBoundary ${declaration}
@@ -1184,10 +1126,6 @@ json 4 @{"a": 1}
 A("x")
 style A stroke-width:1.5px,opacity:0.5,margin:2`);
 
-    expect(db.getUseCases().get('A')?.styles).toEqual([
-      'stroke-width:1.5px',
-      'opacity:0.5',
-      'margin:2',
-    ]);
+    expect(db.getUseCases().get('A')?.styles).toEqual(['stroke-width:1.5px', 'opacity:0.5', 'margin:2']);
   });
 });

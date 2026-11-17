@@ -100,16 +100,12 @@ describe('given a basic class diagram, ', function () {
       expect(namespaces.get('Company')!.parent).toBeUndefined();
       expect(namespaces.get('Company.Project')!.parent).toBe('Company');
       expect(namespaces.get('Company.Project.Module')!.parent).toBe('Company.Project');
-      expect(namespaces.get('Company.Project.Module.SubModule')!.parent).toBe(
-        'Company.Project.Module'
-      );
+      expect(namespaces.get('Company.Project.Module.SubModule')!.parent).toBe('Company.Project.Module');
 
       // Verify children maps
       expect(namespaces.get('Company')!.children.has('Company.Project')).toBe(true);
       expect(namespaces.get('Company.Project')!.children.has('Company.Project.Module')).toBe(true);
-      expect(
-        namespaces.get('Company.Project.Module')!.children.has('Company.Project.Module.SubModule')
-      ).toBe(true);
+      expect(namespaces.get('Company.Project.Module')!.children.has('Company.Project.Module.SubModule')).toBe(true);
 
       // Only the user-declared leaves are marked explicit; intermediate ancestors are not.
       expect(namespaces.get('Company.Project.Module.SubModule')!.explicit).toBe(true);
@@ -382,10 +378,7 @@ describe('given a basic class diagram, ', function () {
     });
 
     it('should parse two classes with text labels', function () {
-      const str =
-        'classDiagram\n' +
-        'class C1["Class 1 with text label"]\n' +
-        'class C2["Class 2 with chars @?"]\n';
+      const str = 'classDiagram\n' + 'class C1["Class 1 with text label"]\n' + 'class C2["Class 2 with chars @?"]\n';
 
       parser.parse(str);
 
@@ -407,10 +400,7 @@ describe('given a basic class diagram, ', function () {
 
     it('should parse a class with a text label, member and annotation', () => {
       const str =
-        'classDiagram\n' +
-        'class C1["Class 1 with text label"]\n' +
-        '<<interface>> C1\n' +
-        'C1 : int member1';
+        'classDiagram\n' + 'class C1["Class 1 with text label"]\n' + '<<interface>> C1\n' + 'C1 : int member1';
 
       parser.parse(str);
 
@@ -434,10 +424,7 @@ describe('given a basic class diagram, ', function () {
 
     it('should parse a class with text label and css class', () => {
       const str =
-        'classDiagram\n' +
-        'class C1["Class 1 with text label"]\n' +
-        'C1 : int member1\n' +
-        'cssClass "C1" styleClass';
+        'classDiagram\n' + 'class C1["Class 1 with text label"]\n' + 'C1 : int member1\n' + 'cssClass "C1" styleClass';
 
       parser.parse(str);
 
@@ -644,16 +631,13 @@ class C13["With Città foreign language"]
       expect(classDb.getNote(0).text).toEqual(`This is a keyword: ${keyword}. It truly is.`);
     });
 
-    it.each(keywords)(
-      'should handle note with %s at beginning of string',
-      function (keyword: string) {
-        const str = `classDiagram
+    it.each(keywords)('should handle note with %s at beginning of string', function (keyword: string) {
+      const str = `classDiagram
                       note "${keyword}"`;
 
-        parser.parse(str);
-        expect(classDb.getNote(0).text).toEqual(`${keyword}`);
-      }
-    );
+      parser.parse(str);
+      expect(classDb.getNote(0).text).toEqual(`${keyword}`);
+    });
 
     it.each(keywords)('should handle a "note for" with a %s in it', function (keyword: string) {
       const str = `classDiagram
@@ -668,10 +652,8 @@ class C13["With Città foreign language"]
       expect(classDb.getNote(0).text).toEqual(`This is a keyword: ${keyword}. It truly is.`);
     });
 
-    it.each(keywords)(
-      'should handle a "note for" with a %s at beginning of string',
-      function (keyword: string) {
-        const str = `classDiagram
+    it.each(keywords)('should handle a "note for" with a %s at beginning of string', function (keyword: string) {
+      const str = `classDiagram
                     class Something {
                       int id
                       string name
@@ -679,10 +661,9 @@ class C13["With Città foreign language"]
                     note for Something "${keyword}"
                     `;
 
-        parser.parse(str);
-        expect(classDb.getNote(0).text).toEqual(`${keyword}`);
-      }
-    );
+      parser.parse(str);
+      expect(classDb.getNote(0).text).toEqual(`${keyword}`);
+    });
 
     it.each(keywords)('should elicit error for %s after NOTE token', function (keyword: string) {
       const str = `classDiagram
@@ -809,15 +790,13 @@ class C13["With Città foreign language"]
     });
 
     it('should handle a mix of members defined in and outside of brackets', function () {
-      const str =
-        'classDiagram\n' + 'class Car{\n' + '+int wheels\n' + '}\n' + 'Car : +ArrayList size()\n';
+      const str = 'classDiagram\n' + 'class Car{\n' + '+int wheels\n' + '}\n' + 'Car : +ArrayList size()\n';
 
       parser.parse(str);
     });
 
     it('should handle member and method definitions', () => {
-      const str =
-        'classDiagram\n' + 'class Dummy_Class {\n' + 'String data\n' + 'void methods()\n' + '}';
+      const str = 'classDiagram\n' + 'class Dummy_Class {\n' + 'String data\n' + 'void methods()\n' + '}';
 
       parser.parse(str);
     });
@@ -865,12 +844,7 @@ class C13["With Città foreign language"]
     });
 
     it('should parse a class with a text label, members and annotation', () => {
-      const str =
-        'classDiagram\n' +
-        'class C1["Class 1 with text label"] {\n' +
-        '<<interface>>\n' +
-        '+member1\n' +
-        '}';
+      const str = 'classDiagram\n' + 'class C1["Class 1 with text label"] {\n' + '<<interface>>\n' + '+member1\n' + '}';
 
       parser.parse(str);
       const c1 = classDb.getClass('C1');
@@ -995,8 +969,7 @@ foo()
     it('should handle href link with tooltip', function () {
       spyOn(classDb, 'setLink');
       spyOn(classDb, 'setTooltip');
-      const str =
-        'classDiagram\n' + 'class Class1 \n' + 'click Class1 href "google.com" "A Tooltip" ';
+      const str = 'classDiagram\n' + 'class Class1 \n' + 'click Class1 href "google.com" "A Tooltip" ';
 
       parser.parse(str);
 
@@ -1041,8 +1014,7 @@ foo()
       spyOn(classDb, 'setClickEvent');
       spyOn(classDb, 'setTooltip');
 
-      const str =
-        'classDiagram\n' + 'class Class1 \n' + 'click Class1 call functionCall() "A Tooltip" ';
+      const str = 'classDiagram\n' + 'class Class1 \n' + 'click Class1 call functionCall() "A Tooltip" ';
 
       parser.parse(str);
 
@@ -1059,11 +1031,7 @@ foo()
         'click Class1 call functionCall(test, test1, test2)';
       parser.parse(str);
 
-      expect(classDb.setClickEvent).toHaveBeenCalledWith(
-        'Class1',
-        'functionCall',
-        'test, test1, test2'
-      );
+      expect(classDb.setClickEvent).toHaveBeenCalledWith('Class1', 'functionCall', 'test, test1, test2');
     });
 
     it('should handle function call with an arbitrary number of args and tooltip', function () {
@@ -1076,11 +1044,7 @@ foo()
         'click Class1 call functionCall("test0", test1, test2) "A Tooltip"';
       parser.parse(str);
 
-      expect(classDb.setClickEvent).toHaveBeenCalledWith(
-        'Class1',
-        'functionCall',
-        '"test0", test1, test2'
-      );
+      expect(classDb.setClickEvent).toHaveBeenCalledWith('Class1', 'functionCall', '"test0", test1, test2');
       expect(classDb.setTooltip).toHaveBeenCalledWith('Class1', 'A Tooltip');
     });
   });
@@ -1105,11 +1069,7 @@ foo()
 
     it('should handle class annotations with members and methods', function () {
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : int test\n' +
-        'Class1 : test()\n' +
-        '<<interface>> Class1';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : int test\n' + 'Class1 : test()\n' + '<<interface>> Class1';
       parser.parse(str);
 
       const actual = parser.yy.getClass('Class1');
@@ -1131,13 +1091,7 @@ foo()
     });
 
     it('should handle class annotations in brackets with members and methods', function () {
-      const str =
-        'classDiagram\n' +
-        'class Class1 {\n' +
-        '<<interface>>\n' +
-        'int : test\n' +
-        'test()\n' +
-        '}';
+      const str = 'classDiagram\n' + 'class Class1 {\n' + '<<interface>>\n' + 'int : test\n' + 'test()\n' + '}';
       parser.parse(str);
 
       const actual = parser.yy.getClass('Class1');
@@ -1149,11 +1103,7 @@ foo()
 
     it('should handle the docs example: separate line annotation with members', function () {
       const str =
-        'classDiagram\n' +
-        'class Shape\n' +
-        '<<interface>> Shape\n' +
-        'Shape : noOfVertices\n' +
-        'Shape : draw()';
+        'classDiagram\n' + 'class Shape\n' + '<<interface>> Shape\n' + 'Shape : noOfVertices\n' + 'Shape : draw()';
       parser.parse(str);
 
       const actual = parser.yy.getClass('Shape');
@@ -1197,12 +1147,7 @@ foo()
     });
 
     it('should handle inline annotation with members: class Shape <<interface>> { ... }', function () {
-      const str =
-        'classDiagram\n' +
-        'class Shape <<interface>> {\n' +
-        '    noOfVertices\n' +
-        '    draw()\n' +
-        '}';
+      const str = 'classDiagram\n' + 'class Shape <<interface>> {\n' + '    noOfVertices\n' + '    draw()\n' + '}';
       parser.parse(str);
 
       const actual = parser.yy.getClass('Shape');
@@ -1708,11 +1653,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should handle class annotations with members and methods', function () {
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : int test\n' +
-        'Class1 : test()\n' +
-        '<<interface>> Class1';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : int test\n' + 'Class1 : test()\n' + '<<interface>> Class1';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1734,13 +1675,7 @@ describe('given a class diagram with relationships, ', function () {
     });
 
     it('should handle class annotations in brackets with members and methods', function () {
-      const str =
-        'classDiagram\n' +
-        'class Class1 {\n' +
-        '<<interface>>\n' +
-        'int : test\n' +
-        'test()\n' +
-        '}';
+      const str = 'classDiagram\n' + 'class Class1 {\n' + '<<interface>>\n' + 'int : test\n' + 'test()\n' + '}';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1752,13 +1687,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should add bracket members in right order', function () {
       const str =
-        'classDiagram\n' +
-        'class Class1 {\n' +
-        'int : test\n' +
-        'string : foo\n' +
-        'test()\n' +
-        'foo()\n' +
-        '}';
+        'classDiagram\n' + 'class Class1 {\n' + 'int : test\n' + 'string : foo\n' + 'test()\n' + 'foo()\n' + '}';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1797,11 +1726,7 @@ describe('given a class diagram with relationships, ', function () {
     });
 
     it('should associate link and css appropriately', function () {
-      const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'link Class1 "google.com"';
+      const str = 'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'link Class1 "google.com"';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1810,11 +1735,7 @@ describe('given a class diagram with relationships, ', function () {
     });
 
     it('should associate click and href link and css appropriately', function () {
-      const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'click Class1 href "google.com"';
+      const str = 'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'click Class1 href "google.com"';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1824,10 +1745,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should associate link with tooltip', function () {
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'link Class1 "google.com" "A tooltip"';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'link Class1 "google.com" "A tooltip"';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1838,10 +1756,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should associate click and href link with tooltip', function () {
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'click Class1 href "google.com" "A tooltip"';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'click Class1 href "google.com" "A tooltip"';
       parser.parse(str);
 
       const testClass = parser.yy.getClass('Class1');
@@ -1866,11 +1781,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should associate click and href link appropriately', function () {
       spyOn(classDb, 'setLink');
-      const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'click Class1 href "google.com"';
+      const str = 'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'click Class1 href "google.com"';
       parser.parse(str);
 
       expect(classDb.setLink).toHaveBeenCalledWith('Class1', 'google.com');
@@ -1879,10 +1790,7 @@ describe('given a class diagram with relationships, ', function () {
     it('should associate click and href link with target appropriately', function () {
       spyOn(classDb, 'setLink');
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'click Class1 href "google.com" _self';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'click Class1 href "google.com" _self';
       parser.parse(str);
 
       expect(classDb.setLink).toHaveBeenCalledWith('Class1', 'google.com', '_self');
@@ -1892,10 +1800,7 @@ describe('given a class diagram with relationships, ', function () {
       spyOn(classDb, 'setLink');
       spyOn(classDb, 'setTooltip');
       const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'link Class1 "google.com" "A tooltip" _self';
+        'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'link Class1 "google.com" "A tooltip" _self';
       parser.parse(str);
 
       expect(classDb.setLink).toHaveBeenCalledWith('Class1', 'google.com', '_self');
@@ -1904,11 +1809,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should associate callback appropriately', function () {
       spyOn(classDb, 'setClickEvent');
-      const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'callback Class1 "functionCall"';
+      const str = 'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'callback Class1 "functionCall"';
       parser.parse(str);
 
       expect(classDb.setClickEvent).toHaveBeenCalledWith('Class1', 'functionCall');
@@ -1916,11 +1817,7 @@ describe('given a class diagram with relationships, ', function () {
 
     it('should associate click and call callback appropriately', function () {
       spyOn(classDb, 'setClickEvent');
-      const str =
-        'classDiagram\n' +
-        'class Class1\n' +
-        'Class1 : someMethod()\n' +
-        'click Class1 call functionCall()';
+      const str = 'classDiagram\n' + 'class Class1\n' + 'Class1 : someMethod()\n' + 'click Class1 call functionCall()';
       parser.parse(str);
 
       expect(classDb.setClickEvent).toHaveBeenCalledWith('Class1', 'functionCall');
@@ -1935,11 +1832,7 @@ describe('given a class diagram with relationships, ', function () {
         'click Class1 call functionCall("test0", test1, test2)';
       parser.parse(str);
 
-      expect(classDb.setClickEvent).toHaveBeenCalledWith(
-        'Class1',
-        'functionCall',
-        '"test0", test1, test2'
-      );
+      expect(classDb.setClickEvent).toHaveBeenCalledWith('Class1', 'functionCall', '"test0", test1, test2');
     });
 
     it('should associate callback with tooltip', function () {
@@ -2004,19 +1897,11 @@ class Class2
       const testClasses = parser.yy.getClasses();
       const testRelations = parser.yy.getRelations();
       expect(testNamespaceA.classes.size).toBe(2);
-      expect(testNamespaceA.classes.get('A1').members[0].getDisplayDetails().displayText).toBe(
-        '+foo : string'
-      );
-      expect(testNamespaceA.classes.get('A2').members[0].getDisplayDetails().displayText).toBe(
-        '+bar : int'
-      );
+      expect(testNamespaceA.classes.get('A1').members[0].getDisplayDetails().displayText).toBe('+foo : string');
+      expect(testNamespaceA.classes.get('A2').members[0].getDisplayDetails().displayText).toBe('+bar : int');
       expect(testNamespaceB.classes.size).toBe(2);
-      expect(testNamespaceB.classes.get('B1').members[0].getDisplayDetails().displayText).toBe(
-        '+foo : bool'
-      );
-      expect(testNamespaceB.classes.get('B2').members[0].getDisplayDetails().displayText).toBe(
-        '+bar : float'
-      );
+      expect(testNamespaceB.classes.get('B1').members[0].getDisplayDetails().displayText).toBe('+foo : bool');
+      expect(testNamespaceB.classes.get('B2').members[0].getDisplayDetails().displayText).toBe('+bar : float');
       expect(testClasses.size).toBe(4);
       expect(testClasses.get('A1').parent).toBe('A');
       expect(testClasses.get('A2').parent).toBe('A');

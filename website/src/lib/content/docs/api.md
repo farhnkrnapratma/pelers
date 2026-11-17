@@ -10,7 +10,7 @@ Pelers ships one native binding for Node and Bun, and a Rust crate with the same
 ## JavaScript and TypeScript
 
 ```ts
-import { detectType, PelersError, render, renderFull, supports } from 'pelers';
+import { detectType, PelersError, render, renderFull, supports } from "pelers";
 
 const svg = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
 const { svg: sized, width, height, title } = renderFull('pie\n  "Dogs": 3');
@@ -36,18 +36,18 @@ Returns `true` when `detectType` finds a diagram type. Pelers supports every typ
 
 Thrown by `render` and `renderFull`. Its `code` is one of:
 
-| Code | Meaning |
-| --- | --- |
-| `unsupported-diagram` | The text does not start with a recognized Mermaid diagram header. |
-| `syntax` | The diagram text is not valid for its type. The message names the line and the expected token. |
-| `semantic` | The text parses but describes something the renderer cannot draw. |
-| `limit` | The source or the output is longer than the limit below. |
+| Code                  | Meaning                                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------------------- |
+| `unsupported-diagram` | The text does not start with a recognized Mermaid diagram header.                              |
+| `syntax`              | The diagram text is not valid for its type. The message names the line and the expected token. |
+| `semantic`            | The text parses but describes something the renderer cannot draw.                              |
+| `limit`               | The source or the output is longer than the limit below.                                       |
 
 ```ts
 try {
-  render('hello');
+  render("hello");
 } catch (error) {
-  if (error instanceof PelersError && error.code === 'unsupported-diagram') {
+  if (error instanceof PelersError && error.code === "unsupported-diagram") {
     // show a message to the user
   }
 }

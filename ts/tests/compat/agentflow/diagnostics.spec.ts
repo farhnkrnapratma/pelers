@@ -9,11 +9,7 @@
  * real diagram, so the claim cannot rot into fiction.
  */
 import { describe, expect, it } from 'vitest';
-import {
-  AgentflowWarning,
-  PARSER_EMITTED_DIAGNOSTICS,
-  RESERVED_DIAGNOSTICS,
-} from './adapter.js';
+import { AgentflowWarning, PARSER_EMITTED_DIAGNOSTICS, RESERVED_DIAGNOSTICS } from './adapter.js';
 import { AgentFlowDB } from './adapter.js';
 import agentflow from './adapter.js';
 
@@ -53,9 +49,7 @@ const REPRODUCTIONS: Record<string, string> = {
 describe('agentflow diagnostic vocabulary', () => {
   it('partitions every ID into emitted or reserved', () => {
     const all = [...new Set(Object.values(AgentflowWarning))].sort();
-    const partitioned = [
-      ...new Set([...PARSER_EMITTED_DIAGNOSTICS, ...RESERVED_DIAGNOSTICS]),
-    ].sort();
+    const partitioned = [...new Set([...PARSER_EMITTED_DIAGNOSTICS, ...RESERVED_DIAGNOSTICS])].sort();
     expect(partitioned).toStrictEqual(all);
     for (const id of PARSER_EMITTED_DIAGNOSTICS) {
       expect(RESERVED_DIAGNOSTICS.has(id)).toBe(false);

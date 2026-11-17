@@ -94,9 +94,7 @@ describe('[Edges] when parsing', () => {
     describe('open ended edges with ids and labels', function () {
       regularEdges.forEach((edgeType) => {
         it(`should handle ${edgeType.stroke} ${edgeType.type} with no text`, function () {
-          const res = flow.parser.parse(
-            `flowchart TD;\nA e1@${edgeType.edgeStart}${edgeType.edgeEnd} B;`
-          );
+          const res = flow.parser.parse(`flowchart TD;\nA e1@${edgeType.edgeStart}${edgeType.edgeEnd} B;`);
           const vert = flow.parser.yy.getVertices();
           const edges = flow.parser.yy.getEdges();
           expect(vert.get('A').id).toBe('A');
@@ -110,9 +108,7 @@ describe('[Edges] when parsing', () => {
           expect(edges[0].stroke).toBe(`${edgeType.stroke}`);
         });
         it(`should handle ${edgeType.stroke} ${edgeType.type} with text`, function () {
-          const res = flow.parser.parse(
-            `flowchart TD;\nA e1@${edgeType.edgeStart}${edgeType.edgeEnd} B;`
-          );
+          const res = flow.parser.parse(`flowchart TD;\nA e1@${edgeType.edgeStart}${edgeType.edgeEnd} B;`);
           const vert = flow.parser.yy.getVertices();
           const edges = flow.parser.yy.getEdges();
           expect(vert.get('A').id).toBe('A');
@@ -139,9 +135,7 @@ A@{ shape: 'rect' }
     describe('double ended edges with ids and labels', function () {
       doubleEndedEdges.forEach((edgeType) => {
         it(`should handle ${edgeType.stroke} ${edgeType.type} with  text`, function () {
-          const res = flow.parser.parse(
-            `flowchart TD;\nA e1@${edgeType.edgeStart} label ${edgeType.edgeEnd} B;`
-          );
+          const res = flow.parser.parse(`flowchart TD;\nA e1@${edgeType.edgeStart} label ${edgeType.edgeEnd} B;`);
           const vert = flow.parser.yy.getVertices();
           const edges = flow.parser.yy.getEdges();
           expect(vert.get('A').id).toBe('A');
@@ -177,9 +171,7 @@ A@{ shape: 'rect' }
       });
 
       it(`should handle ${edgeType.stroke} ${edgeType.type} with text`, function () {
-        const res = flow.parser.parse(
-          `graph TD;\nA ${edgeType.edgeStart} text ${edgeType.edgeEnd} B;`
-        );
+        const res = flow.parser.parse(`graph TD;\nA ${edgeType.edgeStart} text ${edgeType.edgeEnd} B;`);
 
         const vert = flow.parser.yy.getVertices();
         const edges = flow.parser.yy.getEdges();
@@ -194,33 +186,26 @@ A@{ shape: 'rect' }
         expect(edges[0].stroke).toBe(`${edgeType.stroke}`);
       });
 
-      it.each(keywords)(
-        `should handle ${edgeType.stroke} ${edgeType.type} with %s text`,
-        function (keyword) {
-          const res = flow.parser.parse(
-            `graph TD;\nA ${edgeType.edgeStart} ${keyword} ${edgeType.edgeEnd} B;`
-          );
+      it.each(keywords)(`should handle ${edgeType.stroke} ${edgeType.type} with %s text`, function (keyword) {
+        const res = flow.parser.parse(`graph TD;\nA ${edgeType.edgeStart} ${keyword} ${edgeType.edgeEnd} B;`);
 
-          const vert = flow.parser.yy.getVertices();
-          const edges = flow.parser.yy.getEdges();
+        const vert = flow.parser.yy.getVertices();
+        const edges = flow.parser.yy.getEdges();
 
-          expect(vert.get('A').id).toBe('A');
-          expect(vert.get('B').id).toBe('B');
-          expect(edges.length).toBe(1);
-          expect(edges[0].start).toBe('A');
-          expect(edges[0].end).toBe('B');
-          expect(edges[0].type).toBe(`${edgeType.type}`);
-          expect(edges[0].text).toBe(`${keyword}`);
-          expect(edges[0].stroke).toBe(`${edgeType.stroke}`);
-        }
-      );
+        expect(vert.get('A').id).toBe('A');
+        expect(vert.get('B').id).toBe('B');
+        expect(edges.length).toBe(1);
+        expect(edges[0].start).toBe('A');
+        expect(edges[0].end).toBe('B');
+        expect(edges[0].type).toBe(`${edgeType.type}`);
+        expect(edges[0].text).toBe(`${keyword}`);
+        expect(edges[0].stroke).toBe(`${edgeType.stroke}`);
+      });
     });
   });
 
   it('should handle multiple edges', function () {
-    const res = flow.parser.parse(
-      'graph TD;A---|This is the 123 s text|B;\nA---|This is the second edge|B;'
-    );
+    const res = flow.parser.parse('graph TD;A---|This is the 123 s text|B;\nA---|This is the second edge|B;');
     const vert = flow.parser.yy.getVertices();
     const edges = flow.parser.yy.getEdges();
 

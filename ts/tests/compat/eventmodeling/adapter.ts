@@ -21,7 +21,10 @@ export interface EmTimeFrame {
   sourceFrames: { $refText: string; ref?: EmTimeFrame; error: undefined }[];
 }
 export interface EventModelingServices {
-  validation: { EventModelingValidator: EventModelingValidator; ValidationRegistry?: { register(...args: unknown[]): void } };
+  validation: {
+    EventModelingValidator: EventModelingValidator;
+    ValidationRegistry?: { register(...args: unknown[]): void };
+  };
 }
 
 export const eventModelingParse = (src: string) => toResult<EventModelAst>(parseEventModel, src);
@@ -36,7 +39,10 @@ export class EventModelingValidator {
 export function registerValidationChecks(services: EventModelingServices): void {
   const validator = services.validation.EventModelingValidator;
   services.validation.ValidationRegistry?.register(
-    { EmTimeFrame: validator.checkSourceFrameTypes.bind(validator), EmResetFrame: validator.checkSourceFrameTypes.bind(validator) },
+    {
+      EmTimeFrame: validator.checkSourceFrameTypes.bind(validator),
+      EmResetFrame: validator.checkSourceFrameTypes.bind(validator),
+    },
     validator
   );
 }

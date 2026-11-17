@@ -184,7 +184,10 @@ describe('quadrant chart rendering', () => {
       'quadrantChart\n One: [0.5, 0]\n Two: [0.5, 0.02]\n Three: [1, 1]\n Four: [0, 0.5]',
       options
     );
-    const labels = [...svg.matchAll(/<text class="pelers-label" x="([\d.]+)" y="([\d.]+)"/g)].map((m) => [+m[1], +m[2]]);
+    const labels = [...svg.matchAll(/<text class="pelers-label" x="([\d.]+)" y="([\d.]+)"/g)].map((m) => [
+      +m[1],
+      +m[2],
+    ]);
     expect(labels).toHaveLength(4);
     for (const [x, y] of labels) {
       expect(x).toBeGreaterThan(8);

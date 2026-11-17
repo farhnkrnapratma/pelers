@@ -33,8 +33,7 @@ describe('state diagram colour slots', () => {
     return stateDb.getData().nodes;
   };
 
-  const slots = (diagram: string) =>
-    new Map(parse(diagram).map((node) => [node.id, node.colorIndex]));
+  const slots = (diagram: string) => new Map(parse(diagram).map((node) => [node.id, node.colorIndex]));
 
   /**
    * Concurrency regions are matched on shape, not on id. Only the regions that follow a

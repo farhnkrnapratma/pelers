@@ -12,12 +12,9 @@ describe('when using the ganttDb', function () {
   });
 
   describe('when using duration', function () {
-    it.each([{ str: '1d', expected: [1, 'd'] }])(
-      'should %s resulting in $o duration',
-      ({ str, expected }) => {
-        expect(ganttDb.parseDuration(str)).toEqual(expected);
-      }
-    );
+    it.each([{ str: '1d', expected: [1, 'd'] }])('should %s resulting in $o duration', ({ str, expected }) => {
+      expect(ganttDb.parseDuration(str)).toEqual(expected);
+    });
 
     it.each(
       convert`
@@ -446,9 +443,7 @@ describe('when using the ganttDb', function () {
     expect(tasks[14].id).toEqual('task9');
     expect(tasks[14].task).toEqual('Add gantt diagram to demo page');
 
-    expect(tasks[15].startTime).toEqual(
-      dayjs('2014-01-16 20:00:00', 'YYYY-MM-DD HH:mm:ss').toDate()
-    );
+    expect(tasks[15].startTime).toEqual(dayjs('2014-01-16 20:00:00', 'YYYY-MM-DD HH:mm:ss').toDate());
     expect(tasks[15].endTime).toEqual(dayjs('2014-01-18 20:00:00', 'YYYY-MM-DD HH:mm:ss').toDate());
     expect(tasks[15].order).toEqual(15);
     expect(tasks[15].id).toEqual('task10');

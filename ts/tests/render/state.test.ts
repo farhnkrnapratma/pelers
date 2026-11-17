@@ -129,9 +129,9 @@ describe('state diagram rendering', () => {
       Number(m[1]),
       Number(m[2]),
     ]);
-    const starts = [...svg.matchAll(/<g class="pelers-edge pelers-transition"[^>]*><path d="M([-\d.]+),([-\d.]+)/g)].map(
-      (m) => [Number(m[1]), Number(m[2])]
-    );
+    const starts = [
+      ...svg.matchAll(/<g class="pelers-edge pelers-transition"[^>]*><path d="M([-\d.]+),([-\d.]+)/g),
+    ].map((m) => [Number(m[1]), Number(m[2])]);
     expect(tips).toHaveLength(2);
     expect(starts).toHaveLength(2);
     for (const [x, y] of tips) {
@@ -209,13 +209,17 @@ describe('state diagram rendering', () => {
       new RegExp(`<g class="pelers-edge[^"]*"[^>]* data-id="${id}">.*?</g>`).exec(svg)![0];
     const edge = (id: string): string => /<path d="([^"]+)"/.exec(group(id))![1];
     // a --> b inside the composite, b --> e out of it.
-    expect(group('edge0')).toContain('class="pelers-edge pelers-transition" stroke="var(--pelers-fg-on-light,#1f1f1f)"');
+    expect(group('edge0')).toContain(
+      'class="pelers-edge pelers-transition" stroke="var(--pelers-fg-on-light,#1f1f1f)"'
+    );
     expect(group('edge0')).toContain('fill="var(--pelers-fg-on-light,#1f1f1f)"');
     expect(casings).not.toContain(edge('edge0'));
     expect(casings).toContain(`<path d="${edge('edge2')}"/>`);
     expect(group('edge2')).not.toContain('--pelers-fg-on');
     expect(casings).not.toContain(edge('edge3'));
-    expect(draw(src.replace('\nstyle Busy fill:#FFF9C4', ''))).not.toMatch(/pelers-casings|stroke="var\(--pelers-fg-on/);
+    expect(draw(src.replace('\nstyle Busy fill:#FFF9C4', ''))).not.toMatch(
+      /pelers-casings|stroke="var\(--pelers-fg-on/
+    );
   });
 
   it('gives each composite its own direction', () => {
@@ -380,9 +384,13 @@ describe('state diagram rendering', () => {
     );
     expect(svg).toMatch(/class="pelers-node pelers-state cool" data-id="a"[^>]*><rect[^>]* style="stroke:#00f;"/);
     expect(svg).toMatch(/class="pelers-node pelers-state hot" data-id="b"[^>]*><rect[^>]* style="fill:#f00;"/);
-    expect(svg).toMatch(/data-id="b"[^>]*><rect[^>]*\/><text class="pelers-label" style="fill:white;font-weight:bold;"/);
+    expect(svg).toMatch(
+      /data-id="b"[^>]*><rect[^>]*\/><text class="pelers-label" style="fill:white;font-weight:bold;"/
+    );
     expect(svg).toMatch(/data-id="c"[^>]*><rect[^>]* style="fill:#0f0;stroke-width:4px;"/);
-    expect(svg).toMatch(/class="pelers-cluster pelers-state-composite cool" data-id="G"><rect[^>]* style="stroke:#00f;"/);
+    expect(svg).toMatch(
+      /class="pelers-cluster pelers-state-composite cool" data-id="G"><rect[^>]* style="stroke:#00f;"/
+    );
   });
 
   it('turns click statements into links, with the URL sanitized', () => {
@@ -406,7 +414,9 @@ describe('state diagram rendering', () => {
     const svg = draw('accTitle: The title\n accDescr: The description\n a --> b');
     expect(svg).toContain('<title id="pelers-title">The title</title>');
     expect(svg).toContain('<desc id="pelers-desc">The description</desc>');
-    expect(draw('accDescr {\n several\n lines\n }\n a --> b')).toContain('<desc id="pelers-desc">several\nlines</desc>');
+    expect(draw('accDescr {\n several\n lines\n }\n a --> b')).toContain(
+      '<desc id="pelers-desc">several\nlines</desc>'
+    );
   });
 
   it('accepts the statements that change nothing: hide empty description, scale, comments', () => {

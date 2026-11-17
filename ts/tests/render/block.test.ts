@@ -572,10 +572,14 @@ describe('block rendering', () => {
     expect(svg).toMatch(
       /data-id="a"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-light,#1f1f1f\)"[^>]*>Light</
     );
-    expect(svg).toMatch(/data-id="b"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</);
+    expect(svg).toMatch(
+      /data-id="b"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Dark</
+    );
     expect(svg).toMatch(/data-id="c"[^>]*>.*?<text class="pelers-label" style="fill:#eee;"[^>]*>Own</);
     expect(svg).toMatch(/data-id="d"[^>]*>.*?<text class="pelers-label" x=[^>]*>Plain</);
-    expect(svg).toMatch(/data-id="e"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Go</);
+    expect(svg).toMatch(
+      /data-id="e"[^>]*>.*?<text class="pelers-label" fill="var\(--pelers-fg-on-dark,#fff\)"[^>]*>Go</
+    );
   });
 
   it('cases edges that cross a composite fill a style sets and inks those inside it', () => {
@@ -589,7 +593,9 @@ describe('block rendering', () => {
     expect(edges).toHaveLength(3);
     expect(edges.map(([, d]) => casings.includes(`<path d="${d}"/>`))).toEqual([false, true, false]);
     expect(edges.map(([attrs]) => attrs)).toEqual([' stroke="var(--pelers-fg-on-light,#1f1f1f)"', '', '']);
-    expect(render(src.replace('\n  style g fill:#BBDEFB', ''), options).svg).not.toMatch(/pelers-casings|--pelers-fg-on/);
+    expect(render(src.replace('\n  style g fill:#BBDEFB', ''), options).svg).not.toMatch(
+      /pelers-casings|--pelers-fg-on/
+    );
     // The second loop on a reaches out past the composite, so it is cased.
     const loops = render('block\n  block:g\n    a\n  end\n  a --> a\n  a --> a\n  style g fill:white', options).svg;
     expect(loops).toMatch(/data-id="1-a-a" stroke="var\(--pelers-fg-on-light,#1f1f1f\)"/);

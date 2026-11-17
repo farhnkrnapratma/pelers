@@ -98,9 +98,7 @@ describe('architecture diagrams', () => {
         cy.edges().forEach((edge) => edge.numericStyle('label'));
 
         const mappingWarnings = warnSpy.mock.calls.filter((args) =>
-          args.some(
-            (arg) => typeof arg === 'string' && arg.includes('Do not assign mappings to elements')
-          )
+          args.some((arg) => typeof arg === 'string' && arg.includes('Do not assign mappings to elements'))
         );
         expect(mappingWarnings).toHaveLength(0);
 
@@ -288,12 +286,8 @@ describe('architecture diagrams', () => {
       // The langium grammar requires `(members+=ID)+` so the parser path already
       // enforces ≥2 members. This guards the DB API for any non-grammar callers
       // (programmatic construction, future renderers, etc.).
-      expect(() => db.addLayoutHint({ direction: 'row', members: [] })).toThrow(
-        /at least two members/
-      );
-      expect(() => db.addLayoutHint({ direction: 'column', members: ['only_one'] })).toThrow(
-        /at least two members/
-      );
+      expect(() => db.addLayoutHint({ direction: 'row', members: [] })).toThrow(/at least two members/);
+      expect(() => db.addLayoutHint({ direction: 'column', members: ['only_one'] })).toThrow(/at least two members/);
     });
 
     it('should not collide with services whose id starts with row or column', async () => {
@@ -333,22 +327,16 @@ describe('architecture diagrams', () => {
     });
 
     it('should throw if junction parent does not exist', () => {
-      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'nonexistent' })).toThrow(
-        'parent does not exist'
-      );
+      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'nonexistent' })).toThrow('parent does not exist');
     });
 
     it('should throw if junction parent is a node (service), not a group', () => {
       db.addService({ id: 'app', type: 'service', icon: 'server', title: 'App' });
-      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'app' })).toThrow(
-        'parent is not a group'
-      );
+      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'app' })).toThrow('parent is not a group');
     });
 
     it('should throw if junction is placed within itself', () => {
-      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'j1' })).toThrow(
-        'cannot be placed within itself'
-      );
+      expect(() => db.addJunction({ id: 'j1', type: 'junction', in: 'j1' })).toThrow('cannot be placed within itself');
     });
 
     it('should allow junction in a valid group', () => {

@@ -84,7 +84,14 @@ describe('sequence rendering', () => {
 
   it('themes through custom properties with fallbacks and no style element', () => {
     const svg = svgOf('sequenceDiagram\n  Alice->>+Bob: Hi\n  Note over Alice: n\n  Bob-->>-Alice: Yo');
-    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-font']) {
+    for (const token of [
+      '--pelers-bg',
+      '--pelers-fg',
+      '--pelers-line',
+      '--pelers-surface',
+      '--pelers-border',
+      '--pelers-font',
+    ]) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');

@@ -442,9 +442,7 @@ columns 1
   describe('prototype properties', function () {
     function validateProperty(prop: string) {
       expect(() => block.parse(`block\n${prop}`)).not.toThrow();
-      expect(() =>
-        block.parse(`block\nA; classDef ${prop} color:#ffffff,fill:#000000; class A ${prop}`)
-      ).not.toThrow();
+      expect(() => block.parse(`block\nA; classDef ${prop} color:#ffffff,fill:#000000; class A ${prop}`)).not.toThrow();
     }
 
     it('should work with a __proto__ property', function () {

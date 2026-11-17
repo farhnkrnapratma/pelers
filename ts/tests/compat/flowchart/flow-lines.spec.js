@@ -25,11 +25,7 @@ describe('[Lines] when parsing', () => {
 
   it('should handle line interpolation numbered definitions', function () {
     const res = flow.parser.parse(
-      'graph TD\n' +
-        'A-->B\n' +
-        'A-->C\n' +
-        'linkStyle 0 interpolate basis\n' +
-        'linkStyle 1 interpolate cardinal'
+      'graph TD\n' + 'A-->B\n' + 'A-->C\n' + 'linkStyle 0 interpolate basis\n' + 'linkStyle 1 interpolate cardinal'
     );
 
     const vert = flow.parser.yy.getVertices();
@@ -41,11 +37,7 @@ describe('[Lines] when parsing', () => {
 
   it('should handle edge curve properties using edge ID', function () {
     const res = flow.parser.parse(
-      'graph TD\n' +
-        'A e1@-->B\n' +
-        'A uniqueName@-->C\n' +
-        'e1@{curve: basis}\n' +
-        'uniqueName@{curve: cardinal}'
+      'graph TD\n' + 'A e1@-->B\n' + 'A uniqueName@-->C\n' + 'e1@{curve: basis}\n' + 'uniqueName@{curve: cardinal}'
     );
 
     const vert = flow.parser.yy.getVertices();
@@ -57,11 +49,7 @@ describe('[Lines] when parsing', () => {
 
   it('should handle edge curve properties using edge ID but without overriding default', function () {
     const res = flow.parser.parse(
-      'graph TD\n' +
-        'A e1@-->B\n' +
-        'A-->C\n' +
-        'linkStyle default interpolate linear\n' +
-        'e1@{curve: stepAfter}'
+      'graph TD\n' + 'A e1@-->B\n' + 'A-->C\n' + 'linkStyle default interpolate linear\n' + 'e1@{curve: stepAfter}'
     );
 
     const vert = flow.parser.yy.getVertices();
@@ -93,9 +81,7 @@ describe('[Lines] when parsing', () => {
   });
 
   it('should handle line interpolation multi-numbered definitions', function () {
-    const res = flow.parser.parse(
-      'graph TD\n' + 'A-->B\n' + 'A-->C\n' + 'linkStyle 0,1 interpolate basis'
-    );
+    const res = flow.parser.parse('graph TD\n' + 'A-->B\n' + 'A-->C\n' + 'linkStyle 0,1 interpolate basis');
 
     const vert = flow.parser.yy.getVertices();
     const edges = flow.parser.yy.getEdges();
@@ -105,9 +91,7 @@ describe('[Lines] when parsing', () => {
   });
 
   it('should handle line interpolation default with style', function () {
-    const res = flow.parser.parse(
-      'graph TD\n' + 'A-->B\n' + 'linkStyle default interpolate basis stroke-width:1px;'
-    );
+    const res = flow.parser.parse('graph TD\n' + 'A-->B\n' + 'linkStyle default interpolate basis stroke-width:1px;');
 
     const vert = flow.parser.yy.getVertices();
     const edges = flow.parser.yy.getEdges();

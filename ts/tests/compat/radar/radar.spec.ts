@@ -7,16 +7,7 @@ import { relativeRadius, closedRoundCurve } from './adapter.js';
 import { Diagram } from './adapter.js';
 import { mermaidAPI } from './adapter.js';
 
-const {
-  clear,
-  getDiagramTitle,
-  getAccTitle,
-  getAccDescription,
-  getAxes,
-  getCurves,
-  getOptions,
-  getConfig,
-} = db;
+const { clear, getDiagramTitle, getAccTitle, getAccDescription, getAxes, getCurves, getOptions, getConfig } = db;
 
 describe('radar diagrams', () => {
   beforeEach(() => {

@@ -127,9 +127,7 @@ describe('treeView parser integration', () => {
 
   describe('combined annotations', () => {
     it('should handle all annotations together', async () => {
-      const node = await parseAndGetNode(
-        'App.tsx :::highlight icon(logos:react) ## main component'
-      );
+      const node = await parseAndGetNode('App.tsx :::highlight icon(logos:react) ## main component');
       expect(node.name).toBe('App.tsx');
       expect(node.cssClass).toBe('highlight');
       expect(node.icon).toBe('logos:react');
@@ -137,9 +135,7 @@ describe('treeView parser integration', () => {
     });
 
     it('should handle quoted label with all annotations', async () => {
-      const node = await parseAndGetNode(
-        '"my app.tsx" :::highlight icon(logos:react) ## main component'
-      );
+      const node = await parseAndGetNode('"my app.tsx" :::highlight icon(logos:react) ## main component');
       expect(node.name).toBe('my app.tsx');
       expect(node.cssClass).toBe('highlight');
       expect(node.icon).toBe('logos:react');

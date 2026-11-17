@@ -499,34 +499,26 @@ describe('given text representing a method, ', function () {
       const str = '+' + methodNameAndParameters;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '+' + expectedMethodNameAndParameters
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('+' + expectedMethodNameAndParameters);
     });
 
     it('should handle private visibility', function () {
       const str = '-' + methodNameAndParameters;
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '-' + expectedMethodNameAndParameters
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('-' + expectedMethodNameAndParameters);
     });
 
     it('should handle protected visibility', function () {
       const str = '#' + methodNameAndParameters;
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '#' + expectedMethodNameAndParameters
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('#' + expectedMethodNameAndParameters);
     });
 
     it('should handle internal visibility', function () {
       const str = '~' + methodNameAndParameters;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '~' + expectedMethodNameAndParameters
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('~' + expectedMethodNameAndParameters);
     });
 
     it('should return correct css for static classifier', function () {
@@ -602,54 +594,42 @@ describe('given text representing a method, ', function () {
       const str = `getTimetableList() List~List~T~~`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        'getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('getTimetableList() : List<List<T>>');
     });
 
     it('should handle public visibility', function () {
       const str = `+getTimetableList() List~List~T~~`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '+getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('+getTimetableList() : List<List<T>>');
     });
 
     it('should handle private visibility', function () {
       const str = `-getTimetableList() List~List~T~~`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '-getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('-getTimetableList() : List<List<T>>');
     });
 
     it('should handle protected visibility', function () {
       const str = `#getTimetableList() List~List~T~~`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '#getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('#getTimetableList() : List<List<T>>');
     });
 
     it('should handle internal visibility', function () {
       const str = `~getTimetableList() List~List~T~~`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        '~getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('~getTimetableList() : List<List<T>>');
     });
 
     it('should return correct css for static classifier', function () {
       const str = `getTimetableList() List~List~T~~$`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        'getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('getTimetableList() : List<List<T>>');
       expect(classMember.getDisplayDetails().cssStyle).toBe(staticCssStyle);
     });
 
@@ -657,9 +637,7 @@ describe('given text representing a method, ', function () {
       const str = `getTimetableList() List~List~T~~*`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        'getTimetableList() : List<List<T>>'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('getTimetableList() : List<List<T>>');
       expect(classMember.getDisplayDetails().cssStyle).toBe(abstractCssStyle);
     });
   });
@@ -676,9 +654,7 @@ describe('given text representing a method, ', function () {
       const str = `getTime~T~(this T, int seconds)$ DateTime`;
 
       const classMember = new ClassMember(str, 'method');
-      expect(classMember.getDisplayDetails().displayText).toBe(
-        'getTime<T>(this T, int seconds) : DateTime'
-      );
+      expect(classMember.getDisplayDetails().displayText).toBe('getTime<T>(this T, int seconds) : DateTime');
       expect(classMember.getDisplayDetails().cssStyle).toBe(staticCssStyle);
     });
   });

@@ -21,9 +21,7 @@ const slotsById = async (text: string) => {
     getData: () => { nodes: { id: string; colorIndex?: number }[] };
   };
   const data = db.getData();
-  return new Map(
-    data.nodes.filter((n) => n.colorIndex !== undefined).map((n) => [String(n.id), n.colorIndex!])
-  );
+  return new Map(data.nodes.filter((n) => n.colorIndex !== undefined).map((n) => [String(n.id), n.colorIndex!]));
 };
 
 describe('agentflow container order', () => {

@@ -140,16 +140,7 @@ describe('flow db getData', () => {
     flowDb.addLink(['C'], ['D'], {});
     flowDb.updateLinkInterpolate(['default'], 'stepBefore');
     flowDb.updateLinkInterpolate([0], 'basis');
-    flowDb.addVertex(
-      'e2',
-      { text: 'Shouldnt be used', type: 'text' },
-      undefined,
-      [],
-      [],
-      '',
-      {},
-      ' curve: monotoneX '
-    );
+    flowDb.addVertex('e2', { text: 'Shouldnt be used', type: 'text' }, undefined, [], [], '', {}, ' curve: monotoneX ');
     flowDb.addVertex(
       'e3',
       { text: 'Shouldnt be used', type: 'text' },
@@ -357,9 +348,7 @@ describe('flow db subgraph colour slots', () => {
 
     const { nodes } = flowDb.getData();
     const slot = (id: string) => nodes.find((n) => n.id === id)?.colorIndex;
-    expect([slot('Outer'), slot('InnerOne'), slot('InnerTwo'), slot('Sibling')]).toEqual([
-      0, 1, 2, 3,
-    ]);
+    expect([slot('Outer'), slot('InnerOne'), slot('InnerTwo'), slot('Sibling')]).toEqual([0, 1, 2, 3]);
   });
 
   it('keeps a collapsed subgraph on its own slot so the cycle does not shift', () => {
@@ -429,9 +418,7 @@ describe('flow db repeated subgraph ids (issue #8326)', () => {
   });
 
   it('applies a class set after a repeated declaration to the merged subgraph', () => {
-    parse(
-      'flowchart LR\nsubgraph S\n  x\nend\nsubgraph S\n  y\nend\nclassDef hot fill:#f00\nclass S hot'
-    );
+    parse('flowchart LR\nsubgraph S\n  x\nend\nsubgraph S\n  y\nend\nclassDef hot fill:#f00\nclass S hot');
 
     expect(subGraph('S')?.classes).toContain('hot');
     expect(flowDb.getData().nodes.find((n) => n.id === 'S')?.cssClasses).toContain('hot');
@@ -442,10 +429,7 @@ describe('flow db repeated subgraph ids (issue #8326)', () => {
       'after the repeated declaration',
       'flowchart LR\nsubgraph S\n  x\nend\nsubgraph S\n  y\nend\nS@{ view: collapsed }',
     ],
-    [
-      'between the two declarations',
-      'flowchart LR\nsubgraph S\n  x\nend\nS@{ view: collapsed }\nsubgraph S\n  y\nend',
-    ],
+    ['between the two declarations', 'flowchart LR\nsubgraph S\n  x\nend\nS@{ view: collapsed }\nsubgraph S\n  y\nend'],
   ])('collapses a repeated subgraph when its collapsed metadata comes %s', (_, text) => {
     parse(text);
 

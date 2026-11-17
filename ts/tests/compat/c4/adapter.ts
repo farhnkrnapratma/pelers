@@ -11,7 +11,8 @@ type View = Record<string, unknown>;
 
 // Mermaid wraps text fields as { text } and keeps a named argument found in the alias or
 // label slot as a one-key object there. Pelers stores plain strings, with that argument beside them.
-const text = (value: string | undefined): { text: string } | undefined => (value === undefined ? undefined : { text: value });
+const text = (value: string | undefined): { text: string } | undefined =>
+  value === undefined ? undefined : { text: value };
 const pair = (attr: C4Named): View => ({ [attr.key]: attr.value });
 const slot = (value: string, attr: C4Named | undefined): string | View => (attr ? pair(attr) : value);
 
@@ -44,8 +45,10 @@ function elementView(el: C4Element): View {
   };
 }
 
-const shapeView = (shape: C4Shape): View => cached(shape, (s) => ({ ...elementView(s), typeC4Shape: { text: s.kind } }));
-const boundaryView = (boundary: C4Boundary): View => cached(boundary, (b) => ({ ...elementView(b), nodeType: b.nodeType }));
+const shapeView = (shape: C4Shape): View =>
+  cached(shape, (s) => ({ ...elementView(s), typeC4Shape: { text: s.kind } }));
+const boundaryView = (boundary: C4Boundary): View =>
+  cached(boundary, (b) => ({ ...elementView(b), nodeType: b.nodeType }));
 const relView = (rel: C4Rel): View =>
   cached(rel, (r) => ({
     type: r.type,

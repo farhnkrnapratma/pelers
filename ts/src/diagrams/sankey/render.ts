@@ -212,7 +212,8 @@ function draw(model: SankeyModel, conf: Config, options: RenderOptions, chartWid
     const { value, after, y } = label;
     const x = after ? node.x + nodeWidth + LABEL_GAP : node.x - LABEL_GAP;
     const position = ` x="${num(x)}" y="${num(y + small * 0.35)}" text-anchor="${after ? 'start' : 'end'}"`;
-    const text = esc(name) + (value ? ` <tspan class="pelers-sankey-value" fill="var(--_m)">${esc(value)}</tspan>` : '');
+    const text =
+      esc(name) + (value ? ` <tspan class="pelers-sankey-value" fill="var(--_m)">${esc(value)}</tspan>` : '');
     labelsOut +=
       `<g class="pelers-label" data-id="${escText(id)}">` +
       (outlined

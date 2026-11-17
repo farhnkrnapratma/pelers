@@ -29,7 +29,10 @@ export async function referenceTree(src: string): Promise<{ ok: boolean; ast?: u
   }
 }
 
-export function pelersTree(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
+export function pelersTree(
+  parse: (src: string) => unknown,
+  src: string
+): { ok: boolean; ast?: unknown; error?: string } {
   try {
     return { ok: true, ast: plainTree(parse(src)) };
   } catch (e) {

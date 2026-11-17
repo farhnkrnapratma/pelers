@@ -209,8 +209,7 @@ describe('Testing xychart jison file', () => {
   });
 
   it('parse x-axis complete variant 3', () => {
-    const str =
-      'xychart \nx-axis xAxisName    [  "cat1  with space"  ,   cat2 asdf , cat3]   \n   ';
+    const str = 'xychart \nx-axis xAxisName    [  "cat1  with space"  ,   cat2 asdf , cat3]   \n   ';
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
     expect(mockDB.setXAxisBand).toHaveBeenCalledWith([
@@ -281,43 +280,32 @@ describe('Testing xychart jison file', () => {
   it('parse line Data', () => {
     const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line lineTitle [23, 45, 56.6]';
     expect(parserFnConstructor(str)).not.toThrow();
-    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle', type: 'text' }, [
-      dp(23),
-      dp(45),
-      dp(56.6),
-    ]);
+    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle', type: 'text' }, [dp(23), dp(45), dp(56.6)]);
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
   });
   it('parse line Data with spaces and +,- symbols', () => {
-    const str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 , -45  , 56.6 ]   ';
+    const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 , -45  , 56.6 ]   ';
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
-    expect(mockDB.setLineData).toHaveBeenCalledWith(
-      { text: 'lineTitle with space', type: 'text' },
-      [dp(23), dp(-45), dp(56.6)]
-    );
+    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle with space', type: 'text' }, [
+      dp(23),
+      dp(-45),
+      dp(56.6),
+    ]);
   });
   it('parse line Data without title', () => {
     const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [  +23 , -45  , 56.6 , .33]   ';
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
-    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: '', type: 'text' }, [
-      dp(23),
-      dp(-45),
-      dp(56.6),
-      dp(0.33),
-    ]);
+    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: '', type: 'text' }, [dp(23), dp(-45), dp(56.6), dp(0.33)]);
   });
   it('parse line Data throws error unbalanced brackets', () => {
-    let str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 [ -45  , 56.6 ]   ';
+    let str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 [ -45  , 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
-    str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 , -45  ] 56.6 ]   ';
+    str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "lineTitle with space"   [  +23 , -45  ] 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse line Data throws error if data is not provided', () => {
@@ -351,8 +339,7 @@ describe('Testing xychart jison file', () => {
     ]);
   });
   it('parse bar Data spaces and +,- symbol', () => {
-    const str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -45  , 56.6 ]   ';
+    const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -45  , 56.6 ]   ';
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
@@ -367,18 +354,12 @@ describe('Testing xychart jison file', () => {
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
-    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: '', type: 'text' }, [
-      dp(23),
-      dp(-45),
-      dp(56.6),
-    ]);
+    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: '', type: 'text' }, [dp(23), dp(-45), dp(56.6)]);
   });
   it('parse bar should throw for unbalanced brackets', () => {
-    let str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 [ -45  , 56.6 ]   ';
+    let str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 [ -45  , 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
-    str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -45  ] 56.6 ]   ';
+    str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -45  ] 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse bar should throw error if data is not provided', () => {
@@ -386,18 +367,15 @@ describe('Testing xychart jison file', () => {
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse bar should throw error if data is empty', () => {
-    const str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [   ]   ';
+    const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [   ]   ';
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse bar should throw error if comma is not proper', () => {
-    const str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , , -45  , 56.6 ]   ';
+    const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , , -45  , 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse bar should throw error if number is not passed', () => {
-    const str =
-      'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -4aa5  , 56.6 ]   ';
+    const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n bar "barTitle with space"   [  +23 , -4aa5  , 56.6 ]   ';
     expect(parserFnConstructor(str)).toThrow();
   });
   it('parse multiple bar and line variant 1', () => {
@@ -406,27 +384,15 @@ describe('Testing xychart jison file', () => {
     expect(parserFnConstructor(str)).not.toThrow();
     expect(mockDB.setYAxisTitle).toHaveBeenCalledWith({ text: 'yAxisName', type: 'text' });
     expect(mockDB.setXAxisTitle).toHaveBeenCalledWith({ text: 'xAxisName', type: 'text' });
-    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle1', type: 'text' }, [
-      dp(23),
-      dp(45),
-      dp(56.6),
-    ]);
-    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle2', type: 'text' }, [
-      dp(13),
-      dp(42),
-      dp(56.89),
-    ]);
+    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle1', type: 'text' }, [dp(23), dp(45), dp(56.6)]);
+    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle2', type: 'text' }, [dp(13), dp(42), dp(56.89)]);
     expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle1', type: 'text' }, [
       dp(11),
       dp(45.5),
       dp(67),
       dp(23),
     ]);
-    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle2', type: 'text' }, [
-      dp(45),
-      dp(99),
-      dp(12),
-    ]);
+    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle2', type: 'text' }, [dp(45), dp(99), dp(12)]);
   });
   it('parse multiple bar and line variant 2', () => {
     const str = `
@@ -447,33 +413,20 @@ describe('Testing xychart jison file', () => {
       { text: 'category 2', type: 'text' },
       { text: 'category3', type: 'text' },
     ]);
-    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle1', type: 'text' }, [
-      dp(23),
-      dp(45),
-      dp(56.6),
-    ]);
-    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle2', type: 'text' }, [
-      dp(13),
-      dp(42),
-      dp(56.89),
-    ]);
+    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle1', type: 'text' }, [dp(23), dp(45), dp(56.6)]);
+    expect(mockDB.setBarData).toHaveBeenCalledWith({ text: 'barTitle2', type: 'text' }, [dp(13), dp(42), dp(56.89)]);
     expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle1', type: 'text' }, [
       dp(11),
       dp(45.5),
       dp(67),
       dp(23),
     ]);
-    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle2', type: 'text' }, [
-      dp(45),
-      dp(99),
-      dp(12),
-    ]);
+    expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'lineTitle2', type: 'text' }, [dp(45), dp(99), dp(12)]);
   });
 
   describe('point labels', () => {
     it('parse line data with point labels', () => {
-      const str =
-        'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [10 "First", 20 "Second", 30 "Third"]';
+      const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [10 "First", 20 "Second", 30 "Third"]';
       expect(parserFnConstructor(str)).not.toThrow();
       expect(mockDB.setLineData).toHaveBeenCalledWith({ text: '', type: 'text' }, [
         dp(10, 'First'),
@@ -493,8 +446,7 @@ describe('Testing xychart jison file', () => {
     });
 
     it('parse line data with labels containing spaces', () => {
-      const str =
-        'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [10 "Hello World", 20 "Another Label"]';
+      const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [10 "Hello World", 20 "Another Label"]';
       expect(parserFnConstructor(str)).not.toThrow();
       expect(mockDB.setLineData).toHaveBeenCalledWith({ text: '', type: 'text' }, [
         dp(10, 'Hello World'),
@@ -505,10 +457,7 @@ describe('Testing xychart jison file', () => {
     it('parse line data with title and point labels', () => {
       const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line "My Line" [10 "A", 20 "B"]';
       expect(parserFnConstructor(str)).not.toThrow();
-      expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'My Line', type: 'text' }, [
-        dp(10, 'A'),
-        dp(20, 'B'),
-      ]);
+      expect(mockDB.setLineData).toHaveBeenCalledWith({ text: 'My Line', type: 'text' }, [dp(10, 'A'), dp(20, 'B')]);
     });
 
     it('parse bar data with point labels', () => {
@@ -522,8 +471,7 @@ describe('Testing xychart jison file', () => {
     });
 
     it('parse line data with decimal values and labels', () => {
-      const str =
-        'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [3.8 "Phi-3", 7 "Mistral", 540 "PaLM"]';
+      const str = 'xychart\nx-axis xAxisName\ny-axis yAxisName\n line [3.8 "Phi-3", 7 "Mistral", 540 "PaLM"]';
       expect(parserFnConstructor(str)).not.toThrow();
       expect(mockDB.setLineData).toHaveBeenCalledWith({ text: '', type: 'text' }, [
         dp(3.8, 'Phi-3'),

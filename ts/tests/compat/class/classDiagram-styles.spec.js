@@ -52,8 +52,7 @@ describe('class diagram, ', function () {
     });
 
     it('should be possible to apply a cssClass to a comma separated list of classes', function () {
-      const str =
-        'classDiagram\n' + 'class Class01\n class Class02\n cssClass "Class01,Class02" exClass';
+      const str = 'classDiagram\n' + 'class Class01\n class Class02\n cssClass "Class01,Class02" exClass';
 
       parser.parse(str);
 
@@ -62,8 +61,7 @@ describe('class diagram, ', function () {
     });
     it('should be possible to apply a style to an individual node', function () {
       const str =
-        'classDiagram\n' +
-        'class Class01\n class Class02\n style Class01 fill:#f9f,stroke:#333,stroke-width:4px';
+        'classDiagram\n' + 'class Class01\n class Class02\n style Class01 fill:#f9f,stroke:#333,stroke-width:4px';
 
       parser.parse(str);
 
@@ -74,8 +72,7 @@ describe('class diagram, ', function () {
       expect(styleElements[2]).toBe('stroke-width:4px');
     });
     it('should be possible to define and assign a class inside the diagram', function () {
-      const str =
-        'classDiagram\n' + 'class Class01\n cssClass "Class01" pink\n classDef pink fill:#f9f';
+      const str = 'classDiagram\n' + 'class Class01\n cssClass "Class01" pink\n classDef pink fill:#f9f';
 
       parser.parse(str);
 
@@ -89,17 +86,11 @@ describe('class diagram, ', function () {
       expect(parser.yy.getClass('Class01').cssClasses).toBe('default pink');
     });
     it('should properly assign styles from a class defined inside the diagram', function () {
-      const str =
-        'classDiagram\n' +
-        'class Class01:::pink\n classDef pink fill:#f9f,stroke:#333,stroke-width:6px';
+      const str = 'classDiagram\n' + 'class Class01:::pink\n classDef pink fill:#f9f,stroke:#333,stroke-width:6px';
 
       parser.parse(str);
 
-      expect(parser.yy.getClass('Class01').styles).toStrictEqual([
-        'fill:#f9f',
-        'stroke:#333',
-        'stroke-width:6px',
-      ]);
+      expect(parser.yy.getClass('Class01').styles).toStrictEqual(['fill:#f9f', 'stroke:#333', 'stroke-width:6px']);
     });
     it('should properly assign multiple classes and styles from classes defined inside the diagram', function () {
       const str =
@@ -108,11 +99,7 @@ describe('class diagram, ', function () {
 
       parser.parse(str);
 
-      expect(parser.yy.getClass('Class01').styles).toStrictEqual([
-        'fill:#f9f',
-        'stroke:#333',
-        'stroke-width:6px',
-      ]);
+      expect(parser.yy.getClass('Class01').styles).toStrictEqual(['fill:#f9f', 'stroke:#333', 'stroke-width:6px']);
       expect(parser.yy.getClass('Class01').cssClasses).toBe('default pink bold');
     });
   });

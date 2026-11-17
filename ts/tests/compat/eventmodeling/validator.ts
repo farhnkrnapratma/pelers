@@ -15,7 +15,11 @@ export interface CheckedFrame {
   sourceFrames: { ref?: { modelEntityType: string } }[];
 }
 
-export type Accept = (severity: 'error', message: string, info: { node: CheckedFrame; property: 'sourceFrames' }) => void;
+export type Accept = (
+  severity: 'error',
+  message: string,
+  info: { node: CheckedFrame; property: 'sourceFrames' }
+) => void;
 
 export function checkSourceFrameTypes(frame: CheckedFrame, accept: Accept): void {
   if (frame.sourceFrames.length === 0) return;
@@ -35,10 +39,14 @@ export function checkSourceFrameTypes(frame: CheckedFrame, accept: Accept): void
   const [allowed, target, expected] = rule;
   for (const source of frame.sourceFrames) {
     if (source.ref !== undefined && !allowed.has(source.ref.modelEntityType)) {
-      accept('error', `A ${target} can only receive input from a ${expected}, not from '${source.ref.modelEntityType}'.`, {
-        node: frame,
-        property: 'sourceFrames',
-      });
+      accept(
+        'error',
+        `A ${target} can only receive input from a ${expected}, not from '${source.ref.modelEntityType}'.`,
+        {
+          node: frame,
+          property: 'sourceFrames',
+        }
+      );
     }
   }
 }

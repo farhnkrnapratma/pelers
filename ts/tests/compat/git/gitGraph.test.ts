@@ -127,9 +127,7 @@ describe('Parsing Merge Statements', () => {
 
 describe('Parsing Checkout Statements', () => {
   it('should parse a checkout to a named branch', () => {
-    const result = parse(
-      `gitGraph\n commit id:"1"\n branch develop\n branch fun\n checkout develop\n`
-    );
+    const result = parse(`gitGraph\n commit id:"1"\n branch develop\n branch fun\n checkout develop\n`);
     const checkout = result.value.statements[3] as Checkout;
     expect(checkout.branch).toBe('develop');
   });

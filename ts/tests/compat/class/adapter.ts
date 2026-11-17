@@ -69,7 +69,12 @@ export class ClassDB extends ClassDb {
   }
 
   getData() {
-    return { ...buildClassGraph(this, config.class?.hierarchicalNamespaces ?? true), other: {}, config, direction: this.direction };
+    return {
+      ...buildClassGraph(this, config.class?.hierarchicalNamespaces ?? true),
+      other: {},
+      config,
+      direction: this.direction,
+    };
   }
 }
 

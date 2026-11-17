@@ -54,13 +54,7 @@ describe('when parsing a gantt diagram it', function () {
     ].join('\n');
 
     expect(parserFnConstructor(str)).not.toThrow();
-    expect(ganttDb.getExcludes()).toEqual([
-      'weekends',
-      '10-02-2025',
-      '11-02-2025',
-      '12-02-2025',
-      '01-05-2025',
-    ]);
+    expect(ganttDb.getExcludes()).toEqual(['weekends', '10-02-2025', '11-02-2025', '12-02-2025', '01-05-2025']);
   });
   it('should handle a todayMarker definition', function () {
     spyOn(ganttDb, 'setTodayMarker');
@@ -229,11 +223,7 @@ describe('when parsing a gantt diagram it', function () {
 
     expect(parserFnConstructor(str)).not.toThrow();
     const args = '"test1", "test2", "test3"';
-    expect(ganttDb.setClickEvent).toHaveBeenCalledWith(
-      'cl2',
-      'ganttTestClick',
-      '"test0", test1, test2'
-    );
+    expect(ganttDb.setClickEvent).toHaveBeenCalledWith('cl2', 'ganttTestClick', '"test0", test1, test2');
   });
 
   it('should allow for a accessibility title and description (accDescr)', function () {

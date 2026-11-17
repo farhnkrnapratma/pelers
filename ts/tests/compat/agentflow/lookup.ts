@@ -44,7 +44,14 @@ export function elementAt(model: AgentflowModel, line: number, column: number): 
 export function mappingStats(
   model: AgentflowModel
 ): Record<'vertices' | 'edges' | 'subgraphs' | 'connectors' | 'attachments' | 'totalElements', number> {
-  const stats = { vertices: 0, edges: 0, subgraphs: 0, connectors: 0, attachments: 0, totalElements: model.mappings.length };
+  const stats = {
+    vertices: 0,
+    edges: 0,
+    subgraphs: 0,
+    connectors: 0,
+    attachments: 0,
+    totalElements: model.mappings.length,
+  };
   for (const m of model.mappings) {
     if (m.type === 'vertex') stats.vertices++;
     else if (m.type === 'edge') stats.edges++;

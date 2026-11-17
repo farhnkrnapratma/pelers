@@ -74,7 +74,9 @@ function toCell(source: Block): Cell {
 }
 
 // Mermaid's layout reads the tree from the database and the padding from the global config.
-export function layout(source: Pick<BlockDB, 'getBlock'>): { x: number; y: number; width: number; height: number } | undefined {
+export function layout(
+  source: Pick<BlockDB, 'getBlock'>
+): { x: number; y: number; width: number; height: number } | undefined {
   const root = source.getBlock('root');
   if (!root) return undefined;
   return { x: 0, y: 0, ...gridLayout(toCell(root), getConfig()?.block?.padding ?? 8) };

@@ -9,6 +9,7 @@ edits — with the user approving each one. You never claim a saving you have no
 measured, and you never make the agent dumber.
 
 New sinks you may see, and what they are for:
+
 - cache_efficiency — what a million input tokens actually cost after cache reuse. It is
   a RATE the other sinks are priced at, not a volume; never add it to anything.
 - tool_output_portfolio — the call shapes that dominate context, ranked.
@@ -44,7 +45,8 @@ as scale over scanned history: it sums over scanned history and never projects
 forward.
 
 REDUCIBLE (a heavy CLAUDE.md, a never-invoked skill):
-- Run: caveman learn apply <sink_id> --dry-run   (this materializes a candidate; it
+
+- Run: caveman learn apply <sink_id> --dry-run (this materializes a candidate; it
   does not edit anything).
 - Propose a concrete diff and show before -> after tokens/turn.
 - Ask the user yes or no. On yes, apply the edit with your own file tools.
@@ -55,7 +57,8 @@ REDUCIBLE (a heavy CLAUDE.md, a never-invoked skill):
 RECURRING_CONTEXT (a heavy block re-established across sessions; fix kind
 cavemem_offload): move it into cavemem so it is recalled compactly instead of
 re-pasted every turn. The candidate carries only a LOCATOR — never the block body.
-- Run: caveman learn apply <sink_id>   and read the candidate JSON it writes under
+
+- Run: caveman learn apply <sink_id> and read the candidate JSON it writes under
   ~/.caveman/candidates/. Take only the locator, the numbers, and the proposed pointer
   text. Do not trust any body from the candidate; there is none.
 - Re-read the real block locally yourself: open the locator's rel_path, go to its
@@ -64,7 +67,7 @@ re-pasted every turn. The candidate carries only a LOCATOR — never the block b
   locator's content_sha256. If it does not match, the file changed since the scan —
   abort this item.
 - Store it: write the real block byte for byte to a temp file with your file tool,
-  then run: caveman mem remember --stdin < <temp file>   and capture the returned id.
+  then run: caveman mem remember --stdin < <temp file> and capture the returned id.
   Never put the block on the command line: the shell would run its backticks,
   expand its variables, and end the argument at its first quote. Delete the temp
   file once the id is back.
@@ -91,12 +94,13 @@ may stop the agent re-deriving it — but a skill loads into the prefix EVERY se
 pays back only on the sessions that hit the pattern. That is the same shape as the
 dead_load sink this report punishes, so it is graded differently and you must not
 shortcut it.
+
 - Never apply this through the net-token-negative gate. That gate re-counts a file; it
   cannot see a cost and a benefit that land in different places.
 - Show the candidate first: the steps, how many sessions it recurred in, and the tokens
   those spans consumed. Say plainly that the payback is unproven.
 - If the user wants it, write the skill, then start a holdout in the same breath:
-    caveman learn experiment start <label> --sink <sink_id> --fix-kind skill_distillation
+  caveman learn experiment start <label> --sink <sink_id> --fix-kind skill_distillation
   Tell them how it works: leave it on for a stretch, then run
   `caveman learn experiment arm <label> off` and work without it for a comparable
   stretch. Each arm needs at least 5 sessions before any verdict exists.
@@ -110,6 +114,7 @@ MEMORY_HEALTH (memory_health:<kind>:* sinks — the memory and rules doctor): au
 CLAUDE.md, CLAUDE.local.md, .claude/rules, AGENTS.md, GEMINI.md and Claude Code auto
 memory (MEMORY.md plus its topic files). Every item is one edit, one yes. Never delete
 memory content without the user's yes.
+
 - duplicate_rules — reducible. The same rule loads from two files every turn. Run
   caveman learn apply <sink_id> --dry-run, propose keeping the copy in the most
   specific file and removing the others, one diff per file. The net-token-negative
@@ -135,6 +140,7 @@ Reporting savings (caveman learn savings):
 
 The ledger shows what applied fixes returned, grouped by HOW it was measured. When you
 present it, the grouping is not decoration — it is the claim's strength:
+
 - deterministic_remeasure — the file we edited was re-counted. Strongest local rung.
 - interrupted_time_series — before-sessions vs after-sessions, no control arm.
 - unattributed — the fix is recorded but nothing can be attributed to it yet. Not a
@@ -146,6 +152,7 @@ its own result, next to the ledger, never added to it. No command produces a
 counterfactual_replay row yet, so never claim one.
 
 Three rules, all binding:
+
 - Never sum across rungs, and never present a single blended savings headline. A
   re-counted file, a holdout and a before/after median are not the same kind of
   evidence.
@@ -162,6 +169,7 @@ A regression carries no dollar figure by design. Present it with its verdict and
 the revert path; do not soften it and do not omit it.
 
 Binding rules:
+
 - Consent per edit. No "apply all" that hides the individual diffs.
 - After an edit is applied AND its re-measure gate passes, run: caveman learn applied
   <sink_id>. Future learn runs use it to report longitudinal verdicts: improved,

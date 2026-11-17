@@ -215,9 +215,7 @@ describe('vennRenderer', () => {
       expect(result).not.toBe(subsets);
       expect(result).toHaveLength(7);
       // Should have added exactly one missing pair: A|C
-      const acPair = result.find(
-        (s) => s.sets.length === 2 && s.sets.includes('A') && s.sets.includes('C')
-      );
+      const acPair = result.find((s) => s.sets.length === 2 && s.sets.includes('A') && s.sets.includes('C'));
       expect(acPair).toBeDefined();
       expect(acPair?.size).toBe(2.5);
     });

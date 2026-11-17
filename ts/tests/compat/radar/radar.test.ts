@@ -29,17 +29,17 @@ describe('radar', () => {
   });
 
   describe('should handle title, accDescr, and accTitle', () => {
-    it.each([
-      ...mutateGlobalSpacing(' title My Title'),
-      ...mutateGlobalSpacing('\n  title My Title'),
-    ])('should handle title', (context: string) => {
-      const result = parse(`radar-beta${context}`);
-      expectNoErrorsOrAlternatives(result);
-      expect(result.value.$type).toBe(Radar.$type);
+    it.each([...mutateGlobalSpacing(' title My Title'), ...mutateGlobalSpacing('\n  title My Title')])(
+      'should handle title',
+      (context: string) => {
+        const result = parse(`radar-beta${context}`);
+        expectNoErrorsOrAlternatives(result);
+        expect(result.value.$type).toBe(Radar.$type);
 
-      const { title } = result.value;
-      expect(title).toBe('My Title');
-    });
+        const { title } = result.value;
+        expect(title).toBe('My Title');
+      }
+    );
 
     it.each([
       ...mutateGlobalSpacing(' accDescr: My Accessible Description'),
@@ -66,9 +66,7 @@ describe('radar', () => {
     });
 
     it.each([
-      ...mutateGlobalSpacing(
-        ' title My Title\n  accDescr: My Accessible Description\n  accTitle: My Accessible Title'
-      ),
+      ...mutateGlobalSpacing(' title My Title\n  accDescr: My Accessible Description\n  accTitle: My Accessible Title'),
       ...mutateGlobalSpacing(
         '\n  title My Title\n  accDescr: My Accessible Description\n  accTitle: My Accessible Title'
       ),
@@ -85,19 +83,16 @@ describe('radar', () => {
   });
 
   describe('should handle axis', () => {
-    it.each([`axis my-axis`, `axis my-axis["My Axis Label"]`])(
-      'should handle one axis',
-      (context: string) => {
-        const result = parse(`radar-beta\n${context}`);
-        expectNoErrorsOrAlternatives(result);
-        expect(result.value.$type).toBe(Radar.$type);
+    it.each([`axis my-axis`, `axis my-axis["My Axis Label"]`])('should handle one axis', (context: string) => {
+      const result = parse(`radar-beta\n${context}`);
+      expectNoErrorsOrAlternatives(result);
+      expect(result.value.$type).toBe(Radar.$type);
 
-        const { axes } = result.value;
-        expect(axes).toHaveLength(1);
-        expect(axes[0].$type).toBe('Axis');
-        expect(axes[0].name).toBe('my-axis');
-      }
-    );
+      const { axes } = result.value;
+      expect(axes).toHaveLength(1);
+      expect(axes[0].$type).toBe('Axis');
+      expect(axes[0].name).toBe('my-axis');
+    });
 
     it.each([
       `axis my-axis["My Axis Label"]
@@ -289,59 +284,50 @@ describe('radar', () => {
   });
 
   describe('should handle options', () => {
-    it.each([`ticks 5`, `min 50`, `max 50`])(
-      `should handle number option %s`,
-      (context: string) => {
-        const result = parse(`radar-beta
+    it.each([`ticks 5`, `min 50`, `max 50`])(`should handle number option %s`, (context: string) => {
+      const result = parse(`radar-beta
       axis ax1, ax2
       curve c1 { ax1 1, ax2 2 }
       ${context}`);
-        expectNoErrorsOrAlternatives(result);
-        expect(result.value.$type).toBe(Radar.$type);
+      expectNoErrorsOrAlternatives(result);
+      expect(result.value.$type).toBe(Radar.$type);
 
-        const { options } = result.value;
-        expect(options).toBeDefined();
-        const option = options.find((option) => option.name === context.split(' ')[0]);
-        expect(option).toBeDefined();
-        expect(option?.value).toBe(Number(context.split(' ')[1]));
-      }
-    );
+      const { options } = result.value;
+      expect(options).toBeDefined();
+      const option = options.find((option) => option.name === context.split(' ')[0]);
+      expect(option).toBeDefined();
+      expect(option?.value).toBe(Number(context.split(' ')[1]));
+    });
 
-    it.each([`graticule circle`, `graticule polygon`])(
-      `should handle string option %s`,
-      (context: string) => {
-        const result = parse(`radar-beta
+    it.each([`graticule circle`, `graticule polygon`])(`should handle string option %s`, (context: string) => {
+      const result = parse(`radar-beta
       axis ax1, ax2
       curve c1 { ax1 1, ax2 2 }
       ${context}`);
-        expectNoErrorsOrAlternatives(result);
-        expect(result.value.$type).toBe(Radar.$type);
+      expectNoErrorsOrAlternatives(result);
+      expect(result.value.$type).toBe(Radar.$type);
 
-        const { options } = result.value;
-        expect(options).toBeDefined();
-        const option = options.find((option) => option.name === context.split(' ')[0]);
-        expect(option).toBeDefined();
-        expect(option?.value).toBe(context.split(' ')[1]);
-      }
-    );
+      const { options } = result.value;
+      expect(options).toBeDefined();
+      const option = options.find((option) => option.name === context.split(' ')[0]);
+      expect(option).toBeDefined();
+      expect(option?.value).toBe(context.split(' ')[1]);
+    });
 
-    it.each([`showLegend true`, `showLegend false`])(
-      `should handle boolean option %s`,
-      (context: string) => {
-        const result = parse(`radar-beta
+    it.each([`showLegend true`, `showLegend false`])(`should handle boolean option %s`, (context: string) => {
+      const result = parse(`radar-beta
       axis ax1, ax2
       curve c1 { ax1 1, ax2 2 }
       ${context}`);
-        expectNoErrorsOrAlternatives(result);
-        expect(result.value.$type).toBe(Radar.$type);
+      expectNoErrorsOrAlternatives(result);
+      expect(result.value.$type).toBe(Radar.$type);
 
-        const { options } = result.value;
-        expect(options).toBeDefined();
-        const option = options.find((option) => option.name === context.split(' ')[0]);
-        expect(option).toBeDefined();
-        expect(option?.value).toBe(context.split(' ')[1] === 'true');
-      }
-    );
+      const { options } = result.value;
+      expect(options).toBeDefined();
+      const option = options.find((option) => option.name === context.split(' ')[0]);
+      expect(option).toBeDefined();
+      expect(option?.value).toBe(context.split(' ')[1] === 'true');
+    });
   });
 
   describe('error messages with line and column numbers', () => {
@@ -425,9 +411,7 @@ describe('radar', () => {
     });
 
     it.skip('should report an unknown location for errors at the end of input', async () => {
-      await expect(parseAsync('radar', 'radar-beta\n  axis')).rejects.toThrow(
-        'Parse error on line ?, column ?:'
-      );
+      await expect(parseAsync('radar', 'radar-beta\n  axis')).rejects.toThrow('Parse error on line ?, column ?:');
     });
   });
 });

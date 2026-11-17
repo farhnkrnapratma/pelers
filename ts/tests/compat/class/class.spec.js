@@ -20,9 +20,7 @@ describe('class diagram', function () {
 
   describe('backtick escaping', function () {
     it('should handle backtick-quoted namespace names', function () {
-      expect(() =>
-        parser.parse(`classDiagram\nnamespace \`A::B\` {\n\tclass \`IPC::Sender\`\n}`)
-      ).not.toThrow();
+      expect(() => parser.parse(`classDiagram\nnamespace \`A::B\` {\n\tclass \`IPC::Sender\`\n}`)).not.toThrow();
     });
   });
 });

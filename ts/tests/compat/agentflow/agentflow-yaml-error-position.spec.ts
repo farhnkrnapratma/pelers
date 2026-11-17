@@ -40,9 +40,7 @@ const parseExpectingError = (text: string, frontmatterOffset = 0): YamlPositionE
 describe('issue #56 part 2: YAML @{ } errors report source coordinates', () => {
   it.skip('single-line block: maps (block 2:16) to the source line of the @{ } block', () => {
     // `content_ref@{ ... }` is on source line 3 (line 2 is blank).
-    const err = parseExpectingError(
-      'agentflow-beta TB\n\n  content_ref@{ shape: procs,* type: "BilingualContent" }'
-    );
+    const err = parseExpectingError('agentflow-beta TB\n\n  content_ref@{ shape: procs,* type: "BilingualContent" }');
     expect(err.message).toContain('name of an alias node must contain at least one character');
     // Source line 3, column 31 — not the block-relative (2:16).
     expect(err.message).toContain('(3:31)');
@@ -126,8 +124,6 @@ describe('issue #56 part 2: YAML @{ } errors report source coordinates', () => {
     agentflow.parser.yy = new AgentFlowDB();
     agentflow.parser.yy.clear();
     agentflow.parser.yy.setGen('gen-2');
-    expect(() =>
-      agentflow.parse('agentflow-beta TB\n  a["A"]@{ shape: rounded }\n\n  b["B"]')
-    ).not.toThrow();
+    expect(() => agentflow.parse('agentflow-beta TB\n  a["A"]@{ shape: rounded }\n\n  b["B"]')).not.toThrow();
   });
 });

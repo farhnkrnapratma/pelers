@@ -56,7 +56,9 @@ export class RequirementDb implements RequirementModel {
   private copy(target: string[], styles: string[]): void {
     this.styleCopies += styles.length;
     if (this.styleCopies > MAX_STYLE_COPIES) {
-      throw new PelersError('Requirement diagram applies too many style declarations.', 'limit', { type: 'requirement' });
+      throw new PelersError('Requirement diagram applies too many style declarations.', 'limit', {
+        type: 'requirement',
+      });
     }
     for (const style of styles) target.push(style);
   }

@@ -121,9 +121,7 @@ describe('Treemap Parser', () => {
     });
 
     it('should parse a treemap with accDescr', () => {
-      const result = parse(
-        'treemap\naccDescr: This is an accessible description\n"Root"\n  "Child": 100'
-      );
+      const result = parse('treemap\naccDescr: This is an accessible description\n"Root"\n  "Child": 100');
       expectNoErrorsOrAlternatives(result);
       expect(result.value.$type).toBe('Treemap');
       // We can't directly test the accDescr property due to how Langium processes TitleAndAccessibilities
@@ -170,9 +168,7 @@ accDescr: This is an accessible description
     });
 
     it('should parse a classDef statement with multiple style properties', () => {
-      const result = parse(
-        'treemap\nclassDef complexClass fill:blue stroke:#ff0000 stroke-width:2px'
-      );
+      const result = parse('treemap\nclassDef complexClass fill:blue stroke:#ff0000 stroke-width:2px');
 
       // Skip error assertion
 
@@ -206,9 +202,7 @@ accDescr: This is an accessible description
       const result = parse('treemap\n"My Section":::sectionClass');
       expectNoErrorsOrAlternatives(result);
 
-      const row = result.value.TreemapRows.find(
-        (element): element is TreemapRow => element.$type === 'TreemapRow'
-      );
+      const row = result.value.TreemapRows.find((element): element is TreemapRow => element.$type === 'TreemapRow');
 
       expect(row).toBeDefined();
       if (row?.item) {
@@ -223,9 +217,7 @@ accDescr: This is an accessible description
       const result = parse('treemap\n"My Leaf" : 100:::leafClass');
       expectNoErrorsOrAlternatives(result);
 
-      const row = result.value.TreemapRows.find(
-        (element): element is TreemapRow => element.$type === 'TreemapRow'
-      );
+      const row = result.value.TreemapRows.find((element): element is TreemapRow => element.$type === 'TreemapRow');
 
       expect(row).toBeDefined();
       if (row?.item) {

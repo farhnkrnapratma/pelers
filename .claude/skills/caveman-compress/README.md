@@ -50,14 +50,14 @@ The five fixture pairs in [`tests/caveman-compress/`](../../tests/caveman-compre
 counted with tiktoken o200k. Reproduce with
 `uv run --with tiktoken python skills/caveman-compress/scripts/benchmark.py`.
 
-| File | Original | Compressed | Saved |
-|------|----------:|----------:|------:|
-| `claude-md-preferences.md` | 827 | 421 | 49.1% |
-| `claude-md-project.md` | 1628 | 1117 | 31.4% |
-| `mixed-with-code.md` | 1432 | 1106 | 22.8% |
-| `project-notes.md` | 1431 | 846 | 40.9% |
-| `todo-list.md` | 880 | 648 | 26.4% |
-| Total | 6198 | 4138 | 33.2% |
+| File                       | Original | Compressed | Saved |
+| -------------------------- | -------: | ---------: | ----: |
+| `claude-md-preferences.md` |      827 |        421 | 49.1% |
+| `claude-md-project.md`     |     1628 |       1117 | 31.4% |
+| `mixed-with-code.md`       |     1432 |       1106 | 22.8% |
+| `project-notes.md`         |     1431 |        846 | 40.9% |
+| `todo-list.md`             |      880 |        648 | 26.4% |
+| Total                      |     6198 |       4138 | 33.2% |
 
 All fixture validations passed: headings, code blocks, URLs, and file paths were
 preserved exactly.
@@ -135,6 +135,7 @@ Common endpoints: Ollama `http://localhost:11434/v1`, LM Studio `http://localhos
 ```
 
 Examples:
+
 ```
 /caveman-compress CLAUDE.md
 /caveman-compress docs/preferences.md
@@ -143,12 +144,12 @@ Examples:
 
 ### What files work
 
-| Type | Compress? |
-|------|-----------|
-| `.md`, `.mdc`, `.txt`, `.rst`, `.typ`, `.typst`, `.tex` | Yes |
-| Extensionless natural language | Yes |
-| `.py`, `.js`, `.ts`, `.json`, `.yaml` | ❌ Skip (code/config) |
-| `*.original.md` | ❌ Skip (backup files) |
+| Type                                                    | Compress?              |
+| ------------------------------------------------------- | ---------------------- |
+| `.md`, `.mdc`, `.txt`, `.rst`, `.typ`, `.typst`, `.tex` | Yes                    |
+| Extensionless natural language                          | Yes                    |
+| `.py`, `.js`, `.ts`, `.json`, `.yaml`                   | ❌ Skip (code/config)  |
+| `*.original.md`                                         | ❌ Skip (backup files) |
 
 ## How It Work
 

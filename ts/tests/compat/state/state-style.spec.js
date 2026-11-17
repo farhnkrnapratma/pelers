@@ -385,16 +385,8 @@ describe('ClassDefs and classes when parsing a State diagram', () => {
 
         const data4Layout = stateDiagram.parser.yy.getData();
 
-        expect(data4Layout.nodes[0].cssStyles).toEqual([
-          'background:#bbb',
-          'font-weight:bold',
-          'font-style:italic',
-        ]);
-        expect(data4Layout.nodes[1].cssStyles).toEqual([
-          'background:#bbb',
-          'font-weight:bold',
-          'font-style:italic',
-        ]);
+        expect(data4Layout.nodes[0].cssStyles).toEqual(['background:#bbb', 'font-weight:bold', 'font-style:italic']);
+        expect(data4Layout.nodes[1].cssStyles).toEqual(['background:#bbb', 'font-weight:bold', 'font-style:italic']);
       });
     });
   });

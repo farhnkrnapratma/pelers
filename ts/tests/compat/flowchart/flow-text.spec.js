@@ -361,9 +361,7 @@ describe('[Text] when parsing', () => {
     });
 
     it.each(keywords)('should handle %s keyword in rect vertex', function (keyword) {
-      const rest = flow.parser.parse(
-        `graph TD;A_${keyword}_node-->B[|borders:lt|This node has a ${keyword} as text];`
-      );
+      const rest = flow.parser.parse(`graph TD;A_${keyword}_node-->B[|borders:lt|This node has a ${keyword} as text];`);
 
       const vert = flow.parser.yy.getVertices();
       const edges = flow.parser.yy.getEdges();

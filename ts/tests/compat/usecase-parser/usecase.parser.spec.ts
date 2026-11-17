@@ -37,9 +37,7 @@ describe('usecase canonical line-oriented grammar', () => {
   it.skip('defines the stable canonical CST rule names', () => {
     const names = usecaseParser
       .getSerializedGastProductions()
-      .flatMap((production) =>
-        'name' in production && typeof production.name === 'string' ? [production.name] : []
-      );
+      .flatMap((production) => ('name' in production && typeof production.name === 'string' ? [production.name] : []));
     expect(names).toEqual(
       expect.arrayContaining([
         'start',
@@ -222,10 +220,7 @@ accDescr {
     ['unclosed JSON', 'usecase-beta\njson Payload@{"nested": {'],
     ['unclosed Markdown', 'usecase-beta\nA("`unfinished")'],
     ['semicolon CSS', 'usecase-beta\nstyle A fill:red;stroke:blue'],
-    [
-      'boundary class suffix before inline metadata',
-      'usecase-beta\nsystemBoundary A:::system@{ type: package }\nend',
-    ],
+    ['boundary class suffix before inline metadata', 'usecase-beta\nsystemBoundary A:::system@{ type: package }\nend'],
     ['boundary stereotype before inline metadata', 'usecase-beta\nsystemBoundary A <<S>>\nend'],
     ['boundary label without an id', 'usecase-beta\nsystemBoundary [Payment service]\nend'],
   ])('rejects %s', (_name, source) => {

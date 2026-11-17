@@ -144,7 +144,14 @@ describe('class diagram rendering', () => {
 
   it('themes through custom properties, with no style element', () => {
     const svg = draw('class A {\n +x\n}\nA --> B : uses\nnote for A "n"');
-    for (const token of ['--pelers-bg', '--pelers-fg', '--pelers-line', '--pelers-surface', '--pelers-border', '--pelers-muted']) {
+    for (const token of [
+      '--pelers-bg',
+      '--pelers-fg',
+      '--pelers-line',
+      '--pelers-surface',
+      '--pelers-border',
+      '--pelers-muted',
+    ]) {
       expect(svg).toContain(`var(${token},`);
     }
     expect(svg).not.toContain('<style');
@@ -208,7 +215,9 @@ describe('class diagram rendering', () => {
     const svg = draw('class A {\n  +count()$ int\n  +draw()*\n  +String name$\n  +plain\n}');
     expect(svg).toContain('<text class="pelers-member pelers-method pelers-static" style="text-decoration:underline"');
     expect(svg).toContain('<text class="pelers-member pelers-method pelers-abstract" font-style="italic"');
-    expect(svg).toContain('<text class="pelers-member pelers-attribute pelers-static" style="text-decoration:underline"');
+    expect(svg).toContain(
+      '<text class="pelers-member pelers-attribute pelers-static" style="text-decoration:underline"'
+    );
     expect(svg).toMatch(/<text class="pelers-member pelers-attribute" x="[-\d.]+" y="[-\d.]+">\+plain</);
     expect(svg).toContain('>+count() : int<');
     expect(svg).toContain('>+draw()<');
@@ -540,7 +549,9 @@ describe('class diagram rendering', () => {
       /<text class="pelers-annotation"[^>]* fill="var\(--pelers-fg-on-dark,#fff\)">«interface»</
     );
     expect(group(svg, 'A')).toContain(`<text class="pelers-label" font-weight="var(--_hw)"${dark}`);
-    expect(group(svg, 'A')).toMatch(/<g class="pelers-members" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)">/);
+    expect(group(svg, 'A')).toMatch(
+      /<g class="pelers-members" font-size="\d+" fill="var\(--pelers-fg-on-dark,#fff\)">/
+    );
     expect(count(group(svg, 'A'), dark)).toBe(3);
     expect(group(svg, 'B')).not.toContain('--pelers-fg-on');
     expect(group(svg, 'B')).toContain('<text class="pelers-label" font-weight="var(--_hw)" style="fill:#900;"');

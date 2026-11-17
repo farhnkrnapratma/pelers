@@ -1,4 +1,15 @@
-import { detectType, mount, register, registered, render, type DiagramType, type MountOptions, type Mounted, type RenderOptions, type RenderResult } from './core.js';
+import {
+  detectType,
+  mount,
+  register,
+  registered,
+  render,
+  type DiagramType,
+  type MountOptions,
+  type Mounted,
+  type RenderOptions,
+  type RenderResult,
+} from './core.js';
 import type { Diagram } from './types.js';
 
 export * from './core.js';

@@ -57,10 +57,7 @@ describe('when parsing a journey diagram it', function () {
   });
 
   it('should handle a section definition', function () {
-    const str =
-      'journey\n' +
-      'title Adding journey diagram functionality to mermaid\n' +
-      'section Order from website';
+    const str = 'journey\n' + 'title Adding journey diagram functionality to mermaid\n' + 'section Order from website';
 
     expect(parserFnConstructor(str)).not.toThrow();
   });

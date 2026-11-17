@@ -3,12 +3,7 @@
 import type { LangiumParser } from 'langium';
 import { describe, expect, it } from 'vitest';
 
-import type {
-  Railroad,
-  RailroadChoiceExpr,
-  RailroadSequenceExpr,
-  RailroadSpecialExpr,
-} from './adapter.js';
+import type { Railroad, RailroadChoiceExpr, RailroadSequenceExpr, RailroadSpecialExpr } from './adapter.js';
 import { createRailroadServices } from './adapter.js';
 import { MermaidParseError, parse as parseAsync } from './adapter.js';
 import { expectNoErrorsOrAlternatives } from './adapter.js';

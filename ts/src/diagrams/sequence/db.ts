@@ -136,9 +136,13 @@ export class SeqDb implements SequenceModel {
       try {
         parsed = parseYaml(metadata.includes('\n') ? metadata + '\n' : '{\n' + metadata + '\n}');
       } catch (error) {
-        throw new PelersError(`Config of participant "${id}" is not valid YAML. ${(error as Error).message}`, 'syntax', {
-          type: 'sequence',
-        });
+        throw new PelersError(
+          `Config of participant "${id}" is not valid YAML. ${(error as Error).message}`,
+          'syntax',
+          {
+            type: 'sequence',
+          }
+        );
       }
       if (parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)) doc = parsed;
     }

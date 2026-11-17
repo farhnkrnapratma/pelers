@@ -297,7 +297,9 @@ describe('venn diagram rendering', () => {
     );
     const circles = [...circlesOf(svg).values()];
     const paths = [
-      ...svg.matchAll(/<path class="pelers-venn-overlap" data-id="([^"]*)" d="([^"]+)" fill="none" style="([^"]*)"\/>/g),
+      ...svg.matchAll(
+        /<path class="pelers-venn-overlap" data-id="([^"]*)" d="([^"]+)" fill="none" style="([^"]*)"\/>/g
+      ),
     ];
     expect(paths.map((m) => [m[1], m[3]])).toEqual([
       ['A|B', 'fill:gold;'],

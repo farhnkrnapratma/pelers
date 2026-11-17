@@ -27,16 +27,12 @@ const oneEdge = `agentflow-beta TB
 describe('linkStyle index bounds', () => {
   it('rejects an out-of-range index for interpolate with the bounds message', () => {
     const db = parse(oneEdge);
-    expect(() => db.updateLinkInterpolate([99], 'basis')).toThrow(
-      /index 99 for linkStyle is out of bounds/
-    );
+    expect(() => db.updateLinkInterpolate([99], 'basis')).toThrow(/index 99 for linkStyle is out of bounds/);
   });
 
   it('rejects an out-of-range index for style with the same message', () => {
     const db = parse(oneEdge);
-    expect(() => db.updateLink([99], ['stroke:red'])).toThrow(
-      /index 99 for linkStyle is out of bounds/
-    );
+    expect(() => db.updateLink([99], ['stroke:red'])).toThrow(/index 99 for linkStyle is out of bounds/);
   });
 
   it('still applies interpolate at a valid index', () => {

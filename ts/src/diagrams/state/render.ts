@@ -719,7 +719,9 @@ function draw(db: StateDb, config: Config, options: RenderOptions, turned: boole
     (clusters ? `<g class="pelers-clusters">${clusters}</g>` : '') +
       (dividers ? `<g class="pelers-dividers" stroke-dasharray="4 4"${RULE}>${dividers}</g>` : '') +
       casingsSvg(casings) +
-      (edgesOut ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>` : '') +
+      (edgesOut
+        ? `<g class="pelers-edges" fill="none" stroke="var(--_l)" stroke-linecap="round">${edgesOut}</g>`
+        : '') +
       (labelsOut ? `<g class="pelers-edge-labels" font-size="${small}">${labelsOut}</g>` : '') +
       `<g class="pelers-nodes">${nodesOut}${notesOut}</g>`
   );

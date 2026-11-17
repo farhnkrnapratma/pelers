@@ -59,7 +59,10 @@ export async function referenceAst(type: string, src: string): Promise<{ ok: boo
   }
 }
 
-export function pelersAst(parse: (src: string) => unknown, src: string): { ok: boolean; ast?: unknown; error?: string } {
+export function pelersAst(
+  parse: (src: string) => unknown,
+  src: string
+): { ok: boolean; ast?: unknown; error?: string } {
   try {
     return { ok: true, ast: plain(parse(src)) };
   } catch (e) {
