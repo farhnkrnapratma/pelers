@@ -11,9 +11,11 @@ import {
 } from "./corpus.mjs";
 import { mutantCases, rng } from "./mutate.mjs";
 
+process.env.TZ = "UTC";
+
 const require = createRequire(import.meta.url);
 const pele = await import(require.resolve("pele"));
-const perSource = Number(process.env.PER_SOURCE ?? 4);
+const perSource = Number(process.env.PER_SOURCE ?? 20);
 const seed = Number(process.env.SEED ?? 20260513);
 
 const OPTION_CHOICES = [
@@ -62,23 +64,48 @@ const mathMock = (tex, size) => {
   if (tex.includes("?")) return { html: "<span>x</span>", width, height };
   return { svg: '<path d="M0 0"/>', width, height };
 };
-const out = cases.map(({ type, source }) => {
+const RealDate = Date;
+const clockAt = (ms) => {
+  globalThis.Date = class extends RealDate {
+    constructor(...args) {
+      if (args.length === 0) super(ms);
+      else super(...args);
+    }
+    static now() {
+      return ms;
+    }
+  };
+};
+const CLOCKS = [
+  Date.UTC(2026, 0, 15, 10, 0, 0),
+  Date.UTC(2031, 6, 4, 18, 30, 0),
+];
+const out = cases.flatMap(({ type, source }) => {
   const callbacks = optionRandom() < 0.35;
   const options = pickOptions(optionRandom);
-  try {
-    const extra = callbacks ? { icons: iconMock, math: mathMock } : {};
-    const rendered = pele.render(source, {
-      ...referenceOptions(type),
-      ...options,
-      ...extra,
-    });
-    const svg = toPelers(
-      typeof rendered === "string" ? rendered : rendered.svg,
-    );
-    return { type, source, options, callbacks, ok: true, sha256: sha256(svg) };
-  } catch {
-    return { type, source, options, callbacks, ok: false };
-  }
+  const extra = callbacks ? { icons: iconMock, math: mathMock } : {};
+  const renders = CLOCKS.map((ms) => {
+    clockAt(ms);
+    try {
+      const rendered = pele.render(source, {
+        ...referenceOptions(type),
+        ...options,
+        ...extra,
+      });
+      return sha256(
+        toPelers(typeof rendered === "string" ? rendered : rendered.svg),
+      );
+    } catch {
+      return null;
+    }
+  });
+  globalThis.Date = RealDate;
+  if (renders[0] !== renders[1]) return [];
+  return [
+    renders[0] === null
+      ? { type, source, options, callbacks, ok: false }
+      : { type, source, options, callbacks, ok: true, sha256: renders[0] },
+  ];
 });
 const fixture = {
   reference:

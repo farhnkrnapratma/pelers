@@ -8,6 +8,8 @@ import {
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+process.env.TZ = "UTC";
+
 const root = fileURLToPath(new URL("../", import.meta.url));
 const corpus = join(root, "ts/tests/corpus");
 const out = join(root, "tests/golden");

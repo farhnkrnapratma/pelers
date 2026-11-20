@@ -1,0 +1,2 @@
+[env]
+TZ = { value = "UTC", force = true }
