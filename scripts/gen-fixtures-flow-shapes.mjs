@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const shapes = await import(join(root, "ts/src/diagrams/flowchart/shapes.ts"));
+const shapes = await peleSrc("diagrams/flowchart/shapes.ts");
 const names = [
   "rect",
   "proc",
@@ -186,5 +186,5 @@ out.push({
   valid: false,
   canonical: shapes.canonicalShape(undefined),
 });
-writeFileSync(join(OUT, "flow-shapes.json"), `${JSON.stringify(out)}\n`);
+writeFixture(join(OUT, "flow-shapes.json"), `${JSON.stringify(out)}\n`);
 console.log(`flow shapes: ${out.length} names`);

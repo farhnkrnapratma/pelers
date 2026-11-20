@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const theme = await import(join(root, "ts/src/svg/theme.ts"));
+const theme = await peleSrc("svg/theme.ts");
 
 const POOL = [
   "fill:#f00",
@@ -75,7 +75,7 @@ const fills = [
   "fill:",
   "a;fill:b",
 ].map((shape) => ({ shape, out: theme.setsFill(shape) }));
-writeFileSync(
+writeFixture(
   join(OUT, "theme.json"),
   `${JSON.stringify({ styles, classes, fills })}\n`,
 );

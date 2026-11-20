@@ -8,8 +8,7 @@ export const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const referenceOptions = (type) =>
   type === "cynefin" ? { idPrefix: "pelers" } : undefined;
 
-export const toPelers = (svg) =>
-  svg.replace(/pele(?!rs)/g, "pelers").replace(/Pele(?!rs)/g, "Pelers");
+export { normalize as toPelers } from "../scripts/oracle.mjs";
 
 export const sha256 = (text) =>
   createHash("sha256").update(text, "utf8").digest("hex");

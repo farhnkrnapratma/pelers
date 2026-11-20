@@ -1,10 +1,10 @@
 {
-  "oracle": "bun ts/dist",
+  "oracle": "pele@1.13.0 npm under bun",
   "seed": 20260513,
-  "perSource": 100,
-  "total": 61913,
-  "identical": 36916,
-  "bothFailed": 24997,
+  "perSource": 30,
+  "total": 19003,
+  "identical": 11529,
+  "bothFailed": 7474,
   "mismatches": 0,
   "byType": {},
   "samples": []

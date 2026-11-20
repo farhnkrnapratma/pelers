@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const edges = await import(join(root, "ts/src/svg/edges.ts"));
+const edges = await peleSrc("svg/edges.ts");
 
 let seed = 987654;
 const random = () => {
@@ -254,7 +254,7 @@ for (let i = 0; i < 150 * SCALE; i++) {
   });
 }
 
-writeFileSync(
+writeFixture(
   join(OUT, "svg-edges.json"),
   `${JSON.stringify({ pathCases, markerCases, casingCases, fillCases, hollowCases, loopCases })}\n`,
 );

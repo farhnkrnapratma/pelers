@@ -1,7 +1,8 @@
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { peleDir } from "../scripts/oracle.mjs";
 
-const root = resolve(process.env.PELE_TESTS ?? "/home/fkp/Projects/pele/tests");
+const root = join(peleDir, "tests");
 const starts =
   /^\s*(---|%%|flowchart|graph|sequenceDiagram|classDiagram|stateDiagram|erDiagram|journey|gantt|pie|mindmap|timeline|quadrantChart|requirementDiagram|gitGraph|C4|block|packet|sankey|xychart|architecture|kanban|ishikawa|treemap|treeView|usecase|agentflow|eventmodeling|cynefin|wardley|swimlane|railroad|venn|radar|info|quadrant|requirement)/;
 const literal = /`([^`\\]*)`|"((?:[^"\\\n]|\\.)*)"|'((?:[^'\\\n]|\\.)*)'/g;

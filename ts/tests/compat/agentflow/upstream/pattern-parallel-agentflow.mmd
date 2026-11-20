@@ -1,9 +1,0 @@
-%% §16 Parallel Execution Pattern — `&` fan-out in edges only.
-agentflow-beta TB
-  query["query"]
-  query@{ shape: input }
-  orchestrator["Orchestrate"]
-  search["Search"]
-  analyze["Analyze"]
-  validate["Validate"]
-  query --> orchestrator --> search & analyze & validate

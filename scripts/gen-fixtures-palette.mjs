@@ -1,20 +1,12 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleSrc, toUpstream, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const { palette } = await import(join(root, "ts/src/svg/palette.ts"));
-
-function mulberry32(seed) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const { palette } = await peleSrc("svg/palette.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 4242));
 const between = (low, high) => low + Math.floor(random() * (high - low + 1));
 const pick = (list) => list[Math.floor(random() * list.length)];
@@ -150,7 +142,7 @@ function chance() {
 }
 
 function dump(type, config) {
-  const made = palette(type, config);
+  const made = palette(type, JSON.parse(toUpstream(JSON.stringify(config))));
   return {
     type,
     config,
@@ -219,5 +211,5 @@ for (const config of [
   for (const type of ["pie", "xychart", "flowchart", "venn"])
     cases.push(dump(type, config));
 
-writeFileSync(join(OUT, "palette.json"), `${JSON.stringify({ cases })}\n`);
+writeFixture(join(OUT, "palette.json"), `${JSON.stringify({ cases })}\n`);
 console.log(`palette: ${cases.length} cases`);

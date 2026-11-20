@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const shapes = await import(join(root, "ts/src/svg/shapes.ts"));
+const shapes = await peleSrc("svg/shapes.ts");
 
 const NAMES = [
   "rect",
@@ -135,7 +135,7 @@ for (let i = 0; i < 200 * SCALE; i++) {
   routes.push({ c, route, at, side, view, inserted });
 }
 
-writeFileSync(
+writeFixture(
   join(OUT, "svg-shapes.json"),
   `${JSON.stringify({ cases, routes })}\n`,
 );

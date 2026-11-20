@@ -135,33 +135,6 @@ jobs:
               bunx --bun --no-install commitlint --from "$(git merge-base origin/main HEAD)" --to HEAD
             fi
 
-  # Needs bun.lock committed: --frozen-lockfile fails without it.
-  js:
-    executor: rust
-    steps:
-      - checkout
-      - setup-bun
-      - run:
-          name: Install
-          working_directory: ts
-          command: bun install --frozen-lockfile
-      - run:
-          name: Typecheck
-          working_directory: ts
-          command: bun run typecheck
-      - run:
-          name: Lint
-          working_directory: ts
-          command: bun run lint
-      - run:
-          name: Format
-          working_directory: ts
-          command: bun run fmt:check
-      - run:
-          name: Test
-          working_directory: ts
-          command: bun run test
-
 workflows:
   ci:
     jobs:
@@ -171,4 +144,3 @@ workflows:
       - coverage
       - secrets
       - commitlint
-      - js

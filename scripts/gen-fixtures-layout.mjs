@@ -1,22 +1,12 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const { layered, lnode, ledge } = await import(
-  join(root, "ts/src/layout/layered.ts")
-);
+const { layered, lnode, ledge } = await peleSrc("layout/layered.ts");
 
 const KIND_NODE = 0;
-
-function mulberry32(seed) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
 
 const cases = [];
 for (let seed = 1; seed <= 600; seed++) {
@@ -111,15 +101,13 @@ for (const c of cases) {
   });
 }
 
-writeFileSync(
+writeFixture(
   join(root, "tests/fixtures/layout-layered.json"),
   `${JSON.stringify(results)}\n`,
 );
 console.log(`layout: ${results.length} layered cases`);
 
-const { compoundLayout } = await import(
-  join(root, "ts/src/layout/compound.ts")
-);
+const { compoundLayout } = await peleSrc("layout/compound.ts");
 
 const DIRS = [undefined, "TB", "BT", "LR", "RL"];
 const compoundCases = [];
@@ -235,15 +223,13 @@ for (const c of compoundCases) {
     },
   });
 }
-writeFileSync(
+writeFixture(
   join(root, "tests/fixtures/layout-compound.json"),
   `${JSON.stringify(compoundResults)}\n`,
 );
 console.log(`layout: ${compoundResults.length} compound cases`);
 
-const { wrapComponents } = await import(
-  join(root, "ts/src/layout/components.ts")
-);
+const { wrapComponents } = await peleSrc("layout/components.ts");
 const componentResults = [];
 for (let seed = 1; seed <= 400; seed++) {
   const random = mulberry32(seed * 15485863);
@@ -311,13 +297,13 @@ for (let seed = 1; seed <= 400; seed++) {
       : null,
   });
 }
-writeFileSync(
+writeFixture(
   join(root, "tests/fixtures/layout-components.json"),
   `${JSON.stringify(componentResults)}\n`,
 );
 console.log(`layout: ${componentResults.length} component cases`);
 
-const { laneLayout } = await import(join(root, "ts/src/layout/lanes.ts"));
+const { laneLayout } = await peleSrc("layout/lanes.ts");
 const laneResults = [];
 for (let seed = 1; seed <= 300; seed++) {
   const random = mulberry32(seed * 32452843);
@@ -420,7 +406,7 @@ for (const c of laneResults) {
     })),
   };
 }
-writeFileSync(
+writeFixture(
   join(root, "tests/fixtures/layout-lanes.json"),
   `${JSON.stringify(laneResults)}\n`,
 );

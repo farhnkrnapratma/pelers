@@ -1,11 +1,12 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const { parse, register } = await import(join(root, "ts/src/core.ts"));
-const { all } = await import(join(root, "ts/src/diagrams/registry.ts"));
+const { parse, register } = await peleSrc("core.ts");
+const { all } = await peleSrc("diagrams/registry.ts");
 register(...all);
 
 const sourceFiles = [
@@ -55,7 +56,7 @@ const cases = sources.map((source) => {
     };
   }
 });
-writeFileSync(
+writeFixture(
   join(OUT, "semantic-agentflow.json"),
   `${JSON.stringify({ cases })}\n`,
 );

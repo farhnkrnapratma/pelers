@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const ink = await import(join(root, "ts/src/svg/ink.ts"));
+const ink = await peleSrc("svg/ink.ts");
 
 const COLORS = [
   "#fff",
@@ -82,5 +82,5 @@ for (const shape of shapes) {
   cases.push({ shape, paints: ink.paints(shape) });
 }
 const plains = COLORS.map((raw) => ({ raw, out: ink.plainColor(raw) }));
-writeFileSync(join(OUT, "ink.json"), `${JSON.stringify({ cases, plains })}\n`);
+writeFixture(join(OUT, "ink.json"), `${JSON.stringify({ cases, plains })}\n`);
 console.log(`ink: ${cases.length} cases, ${plains.length} plain colors`);

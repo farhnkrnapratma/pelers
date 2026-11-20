@@ -1,3 +1,4 @@
+import { toPelers } from "./corpus.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,8 +9,6 @@ const corpus = JSON.parse(
   readFileSync(join(root, "bench", "corpus.json"), "utf8"),
 );
 const RENAME_SENSITIVE = new Set(["info"]);
-const toPelers = (svg) =>
-  svg.replace(/pele(?!rs)/g, "pelers").replace(/Pele(?!rs)/g, "Pelers");
 
 const pelersOptions = (type) =>
   type === "cynefin" ? { idPrefix: "pelers" } : undefined;

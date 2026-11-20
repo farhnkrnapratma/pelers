@@ -1,23 +1,13 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? `${root}tests/fixtures`;
-const { parseYaml } = await import(`${root}ts/src/util/yaml.ts`);
-const { cleanupComments, encodeEntities, preprocess } = await import(
-  `${root}ts/src/preprocess.ts`
-);
-const { inputOffset } = await import(`${root}ts/src/errors.ts`);
-
-function mulberry32(seed) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const { parseYaml } = await peleSrc("util/yaml.ts");
+const { cleanupComments, encodeEntities, preprocess } = await peleSrc("preprocess.ts");
+const { inputOffset } = await peleSrc("errors.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 777));
 const pick = (list) => list[Math.floor(random() * list.length)];
 
@@ -301,7 +291,7 @@ for (let i = 0; i < 2000 * SCALE; i++) {
   entities.push([source, encodeEntities(source)]);
 }
 
-writeFileSync(
+writeFixture(
   `${OUT}/preprocess.json`,
   `${JSON.stringify({ yaml, pre, mapping, entities })}\n`,
 );

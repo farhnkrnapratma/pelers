@@ -1,17 +1,14 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const { FlowDb } = await import(join(root, "ts/src/diagrams/flowchart/db.ts"));
-const { parseFlowchart } = await import(
-  join(root, "ts/src/diagrams/flowchart/parser.ts")
-);
-const { buildFlowGraph } = await import(
-  join(root, "ts/src/diagrams/flowchart/graph.ts")
-);
+const { FlowDb } = await peleSrc("diagrams/flowchart/db.ts");
+const { parseFlowchart } = await peleSrc("diagrams/flowchart/parser.ts");
+const { buildFlowGraph } = await peleSrc("diagrams/flowchart/graph.ts");
 
 const sources = JSON.parse(
   readFileSync(join(root, "tests/fixtures/flow-lexer.json"), "utf8"),
@@ -133,6 +130,6 @@ const out = sources.map((source) => {
   const graph = error ? null : dumpGraph(buildFlowGraph(db, undefined));
   return { source, error, db: dump(db), graph };
 });
-writeFileSync(join(OUT, "flow-parse.json"), `${JSON.stringify(out)}\n`);
+writeFixture(join(OUT, "flow-parse.json"), `${JSON.stringify(out)}\n`);
 const failed = out.filter((c) => c.error).length;
 console.log(`flow parse: ${out.length} inputs, ${failed} with errors`);

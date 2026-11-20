@@ -3,7 +3,6 @@ dist/
 
 # Local state
 .wrangler/
-ts/tests/scratch/
 
 # Build output
 *.node

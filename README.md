@@ -6,7 +6,7 @@ A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is a R
 
 ## Status
 
-Alpha. The port is in progress; the TypeScript renderer in [`ts/`](ts) is the reference until each diagram type matches it byte for byte.
+Alpha. All 33 diagram types of Pele 1.13.0 are ported and match Pele's output byte for byte on its test corpus (with `pelers` names), and a differential fuzz run against the official `pele` package is clean.
 
 | Registry  | Name                                             | State                                                                                                                                                                                      |
 | --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -52,7 +52,8 @@ src/*.rs                 the Rust core: api, detect, preprocess, flowchart, rend
 src/bindings/node.rs     the napi binding (feature `napi`)
 index.js, index.d.ts     hand-written wrapper over the generated index.native.js / index.native.d.ts
 scripts/                 binding checks
-ts/                      the TypeScript renderer, kept as the oracle for the port (private, not published)
+scripts/oracle.mjs       loads Pele's source from ../pele (or PELE_DIR) as the oracle for fixtures and goldens
+bench/                   benchmarks and differential fuzzing against the npm pele and mermaid releases
 ```
 
 ## Development
@@ -69,24 +70,19 @@ cargo fmt --check
 cargo deny check
 ```
 
-The TypeScript oracle lives in `ts/` with its own dependencies:
+The oracle is Pele's own source. Check it out next to this repository (or point `PELE_DIR` at it) before regenerating fixtures:
 
 ```sh
-cd ts
-bun install
-bun run typecheck          # tsc --noEmit (TypeScript 7)
-bun run lint               # eslint (typescript-eslint on the TypeScript 6 API)
-bun run fmt:check          # prettier
-bun run test               # vitest
+git clone --branch 1.13.0 https://github.com/obsidianmd/pele ../pele
+bun scripts/gen-golden.mjs          # tests/golden from ../pele/tests/corpus
+bun scripts/gen-fixtures-render.mjs # and the other scripts/gen-fixtures-*.mjs
 ```
-
-TypeScript 7 does not ship a programmatic API yet, so `ts/` installs both compilers side by side: `typescript` is an alias for `@typescript/typescript6` (used by typescript-eslint) and `@typescript/native` provides the `tsc` 7 binary. See the [TypeScript 7.0 announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
 
 Releases are cut with git-flow (`git flow release start vX.Y.Z`), so the tag carries the `v`. The npm package is published with `--tag alpha` while the version is a prerelease, and the crate with `cargo publish`.
 
 ## Upstream and attribution
 
-Pelers is © kepano and distributed under the MIT License. The TypeScript implementation and test corpus in `ts/` carry over that work, together with material from Mermaid and Lucide. Their notices are reproduced in [`NOTICE`](NOTICE) and must stay with every copy of this code.
+Pele is © kepano and distributed under the MIT License. pelers ports that work to Rust, together with material from Mermaid and Lucide. Their notices are reproduced in [`NOTICE`](NOTICE) and must stay with every copy of this code.
 
 ## Contributing
 

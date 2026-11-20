@@ -1,3 +1,4 @@
+import { peleCore, peleDir, writeFixture } from "./oracle.mjs";
 import {
   mkdirSync,
   readdirSync,
@@ -11,9 +12,9 @@ import { fileURLToPath } from "node:url";
 process.env.TZ = "UTC";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const corpus = join(root, "ts/tests/corpus");
+const corpus = join(peleDir, "tests/corpus");
 const out = join(root, "tests/golden");
-const { render } = await import(join(root, "ts/dist/pelers.js"));
+const { render } = await peleCore();
 
 mkdirSync(out, { recursive: true });
 for (const entry of readdirSync(out, { withFileTypes: true })) {
@@ -29,14 +30,20 @@ for (const file of readdirSync(corpus)
   const sources = JSON.parse(readFileSync(join(corpus, file), "utf8"));
   const dir = join(out, type);
   mkdirSync(dir, { recursive: true });
-  sources.forEach((source, index) => {
+  sources.forEach((original, index) => {
+    const source =
+      type === "gantt" &&
+      original.includes("dateFormat HH:mm") &&
+      !original.includes("todayMarker")
+        ? original.replace(/(axisFormat[^\n]*\n)/, "$1    todayMarker off\n")
+        : original;
     const name = String(index).padStart(3, "0");
     writeFileSync(join(dir, `${name}.mmd`), source);
     try {
-      writeFileSync(join(dir, `${name}.svg`), render(source).svg);
+      writeFixture(join(dir, `${name}.svg`), render(source).svg);
       svgs += 1;
     } catch (error) {
-      writeFileSync(
+      writeFixture(
         join(dir, `${name}.error.json`),
         `${JSON.stringify({ code: error.code, message: error.message }, null, 2)}\n`,
       );

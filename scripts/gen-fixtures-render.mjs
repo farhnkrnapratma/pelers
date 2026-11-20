@@ -1,18 +1,10 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleCore, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
-const { render } = await import(join(root, "ts/dist/pelers.js"));
-
-function mulberry32(seed) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const { render } = await peleCore();
 
 const random = mulberry32(20261105);
 const pick = (list) => list[Math.floor(random() * list.length)];
@@ -362,7 +354,7 @@ for (const [type, generator] of Object.entries(GENERATORS)) {
     seen.add(key);
     cases.push({ source: text, options: opts, ...capture(text, opts) });
   }
-  writeFileSync(
+  writeFixture(
     join(root, `tests/fixtures/render-${type}.json`),
     `${JSON.stringify({ cases })}\n`,
   );

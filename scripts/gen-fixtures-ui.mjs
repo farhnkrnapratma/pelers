@@ -1,21 +1,26 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleInternals, peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const zoom = await import(join(root, "ts/src/zoom.ts"));
-const mount = await import(join(root, "ts/src/mount.ts"));
-const windowModule = await import(join(root, "ts/src/window.ts"));
-
-function mulberry32(seed) {
-  return function () {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const zoom = await peleInternals("zoom.ts", [
+  "BAR_STYLE",
+  "BUTTON_STYLE",
+  "GAP",
+  "ICONS",
+  "LABELS",
+  "PAN",
+  "STEP",
+]);
+const mount = await peleInternals("mount.ts", [
+  "ALONE_STYLE",
+  "OVER_STYLE",
+  "messageOf",
+  "summary",
+]);
+const windowModule = await peleSrc("window.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 20261110));
 const between = (low, high) => low + random() * (high - low);
 const pick = (list) => list[Math.floor(random() * list.length)];
@@ -86,10 +91,9 @@ for (let i = 0; i < 500 * Number(process.env.PELERS_FUZZ_SCALE ?? 1); i++) {
     clientWidth,
     left: Number.isNaN(left) ? null : left,
     right: Number.isNaN(right) ? null : right,
-    room: windowModule.roomWithin(
-      clientWidth,
-      Number.isNaN(left) ? 0 : left,
-      Number.isNaN(right) ? 0 : right,
+    room: windowModule.room(
+      { clientWidth },
+      { paddingLeft: String(left), paddingRight: String(right) },
     ),
   });
 }
@@ -106,7 +110,7 @@ const constants = {
   ALONE_STYLE: mount.ALONE_STYLE,
 };
 
-writeFileSync(
+writeFixture(
   join(OUT, "ui.json"),
   `${JSON.stringify({ frames, messages, messageOfs, rooms, constants })}\n`,
 );

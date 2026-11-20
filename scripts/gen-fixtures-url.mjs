@@ -1,11 +1,11 @@
-import { writeFileSync } from "node:fs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
-const url = await import(join(root, "ts/src/util/url.ts"));
+const url = await peleSrc("util/url.ts");
 
 const inputs = [
   "",
@@ -68,5 +68,5 @@ const out = inputs.map((input) => ({
   sanitize: url.sanitizeUrl(input),
   safe: url.safeUrl(input),
 }));
-writeFileSync(join(OUT, "url.json"), `${JSON.stringify(out)}\n`);
+writeFixture(join(OUT, "url.json"), `${JSON.stringify(out)}\n`);
 console.log(`url: ${out.length} cases`);

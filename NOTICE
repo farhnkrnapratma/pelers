@@ -2,10 +2,9 @@ pelers
 Copyright (c) 2026 Farhan Kurnia Pratama
 
 pelers is a Rust rewrite of Pele (https://github.com/obsidianmd/pele), a Mermaid
-renderer by kepano (Obsidian). The TypeScript renderer kept in ts/ is Pele's source
-with the product name changed. pelers ports Pele's diagram types one by one and
-keeps Pele's MIT License. Pele's original copyright notice is reproduced below as
-required by its terms.
+renderer by kepano (Obsidian). pelers ports Pele 1.13.0 diagram by diagram, checks
+its output against Pele's source byte for byte, and keeps Pele's MIT License.
+Pele's original copyright notice is reproduced below as required by its terms.
 
 MIT License
 

@@ -109,7 +109,7 @@ const out = cases.flatMap(({ type, source }) => {
 });
 const fixture = {
   reference:
-    "pele@1.13.0 npm under bun (pele->pelers normalized, idPrefix pelers only for cynefin)",
+    "pele@1.13.0 npm under bun (names normalized to pelers, idPrefix pelers only for cynefin)",
   seed,
   perSource,
   cases: out,

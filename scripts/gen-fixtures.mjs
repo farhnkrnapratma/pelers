@@ -1,21 +1,13 @@
-import { writeFileSync } from "node:fs";
+import { mulberry32 } from "./random.mjs";
+import { peleSrc, writeFixture } from "./oracle.mjs";
 import { fileURLToPath } from "node:url";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const OUT = process.env.PELERS_FUZZ_OUT ?? `${root}tests/fixtures`;
-const { layoutLabel } = await import(`${root}ts/src/text/label.ts`);
-const { metricsMeasurer } = await import(`${root}ts/src/text/measurer.ts`);
-const { esc, labelSvg, num } = await import(`${root}ts/src/svg/builder.ts`);
-
-function mulberry32(seed) {
-  return () => {
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+const { layoutLabel } = await peleSrc("text/label.ts");
+const { metricsMeasurer } = await peleSrc("text/measurer.ts");
+const { esc, labelSvg, num } = await peleSrc("svg/builder.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 20261105));
 const pick = (list) => list[Math.floor(random() * list.length)];
 
@@ -244,7 +236,7 @@ const escapes = ["plain", 'a<b>&"c', "\u0001\u007fx￾", "&amp;", "😀 <>"].map
   (s) => [s, esc(s)],
 );
 
-writeFileSync(
+writeFixture(
   `${OUT}/text.json`,
   `${JSON.stringify({ labels: out, numbers, escapes })}\n`,
 );
