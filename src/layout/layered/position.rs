@@ -17,16 +17,16 @@ pub(crate) fn position(g: &mut Graph, opt: &LayeredOptions) -> Vec<f64> {
     let gap: Vec<f64> = (0..n).map(|i| half_room(&*g, opt, i)).collect();
 
     let mut key = vec![0usize; segments];
-    for e in 0..segments {
-        key[e] = g.pos[g.et[e]];
+    for (e, slot) in key.iter_mut().enumerate() {
+        *slot = g.pos[g.et[e]];
     }
     for v in 0..n {
         if g.succ_start[v + 1] - g.succ_start[v] > 1 {
             sort_range(&mut g.succ_e, g.succ_start[v], g.succ_start[v + 1], &key);
         }
     }
-    for e in 0..segments {
-        key[e] = g.pos[g.ef[e]];
+    for (e, slot) in key.iter_mut().enumerate() {
+        *slot = g.pos[g.ef[e]];
     }
     for v in 0..n {
         if g.pred_start[v + 1] - g.pred_start[v] > 1 {
@@ -227,13 +227,13 @@ pub(crate) fn position(g: &mut Graph, opt: &LayeredOptions) -> Vec<f64> {
     for (k, xs) in results.iter().enumerate().take(4) {
         let mut lo = f64::INFINITY;
         let mut hi = f64::NEG_INFINITY;
-        for i in 0..n {
+        for (i, &x) in xs.iter().enumerate().take(n) {
             let half = g.w[i] / 2.0;
-            if xs[i] - half < lo {
-                lo = xs[i] - half;
+            if x - half < lo {
+                lo = x - half;
             }
-            if xs[i] + half > hi {
-                hi = xs[i] + half;
+            if x + half > hi {
+                hi = x + half;
             }
         }
         mins.push(lo);

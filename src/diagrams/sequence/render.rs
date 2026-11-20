@@ -899,8 +899,8 @@ fn draw(
         }
     };
 
-    for i in 0..count {
-        let m = messages[i].clone();
+    for (i, m) in messages.iter().enumerate().take(count) {
+        let m = m.clone();
         let a = m.from.as_ref().and_then(|f| ctx.col_of.get(f).copied());
         let b = m.to.as_ref().and_then(|t| ctx.col_of.get(t).copied());
         let (Some(a), Some(b)) = (a, b) else {
@@ -1082,14 +1082,14 @@ fn draw(
         let mut wrapped: Vec<usize> = Vec::new();
         let mut lines = 0usize;
         if spare > 0.0 {
-            for i in 0..ctx.views.len() {
+            for (i, message) in messages.iter().enumerate().take(ctx.views.len()) {
                 let Some(view) = ctx.views[i].clone() else {
                     continue;
                 };
                 if view.kind != ViewKind::Line {
                     continue;
                 }
-                let raw = match &messages[i].message {
+                let raw = match &message.message {
                     MessageBody::Text(text) => text.clone(),
                     MessageBody::Numbering(_) => String::new(),
                 };
@@ -1121,8 +1121,8 @@ fn draw(
         if crossed > 0 {
             let before = ctx.gaps.clone();
             let spread = |ctx: &mut Ctx, share: &dyn Fn(usize) -> f64| -> Vec<usize> {
-                for g in 0..ctx.gaps.len() {
-                    ctx.gaps[g] = before[g] + share(g);
+                for (g, gap) in ctx.gaps.iter_mut().enumerate() {
+                    *gap = before[g] + share(g);
                 }
                 ctx.layout();
                 wrapped

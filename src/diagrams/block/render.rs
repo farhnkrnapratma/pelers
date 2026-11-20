@@ -938,8 +938,7 @@ fn route_all(
     let mut seen: FastMap<usize, usize> = FastMap::default();
     let mut routes: Vec<Route> = Vec::new();
     let mut stacks: Vec<(usize, Vec<usize>)> = Vec::new();
-    for i in 0..plan.drawn.len() {
-        let (s, t) = plan.ends[i];
+    for (i, &(s, t)) in plan.ends.iter().enumerate().take(plan.drawn.len()) {
         let key = plan.key_of(s, t);
         let total = plan.pairs.get(&key).copied().unwrap_or(1);
         let k = seen.get(&key).copied().unwrap_or(0);

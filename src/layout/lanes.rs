@@ -202,8 +202,7 @@ impl Geo {
                 return false;
             }
         }
-        for i in 0..self.edges.len() {
-            let (esrc, edst, lw, lh) = self.edges[i];
+        for (i, &(esrc, edst, lw, lh)) in self.edges.iter().enumerate() {
             if i != ei && lw > 0.0 && esrc != edst {
                 let (cw, ah) = if self.sideways { (lh, lw) } else { (lw, lh) };
                 if Self::overlaps((c0, a0, c1, a1), (labels[i].0, labels[i].1), (cw, ah)) {
@@ -821,12 +820,12 @@ impl Layout<'_> {
         let n = self.n;
         let mut depth_of = vec![0i64; n];
         let mut inner: Vec<usize> = Vec::new();
-        for i in 0..n {
-            if !self.nodes[i].is_group || self.lane_slot[i] >= 0 || self.item_of[i] >= 0 {
+        for (i, node) in self.nodes.iter().enumerate().take(n) {
+            if !node.is_group || self.lane_slot[i] >= 0 || self.item_of[i] >= 0 {
                 continue;
             }
             let mut d = 0i64;
-            let mut p = self.nodes[i].parent;
+            let mut p = node.parent;
             let mut hops = 0usize;
             while p >= 0 && hops < MAX_HOPS {
                 d += 1;

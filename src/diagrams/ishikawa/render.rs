@@ -117,7 +117,7 @@ fn arrange<'a>(
     let mut reach = box_w / 2.0;
     for k in 0..bones.len() {
         let parent = usize::try_from(bones[k].parent).ok();
-        if bones[k].depth % 2 == 0 {
+        if bones[k].depth.is_multiple_of(2) {
             let at = parent.map_or(0.0, |p| bones[p].at);
             let kids = bones[k].kids;
             bones[k].at = at;

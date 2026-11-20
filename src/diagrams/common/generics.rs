@@ -7,7 +7,7 @@ fn pair_tildes(text: &str) -> String {
     if count <= 1 {
         return text.to_owned();
     }
-    let lead = count % 2 != 0 && text.starts_with('~');
+    let lead = !count.is_multiple_of(2) && text.starts_with('~');
     let mut chars: Vec<char> = text.chars().collect();
     let start = usize::from(lead);
     let at: Vec<usize> = (start..chars.len()).filter(|&i| chars[i] == '~').collect();

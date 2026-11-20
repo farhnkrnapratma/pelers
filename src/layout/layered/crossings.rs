@@ -505,7 +505,13 @@ pub(crate) fn reduce_crossings(g: &mut Graph, nodes: &[LNode]) -> (i32, i32) {
         let mut i = 0usize;
         let mut stale = 0usize;
         while stale < 4 && i < MAX_SWEEPS {
-            sweep(g, nodes, &mut sc, (i + attempt) % 2 == 0, i % 4 >= 2);
+            sweep(
+                g,
+                nodes,
+                &mut sc,
+                (i + attempt).is_multiple_of(2),
+                i % 4 >= 2,
+            );
             let c = counter.count(g);
             if c < found {
                 found = c;

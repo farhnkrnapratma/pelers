@@ -60,9 +60,9 @@ pub(crate) fn side_ends(
 }
 
 pub(crate) fn spread(g: &mut Graph, nodes: &[LNode], efk: &[End], etk: &[End]) {
-    for v in 0..g.real {
-        let span = js_min(nodes[v].span, g.w[v]);
-        if span <= 0.0 || nodes[v].kind != Kind::Node {
+    for (v, node) in nodes.iter().enumerate().take(g.real) {
+        let span = js_min(node.span, g.w[v]);
+        if span <= 0.0 || node.kind != Kind::Node {
             continue;
         }
         for side in 0..2 {
@@ -664,8 +664,8 @@ pub(crate) fn straighten(
     }
 
     let mut twins: Vec<usize> = Vec::new();
-    for r in 1..g.max_rank {
-        if !empty[r] {
+    for (r, &is_empty) in empty.iter().enumerate().take(g.max_rank).skip(1) {
+        if !is_empty {
             continue;
         }
         let s = g.layer_start[r];
@@ -707,7 +707,7 @@ pub(crate) fn past_labels(
     let max_rank = g.max_rank;
     let mut labelled = vec![false; max_rank + 1];
     let mut any = false;
-    for r in 1..max_rank {
+    for (r, slot) in labelled.iter_mut().enumerate().take(max_rank).skip(1) {
         let mut labels = false;
         let mut others = false;
         for i in g.layer_start[r]..g.layer_start[r + 1] {
@@ -719,7 +719,7 @@ pub(crate) fn past_labels(
             }
         }
         if labels && !others {
-            labelled[r] = true;
+            *slot = true;
             any = true;
         }
     }

@@ -793,9 +793,9 @@ pub(crate) fn layered(
             if !direct[ei]
                 && let Some(first) = first_dummy[ei]
             {
-                for d in first..first + span[ei] - 1 {
+                for (d, &position) in at.iter().enumerate().take(first + span[ei] - 1).skip(first) {
                     pts.push(g.rank[d] as f64);
-                    pts.push(at[d]);
+                    pts.push(position);
                 }
             }
             pts.push(g.rank[b] as f64);
@@ -1052,13 +1052,13 @@ pub(crate) fn layered(
 
     let mut min_x = f64::INFINITY;
     let mut max_x = f64::NEG_INFINITY;
-    for i in 0..n {
+    for (i, &x) in xs.iter().enumerate().take(n) {
         let half = g.w[i] / 2.0;
-        if xs[i] - half < min_x {
-            min_x = xs[i] - half;
+        if x - half < min_x {
+            min_x = x - half;
         }
-        if xs[i] + half > max_x {
-            max_x = xs[i] + half;
+        if x + half > max_x {
+            max_x = x + half;
         }
     }
     let mut arrives = vec![false; max_rank + 1];
@@ -1191,7 +1191,7 @@ pub(crate) fn layered(
 pub(crate) fn empty_ranks(g: &Graph) -> Option<Vec<bool>> {
     let mut empty = vec![false; g.max_rank + 1];
     let mut any = false;
-    for r in 1..g.max_rank {
+    for (r, slot) in empty.iter_mut().enumerate().take(g.max_rank).skip(1) {
         let mut only = g.layer_start[r + 1] > g.layer_start[r];
         for i in g.layer_start[r]..g.layer_start[r + 1] {
             if only && g.kind[g.order[i]] != Kind::Dummy {
@@ -1199,7 +1199,7 @@ pub(crate) fn empty_ranks(g: &Graph) -> Option<Vec<bool>> {
             }
         }
         if only {
-            empty[r] = true;
+            *slot = true;
             any = true;
         }
     }

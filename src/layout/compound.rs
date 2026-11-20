@@ -1023,8 +1023,8 @@ impl Compound<'_> {
         let mut lnodes: Vec<LNode> = Vec::new();
         let mut of: Vec<i32> = Vec::new();
         let mut parent: Vec<i32> = Vec::new();
-        for i in 0..n {
-            if self.nodes[i].is_group {
+        for (i, node) in self.nodes.iter().enumerate().take(n) {
+            if node.is_group {
                 group[i] = parent.len() as i64;
                 parent.push(-1);
             }
@@ -1046,8 +1046,7 @@ impl Compound<'_> {
         }
         let mut ledges: Vec<LEdge> = Vec::new();
         let mut ledge_of = vec![-1i64; self.edges.len()];
-        for ei in 0..self.edges.len() {
-            let e = &self.edges[ei];
+        for (ei, e) in self.edges.iter().enumerate() {
             if e.src == e.dst || leaf[e.src] < 0 || leaf[e.dst] < 0 {
                 continue;
             }
@@ -1071,11 +1070,11 @@ impl Compound<'_> {
         let mut sum = vec![0.0f64; n];
         let mut count = vec![0i64; n];
         let mut last = vec![-1i32; n];
-        for i in 0..n {
-            if leaf[i] < 0 {
+        for (i, &leaf_of) in leaf.iter().enumerate().take(n) {
+            if leaf_of < 0 {
                 continue;
             }
-            let li = leaf[i] as usize;
+            let li = leaf_of as usize;
             self.key[i] = lnodes[li].x;
             let mut p = self.nodes[i].parent;
             while p >= 0 {
