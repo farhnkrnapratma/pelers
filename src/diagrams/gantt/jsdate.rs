@@ -1,4 +1,7 @@
 use std::cell::RefCell;
+use std::rc::Rc;
+
+use crate::util::hook::Hook;
 
 use jiff::Timestamp;
 use jiff::tz::TimeZone;
@@ -76,11 +79,35 @@ pub struct Fields {
 
 const SLOTS: usize = 256;
 
-fn offset_at(utc_ms: f64) -> f64 {
-    thread_local! {
-        static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
-        static ZONE: TimeZone = TimeZone::system();
+pub type OffsetFn = dyn Fn(f64) -> f64;
+
+thread_local! {
+    static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
+    static ZONE: TimeZone = TimeZone::system();
+    static OFFSETS: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
+}
+
+fn forget_offsets() {
+    CACHE.with(|cache| cache.borrow_mut().fill((i64::MIN, 0.0)));
+}
+
+struct OffsetsRestore(Option<Rc<OffsetFn>>);
+
+impl Drop for OffsetsRestore {
+    fn drop(&mut self) {
+        OFFSETS.with(|slot| *slot.borrow_mut() = self.0.take());
+        forget_offsets();
     }
+}
+
+pub fn with_offsets<T>(offsets: Option<Hook<OffsetFn>>, run: impl FnOnce() -> T) -> T {
+    let outer = OFFSETS.with(|slot| slot.replace(offsets.map(|hook| hook.0)));
+    forget_offsets();
+    let _restore = OffsetsRestore(outer);
+    run()
+}
+
+fn offset_at(utc_ms: f64) -> f64 {
     if !utc_ms.is_finite() {
         return 0.0;
     }
@@ -93,10 +120,13 @@ fn offset_at(utc_ms: f64) -> f64 {
             return cell.1;
         }
         let instant = seconds.clamp(Timestamp::MIN.as_second(), Timestamp::MAX.as_second());
-        let offset = ZONE.with(|zone| {
-            let at = Timestamp::from_second(instant).unwrap_or_default();
-            f64::from(zone.to_offset(at).seconds()) * 1000.0
-        });
+        let offset = match OFFSETS.with(|slot| slot.borrow().clone()) {
+            Some(offsets) => offsets(instant as f64 * 1000.0),
+            None => ZONE.with(|zone| {
+                let at = Timestamp::from_second(instant).unwrap_or_default();
+                f64::from(zone.to_offset(at).seconds()) * 1000.0
+            }),
+        };
         *cell = (seconds, offset);
         offset
     })
@@ -244,5 +274,29 @@ impl JsDate {
 
     pub fn set_hours(&mut self, hours: f64, minutes: f64, seconds: f64, ms: f64) {
         self.update(|p| p[3..7].copy_from_slice(&[hours, minutes, seconds, ms]));
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn offsets_come_from_the_host_inside_the_scope() {
+        let east: Hook<OffsetFn> = Hook(Rc::new(|_| 7.0 * 3_600_000.0));
+        let midnight = JsDate::from_ms(JsDate::utc(2017.0, 6.0, 20.0, 0.0, 0.0, 0.0, 0.0));
+        let (offset, hours) = with_offsets(Some(east), || {
+            (
+                midnight.timezone_offset(),
+                JsDate::local(2017.0, 6.0, 20.0, 7.0, 0.0, 0.0, 0.0).time(),
+            )
+        });
+        assert_eq!(offset, -420.0);
+        assert_eq!(hours, midnight.time());
+        assert_eq!(
+            midnight.timezone_offset(),
+            -offset_at(midnight.time()) / 60_000.0
+        );
+        assert_eq!(offset_at(f64::NAN), 0.0);
     }
 }
