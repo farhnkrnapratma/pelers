@@ -444,10 +444,7 @@ fn draw(
                 node_color(link.source),
                 node_color(link.target)
             );
-            let id = format!(
-                "{id_prefix}-sankey-{}",
-                content_id(&stops.replace("--pelers-series-", "--pele-series-"))
-            );
+            let id = format!("{id_prefix}-sankey-{}", content_id(&stops));
             if !gradients.iter().any(|(existing, _)| *existing == id) {
                 gradients.push((
                     id.clone(),
