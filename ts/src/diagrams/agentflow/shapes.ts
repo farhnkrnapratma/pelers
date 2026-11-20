@@ -1,7 +1,7 @@
 import { isValidShape as isFlowchartShape } from '../flowchart/shapes.js';
 
 // Author-facing names for the shapes that carry meaning in an agentflow.
-export const SHAPE_ALIASES: ReadonlyMap<string, string> = new Map([
+const SHAPE_ALIASES: ReadonlyMap<string, string> = new Map([
   ['task', 'roundedRect'],
   ['tool', 'subroutine'],
   ['input', 'lean-right'],

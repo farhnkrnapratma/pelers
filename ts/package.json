@@ -39,9 +39,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude \"tests/website/**\"",
-    "test:website": "vitest run tests/website",
-    "test:watch": "vitest --exclude \"tests/website/**\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "bench": "node scripts/bench.mjs",
     "bench:mermaid": "node scripts/bench-mermaid.mjs",
     "lint": "eslint .",
