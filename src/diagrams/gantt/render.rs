@@ -5,7 +5,7 @@ use regex::Regex;
 use super::axis::{auto_ticks, interval_ticks, time_format};
 use super::dates::add;
 use super::db::{GanttDb, Task};
-use super::jsdate::JsDate;
+use super::jsdate::{JsDate, now_ms};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::cap_width;
 use crate::errors::PelersError;
@@ -161,9 +161,7 @@ pub fn render_gantt(
     let pad = options.padding.unwrap_or(8.0);
     let now = match options.now {
         Some(given) if given.is_finite() => given,
-        _ => std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_or(0.0, |d| d.as_millis() as f64),
+        _ => now_ms(),
     };
 
     let label_size = setting(config, "fontSize", 4.0, 72.0).unwrap_or(js_round(size * 0.8125));

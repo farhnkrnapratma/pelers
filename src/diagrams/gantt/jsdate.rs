@@ -81,6 +81,18 @@ const SLOTS: usize = 256;
 
 pub type OffsetFn = dyn Fn(f64) -> f64;
 
+#[cfg(not(all(target_arch = "wasm32", feature = "wasm")))]
+pub fn now_ms() -> f64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0.0, |d| d.as_millis() as f64)
+}
+
+#[cfg(all(target_arch = "wasm32", feature = "wasm"))]
+pub fn now_ms() -> f64 {
+    js_sys::Date::now()
+}
+
 thread_local! {
     static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
     static ZONE: TimeZone = TimeZone::system();

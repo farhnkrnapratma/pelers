@@ -26,14 +26,30 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
+      "browser": "./browser.js",
       "default": "./index.js"
-    }
+    },
+    "./lazy": {
+      "types": "./lazy.d.ts",
+      "default": "./lazy.js"
+    },
+    "./global": "./dist/pelers.global.js",
+    "./package.json": "./package.json"
   },
   "files": [
     "index.js",
     "index.native.js",
     "index.d.ts",
     "index.native.d.ts",
+    "browser.js",
+    "lazy.js",
+    "lazy.d.ts",
+    "js/",
+    "wasm/pelers.js",
+    "wasm/pelers.d.ts",
+    "wasm/pelers_bg.wasm",
+    "wasm/pelers_bg.wasm.d.ts",
+    "dist/pelers.global.js",
     "README.md",
     "NOTICE",
     "LICENSE-MIT",
@@ -45,7 +61,10 @@
     "build": "napi build --platform --features napi --esm --js index.native.js --dts index.native.d.ts",
     "build:release": "napi build --platform --release --features napi --esm --js index.native.js --dts index.native.d.ts",
     "test:bindings": "bun scripts/test-bindings.mjs",
-    "test:native": "bun run build:release && bun run test:bindings"
+    "test:native": "bun run build:release && bun run test:bindings",
+    "build:wasm": "bun scripts/build-wasm.mjs",
+    "test:dom": "bun test tests/dom",
+    "prepublishOnly": "napi create-npm-dirs && napi pre-publish -t npm && bun run build:wasm"
   },
   "napi": {
     "binaryName": "pelers",
@@ -71,5 +90,8 @@
     "@commitlint/config-conventional": "^21.2.4",
     "@napi-rs/cli": "^3.10.12",
     "fallow": "^3.44.0"
+  },
+  "browser": {
+    "./index.js": "./browser.js"
   }
 }

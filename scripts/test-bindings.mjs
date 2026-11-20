@@ -63,17 +63,32 @@ const boom = () => {
 };
 assert.throws(() => render("flowchart LR\n  A[fa:fa-car x]", { icons: boom }), /boom/);
 
-if (!existsSync(join(peleDir, "src/index.ts"))) {
-  console.log(`bindings ok (parity skipped: no pele checkout at ${peleDir})`);
-  process.exit(0);
+const golden = new URL("tests/golden/", root);
+const sources = readdirSync(golden, { recursive: true })
+  .filter((name) => name.endsWith(".mmd"))
+  .sort()
+  .map((name) => readFileSync(new URL(name, golden), "utf8"));
+
+const wasmModule = new URL("wasm/pelers_bg.wasm", root);
+let wasm;
+if (existsSync(wasmModule)) {
+  const engine = await import(new URL("wasm/pelers.js", root));
+  engine.initSync({ module: readFileSync(wasmModule) });
+  const { bind } = await import(new URL("js/native.js", root));
+  const napi = await import(new URL("index.native.js", root));
+  wasm = {
+    render(source, options) {
+      bind(engine);
+      try {
+        return render(source, options);
+      } finally {
+        bind(napi);
+      }
+    },
+  };
 }
 
-const pele = await peleCore();
-const corpus = join(peleDir, "tests/corpus");
-const sources = readdirSync(corpus)
-  .filter((name) => name.endsWith("-docs.json"))
-  .sort()
-  .flatMap((name) => JSON.parse(readFileSync(join(corpus, name), "utf8")));
+const pele = existsSync(join(peleDir, "src/index.ts")) ? await peleCore() : undefined;
 
 const widths = { width: (text, size, style) => text.length * size * (style & 1 ? 0.62 : 0.55) };
 const OPTIONS = [
@@ -119,22 +134,30 @@ const failures = [];
 for (const [index, source] of sources.entries())
   for (const [set, given] of OPTIONS.entries()) {
     const options = { now: Date.UTC(2026, 10, 20, 9), ...given };
-    const want = outcome(() => pele.render(source, options));
     const got = outcome(() => render(source, options));
-    cases += 1;
-    try {
-      assert.deepEqual(got, want);
-    } catch {
-      failures.push(`source ${index} options ${set} (${got.type ?? got.code})`);
+    const checks = [
+      ["pele", pele && (() => outcome(() => pele.render(source, options)))],
+      ["wasm", wasm && (() => outcome(() => wasm.render(source, options)))],
+    ];
+    for (const [name, want] of checks) {
+      if (!want) continue;
+      cases += 1;
+      try {
+        assert.deepEqual(got, want());
+      } catch {
+        failures.push(`${name} source ${index} options ${set} (${got.type ?? got.code})`);
+      }
     }
   }
 if (failures.length > 0) {
   const tally = {};
   for (const failure of failures) {
-    const key = failure.replace(/^source \d+ /, "");
+    const key = failure.replace(/ source \d+ /, " ");
     tally[key] = (tally[key] ?? 0) + 1;
   }
   console.log(tally);
 }
 assert.deepEqual(failures.slice(0, 20), [], `${failures.length} of ${cases} differ`);
-console.log(`bindings ok (${cases} option cases match pele)`);
+console.log(
+  `bindings ok (${cases} checks; pele ${pele ? "compared" : `skipped, no checkout at ${peleDir}`}; wasm ${wasm ? "compared" : "not built"})`,
+);

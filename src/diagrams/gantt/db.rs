@@ -3,7 +3,7 @@ use std::sync::OnceLock;
 use regex::Regex;
 
 use super::dates::{Unit, WEEKDAYS, add, add_days, format, is_valid, iso_date, parse_strict};
-use super::jsdate::JsDate;
+use super::jsdate::{JsDate, now_ms};
 use crate::errors::{PelersError, PelersErrorCode};
 use crate::util::chars::trim;
 use crate::util::fxhash::{FastMap, FastSet};
@@ -147,12 +147,6 @@ fn merge_tokens(existing: &[String], text: &str) -> Vec<String> {
         }
     }
     merged
-}
-
-fn now_ms() -> f64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map_or(0.0, |d| d.as_millis() as f64)
 }
 
 fn semantic(message: String) -> PelersError {
