@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 
-use chrono::{Local, TimeZone};
+use jiff::Timestamp;
+use jiff::tz::TimeZone;
 
 pub const MS_PER_DAY: f64 = 86_400_000.0;
 const MAX_TIME: f64 = 8.64e15;
@@ -78,6 +79,7 @@ const SLOTS: usize = 256;
 fn offset_at(utc_ms: f64) -> f64 {
     thread_local! {
         static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
+        static ZONE: TimeZone = TimeZone::system();
     }
     if !utc_ms.is_finite() {
         return 0.0;
@@ -90,13 +92,11 @@ fn offset_at(utc_ms: f64) -> f64 {
         if cell.0 == seconds {
             return cell.1;
         }
-        let offset = match Local.timestamp_opt(seconds, 0).single() {
-            Some(local) => {
-                let offset = chrono::Offset::fix(local.offset());
-                f64::from(offset.local_minus_utc()) * 1000.0
-            }
-            None => 0.0,
-        };
+        let instant = seconds.clamp(Timestamp::MIN.as_second(), Timestamp::MAX.as_second());
+        let offset = ZONE.with(|zone| {
+            let at = Timestamp::from_second(instant).unwrap_or_default();
+            f64::from(zone.to_offset(at).seconds()) * 1000.0
+        });
         *cell = (seconds, offset);
         offset
     })

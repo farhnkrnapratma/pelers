@@ -38,10 +38,7 @@ sha2 = "0.11.1"
 napi-build = { version = "2", optional = true }
 
 [dependencies]
-chrono = { version = "0.4.45", default-features = false, features = [
-  "clock",
-  "std",
-] }
+jiff = "1.0.1"
 mimalloc = "0.1.52"
 regex = "1.13.1"
 url = "2.5.8"
