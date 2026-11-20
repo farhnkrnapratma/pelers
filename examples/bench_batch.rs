@@ -1,3 +1,4 @@
+#[cfg(not(feature = "napi"))]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
