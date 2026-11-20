@@ -8,12 +8,12 @@ A fast, lightweight Mermaid renderer that outputs themeable SVG. `pelers` is a R
 
 Alpha. All 33 diagram types of Pele 1.13.0 are ported and match Pele's output byte for byte on its test corpus (with `pelers` names), and a differential fuzz run against the official `pele` package is clean.
 
-| Registry  | Name                                             | State                                                                                                                                                                                      |
-| --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the TypeScript renderer (33 diagram types). The next version is the Rust binding and starts with flowcharts only; other types return `unsupported-diagram` until ported. |
-| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core: diagram type detection, preprocessing, flowchart parsing and a basic SVG renderer. There is no command-line interface.                                                      |
+| Registry  | Name                                             | State                                                                                                   |
+| --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the old TypeScript build. The next release is the Rust binding with Pele's full API. |
+| crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core and a `pelers` command-line renderer.                                                    |
 
-The npm API of the Rust-backed version is `render` (returns the SVG string), `renderFull` (returns `{ svg, width, height, title }`), `detectType`, `supports` and `PelersError`. `register()` and the per-diagram `pelers/diagrams/*` entry points of the TypeScript package go away.
+The npm API follows Pele's: `render(source | model, options)` returns `{ svg, width, height, links, type, mermaidType, title? }`, and `parse`, `detectType`, `supports`, `register`, `registered`, `forgetTextWidths` and `PelersError` (with `code`, `type`, `mermaidType`, `line`, `column` and `snippet`) are exported. Every `RenderOptions` field is accepted, including the `icons`, `math` and `measurer` callbacks. CSS classes and variables use the `pelers-` prefix (`--pelers-bg` and so on).
 
 ## Install
 
@@ -27,22 +27,24 @@ cargo add pelers        # Rust
 JavaScript / TypeScript (Rust-backed version):
 
 ```ts
-import { render, renderFull } from "pelers";
+import { parse, render } from "pelers";
 
-const svg = render("flowchart LR\n  A --> B");
-const { svg: sized, width, height } = renderFull("flowchart LR\n  A --> B");
+const { svg, width, height, links } = render("flowchart LR\n  A --> B", {
+  fontSize: 14,
+  maxWidth: 640,
+});
+const model = parse("pie\n  \"Dogs\": 3\n  \"Cats\": 1");
+const again = render(model, { idPrefix: "pets" });
 ```
 
 Rust:
 
 ```rust
-use pelers::{detect_diagram, parse_flowchart, preprocess, render_flowchart};
+use pelers::{ParseOptions, RenderOptions, parse_with, render_with};
 
-let prepared = preprocess("flowchart LR\n  A --> B")?;
-if detect_diagram(&prepared.text).is_some() {
-    let model = parse_flowchart(&prepared.text)?;
-    let svg = render_flowchart(&model).svg;
-}
+let model = parse_with("flowchart LR\n  A --> B", &ParseOptions::default())?;
+let rendered = render_with(&model, &RenderOptions::default())?;
+println!("{}", rendered.svg);
 ```
 
 ## Repository layout

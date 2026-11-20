@@ -11,7 +11,7 @@ const PASSES = 5;
 const MIN_SAMPLE_MS = 25;
 const CHROME = process.env.CHROME ?? "/usr/sbin/google-chrome";
 
-const pelers = await import(join(root, "index.native.js"));
+const pelers = await import(join(root, "index.js"));
 const oracle = JSON.parse(
   readFileSync(join(root, "bench", "oracle-results.json"), "utf8"),
 );
@@ -122,7 +122,7 @@ for (const [index, { type, source }] of corpus.entries()) {
   if (index % 25 === 0) console.error(`progress ${index}/${corpus.length}`);
   let pelersSvg;
   try {
-    pelersSvg = pelers.render(source);
+    pelersSvg = pelers.render(source).svg;
   } catch {
     pelersSvg = null;
   }
@@ -130,7 +130,7 @@ for (const [index, { type, source }] of corpus.entries()) {
   if (sha256(pelersSvg) === oracle[index].sha) identical++;
   const row = {
     type,
-    pelers: timeSync(() => pelers.render(source)),
+    pelers: timeSync(() => pelers.render(source).svg),
     reference: oracle[index].ms,
     mermaid: null,
   };

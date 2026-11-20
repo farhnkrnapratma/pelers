@@ -3,6 +3,7 @@ use crate::diagrams::architecture::{self, ArchitectureModel, render_architecture
 use crate::diagrams::block::{self, BlockDb, render_block};
 use crate::diagrams::c4::{self, C4Db, render_c4};
 use crate::diagrams::class::{self, ClassDb, render_class};
+use crate::diagrams::common::Drawn;
 use crate::diagrams::cynefin::{self, CynefinModel, render_cynefin};
 use crate::diagrams::er::{self, ErDb, render_er};
 use crate::diagrams::eventmodeling::{self, EventModelingModel, render_eventmodel};
@@ -35,17 +36,21 @@ use crate::diagrams::wardley::{self, WardleyModel, render_wardley};
 use crate::diagrams::xychart::{self, XyChartDb, render_xychart};
 use crate::errors::{Edit, input_offset, locating_in};
 use crate::preprocess::{encode_entities, source_map};
+use crate::svg::options::LinkInfo;
 use crate::svg::palette::{palette, with_palette};
 use crate::svg::root::RenderOptions;
+use crate::text::entities::decode_entities;
 use crate::text::entities::written_codes;
-use crate::text::icons::with_icons;
+use crate::text::icons::{IconFn, with_icons};
 use crate::text::math::with_math;
 use crate::text::measurer::with_measurer;
+use crate::util::hook::Hook;
 use crate::util::value::Value;
 use crate::{
     Config, Detected, DiagramType, MermaidType, PelersError, PelersErrorCode, Preprocessed,
     detect_diagram, preprocess,
 };
+use std::rc::Rc;
 
 const DEFAULT_LIMIT: usize = 50_000;
 const DEFAULT_OUTPUT_LIMIT: usize = 4_000_000;
@@ -103,6 +108,7 @@ pub struct RenderResult {
     pub svg: String,
     pub width: f64,
     pub height: f64,
+    pub links: Vec<LinkInfo>,
     pub title: Option<String>,
 }
 
@@ -110,6 +116,7 @@ pub struct RenderResult {
 pub struct ParseOptions {
     pub limit: Option<usize>,
     pub max_edges: Option<usize>,
+    pub config: Option<Config>,
 }
 
 fn with_types(mut error: PelersError, found: Detected) -> PelersError {
@@ -165,6 +172,16 @@ pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram,
         ));
     }
     let prepared: Preprocessed = preprocess(source)?;
+    let config = match &options.config {
+        Some(extra) => {
+            let mut merged = extra.clone();
+            for (key, value) in prepared.config.iter() {
+                merged.set(key, value.clone());
+            }
+            merged
+        }
+        None => prepared.config,
+    };
     let found = detect_diagram(&prepared.text).ok_or_else(|| unsupported(None))?;
     let keep_comments = matches!(
         found.diagram_type,
@@ -176,107 +193,103 @@ pub fn parse_with(source: &str, options: &ParseOptions) -> Result<ParsedDiagram,
         &prepared.text
     };
     let parsed = encode_entities(kept, None) + "\n";
-    let model = locating_in(
-        parsed.clone(),
-        source_finder(source, keep_comments),
-        || match found.diagram_type {
-            DiagramType::Flowchart | DiagramType::Swimlane => {
-                let swimlane = found.diagram_type == DiagramType::Swimlane;
-                let mut db = FlowDb::new(DbOptions {
-                    max_edges: Some(options.max_edges.unwrap_or(DEFAULT_MAX_EDGES)),
-                    ..DbOptions::default()
-                });
-                db.title = prepared.title.clone();
-                parse_flowchart(&parsed, &mut db).map(|()| {
-                    if swimlane {
-                        Model::Swimlane(Box::new(db))
-                    } else {
-                        Model::Flowchart(Box::new(db))
-                    }
-                })
-            }
-            DiagramType::GitGraph => git::parse(&parsed, &prepared.config, prepared.title.clone())
-                .map(|model| Model::Git(Box::new(model))),
-            DiagramType::TreeView => treeview::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::TreeView(Box::new(model))),
-            DiagramType::Cynefin => cynefin::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Cynefin(Box::new(model))),
-            DiagramType::Railroad => railroad::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Railroad(Box::new(model))),
-            DiagramType::Er => {
-                er::parse(&parsed, prepared.title.clone()).map(|model| Model::Er(Box::new(model)))
-            }
-            DiagramType::C4 => {
-                c4::parse(&parsed, prepared.title.clone()).map(|model| Model::C4(Box::new(model)))
-            }
-            DiagramType::Block => block::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Block(Box::new(model))),
-            DiagramType::Gantt => gantt::parse(&parsed, &prepared.config, prepared.title.clone())
-                .map(|model| Model::Gantt(Box::new(model))),
-            DiagramType::State => state::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::State(Box::new(model))),
-            DiagramType::Class => class::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Class(Box::new(model))),
-            DiagramType::Usecase => usecase::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Usecase(Box::new(model))),
-            DiagramType::Agentflow => agentflow::parse(
-                &parsed,
-                &prepared.config,
-                prepared.title.clone(),
-                prepared.line_offset,
-                options.max_edges.unwrap_or(DEFAULT_MAX_EDGES),
-            )
-            .map(|model| Model::Agentflow(Box::new(model))),
-            DiagramType::Sequence => {
-                sequence::parse(&parsed, &prepared.config, prepared.title.clone())
-                    .map(|model| Model::Sequence(Box::new(model)))
-            }
-            DiagramType::Eventmodeling => eventmodeling::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::EventModel(Box::new(model))),
-            DiagramType::Wardley => wardley::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Wardley(Box::new(model))),
-            DiagramType::Architecture => architecture::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Architecture(Box::new(model))),
-            DiagramType::Requirement => requirement::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Requirement(Box::new(model))),
-            DiagramType::Info => info::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Info(Box::new(model))),
-            DiagramType::Packet => packet::parse(&parsed, &prepared.config, prepared.title.clone())
-                .map(|model| Model::Packet(Box::new(model))),
-            DiagramType::Kanban => kanban::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Kanban(Box::new(model))),
-            DiagramType::Mindmap => mindmap::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Mindmap(Box::new(model))),
-            DiagramType::Ishikawa => ishikawa::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Ishikawa(Box::new(model))),
-            DiagramType::Timeline => timeline::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Timeline(Box::new(model))),
-            DiagramType::Radar => radar::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Radar(Box::new(model))),
-            DiagramType::Treemap => treemap::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Treemap(Box::new(model))),
-            DiagramType::QuadrantChart => quadrant::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Quadrant(Box::new(model))),
-            DiagramType::Venn => venn::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Venn(Box::new(model))),
-            DiagramType::Sankey => sankey::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Sankey(Box::new(model))),
-            DiagramType::Xychart => xychart::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::XyChart(Box::new(model))),
-            DiagramType::Journey => journey::parse(&parsed, prepared.title.clone())
-                .map(|model| Model::Journey(Box::new(model))),
-            DiagramType::Pie => {
-                pie::parse(&parsed, prepared.title.clone()).map(|model| Model::Pie(Box::new(model)))
-            }
-        },
-    )
-    .map_err(|error| with_types(error, found))?;
+    let model =
+        locating_in(
+            parsed.clone(),
+            source_finder(source, keep_comments),
+            || match found.diagram_type {
+                DiagramType::Flowchart | DiagramType::Swimlane => {
+                    let swimlane = found.diagram_type == DiagramType::Swimlane;
+                    let mut db = FlowDb::new(DbOptions {
+                        max_edges: Some(options.max_edges.unwrap_or(DEFAULT_MAX_EDGES)),
+                        ..DbOptions::default()
+                    });
+                    db.title = prepared.title.clone();
+                    parse_flowchart(&parsed, &mut db).map(|()| {
+                        if swimlane {
+                            Model::Swimlane(Box::new(db))
+                        } else {
+                            Model::Flowchart(Box::new(db))
+                        }
+                    })
+                }
+                DiagramType::GitGraph => git::parse(&parsed, &config, prepared.title.clone())
+                    .map(|model| Model::Git(Box::new(model))),
+                DiagramType::TreeView => treeview::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::TreeView(Box::new(model))),
+                DiagramType::Cynefin => cynefin::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Cynefin(Box::new(model))),
+                DiagramType::Railroad => railroad::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Railroad(Box::new(model))),
+                DiagramType::Er => er::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Er(Box::new(model))),
+                DiagramType::C4 => c4::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::C4(Box::new(model))),
+                DiagramType::Block => block::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Block(Box::new(model))),
+                DiagramType::Gantt => gantt::parse(&parsed, &config, prepared.title.clone())
+                    .map(|model| Model::Gantt(Box::new(model))),
+                DiagramType::State => state::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::State(Box::new(model))),
+                DiagramType::Class => class::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Class(Box::new(model))),
+                DiagramType::Usecase => usecase::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Usecase(Box::new(model))),
+                DiagramType::Agentflow => agentflow::parse(
+                    &parsed,
+                    &config,
+                    prepared.title.clone(),
+                    prepared.line_offset,
+                    options.max_edges.unwrap_or(DEFAULT_MAX_EDGES),
+                )
+                .map(|model| Model::Agentflow(Box::new(model))),
+                DiagramType::Sequence => sequence::parse(&parsed, &config, prepared.title.clone())
+                    .map(|model| Model::Sequence(Box::new(model))),
+                DiagramType::Eventmodeling => eventmodeling::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::EventModel(Box::new(model))),
+                DiagramType::Wardley => wardley::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Wardley(Box::new(model))),
+                DiagramType::Architecture => architecture::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Architecture(Box::new(model))),
+                DiagramType::Requirement => requirement::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Requirement(Box::new(model))),
+                DiagramType::Info => info::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Info(Box::new(model))),
+                DiagramType::Packet => packet::parse(&parsed, &config, prepared.title.clone())
+                    .map(|model| Model::Packet(Box::new(model))),
+                DiagramType::Kanban => kanban::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Kanban(Box::new(model))),
+                DiagramType::Mindmap => mindmap::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Mindmap(Box::new(model))),
+                DiagramType::Ishikawa => ishikawa::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Ishikawa(Box::new(model))),
+                DiagramType::Timeline => timeline::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Timeline(Box::new(model))),
+                DiagramType::Radar => radar::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Radar(Box::new(model))),
+                DiagramType::Treemap => treemap::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Treemap(Box::new(model))),
+                DiagramType::QuadrantChart => quadrant::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Quadrant(Box::new(model))),
+                DiagramType::Venn => venn::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Venn(Box::new(model))),
+                DiagramType::Sankey => sankey::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Sankey(Box::new(model))),
+                DiagramType::Xychart => xychart::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::XyChart(Box::new(model))),
+                DiagramType::Journey => journey::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Journey(Box::new(model))),
+                DiagramType::Pie => pie::parse(&parsed, prepared.title.clone())
+                    .map(|model| Model::Pie(Box::new(model))),
+            },
+        )
+        .map_err(|error| with_types(error, found))?;
     Ok(ParsedDiagram {
         diagram_type: found.diagram_type,
         mermaid_type: found.mermaid_type,
         model,
         title: prepared.title,
-        config: prepared.config,
+        config,
         source: prepared.text,
     })
 }
@@ -330,7 +343,11 @@ pub fn render_with(
         &model.config,
         config_section(model.diagram_type),
     ));
-    let (svg, width, height) = with_measurer(options.measurer.clone(), || {
+    options.icons = options.icons.take().map(|hook| {
+        let resolve = hook.0;
+        Hook(Rc::new(move |name: &str| resolve(&decode_entities(name))) as Rc<IconFn>)
+    });
+    let drawn = with_measurer(options.measurer.clone(), || {
         with_math(math_hook(model.diagram_type, &options), || {
             with_icons(options.icons.clone(), || {
                 with_palette(palette(model.diagram_type.as_str(), &model.config), || {
@@ -340,168 +357,72 @@ pub fn render_with(
         })
     })
     .map_err(|error| with_types(error, found))?;
-    let units = if svg.is_ascii() {
-        svg.len()
+    let output_limit = options.output_limit.unwrap_or(DEFAULT_OUTPUT_LIMIT);
+    let units = if drawn.svg.is_ascii() {
+        drawn.svg.len()
     } else {
-        svg.encode_utf16().count()
+        drawn.svg.encode_utf16().count()
     };
-    if units > DEFAULT_OUTPUT_LIMIT {
+    if units > output_limit {
         return Err(with_types(
             PelersError::new(
-                format!(
-                    "Diagram output is longer than the limit of {DEFAULT_OUTPUT_LIMIT} characters."
-                ),
+                format!("Diagram output is longer than the limit of {output_limit} characters."),
                 PelersErrorCode::Limit,
             ),
             found,
         ));
     }
     Ok(RenderResult {
-        svg,
-        width,
-        height,
+        svg: drawn.svg,
+        width: drawn.width,
+        height: drawn.height,
+        links: drawn
+            .links
+            .into_iter()
+            .map(|link| LinkInfo {
+                id: decode_entities(&link.id),
+                ..link
+            })
+            .collect(),
         title: model.title.clone(),
     })
 }
 
-fn render_model(
-    model: &ParsedDiagram,
-    options: &RenderOptions,
-) -> Result<(String, f64, f64), PelersError> {
+fn render_model(model: &ParsedDiagram, options: &RenderOptions) -> Result<Drawn, PelersError> {
     Ok(match &model.model {
-        Model::XyChart(diagram) => {
-            let drawn = render_xychart(diagram, &model.config, options)?;
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Flowchart(db) => {
-            let drawn = render_flowchart(db, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Swimlane(db) => {
-            let drawn = render_swimlane(db, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Git(diagram) => {
-            let drawn = render_git(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::TreeView(diagram) => {
-            let drawn = render_treeview(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Cynefin(diagram) => {
-            let drawn = render_cynefin(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Railroad(diagram) => {
-            let drawn = render_railroad(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Er(diagram) => {
-            let drawn = render_er(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::C4(diagram) => {
-            let drawn = render_c4(diagram, &model.config, options)?;
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Block(diagram) => {
-            let drawn = render_block(diagram, &model.config, options)?;
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Gantt(diagram) => {
-            let mut scratch = diagram.clone();
-            let drawn = render_gantt(&mut scratch, &model.config, options)?;
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::State(diagram) => {
-            let drawn = render_state(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Class(diagram) => {
-            let drawn = render_class(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Usecase(diagram) => {
-            let drawn = render_usecase(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Agentflow(diagram) => {
-            let drawn = render_agentflow(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Sequence(diagram) => {
-            let drawn = render_sequence(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::EventModel(diagram) => {
-            let drawn = render_eventmodel(diagram, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Wardley(diagram) => {
-            let drawn = render_wardley(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Architecture(diagram) => {
-            let drawn = render_architecture(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Requirement(diagram) => {
-            let drawn = render_requirement(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Info(info) => {
-            let drawn = render_info(info, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Packet(packet) => {
-            let drawn = render_packet(packet, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Venn(diagram) => {
-            let drawn = render_venn(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Sankey(diagram) => {
-            let drawn = render_sankey(diagram, &model.config, options)?;
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Quadrant(diagram) => {
-            let drawn = render_quadrant(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Treemap(diagram) => {
-            let drawn = render_treemap(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Radar(diagram) => {
-            let drawn = render_radar(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Timeline(diagram) => {
-            let drawn = render_timeline(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Ishikawa(diagram) => {
-            let drawn = render_ishikawa(diagram, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Mindmap(map) => {
-            let drawn = render_mindmap(map, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Kanban(board) => {
-            let drawn = render_kanban(board, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Journey(journey) => {
-            let drawn = render_journey(journey, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
-        Model::Pie(pie) => {
-            let drawn = render_pie(pie, &model.config, options);
-            (drawn.svg, drawn.width, drawn.height)
-        }
+        Model::XyChart(diagram) => render_xychart(diagram, &model.config, options)?,
+        Model::Flowchart(db) => render_flowchart(db, &model.config, options),
+        Model::Swimlane(db) => render_swimlane(db, &model.config, options),
+        Model::Git(diagram) => render_git(diagram, &model.config, options),
+        Model::TreeView(diagram) => render_treeview(diagram, &model.config, options),
+        Model::Cynefin(diagram) => render_cynefin(diagram, &model.config, options),
+        Model::Railroad(diagram) => render_railroad(diagram, &model.config, options),
+        Model::Er(diagram) => render_er(diagram, &model.config, options),
+        Model::C4(diagram) => render_c4(diagram, &model.config, options)?,
+        Model::Block(diagram) => render_block(diagram, &model.config, options)?,
+        Model::Gantt(diagram) => render_gantt(&mut (**diagram).clone(), &model.config, options)?,
+        Model::State(diagram) => render_state(diagram, &model.config, options),
+        Model::Class(diagram) => render_class(diagram, &model.config, options),
+        Model::Usecase(diagram) => render_usecase(diagram, &model.config, options),
+        Model::Agentflow(diagram) => render_agentflow(diagram, &model.config, options),
+        Model::Sequence(diagram) => render_sequence(diagram, &model.config, options),
+        Model::EventModel(diagram) => render_eventmodel(diagram, options),
+        Model::Wardley(diagram) => render_wardley(diagram, &model.config, options),
+        Model::Architecture(diagram) => render_architecture(diagram, &model.config, options),
+        Model::Requirement(diagram) => render_requirement(diagram, &model.config, options),
+        Model::Info(info) => render_info(info, options),
+        Model::Packet(packet) => render_packet(packet, &model.config, options),
+        Model::Venn(diagram) => render_venn(diagram, &model.config, options),
+        Model::Sankey(diagram) => render_sankey(diagram, &model.config, options)?,
+        Model::Quadrant(diagram) => render_quadrant(diagram, &model.config, options),
+        Model::Treemap(diagram) => render_treemap(diagram, &model.config, options),
+        Model::Radar(diagram) => render_radar(diagram, &model.config, options),
+        Model::Timeline(diagram) => render_timeline(diagram, &model.config, options),
+        Model::Ishikawa(diagram) => render_ishikawa(diagram, &model.config, options),
+        Model::Mindmap(map) => render_mindmap(map, &model.config, options),
+        Model::Kanban(board) => render_kanban(board, &model.config, options),
+        Model::Journey(journey) => render_journey(journey, options),
+        Model::Pie(pie) => render_pie(pie, &model.config, options),
     })
 }
 
@@ -550,8 +471,9 @@ pub fn render_batch(sources: &[&str], threads: usize) -> Vec<Result<RenderResult
 
 #[cfg(test)]
 mod tests {
-    use super::{Model, ParseOptions, parse, parse_with, render};
-    use crate::{DiagramType, PelersErrorCode};
+    use super::{Hook, IconFn, Model, ParseOptions, Rc, parse, parse_with, render, render_with};
+    use crate::util::value::Value;
+    use crate::{Config, DiagramType, PelersErrorCode, RenderOptions};
 
     #[test]
     fn parses_and_renders_supported_flowcharts() {
@@ -649,5 +571,54 @@ flowchart TB
         .unwrap();
         let code = render(&parsed).err().map(|error| error.code);
         assert_eq!(code, Some(PelersErrorCode::Limit));
+        let small = parse("pie\n  \"a\": 1").unwrap();
+        let options = RenderOptions {
+            output_limit: Some(50),
+            ..RenderOptions::default()
+        };
+        let error = render_with(&small, &options).unwrap_err();
+        assert_eq!(error.code, PelersErrorCode::Limit);
+        assert!(error.message.contains("limit of 50 characters"));
+    }
+
+    #[test]
+    fn merges_host_config_under_the_diagram_config() {
+        let mut extra = Config::new();
+        extra.set("theme", Value::String("dark".to_owned()));
+        extra.set("pie", Value::Object(Config::new()));
+        let parsed = parse_with(
+            "---\nconfig:\n  theme: forest\n---\npie\n  \"a\": 1",
+            &ParseOptions {
+                config: Some(extra),
+                ..ParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(parsed.config.keys(), vec!["theme", "pie"]);
+        assert_eq!(
+            parsed.config.get("theme"),
+            Some(&Value::String("forest".to_owned()))
+        );
+    }
+
+    #[test]
+    fn decodes_icon_names_and_link_ids() {
+        let seen = Rc::new(std::cell::RefCell::new(Vec::new()));
+        let names = Rc::clone(&seen);
+        let options = RenderOptions {
+            links: Some(true),
+            icons: Some(Hook(Rc::new(move |name: &str| {
+                names.borrow_mut().push(name.to_owned());
+                None
+            }) as Rc<IconFn>)),
+            ..RenderOptions::default()
+        };
+        let parsed =
+            parse("flowchart LR\n  A@{ icon: \"fa:#99;ar\", label: \"x\" }\n  click A \"https://example.com\"")
+                .unwrap();
+        let rendered = render_with(&parsed, &options).unwrap();
+        assert_eq!(rendered.links.len(), 1);
+        assert_eq!(rendered.links[0].id, "A");
+        assert_eq!(seen.borrow().as_slice(), ["fa:car"]);
     }
 }

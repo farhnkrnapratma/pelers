@@ -1,12 +1,10 @@
 import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const require = createRequire(import.meta.url);
-const pelers = require(join(root, "..", "index.native.js")) as {
-  render: (source: string) => string;
+const pelers = (await import(join(root, "..", "index.js"))) as {
+  render: (source: string) => { svg: string };
 };
 
 const generated = join(root, "src/lib/generated");
@@ -18,7 +16,7 @@ const examples = JSON.parse(
 const exampleSvgs: Record<string, string> = {};
 for (const [name, source] of Object.entries(examples)) {
   if (name.endsWith("Example")) {
-    exampleSvgs[name] = pelers.render(source);
+    exampleSvgs[name] = pelers.render(source).svg;
   }
 }
 writeFileSync(join(generated, "examples.json"), JSON.stringify(exampleSvgs));
@@ -35,7 +33,7 @@ for (const dir of markdownDirs) {
     for (const match of text.matchAll(fence)) {
       const source = match[1];
       if (!(source in diagrams)) {
-        diagrams[source] = pelers.render(source);
+        diagrams[source] = pelers.render(source).svg;
       }
     }
   }

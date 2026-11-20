@@ -7,20 +7,82 @@
  * flavor napi-rs can build is listed, because `NAPI_RS_NATIVE_LIBRARY_PATH`
  * can point the loader at a WASI artifact this package does not build itself.
  */
-export declare const __napiBindingTarget:
-  "native" | "wasm32-wasi" | "wasm32-wasip1";
+export declare const __napiBindingTarget: 'native' | 'wasm32-wasi' | 'wasm32-wasip1'
 
-export declare function detectType(source: string): string | null;
-
-export declare function render(source: string): string;
-
-export declare function renderFull(source: string): RenderResult;
-
-export interface RenderResult {
-  svg: string;
-  width: number;
-  height: number;
-  title?: string;
+export declare class Parsed {
+  get type(): string
+  get mermaidType(): string
+  get title(): string | null
 }
 
-export declare function supports(source: string): boolean;
+export declare function detectType(source: string): string | undefined | null | NativeError
+
+export interface NativeError {
+  message: string
+  code: string
+  type?: string
+  mermaidType?: string
+  line: number
+  column: number
+  snippet: string
+}
+
+export interface NativeLink {
+  id: string
+  href: string
+  internal: boolean
+}
+
+export interface NativeMath {
+  svg?: string
+  html?: string
+  width: number
+  height: number
+}
+
+export interface NativeOutcome {
+  result?: NativeResult
+  error?: NativeError
+}
+
+export interface NativeParseOptions {
+  limit?: number
+  maxEdges?: number
+  config?: string
+}
+
+export interface NativeRenderOptions {
+  fontFamily?: string
+  fontFamilyMono?: string
+  monospace?: Array<string>
+  fontSize?: number
+  idPrefix?: string
+  responsive?: boolean
+  maxWidth?: number
+  autoDirection?: boolean
+  directionBreakpoint?: number
+  padding?: number
+  outputLimit?: number
+  linkSchemes?: Array<string>
+  imageSchemes?: Array<string>
+  links?: boolean
+  images?: boolean
+  linkRel?: string
+  now?: number
+}
+
+export interface NativeResult {
+  svg: string
+  width: number
+  height: number
+  links: Array<NativeLink>
+  type: string
+  mermaidType: string
+  title?: string
+}
+
+export declare function parse(source: string, options?: NativeParseOptions | undefined | null, offsets?: OffsetCallback | undefined | null): Parsed | NativeError
+
+export declare function renderParsed(model: Parsed, options?: NativeRenderOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null, offsets?: OffsetCallback | undefined | null): NativeOutcome
+
+export declare function renderSource(source: string, parse?: NativeParseOptions | undefined | null, options?: NativeRenderOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null, offsets?: OffsetCallback | undefined | null): NativeOutcome

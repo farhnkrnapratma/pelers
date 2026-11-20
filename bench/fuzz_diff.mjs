@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const pelers = await import(join(root, "index.native.js"));
+const pelers = await import(join(root, "index.js"));
 
 const corpus = JSON.parse(
   readFileSync(join(root, "bench", "corpus.json"), "utf8"),
@@ -120,7 +120,7 @@ function mutate(source, random) {
 
 function renderPelers(source) {
   try {
-    return { ok: true, svg: pelers.render(source) };
+    return { ok: true, svg: pelers.render(source).svg };
   } catch (error) {
     return {
       ok: false,

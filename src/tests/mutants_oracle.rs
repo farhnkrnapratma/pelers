@@ -108,6 +108,7 @@ fn mutants_match_the_oracle() {
             limit: case["options"]["limit"]
                 .as_u64()
                 .map(|limit| limit as usize),
+            config: None,
         };
         let rendered =
             parse_with(source, &parse_options).and_then(|model| render_with(&model, &options));

@@ -114,12 +114,21 @@ export async function peleCore() {
   core.register({ ...info, render: renderInfo });
   return {
     ...core,
-    render(source, options) {
+    render(source, options = {}) {
       const rendered = core.render(toUpstream(source), {
         ...(core.detectType(source) === "cynefin" ? { idPrefix: "pelers" } : {}),
         ...options,
+        outputLimit: Infinity,
       });
-      return { ...rendered, svg: normalize(rendered.svg) };
+      const svg = normalize(rendered.svg);
+      const outputLimit = options.outputLimit ?? 4_000_000;
+      if (svg.length > outputLimit)
+        throw new core.PeleError(
+          `Diagram output is longer than the limit of ${outputLimit} characters.`,
+          "limit",
+          { type: rendered.type, mermaidType: rendered.mermaidType },
+        );
+      return { ...rendered, svg };
     },
   };
 }

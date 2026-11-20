@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { buildCorpus, root, sha256 } from "./corpus.mjs";
 
-const pelers = await import(join(root, "index.native.js"));
+const pelers = await import(join(root, "index.js"));
 const oracle = JSON.parse(
   readFileSync(join(root, "bench", "oracle-results.json"), "utf8"),
 );
@@ -30,11 +30,11 @@ function median(values) {
 const rows = [];
 let identical = 0;
 for (const [index, { type, source }] of corpus.entries()) {
-  for (let i = 0; i < 3; i++) pelers.render(source);
+  for (let i = 0; i < 3; i++) pelers.render(source).svg;
   const times = [];
   for (let round = 0; round < ROUNDS; round++)
-    times.push(timeOnce(() => pelers.render(source)));
-  const svg = pelers.render(source);
+    times.push(timeOnce(() => pelers.render(source).svg));
+  const svg = pelers.render(source).svg;
   if (sha256(svg) === oracle[index].sha) identical++;
   rows.push({ type, index, pelers: median(times), oracle: oracle[index].ms });
 }
