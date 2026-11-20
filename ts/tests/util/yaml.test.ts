@@ -8,7 +8,6 @@ const CASES = [
   '{\n shape: rounded \n}',
   '{\nshape: rounded , label: "DD"\n}',
   '{\n label: "This is }", other: "clock"\n}',
-  '{\n animate: true, animation: fast, w: 100, h: 50.5, x: null, y: ~\n}',
   '{\n label: \'single quoted\', icon: "fa:fa-user", form: circle, pos: t \n}',
   '{\n a: [1, 2, three], b: {c: d, e: [f]}\n}',
   '{\n}',
@@ -19,23 +18,39 @@ const CASES = [
   'title: Hello world\nconfig:\n  theme: dark\n  flowchart:\n    curve: linear\n    htmlLabels: false\n',
   'title: "Quoted: title"\ndisplayMode: compact\n',
   'config:\n  themeVariables:\n    primaryColor: "#ff0000"\n    fontSize: 16px\n  look: handDrawn # trailing comment\n',
-  'list:\n  - a\n  - b: 1\n    c: 2\n  - [x, y]\nempty:\n',
-  'a: 0x1f\nb: -12\nc: 1e3\nd: .5\ne: "12"\nf: True\ng: FALSE\nh: Null\n',
   'key with spaces: plain value\nurl: http://example.com/a#b\n',
   'multi: this is\n  continued on the next line\nnext: 1\n',
-  '# only a comment\n',
-  '',
   'just a scalar',
   '- 1\n- 2\n',
-  'a: {\n  b: 1,\n  c: [2,\n    3]\n}\nd: "two\n  lines"\ne: 5\n',
   '{\n a: 1, # comment\n b: 2\n}',
   '__proto__: 1\nb:\n  __proto__: {x: 1}\n',
+];
+
+const MERMAID_CASES: [string, unknown][] = [
+  [
+    '{\n animate: true, animation: fast, w: 100, h: 50.5, x: null, y: ~\n}',
+    { animate: true, animation: 'fast', w: 100, h: 50.5, x: null, y: null },
+  ],
+  ['list:\n  - a\n  - b: 1\n    c: 2\n  - [x, y]\nempty:\n', { list: ['a', { b: 1, c: 2 }, ['x', 'y']], empty: null }],
+  [
+    'a: 0x1f\nb: -12\nc: 1e3\nd: .5\ne: "12"\nf: True\ng: FALSE\nh: Null\n',
+    { a: 31, b: -12, c: 1000, d: 0.5, e: '12', f: true, g: false, h: null },
+  ],
+  ['# only a comment\n', null],
+  ['', null],
+  ['a: {\n  b: 1,\n  c: [2,\n    3]\n}\nd: "two\n  lines"\ne: 5\n', { a: { b: 1, c: [2, 3] }, d: 'two lines', e: 5 }],
 ];
 
 describe('yaml reader', () => {
   for (const source of CASES) {
     it(`agrees with js-yaml on ${JSON.stringify(source).slice(0, 60)}`, () => {
       expect(parseYaml(source) ?? null).toEqual(load(source, { schema: JSON_SCHEMA }) ?? null);
+    });
+  }
+
+  for (const [source, expected] of MERMAID_CASES) {
+    it(`reads ${JSON.stringify(source).slice(0, 60)} as Mermaid's js-yaml 4 does`, () => {
+      expect(parseYaml(source) ?? null).toEqual(expected);
     });
   }
 
