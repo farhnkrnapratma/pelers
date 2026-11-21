@@ -7,8 +7,8 @@ import { root } from "./oracle.mjs";
 const run = (command, args) => execFileSync(command, args, { cwd: root, stdio: "inherit" });
 
 const variants = [
-  { name: "fast", level: "3", flag: "-O3", global: "pelers.global.js" },
-  { name: "small", level: '"z"', flag: "-Oz", global: "pelers.small.global.js" },
+  { name: "fast", level: "3", flag: "-O3", features: "wasm,regex-perf", global: "pelers.global.js" },
+  { name: "small", level: '"z"', flag: "-Oz", features: "wasm", global: "pelers.small.global.js" },
 ];
 
 function wasmOpt() {
@@ -23,7 +23,7 @@ function wasmOpt() {
 
 rmSync(join(root, "wasm"), { recursive: true, force: true });
 mkdirSync(join(root, "dist"), { recursive: true });
-for (const { name, level, flag, global } of variants) {
+for (const { name, level, flag, features, global } of variants) {
   const target = `target/wasm-${name}`;
   run("cargo", [
     "build",
@@ -33,7 +33,7 @@ for (const { name, level, flag, global } of variants) {
     "--target",
     "wasm32-unknown-unknown",
     "--features",
-    "wasm",
+    features,
     "--config",
     `profile.release.opt-level=${level}`,
     "--config",

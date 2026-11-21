@@ -25,6 +25,7 @@ crate-type = ["cdylib", "rlib"]
 [features]
 napi = ["dep:napi", "dep:napi-derive", "dep:napi-build"]
 wasm = []
+regex-perf = ["regex/perf"]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 mimalloc = "0.1.52"
