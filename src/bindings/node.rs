@@ -274,22 +274,16 @@ fn render_options(
 thread_local! {
     static OFFSETS: RefCell<Option<ManuallyDrop<FunctionRef<f64, f64>>>> =
         const { RefCell::new(None) };
+    static HOST: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
+    static OFFSET_ERROR: RefCell<Option<Error>> = const { RefCell::new(None) };
 }
 
 #[napi(js_name = "setOffsets")]
-pub fn set_offsets(offsets: OffsetCallback<'_>) -> Result<()> {
+pub fn set_offsets(env: Env, offsets: OffsetCallback<'_>) -> Result<()> {
     let reference = ManuallyDrop::new(offsets.create_ref()?);
     let previous = OFFSETS.with(|slot| slot.borrow_mut().replace(reference));
     drop(previous.map(ManuallyDrop::into_inner));
-    Ok(())
-}
-
-fn offsets_hook(env: Env, failed: &Failure) -> Option<Hook<OffsetFn>> {
-    if OFFSETS.with(|slot| slot.borrow().is_none()) {
-        return None;
-    }
-    let failed = Rc::clone(failed);
-    let offset = move |ms: f64| {
+    let host = move |ms: f64| {
         let called = OFFSETS.with(|slot| match slot.borrow().as_ref() {
             Some(reference) => reference
                 .borrow_back(&env)
@@ -297,11 +291,18 @@ fn offsets_hook(env: Env, failed: &Failure) -> Option<Hook<OffsetFn>> {
             None => Ok(0.0),
         });
         called.unwrap_or_else(|error| {
-            failed.borrow_mut().get_or_insert(error);
+            OFFSET_ERROR.with(|slot| {
+                slot.borrow_mut().get_or_insert(error);
+            });
             0.0
         })
     };
-    Some(Hook(Rc::new(offset) as Rc<OffsetFn>))
+    HOST.with(|slot| *slot.borrow_mut() = Some(Rc::new(host)));
+    Ok(())
+}
+
+fn offsets_hook() -> Option<Hook<OffsetFn>> {
+    HOST.with(|slot| slot.borrow().clone().map(Hook))
 }
 
 type Outcome<T> = Either<T, NativeError>;
@@ -369,16 +370,17 @@ fn rendered(result: Core<crate::RenderResult>, model: Option<&ParsedDiagram>) ->
 }
 
 fn finish<T>(failed: &Failure, outcome: T) -> Result<T> {
-    match failed.borrow_mut().take() {
+    let offset_error = OFFSET_ERROR.with(|slot| slot.borrow_mut().take());
+    match failed.borrow_mut().take().or(offset_error) {
         Some(error) => Err(error),
         None => Ok(outcome),
     }
 }
 
 #[napi]
-pub fn parse(env: Env, source: String, options: Option<NativeOptions>) -> Result<Outcome<Parsed>> {
+pub fn parse(source: String, options: Option<NativeOptions>) -> Result<Outcome<Parsed>> {
     let failed = Failure::default();
-    let parsed = with_offsets(offsets_hook(env, &failed), || {
+    let parsed = with_offsets(offsets_hook(), || {
         catching_panics(|| parse_with(&source, &parse_options(options.as_ref())))
     });
     finish(
@@ -414,7 +416,7 @@ pub fn render_source(
         &failed,
     )?;
     let mut model = None;
-    let result = with_offsets(offsets_hook(env, &failed), || {
+    let result = with_offsets(offsets_hook(), || {
         catching_panics(|| {
             let parsed = parse_with(&source, &parse)?;
             let rendered = render_with(&parsed, &options);
@@ -447,7 +449,7 @@ pub fn render_parsed(
         },
         &failed,
     )?;
-    let result = with_offsets(offsets_hook(env, &failed), || {
+    let result = with_offsets(offsets_hook(), || {
         catching_panics(|| render_with(&model.inner, &options))
     });
     finish(&failed, rendered(result, Some(&model.inner)))

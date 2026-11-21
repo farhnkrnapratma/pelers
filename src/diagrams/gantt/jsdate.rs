@@ -1,4 +1,4 @@
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
 use crate::util::hook::Hook;
@@ -94,29 +94,51 @@ pub fn now_ms() -> f64 {
 }
 
 thread_local! {
-    static CACHE: RefCell<Vec<(i64, f64)>> = RefCell::new(vec![(i64::MIN, 0.0); SLOTS]);
+    static CACHE: RefCell<Vec<(i64, f64, u64)>> = RefCell::new(vec![(i64::MIN, 0.0, u64::MAX); SLOTS]);
+    static GENERATION: Cell<u64> = const { Cell::new(1) };
+    static VERSION: Cell<u64> = const { Cell::new(0) };
+    static CHECKED: Cell<bool> = const { Cell::new(false) };
     static ZONE: TimeZone = TimeZone::system();
     static OFFSETS: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
+    static LAST: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
 }
 
 fn forget_offsets() {
-    CACHE.with(|cache| cache.borrow_mut().fill((i64::MIN, 0.0)));
+    GENERATION.with(|generation| generation.set(generation.get() + 1));
+}
+
+fn install(offsets: Option<Rc<OffsetFn>>) -> Option<Rc<OffsetFn>> {
+    if let Some(host) = &offsets {
+        let known = LAST.with(|last| last.borrow().as_ref().is_some_and(|l| Rc::ptr_eq(l, host)));
+        if !known {
+            LAST.with(|last| *last.borrow_mut() = Some(Rc::clone(host)));
+            forget_offsets();
+        }
+    }
+    CHECKED.with(|checked| checked.set(false));
+    OFFSETS.with(|slot| slot.replace(offsets))
 }
 
 struct OffsetsRestore(Option<Rc<OffsetFn>>);
 
 impl Drop for OffsetsRestore {
     fn drop(&mut self) {
-        OFFSETS.with(|slot| *slot.borrow_mut() = self.0.take());
-        forget_offsets();
+        install(self.0.take());
     }
 }
 
 pub fn with_offsets<T>(offsets: Option<Hook<OffsetFn>>, run: impl FnOnce() -> T) -> T {
-    let outer = OFFSETS.with(|slot| slot.replace(offsets.map(|hook| hook.0)));
-    forget_offsets();
-    let _restore = OffsetsRestore(outer);
+    let _restore = OffsetsRestore(install(offsets.map(|hook| hook.0)));
     run()
+}
+
+fn check_zone(offsets: &OffsetFn) {
+    if !CHECKED.with(|checked| checked.replace(true)) {
+        let version = offsets(f64::NAN).to_bits();
+        if VERSION.with(|known| known.replace(version)) != version {
+            forget_offsets();
+        }
+    }
 }
 
 fn offset_at(utc_ms: f64) -> f64 {
@@ -125,21 +147,31 @@ fn offset_at(utc_ms: f64) -> f64 {
     }
     let seconds = (utc_ms / 1000.0).floor() as i64;
     let slot = ((seconds as u64).wrapping_mul(0x9E37_79B9_7F4A_7C15) >> 56) as usize;
+    let host = OFFSETS.with(|slot| slot.borrow().clone());
+    if let Some(offsets) = &host {
+        check_zone(offsets.as_ref());
+    }
+    let stamp = if host.is_some() {
+        GENERATION.with(Cell::get)
+    } else {
+        0
+    };
     CACHE.with(|cache| {
-        let mut cache = cache.borrow_mut();
-        let cell = &mut cache[slot];
-        if cell.0 == seconds {
-            return cell.1;
+        if let Some(&(known, offset, cached)) = cache.borrow().get(slot)
+            && known == seconds
+            && cached == stamp
+        {
+            return offset;
         }
         let instant = seconds.clamp(Timestamp::MIN.as_second(), Timestamp::MAX.as_second());
-        let offset = match OFFSETS.with(|slot| slot.borrow().clone()) {
+        let offset = match &host {
             Some(offsets) => offsets(instant as f64 * 1000.0),
             None => ZONE.with(|zone| {
                 let at = Timestamp::from_second(instant).unwrap_or_default();
                 f64::from(zone.to_offset(at).seconds()) * 1000.0
             }),
         };
-        *cell = (seconds, offset);
+        cache.borrow_mut()[slot] = (seconds, offset, stamp);
         offset
     })
 }
@@ -292,6 +324,26 @@ impl JsDate {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn keeps_host_offsets_until_the_zone_changes() {
+        let calls = Rc::new(Cell::new(0));
+        let version = Rc::new(Cell::new(1.0));
+        let (counted, zone) = (Rc::clone(&calls), Rc::clone(&version));
+        let host: Rc<OffsetFn> = Rc::new(move |ms: f64| {
+            if ms.is_nan() {
+                zone.get()
+            } else {
+                counted.set(counted.get() + 1);
+                3_600_000.0
+            }
+        });
+        let date = JsDate::from_ms(0.0);
+        let run = || with_offsets(Some(Hook(Rc::clone(&host))), || date.timezone_offset());
+        assert_eq!((run(), run(), calls.get()), (-60.0, -60.0, 1));
+        version.set(2.0);
+        assert_eq!((run(), calls.get()), (-60.0, 2));
+    }
 
     #[test]
     fn offsets_come_from_the_host_inside_the_scope() {

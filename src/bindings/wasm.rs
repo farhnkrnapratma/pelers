@@ -75,6 +75,10 @@ export function measure(f, at, length, size, style) {
   const width = f(text(at, length), size, style);
   return typeof width === 'number' ? width : NaN;
 }
+export function offset(f, ms) {
+  const value = f(ms);
+  return typeof value === 'number' ? value : 0;
+}
 export function icon(f, at, length) {
   const markup = f(text(at, length));
   return typeof markup === 'string' ? markup : undefined;
@@ -112,6 +116,8 @@ extern "C" {
     fn measure(f: &Function, at: u32, length: u32, size: f64, style: u32) -> Result<f64, JsValue>;
     #[wasm_bindgen(catch)]
     fn icon(f: &Function, at: u32, length: u32) -> Result<Option<String>, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn offset(f: &Function, ms: f64) -> Result<f64, JsValue>;
 }
 
 fn address(text: &str) -> (u32, u32) {
@@ -163,7 +169,8 @@ extern "C" {
 
 thread_local! {
     static NAMES: RefCell<Vec<(&'static str, JsValue)>> = const { RefCell::new(Vec::new()) };
-    static OFFSETS: RefCell<Option<Function>> = const { RefCell::new(None) };
+    static HOST: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
+    static OFFSET_ERROR: RefCell<Option<JsValue>> = const { RefCell::new(None) };
 }
 
 fn name(text: &'static str) -> JsValue {
@@ -334,21 +341,24 @@ fn render_options(
 #[wasm_bindgen(js_name = "setOffsets")]
 pub fn set_offsets(offsets: Function) {
     attach(wasm_bindgen::memory());
-    OFFSETS.with(|slot| *slot.borrow_mut() = Some(offsets));
+    let host = move |ms: f64| {
+        offset(&offsets, ms).unwrap_or_else(|error| {
+            OFFSET_ERROR.with(|slot| {
+                slot.borrow_mut().get_or_insert(error);
+            });
+            0.0
+        })
+    };
+    HOST.with(|slot| *slot.borrow_mut() = Some(Rc::new(host)));
 }
 
-fn offsets_hook(failed: &Failure) -> Option<Hook<OffsetFn>> {
-    let function = OFFSETS.with(|slot| slot.borrow().clone())?;
-    let failed = Rc::clone(failed);
-    let offset = move |ms: f64| match function.call1(&JsValue::NULL, &JsValue::from_f64(ms)) {
-        Ok(value) => value.as_f64().unwrap_or(0.0),
-        Err(error) => failing(&failed, error, 0.0),
-    };
-    Some(Hook(Rc::new(offset) as Rc<OffsetFn>))
+fn offsets_hook() -> Option<Hook<OffsetFn>> {
+    HOST.with(|slot| slot.borrow().clone().map(Hook))
 }
 
 fn finish(failed: &Failure, value: JsValue) -> Result<JsValue, JsValue> {
-    match failed.borrow_mut().take() {
+    let offset_error = OFFSET_ERROR.with(|slot| slot.borrow_mut().take());
+    match failed.borrow_mut().take().or(offset_error) {
         Some(error) => Err(error),
         None => Ok(value),
     }
@@ -357,7 +367,7 @@ fn finish(failed: &Failure, value: JsValue) -> Result<JsValue, JsValue> {
 #[wasm_bindgen]
 pub fn parse(source: &str, options: Option<Options>) -> Result<JsValue, JsValue> {
     let failed = Failure::default();
-    let parsed = with_offsets(offsets_hook(&failed), || {
+    let parsed = with_offsets(offsets_hook(), || {
         parse_with(source, &parse_options(options.as_ref()))
     });
     let value = match parsed {
@@ -380,7 +390,7 @@ pub fn render_source(
     let parse = parse_options(options.as_ref());
     let options = render_options(now, options.as_ref(), icons, math_hook, measurer, &failed);
     let mut model = None;
-    let rendered = with_offsets(offsets_hook(&failed), || {
+    let rendered = with_offsets(offsets_hook(), || {
         let parsed = parse_with(source, &parse)?;
         let rendered = render_with(&parsed, &options);
         model = Some(parsed);
@@ -400,9 +410,7 @@ pub fn render_parsed(
 ) -> Result<JsValue, JsValue> {
     let failed = Failure::default();
     let options = render_options(now, options.as_ref(), icons, math_hook, measurer, &failed);
-    let rendered = with_offsets(offsets_hook(&failed), || {
-        render_with(&model.inner, &options)
-    });
+    let rendered = with_offsets(offsets_hook(), || render_with(&model.inner, &options));
     finish(&failed, outcome(rendered, Some(&model.inner)))
 }
 

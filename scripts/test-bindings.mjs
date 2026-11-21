@@ -155,6 +155,27 @@ for (const [index, source] of sources.entries())
       }
     }
   }
+if (pele) {
+  const source =
+    "gantt\n  dateFormat YYYY-MM-DD HH:mm\n  axisFormat %d %H:%M\n  section A\n  Task :a1, 2024-03-09 22:00, 8h";
+  const options = { now: Date.UTC(2024, 2, 10) };
+  const zones = ["UTC", "America/New_York", "Asia/Jakarta", "UTC"];
+  const seen = new Set();
+  for (const zone of zones) {
+    process.env.TZ = zone;
+    const got = outcome(() => render(source, options));
+    seen.add(got.svg);
+    assert.deepEqual(got, outcome(() => pele.render(source, options)), zone);
+  }
+  assert.equal(seen.size, 3, "the gantt check depends on the time zone");
+  for (const [name, run] of engines)
+    for (const zone of zones) {
+      process.env.TZ = zone;
+      assert.deepEqual(outcome(() => run(source, options)), outcome(() => pele.render(source, options)), `${name} ${zone}`);
+    }
+  process.env.TZ = "UTC";
+}
+
 if (failures.length > 0) {
   const tally = {};
   for (const failure of failures) {
