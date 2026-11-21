@@ -11,6 +11,7 @@ use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 const TICK: f64 = 4.0;
 const SWATCH: f64 = 12.0;
@@ -513,10 +514,10 @@ pub fn render_xychart(
     let mut axis = String::new();
     let mut labels = String::new();
     if on(left_conf, "showAxisLine", true) {
-        axis.push_str(&format!("M{},{}V{}", num(left), num(top), num(bottom)));
+        let _ = write!(axis, "M{},{}V{}", num(left), num(top), num(bottom));
     }
     if on(bottom_conf, "showAxisLine", true) {
-        axis.push_str(&format!("M{},{}H{}", num(left), num(bottom), num(right)));
+        let _ = write!(axis, "M{},{}H{}", num(left), num(bottom), num(right));
     }
     for mark in &left_marks {
         let y = if horizontal {
@@ -525,12 +526,13 @@ pub fn render_xychart(
             bottom - mark.at * plot_height
         };
         if left_tick != 0.0 {
-            axis.push_str(&format!(
+            let _ = write!(
+                axis,
                 "M{},{}h{}",
                 num(left),
                 num(y),
                 js_number_to_string(-left_tick)
-            ));
+            );
         }
         if left_labels {
             labels.push_str(&aligned(&mark.label, left - left_tick - 6.0, y, "end"));
@@ -539,12 +541,13 @@ pub fn render_xychart(
     for mark in &bottom_marks {
         let at = left + mark.at * plot_width;
         if bottom_tick != 0.0 {
-            axis.push_str(&format!(
+            let _ = write!(
+                axis,
                 "M{},{}v{}",
                 num(at),
                 num(bottom),
                 js_number_to_string(bottom_tick)
-            ));
+            );
         }
         if bottom_labels {
             labels.push_str(&aligned(
@@ -619,13 +622,14 @@ pub fn render_xychart(
                 } else {
                     (to - from) * plot_height
                 };
-                rects.push_str(&format!(
+                let _ = write!(
+                    rects,
                     "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"/>",
                     num(bx),
                     num(by),
                     num(bw),
                     num(bh)
-                ));
+                );
                 if !show_values {
                     continue;
                 }
@@ -647,15 +651,17 @@ pub fn render_xychart(
                     }
                     ty = (if out > 0.0 { by } else { by + bh }) - out * (tiny_height / 2.0 + 2.0);
                 }
-                outside.push_str(&format!(
+                let _ = write!(
+                    outside,
                     "<text x=\"{}\" y=\"{}\" text-anchor=\"{anchor}\">{label}</text>",
                     num(tx),
                     num(ty + tiny * 0.35)
-                ));
+                );
             }
-            series.push_str(&format!(
+            let _ = write!(
+                series,
                 "<g class=\"pelers-series pelers-bars\"{id} fill=\"{color}\">{rects}</g>"
-            ));
+            );
             continue;
         }
 
@@ -674,7 +680,7 @@ pub fn render_xychart(
             let visible = (0.0..=1.0).contains(&v);
             if pv.is_nan() {
                 if visible {
-                    d.push_str(&format!("M{},{}", num(px(c, v)), num(py(c, v))));
+                    let _ = write!(d, "M{},{}", num(px(c, v)), num(py(c, v)));
                 }
                 pen = visible;
             } else {
@@ -695,9 +701,9 @@ pub fn render_xychart(
                     let c1 = pc + (c - pc) * t1;
                     let v1 = pv + dv * t1;
                     if !pen || t0 > 0.0 {
-                        d.push_str(&format!("M{},{}", num(px(c0, v0)), num(py(c0, v0))));
+                        let _ = write!(d, "M{},{}", num(px(c0, v0)), num(py(c0, v0)));
                     }
-                    d.push_str(&format!("L{},{}", num(px(c1, v1)), num(py(c1, v1))));
+                    let _ = write!(d, "L{},{}", num(px(c1, v1)), num(py(c1, v1)));
                 }
                 pen = visible;
             }
@@ -709,11 +715,12 @@ pub fn render_xychart(
             let cx = px(c, v);
             let cy = py(c, v);
             if span >= 12.0 {
-                dots.push_str(&format!(
+                let _ = write!(
+                    dots,
                     "<circle cx=\"{}\" cy=\"{}\" r=\"3\"/>",
                     num(cx),
                     num(cy)
-                ));
+                );
             }
             let label = text(
                 plot.point_labels
@@ -737,7 +744,8 @@ pub fn render_xychart(
                 });
             }
         }
-        lines.push_str(&format!(
+        let _ = write!(
+            lines,
             "<g class=\"pelers-series pelers-line\"{id} fill=\"{color}\">{}{dots}</g>",
             if d.is_empty() {
                 String::new()
@@ -746,17 +754,18 @@ pub fn render_xychart(
                     "<path d=\"{d}\" fill=\"none\" stroke=\"{color}\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>"
                 )
             }
-        ));
+        );
     }
 
     let mut titles = String::new();
     if left_title.height > 0.0 {
-        titles.push_str(&format!(
+        let _ = write!(
+            titles,
             "<g transform=\"translate({},{}) rotate(-90)\">{}</g>",
             num(pad + left_title.height / 2.0),
             num(top + plot_height / 2.0),
             label_svg(&left_title, 0.0, 0.0, "")
-        ));
+        );
     }
     titles.push_str(&label_svg(
         &bottom_title,
@@ -796,11 +805,12 @@ pub fn render_xychart(
                 js_number_to_string(SWATCH)
             )
         };
-        legend_out.push_str(&format!(
+        let _ = write!(
+            legend_out,
             "<g class=\"pelers-legend-item\" data-id=\"{}\">{mark}{}</g>",
             esc_text(&plot.title),
             label_svg(label, lx + SWATCH + 8.0 + label.width / 2.0, y, "")
-        ));
+        );
         ly += row;
     }
 

@@ -19,6 +19,7 @@ use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::chars::is_js_space;
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_pow, js_round};
+use std::fmt::Write as _;
 
 const NODE_SEP: f64 = 32.0;
 const EDGE_SEP: f64 = 16.0;
@@ -278,13 +279,14 @@ fn figure(view: &View, icons: bool) -> String {
         ),
     };
     if node.business == Some(true) {
-        out.push_str(&format!(
+        let _ = write!(
+            out,
             "<path class=\"pelers-business\" d=\"M{},{}L{},{}\"{line}/>",
             num(0.12 * radius),
             num(head + 0.99 * radius),
             num(0.92 * radius),
             num(head - 0.39 * radius)
-        ));
+        );
     }
     out
 }
@@ -625,9 +627,10 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
                     )
                 )
             };
-            clusters.push_str(&format!(
+            let _ = write!(
+                clusters,
                 "<g class=\"pelers-cluster pelers-boundary{classes}\" data-id=\"{id}\">{body}</g>"
-            ));
+            );
             continue;
         }
 
@@ -665,12 +668,13 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
                 let mut cells = String::new();
                 let mut lines = format!("M{},{}H{}", num(x0), num(y), num(x0 + w));
                 if view.key_w > 0.0 {
-                    lines.push_str(&format!(
+                    let _ = write!(
+                        lines,
                         "M{},{}V{}",
                         num(x0 + view.key_w),
                         num(y),
                         num(h / 2.0)
-                    ));
+                    );
                 }
                 for (key, value) in &view.rows {
                     let row_h =
@@ -727,14 +731,15 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
                             let arc = |at: f64| {
                                 (h / 2.0) * js_max(1.0 - js_pow(at / (w / 2.0), 2.0), 0.0).sqrt()
                             };
-                            outline.push_str(&format!(
+                            let _ = write!(
+                                outline,
                                 "<path class=\"pelers-business\" d=\"M{},{}L{},{}\" fill=\"none\" stroke=\"var(--_b)\"{}/>",
                                 num(from),
                                 num(arc(from)),
                                 num(to),
                                 num(-arc(to)),
                                 view.style.line
-                            ));
+                            );
                         }
                         ("pelers-usecase", outline)
                     }
@@ -799,11 +804,12 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
                 (kind, body)
             }
         };
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<g class=\"pelers-node {kind}{classes}\" data-id=\"{id}\" transform=\"translate({},{})\">{body}</g>",
             num(c.x),
             num(c.y)
-        ));
+        );
     }
 
     let mut casings = String::new();
@@ -950,7 +956,8 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
         };
         let style_line = style.as_ref().map(|s| s.line.clone()).unwrap_or_default();
         let class_extra = class_names(&strip_relationship_defaults(&edge.classes));
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge pelers-{}{class_extra}\" data-id=\"{}\"{stroke_attr}{style_line}><path d=\"{}\"{}/>{marks_out}</g>",
             edge.relationship_type,
             esc_text(&edge.id),
@@ -960,7 +967,7 @@ fn draw(model: &UsecaseModel, config: &Config, options: &RenderOptions, turned: 
             } else {
                 format!(" stroke-dasharray=\"{dashes}\"")
             }
-        ));
+        );
         if label.width > 0.0 {
             let semantic =
                 edge.relationship_type == "include" || edge.relationship_type == "extend";

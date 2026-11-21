@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::fmt::Write as _;
 use std::sync::OnceLock;
 
 use crate::text::entities::decode_entities;
@@ -302,14 +303,15 @@ pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool)
                     } else {
                         String::new()
                     };
-                    extra.push_str(&format!(
+                    let _ = write!(
+                        extra,
                         "<svg class=\"pelers-icon\" data-icon=\"{}\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">{inner}</svg>",
                         esc_text(icon),
                         num(x),
                         num(mid - side / 2.0),
                         num(side),
                         num(side)
-                    ));
+                    );
                 } else if !span.text.is_empty() {
                     body.push_str("<tspan x=\"");
                     body.push_str(&num(x));
@@ -375,7 +377,7 @@ fn math_look(attrs: &str) -> MathLook {
         format!(" color=\"{fill}\"")
     };
     if let Some(opacity) = opacity.filter(|o| !o.is_empty()) {
-        out.push_str(&format!(" opacity=\"{opacity}\""));
+        let _ = write!(out, " opacity=\"{opacity}\"");
     }
     MathLook {
         attrs: out,

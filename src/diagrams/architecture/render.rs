@@ -12,6 +12,7 @@ use crate::text::measurer::{BOLD_STYLE, width as measure};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 const STUB: f64 = 12.0;
 const CORNER: f64 = 6.0;
@@ -305,14 +306,15 @@ fn path_data(p: &[f64], start_trim: f64, end_trim: f64) -> String {
         let after = js_hypot_pair(xs[i + 1] - xs[i], ys[i + 1] - ys[i]);
         let r = js_min(CORNER, js_min(before / 2.0, after / 2.0));
         if r < 0.5 {
-            d.push_str(&format!("L{},{}", num(xs[i]), num(ys[i])));
+            let _ = write!(d, "L{},{}", num(xs[i]), num(ys[i]));
             continue;
         }
         let in_x = xs[i] - ((xs[i] - xs[i - 1]) / before) * r;
         let in_y = ys[i] - ((ys[i] - ys[i - 1]) / before) * r;
         let out_x = xs[i] + ((xs[i + 1] - xs[i]) / after) * r;
         let out_y = ys[i] + ((ys[i + 1] - ys[i]) / after) * r;
-        d.push_str(&format!(
+        let _ = write!(
+            d,
             "L{},{}Q{},{} {},{}",
             num(in_x),
             num(in_y),
@@ -320,9 +322,9 @@ fn path_data(p: &[f64], start_trim: f64, end_trim: f64) -> String {
             num(ys[i]),
             num(out_x),
             num(out_y)
-        ));
+        );
     }
-    d.push_str(&format!("L{},{}", num(xs[n - 1]), num(ys[n - 1])));
+    let _ = write!(d, "L{},{}", num(xs[n - 1]), num(ys[n - 1]));
     d
 }
 
@@ -678,7 +680,8 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
         } else {
             0.0
         };
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge\" data-id=\"{id}\"><path d=\"{}\"/>{}{}</g>",
             path_data(&points, start_trim, end_trim),
             if edge.lhs_into {
@@ -707,7 +710,7 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
             } else {
                 String::new()
             }
-        ));
+        );
 
         let mut best: i64 = -1;
         let mut best_length = -1.0f64;
@@ -832,14 +835,15 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
                 icons,
             ));
         }
-        clusters.push_str(&format!(
+        let _ = write!(
+            clusters,
             "<g class=\"pelers-cluster\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\" fill-opacity=\"0.5\" stroke=\"var(--_b)\"{ROUNDED}/>{head}</g>",
             esc_text(&group.id),
             num(x),
             num(y),
             num(w),
             num(bottom_of(g) - y)
-        ));
+        );
     }
 
     let mut nodes_out = String::new();
@@ -854,11 +858,12 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
             num(ys[node_row[i]])
         );
         if node.kind == NodeKind::Junction {
-            nodes_out.push_str(&format!(
+            let _ = write!(
+                nodes_out,
                 "<g class=\"pelers-node pelers-junction\" {at}><circle cy=\"{}\" r=\"{}\" fill=\"var(--_l)\"/></g>",
                 num(half),
                 js_number_to_string(DOT)
-            ));
+            );
             continue;
         }
         let mut inner = String::new();
@@ -894,7 +899,8 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
                 icons,
             );
         }
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<g class=\"pelers-node pelers-service\" {at}><rect x=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{inner}{}</g>",
             num(-half),
             num(icon_size),
@@ -906,7 +912,7 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
                 " class=\"pelers-label\"",
                 icons
             )
-        ));
+        );
     }
 
     let title = layout_label(
@@ -928,21 +934,23 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
     let oy = js_round(pad + title_height - min_y);
     let mut body = String::new();
     if !clusters.is_empty() {
-        body.push_str(&format!("<g class=\"pelers-clusters\">{clusters}</g>"));
+        let _ = write!(body, "<g class=\"pelers-clusters\">{clusters}</g>");
     }
     if !edges_out.is_empty() {
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\" stroke-linejoin=\"round\">{edges_out}</g>"
-        ));
+        );
     }
     if !labels_out.is_empty() {
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-edge-labels\" font-size=\"{}\">{labels_out}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     if !nodes_out.is_empty() {
-        body.push_str(&format!("<g class=\"pelers-nodes\">{nodes_out}</g>"));
+        let _ = write!(body, "<g class=\"pelers-nodes\">{nodes_out}</g>");
     }
     let mut content = label_svg(
         &title,
@@ -951,11 +959,12 @@ fn draw(model: &ArchitectureModel, config: &Config, options: &RenderOptions, tig
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !body.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g transform=\"translate({},{})\">{body}</g>",
             js_number_to_string(ox),
             js_number_to_string(oy)
-        ));
+        );
     }
     Drawn {
         svg: svg_document(

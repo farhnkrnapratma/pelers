@@ -9,6 +9,7 @@ use crate::svg::theme::{ResolvedStyle, resolve_style, series_color};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
+use std::fmt::Write as _;
 
 const RADIUS: f64 = 100.0;
 const MAX_GROWTH: f64 = 1.6;
@@ -294,14 +295,15 @@ pub fn render_venn(model: &VennDb, _config: &Config, options: &RenderOptions) ->
             .iter()
             .find(|r| r.key == c.id)
             .map_or_else(|| no_style.clone(), |r| r.style.clone());
-        sets.push_str(&format!(
+        let _ = write!(
+            sets,
             "<circle class=\"pelers-venn-set\" data-id=\"{}\" cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{color}\" fill-opacity=\"0.2\" stroke=\"{color}\"{}/>",
             esc_text(&c.id),
             num(c.x),
             num(c.y),
             num(c.r),
             style.shape
-        ));
+        );
     }
 
     let painted: Vec<&Region> = regions
@@ -336,10 +338,11 @@ pub fn render_venn(model: &VennDb, _config: &Config, options: &RenderOptions) ->
             let members: Vec<Circle> = region.inside.iter().map(|&i| placed[i].clone()).collect();
             let d = region_path(&members, &|v| num(v).to_string());
             if !d.is_empty() {
-                overlaps.push_str(&format!(
+                let _ = write!(
+                    overlaps,
                     "<path class=\"pelers-venn-overlap\" data-id=\"{id}\" d=\"{d}\" fill=\"none\"{}/>",
                     region.style.shape
-                ));
+                );
             }
         }
         let total: f64 = region.lines.iter().map(|l| l.label.height).sum();
@@ -385,9 +388,10 @@ pub fn render_venn(model: &VennDb, _config: &Config, options: &RenderOptions) ->
             ));
             y += line.label.height;
         }
-        labels.push_str(&format!(
+        let _ = write!(
+            labels,
             "<g class=\"pelers-venn-region\" data-id=\"{id}\">{content}</g>"
-        ));
+        );
     }
 
     let content = label_svg(

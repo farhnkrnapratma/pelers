@@ -2,6 +2,7 @@ use super::builder::{esc, esc_text};
 use super::palette::{palette_style_len, push_palette_style};
 use super::theme::{RADIUS, ROOT_STYLE, font_style};
 use crate::util::jsnum::js_number_to_string;
+use std::fmt::Write as _;
 
 const WEIGHTS: [(&str, &str); 3] = [("tw", "title"), ("hw", "heading"), ("w", "bold")];
 
@@ -74,18 +75,20 @@ pub fn svg_document(
     let mut head = String::new();
     let mut aria = String::new();
     if let Some(title) = acc.acc_title.filter(|t| !t.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<title id=\"{prefix}-title\">{}</title>",
             esc_text(title)
-        ));
-        aria.push_str(&format!(" aria-labelledby=\"{prefix}-title\""));
+        );
+        let _ = write!(aria, " aria-labelledby=\"{prefix}-title\"");
     }
     if let Some(descr) = acc.acc_descr.filter(|d| !d.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<desc id=\"{prefix}-desc\">{}</desc>",
             esc_text(descr)
-        ));
-        aria.push_str(&format!(" aria-describedby=\"{prefix}-desc\""));
+        );
+        let _ = write!(aria, " aria-describedby=\"{prefix}-desc\"");
     }
     let fit = if options.responsive == Some(false) {
         ""
@@ -100,7 +103,7 @@ pub fn svg_document(
     };
     for (k, (alias, name)) in WEIGHTS.iter().enumerate() {
         if used[k + 1] {
-            weights.push_str(&format!(";--_{alias}:var(--pelers-{name}-weight,bold)"));
+            let _ = write!(weights, ";--_{alias}:var(--pelers-{name}-weight,bold)");
         }
     }
     let fonts = font_style(

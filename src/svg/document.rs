@@ -3,6 +3,7 @@ use crate::svg::options::RenderOptions;
 use crate::svg::palette::palette_style;
 use crate::svg::theme::font_style;
 use crate::util::jsnum::js_number_to_string;
+use std::fmt::Write as _;
 
 const RADIUS: &str = "var(--pelers-radius,4px)";
 const ROOT_STYLE: &str = "--_bg:var(--pelers-bg,#fff);--_fg:var(--pelers-fg,#1f1f1f);--_m:var(--pelers-muted,#6e6e6e);--_l:var(--pelers-line,#1f1f1f);--_s:var(--pelers-surface,#f3f3f3);--_a:var(--pelers-surface-alt,#e6e6e6);--_b:var(--pelers-border,#8a8a8a);--_c:var(--pelers-accent,#5b7bd5);color:var(--_fg)";
@@ -28,18 +29,20 @@ pub fn svg_document(
     let mut head = String::new();
     let mut aria = String::new();
     if let Some(title) = acc.acc_title.filter(|t| !t.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<title id=\"{prefix}-title\">{}</title>",
             esc_text(title)
-        ));
-        aria.push_str(&format!(" aria-labelledby=\"{prefix}-title\""));
+        );
+        let _ = write!(aria, " aria-labelledby=\"{prefix}-title\"");
     }
     if let Some(descr) = acc.acc_descr.filter(|t| !t.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<desc id=\"{prefix}-desc\">{}</desc>",
             esc_text(descr)
-        ));
-        aria.push_str(&format!(" aria-describedby=\"{prefix}-desc\""));
+        );
+        let _ = write!(aria, " aria-describedby=\"{prefix}-desc\"");
     }
     let fit = if options.responsive == Some(false) {
         ""
@@ -54,7 +57,7 @@ pub fn svg_document(
     };
     for (alias, name) in WEIGHTS {
         if used(alias) {
-            weights.push_str(&format!(";--_{alias}:var(--pelers-{name}-weight,bold)"));
+            let _ = write!(weights, ";--_{alias}:var(--pelers-{name}-weight,bold)");
         }
     }
     let width = js_number_to_string(width);

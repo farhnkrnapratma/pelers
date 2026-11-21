@@ -1,4 +1,5 @@
 use std::f64::consts::FRAC_1_SQRT_2;
+use std::fmt::Write as _;
 
 use super::db::{GitModel, commit_type};
 use super::parser::Direction;
@@ -330,12 +331,13 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
                 px(end + TAIL, c),
                 py(end + TAIL, c),
             );
-            branches.push_str(&format!(
+            let _ = write!(
+                branches,
                 "<g class=\"pelers-branch\" data-id=\"{}\"><path class=\"pelers-lane\" d=\"M{}L{}\" stroke=\"{color}\" stroke-dasharray=\"2 4\"/>",
                 esc_text(&model.lanes[i]),
                 point(-LABEL_GAP, c),
                 point(end + TAIL, c)
-            ));
+            );
             if !name.lines.is_empty() {
                 grow(cx - w / 2.0, cy - h / 2.0, cx + w / 2.0, cy + h / 2.0);
                 let ink = series_ink_fill(i);
@@ -344,14 +346,15 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
                 } else {
                     ink
                 };
-                branches.push_str(&format!(
+                let _ = write!(
+                    branches,
                     "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{color}\"{ROUNDED}/>{}",
                     num(cx - w / 2.0),
                     num(cy - h / 2.0),
                     num(w),
                     num(h),
                     label_svg(name, cx, cy, &format!(" class=\"pelers-label\"{ink}"))
-                ));
+                );
             }
             branches.push_str("</g>");
         }
@@ -396,12 +399,13 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
             let c1 = cross[parent.lane];
             let m1 = parent.m;
             if parent.lane == view.lane {
-                lines.push_str(&format!(
+                let _ = write!(
+                    lines,
                     "<path class=\"pelers-edge\" d=\"M{}L{}\" stroke=\"{}\"/>",
                     point(m1, c1),
                     point(m2, c2),
                     series_color(view.lane)
-                ));
+                );
                 continue;
             }
             let merged = j > 0 && commit.kind == commit_type::MERGE;
@@ -409,21 +413,23 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
             let mut d = format!("M{}", point(m1, c1));
             if m2 <= m1 {
                 let mid = (m1 + m2) / 2.0;
-                d.push_str(&format!(
+                let _ = write!(
+                    d,
                     "C{} {} {}",
                     point(mid, c1),
                     point(mid, c2),
                     point(m2, c2)
-                ));
+                );
             } else if !merged && !busy(view.lane, m1, m2) {
                 let s = js_min(CURVE, m2 - m1);
-                d.push_str(&format!(
+                let _ = write!(
+                    d,
                     "C{} {} {}L{}",
                     point(m1 + s / 2.0, c1),
                     point(m1 + s / 2.0, c2),
                     point(m1 + s, c2),
                     point(m2, c2)
-                ));
+                );
             } else {
                 let lead_here = lead[view.index];
                 let to = if parent.lane < view.lane && m2 - lead_here > m1 {
@@ -440,22 +446,24 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
                         c2 - lo[view.lane] - GAP / 2.0
                     };
                     s = js_min(CURVE, (to - m1) / 2.0);
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "C{} {} {}",
                         point(m1 + s / 2.0, c1),
                         point(m1 + s / 2.0, along),
                         point(m1 + s, along)
-                    ));
+                    );
                 }
-                d.push_str(&format!(
+                let _ = write!(
+                    d,
                     "L{}C{} {} {}",
                     point(to - s, along),
                     point(to - s / 2.0, along),
                     point(to - s / 2.0, c2),
                     point(to, c2)
-                ));
+                );
                 if to < m2 {
-                    d.push_str(&format!("L{}", point(m2, c2)));
+                    let _ = write!(d, "L{}", point(m2, c2));
                 }
             }
             let class = if merged {
@@ -471,9 +479,10 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
             } else {
                 ""
             };
-            curves.push_str(&format!(
+            let _ = write!(
+                curves,
                 "<path class=\"pelers-edge{class}\" d=\"{d}\" stroke=\"{lane_color}\"{dash}/>"
-            ));
+            );
         }
     }
 
@@ -515,23 +524,25 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
                     ax + k,
                     if flip { ay + k } else { ay + reach },
                 );
-                body.push_str(&format!(
+                let _ = write!(
+                    body,
                     "<g class=\"pelers-commit-label\" transform=\"rotate({} {} {})\">{}{}</g>",
                     if flip { 45 } else { -45 },
                     num(ax),
                     num(ay),
                     back(ax - w / 2.0, ay),
                     label_svg(label, ax - w / 2.0, ay, "")
-                ));
+                );
             } else {
                 let cx = if vertical { x - DOT - 6.0 - w / 2.0 } else { x };
                 let cy = if vertical { y } else { y + DOT + 6.0 + h / 2.0 };
                 grow(cx - w / 2.0, cy - h / 2.0, cx + w / 2.0, cy + h / 2.0);
-                body.push_str(&format!(
+                let _ = write!(
+                    body,
                     "<g class=\"pelers-commit-label\">{}{}</g>",
                     back(cx, cy),
                     label_svg(label, cx, cy, "")
-                ));
+                );
             }
         }
 
@@ -546,7 +557,8 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
             let cy = if vertical { y } else { y - offset - h / 2.0 };
             offset += if vertical { w + 4.0 } else { h + 3.0 };
             grow(left, cy - h / 2.0, left + w, cy + h / 2.0);
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "<g class=\"pelers-tag\"><path d=\"M{},{}L{},{}H{}V{}H{}Z\" fill=\"var(--_s)\" stroke=\"var(--_b)\" stroke-linejoin=\"round\"/><circle cx=\"{}\" cy=\"{}\" r=\"1.5\" fill=\"var(--_b)\"/>{}</g>",
                 num(left),
                 num(cy),
@@ -557,8 +569,13 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
                 num(left + NOTCH),
                 num(left + NOTCH),
                 num(cy),
-                label_svg(tag, left + NOTCH + 4.0 + tag.width / 2.0, cy, " fill=\"var(--_fg)\"")
-            ));
+                label_svg(
+                    tag,
+                    left + NOTCH + 4.0 + tag.width / 2.0,
+                    cy,
+                    " fill=\"var(--_fg)\""
+                )
+            );
             t += if vertical { 1 } else { -1 };
         }
 
@@ -568,10 +585,11 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
             ""
         };
         let class = CLASSES.get(kind as usize).copied().unwrap_or(CLASSES[0]);
-        commits.push_str(&format!(
+        let _ = write!(
+            commits,
             "<g class=\"pelers-commit pelers-commit-{class}{merge}\" data-id=\"{}\">{body}</g>",
             esc_text(&commit.id)
-        ));
+        );
     }
 
     if min_x > max_x {
@@ -606,27 +624,31 @@ fn draw(model: &GitModel, config: &Config, options: &RenderOptions, direction: D
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
-    content.push_str(&format!(
+    let _ = write!(
+        content,
         "<g transform=\"translate({},{})\">",
         num(dx),
         num(dy)
-    ));
+    );
     if !branches.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-branches\" fill=\"none\" font-size=\"{}\">{branches}</g>",
             js_number_to_string(medium)
-        ));
+        );
     }
     if !curves.is_empty() || !lines.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edges\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\">{curves}{lines}</g>"
-        ));
+        );
     }
     if !commits.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-commits\" font-size=\"{}\" fill=\"var(--_m)\">{commits}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     content.push_str("</g>");
 

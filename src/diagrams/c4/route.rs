@@ -1,5 +1,6 @@
 use crate::svg::builder::num;
 use crate::util::jsnum::js_hypot;
+use std::fmt::Write as _;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Box {
@@ -409,17 +410,18 @@ fn path(points: &[f64], start_trim: f64, end_trim: f64) -> String {
             .min((x - points[i - 2] + y - points[i - 1]).abs() / 2.0)
             .min((points[i + 2] - x + points[i + 3] - y).abs() / 2.0);
         if ix != 0.0 {
-            d.push_str(&format!("H{}", num(x - ix * r)));
+            let _ = write!(d, "H{}", num(x - ix * r));
         } else {
-            d.push_str(&format!("V{}", num(y - iy * r)));
+            let _ = write!(d, "V{}", num(y - iy * r));
         }
-        d.push_str(&format!(
+        let _ = write!(
+            d,
             "Q{},{} {},{}",
             num(x),
             num(y),
             num(x + ox * r),
             num(y + oy * r)
-        ));
+        );
         i += 2;
     }
     let lx = sign(points[n - 2] - points[n - 4]);

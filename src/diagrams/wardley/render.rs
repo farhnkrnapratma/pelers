@@ -6,6 +6,7 @@ use crate::svg::builder::{
     esc, esc_text, label_svg_with, num, shared_style, span_style, text_style,
 };
 use crate::util::fxhash::{FastMap, FastSet};
+use std::fmt::Write as _;
 
 use crate::svg::edges::{marker, marker_trim};
 use crate::svg::root::{Accessible, RenderOptions, svg_document};
@@ -64,10 +65,7 @@ fn start_label(label: &Label, x: f64, y: f64, attrs: &str) -> String {
             } else {
                 String::new()
             };
-            body.push_str(&format!(
-                "<tspan{position}{style}>{}</tspan>",
-                esc(&span.text)
-            ));
+            let _ = write!(body, "<tspan{position}{style}>{}</tspan>", esc(&span.text));
             first = false;
         }
         baseline += label.line_height;
@@ -265,11 +263,12 @@ fn draw(
         };
         previous = end;
         if index > 0 {
-            frame.push_str(&format!(
+            let _ = write!(
+                frame,
                 "<path class=\"pelers-wardley-stage\" d=\"M{},0V{}\" stroke=\"var(--_b)\" stroke-dasharray=\"4 4\"/>",
                 num(start * plot_w),
                 num(plot_h)
-            ));
+            );
         }
         let label = canvas.text(
             stage,
@@ -292,20 +291,22 @@ fn draw(
     if show_grid {
         for i in 1..4 {
             let i = i as f64;
-            frame.push_str(&format!(
+            let _ = write!(
+                frame,
                 "<path class=\"pelers-wardley-grid\" d=\"M{},0V{}M0,{}H{}\" stroke=\"var(--_b)\" stroke-dasharray=\"2 6\"/>",
                 num(plot_w * i / 4.0),
                 num(plot_h),
                 num(plot_h * i / 4.0),
                 num(plot_w)
-            ));
+            );
         }
     }
-    frame.push_str(&format!(
+    let _ = write!(
+        frame,
         "<path class=\"pelers-wardley-axis\" d=\"M0,0V{}H{}\" stroke=\"{LINE}\"/>",
         num(plot_h),
         num(plot_w)
-    ));
+    );
     let x_title = canvas.text_default("Evolution", small, 0);
     let y_title = canvas.text_default("Visibility", small, 0);
     let axis_attrs = format!(
@@ -387,14 +388,15 @@ fn draw(
         } else {
             String::new()
         };
-        pipelines.push_str(&format!(
+        let _ = write!(
+            pipelines,
             "<g class=\"pelers-wardley-pipeline\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{edge}</g>",
             esc_text(&pipeline.node_id),
             num(left - PIPELINE_PAD),
             num(top),
             num(right - left + 2.0 * PIPELINE_PAD),
             num(4.0 * R)
-        ));
+        );
     }
 
     let mut taken = vec![0u8; placed.len()];
@@ -477,17 +479,26 @@ fn draw(
                 ),
             );
         }
-        links.push_str(&format!(
+        let _ = write!(
+            links,
             "<g class=\"pelers-edge{}\" data-id=\"{}-{}\"><path d=\"M{},{}L{},{}\" stroke=\"{LINE}\"{}/>{heads}{caption}</g>",
-            if link.dashed { " pelers-wardley-dashed" } else { "" },
+            if link.dashed {
+                " pelers-wardley-dashed"
+            } else {
+                ""
+            },
             esc_text(&link.source),
             esc_text(&link.target),
             num(x1),
             num(y1),
             num(x2),
             num(y2),
-            if link.dashed { " stroke-dasharray=\"6 6\"" } else { "" }
-        ));
+            if link.dashed {
+                " stroke-dasharray=\"6 6\""
+            } else {
+                ""
+            }
+        );
     }
 
     let mut trends = String::new();
@@ -527,12 +538,13 @@ fn draw(
             );
         }
         canvas.bounds.grow(tx - R, ty - R, tx + R, ty + R);
-        trends.push_str(&format!(
+        let _ = write!(
+            trends,
             "<g class=\"pelers-wardley-trend\" data-id=\"{}\">{arrow}<circle cx=\"{}\" cy=\"{}\" r=\"6\" fill=\"var(--_bg)\" stroke=\"{ACCENT}\"/></g>",
             esc_text(&trend.node_id),
             num(tx),
             num(ty)
-        ));
+        );
     }
 
     let mut nodes = String::new();
@@ -551,46 +563,51 @@ fn draw(
                 "build" => "var(--_s)",
                 _ => "var(--_bg)",
             };
-            shape.push_str(&format!(
+            let _ = write!(
+                shape,
                 "<circle class=\"pelers-wardley-{strategy}\" cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{fill}\" stroke=\"{LINE}\"/>",
                 num(x),
                 num(y),
                 num(2.0 * R)
-            ));
+            );
         }
         if strategy == Some("market") {
             let bx = tri * (std::f64::consts::PI / 6.0).cos();
             let by = y + tri * (std::f64::consts::PI / 6.0).sin();
-            shape.push_str(&format!(
+            let _ = write!(
+                shape,
                 "<path d=\"M{},{}L{},{}H{}Z\" fill=\"none\" stroke=\"{LINE}\"/>",
                 num(x),
                 num(y - tri),
                 num(x - bx),
                 num(by),
                 num(x + bx)
-            ));
+            );
             for (cx, cy) in [(x, y - tri), (x - bx, by), (x + bx, by)] {
-                shape.push_str(&format!(
+                let _ = write!(
+                    shape,
                     "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"var(--_bg)\" stroke=\"{LINE}\"/>",
                     num(cx),
                     num(cy),
                     num(dot)
-                ));
+                );
             }
         } else if node.is_pipeline_parent {
-            shape.push_str(&format!(
+            let _ = write!(
+                shape,
                 "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"{LINE}\"/>",
                 num(x - SQUARE / 2.0),
                 num(y - SQUARE / 2.0),
                 js_number_to_string(SQUARE),
                 js_number_to_string(SQUARE)
-            ));
+            );
         } else if !anchor {
-            shape.push_str(&format!(
+            let _ = write!(
+                shape,
                 "<circle cx=\"{}\" cy=\"{}\" r=\"6\" fill=\"var(--_bg)\" stroke=\"{LINE}\"/>",
                 num(x),
                 num(y)
-            ));
+            );
         }
         if node.inertia {
             let offset = (if node.is_pipeline_parent {
@@ -599,11 +616,12 @@ fn draw(
                 R
             }) + 10.0
                 + if strategy.is_some() { R + 4.0 } else { 0.0 };
-            shape.push_str(&format!(
+            let _ = write!(
+                shape,
                 "<rect class=\"pelers-wardley-inertia\" x=\"{}\" y=\"{}\" width=\"4\" height=\"12\" fill=\"{LINE}\"/>",
                 num(x + offset),
                 num(y - R)
-            ));
+            );
         }
         let ox = node.label_offset_x.map(|v| clamp(v, -5000.0, 5000.0));
         let oy = node.label_offset_y.map(|v| clamp(v, -5000.0, 5000.0));
@@ -677,10 +695,11 @@ fn draw(
         } else {
             "component"
         };
-        nodes.push_str(&format!(
+        let _ = write!(
+            nodes,
             "<g class=\"pelers-node pelers-wardley-{class}\" data-id=\"{}\">{shape}{caption}</g>",
             esc_text(&node.id)
-        ));
+        );
     }
 
     let mut annotations = String::new();
@@ -693,7 +712,8 @@ fn draw(
             let y = canvas.project_y(cy);
             let r = js_max(10.0, label.width / 2.0 + 4.0);
             canvas.bounds.grow(x - r, y - r, x + r, y + r);
-            marks.push_str(&format!(
+            let _ = write!(
+                marks,
                 "<circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"var(--_bg)\" stroke=\"{LINE}\"/>{}",
                 num(x),
                 num(y),
@@ -707,12 +727,13 @@ fn draw(
                         js_number_to_string(tiny)
                     )
                 )
-            ));
+            );
         }
-        annotations.push_str(&format!(
+        let _ = write!(
+            annotations,
             "<g class=\"pelers-wardley-annotation\" data-id=\"{}\">{marks}</g>",
             esc_text(&number)
-        ));
+        );
     }
     let mut listed: Vec<&super::model::WardleyAnnotation> = model
         .annotations
@@ -767,13 +788,14 @@ fn draw(
             ));
             y += line.height;
         }
-        annotations.push_str(&format!(
+        let _ = write!(
+            annotations,
             "<g class=\"pelers-wardley-annotations\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>{rows}</g>",
             num(bx),
             num(by),
             num(width),
             num(height)
-        ));
+        );
     }
 
     let mut notes = String::new();
@@ -841,11 +863,16 @@ fn draw(
                 js_number_to_string(tiny + 1.0)
             ),
         );
-        forces.push_str(&format!(
+        let _ = write!(
+            forces,
             "<g class=\"pelers-wardley-{}\" data-id=\"{}\"><path d=\"{d}\" fill=\"var(--_s)\" stroke=\"{LINE}\"/>{caption}</g>",
-            if forward { "accelerator" } else { "deaccelerator" },
+            if forward {
+                "accelerator"
+            } else {
+                "deaccelerator"
+            },
             esc_text(name)
-        ));
+        );
     }
 
     let title = layout_label(

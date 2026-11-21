@@ -1,5 +1,6 @@
 use crate::diagrams::common::generics::parse_generic_types;
 use crate::util::chars::trim;
+use std::fmt::Write as _;
 
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct ClassMember {
@@ -135,10 +136,7 @@ impl ClassMember {
     pub fn display_details(&self) -> (String, String) {
         let mut display = format!("{}{}", self.visibility, parse_generic_types(&self.id));
         if self.method {
-            display.push_str(&format!(
-                "({})",
-                parse_generic_types(trim(&self.parameters))
-            ));
+            let _ = write!(display, "({})", parse_generic_types(trim(&self.parameters)));
             if !self.return_type.is_empty() {
                 display.push_str(" : ");
                 display.push_str(&parse_generic_types(&self.return_type));

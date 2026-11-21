@@ -13,6 +13,7 @@ use crate::text::measurer::BOLD_STYLE;
 use crate::util::chars::trim;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_pow, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 pub fn render_packet(model: &PacketModel, config: &Config, options: &RenderOptions) -> Drawn {
     turn_to_fit(options, |down| draw(model, config, options, down))
@@ -179,7 +180,8 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                     first
                 }) * bit_width;
             let w = count * bit_width - gap;
-            fields.push_str(&format!(
+            let _ = write!(
+                fields,
                 "<g class=\"pelers-node\" data-id=\"{}-{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
                 js_number_to_string(block.start),
                 js_number_to_string(block.end),
@@ -187,7 +189,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                 num(y),
                 num(w),
                 num(height)
-            ));
+            );
             if down {
                 fields.push_str(&label_svg(
                     &labels[index][position],
@@ -208,12 +210,13 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                 } else {
                     format!(" font-size=\"{}\"", num(text.size))
                 };
-                fields.push_str(&format!(
+                let _ = write!(
+                    fields,
                     "<text x=\"{}\" y=\"{}\"{font}>{}</text>",
                     num(x + w / 2.0),
                     num(y + height / 2.0 + text.size * 0.35),
                     esc(&text.text)
-                ));
+                );
             }
             fields.push_str("</g>");
             if !show_bits {
@@ -225,14 +228,16 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                 (block.start, block.end)
             };
             if count == 1.0 {
-                bits.push_str(&format!(
+                let _ = write!(
+                    bits,
                     "<text x=\"{}\" y=\"{}\" text-anchor=\"middle\">{}</text>",
                     num(x + w / 2.0),
                     num(y - 4.0),
                     js_number_to_string(leading)
-                ));
+                );
             } else {
-                bits.push_str(&format!(
+                let _ = write!(
+                    bits,
                     "<text x=\"{}\" y=\"{}\">{}</text><text x=\"{}\" y=\"{}\" text-anchor=\"end\">{}</text>",
                     num(x),
                     num(y - 4.0),
@@ -240,7 +245,7 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
                     num(x + w),
                     num(y - 4.0),
                     js_number_to_string(trailing)
-                ));
+                );
             }
         }
     }
@@ -249,16 +254,18 @@ fn draw(model: &PacketModel, config: &Config, options: &RenderOptions, down: boo
     let total_height = (rows_height + title_height + 2.0 * pad).ceil();
     let mut content = String::new();
     if !fields.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-packet-fields\" font-size=\"{}\" text-anchor=\"middle\">{fields}</g>",
             js_number_to_string(label_size)
-        ));
+        );
     }
     if !bits.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-packet-bits\" font-size=\"{}\" fill=\"var(--_m)\">{bits}</g>",
             js_number_to_string(bit_size)
-        ));
+        );
     }
     content.push_str(&label_svg(
         &title,

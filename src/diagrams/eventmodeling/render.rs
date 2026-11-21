@@ -11,6 +11,7 @@ use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, MONO, width as measure};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
+use std::fmt::Write as _;
 
 const FONT_MONO: &str = "var(--_fm)";
 const BOX_PAD_X: f64 = 12.0;
@@ -61,12 +62,13 @@ fn lines(rows: &[String], x: f64, y: f64, step: f64, attrs: &str) -> String {
     let mut body = String::new();
     for (i, row) in rows.iter().enumerate() {
         if !row.is_empty() {
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "<tspan x=\"{}\" y=\"{}\">{}</tspan>",
                 num(x),
                 num(y + i as f64 * step),
                 esc(row)
-            ));
+            );
         }
     }
     if body.is_empty() {
@@ -211,7 +213,8 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
             .iter()
             .find(|lane| lane.id == band.lane)
             .map_or("", |lane| lane.label.as_str());
-        lanes.push_str(&format!(
+        let _ = write!(
+            lanes,
             "<g class=\"pelers-cluster pelers-em-lane\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\"{ROUNDED}/>{}</g>",
             esc_text(label),
             num(left),
@@ -227,7 +230,7 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                     js_number_to_string(small)
                 ),
             )
-        ));
+        );
         y += band.h + LANE_GAP;
     }
     let mut bottom = if bands.is_empty() { top } else { y - LANE_GAP };
@@ -276,12 +279,13 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 js_number_to_string(mono)
             ),
         );
-        nodes.push_str(&format!(
+        let _ = write!(
+            nodes,
             "<g class=\"pelers-node pelers-em-{}{}\" data-id=\"{}\">{shape}{text}</g>",
             entity.kind.as_str(),
             if entity.reset { " pelers-em-reset" } else { "" },
             esc_text(&entity.id)
-        ));
+        );
     }
 
     let mut edges = String::new();
@@ -355,11 +359,12 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 marker("arrow_point", tx, ty, 0.0, dir, "var(--_l)", "none"),
             )
         };
-        edges.push_str(&format!(
+        let _ = write!(
+            edges,
             "<g class=\"pelers-edge\" data-id=\"{}-{}\"><path d=\"{d}\" fill=\"none\" stroke=\"var(--_l)\"/>{head}</g>",
             esc_text(&model.boxes[relation.source].id),
             esc_text(&model.boxes[relation.target].id)
-        ));
+        );
     }
 
     let names: FastMap<&str, &str> = model
@@ -389,7 +394,8 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
             } else {
                 CARD_GAP
             };
-        cards.push_str(&format!(
+        let _ = write!(
+            cards,
             "<g class=\"pelers-em-{kind}\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{}</g>",
             esc_text(frame),
             num(left),
@@ -412,7 +418,7 @@ fn horizontal(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 small_step,
                 &format!(" font-size=\"{}\"", js_number_to_string(small)),
             )
-        ));
+        );
         *bottom = cy + h;
         *cards_right = js_max(*cards_right, w);
     };
@@ -617,7 +623,8 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 ),
             ),
         };
-        nodes.push_str(&format!(
+        let _ = write!(
+            nodes,
             "<g class=\"pelers-cluster pelers-em-lane\" data-id=\"{}\">{}<g class=\"pelers-node pelers-em-{}{reset}\" data-id=\"{}\"><rect {frame} fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>{series_rect}{}<text class=\"pelers-em-frame\" x=\"{}\" y=\"{}\" text-anchor=\"end\" font-size=\"{}\" fill=\"var(--_m)\">{}</text>{data_markup}</g></g>",
             esc_text(&lane.label),
             left_label_svg(
@@ -644,7 +651,7 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
             num(cy + BOX_PAD_Y + small),
             js_number_to_string(mono),
             esc(&entity.id)
-        ));
+        );
         placed.insert(index, (cy, h, w, index, lane_label.width));
         width = js_max(width, w + gutter);
         bottom = cy + h;
@@ -690,11 +697,12 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 marker("arrow_point", pad + t_w, to, -1.0, 0.0, "var(--_l)", "none"),
             )
         };
-        edges.push_str(&format!(
+        let _ = write!(
+            edges,
             "<g class=\"pelers-edge\" data-id=\"{}-{}\"><path d=\"{d}\" fill=\"none\" stroke=\"var(--_l)\"/>{head}</g>",
             esc_text(&model.boxes[relation.source].id),
             esc_text(&model.boxes[relation.target].id)
-        ));
+        );
     }
 
     let names: FastMap<&str, &str> = model
@@ -730,7 +738,8 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                     .collect::<String>()
             })
             .collect();
-        cards.push_str(&format!(
+        let _ = write!(
+            cards,
             "<g class=\"pelers-em-{kind}\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{}</g>",
             esc_text(frame),
             num(pad),
@@ -741,7 +750,10 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 &head,
                 pad + BOX_PAD_X + head.width / 2.0,
                 *y + BOX_PAD_Y + head.height / 2.0,
-                &format!(" font-size=\"{}\" font-weight=\"var(--_hw)\"", js_number_to_string(small)),
+                &format!(
+                    " font-size=\"{}\" font-weight=\"var(--_hw)\"",
+                    js_number_to_string(small)
+                ),
             ),
             lines(
                 &body_lines,
@@ -750,7 +762,7 @@ fn vertical(model: &EventModelingModel, options: &RenderOptions) -> Drawn {
                 body.line_height,
                 &format!(" font-size=\"{}\"", js_number_to_string(small)),
             )
-        ));
+        );
         *bottom = *y + h;
         *y = *bottom + CARD_GAP;
         *width = js_max(*width, w);

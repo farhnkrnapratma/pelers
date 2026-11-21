@@ -1,5 +1,6 @@
 use crate::flowchart::{Direction, FlowchartModel, Shape};
 use std::collections::BTreeMap;
+use std::fmt::Write as _;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Rendered {
@@ -199,7 +200,8 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
         ) {
             let top = members.iter().map(|(_, y)| *y).min().unwrap_or(min_y);
             let bottom = members.iter().map(|(_, y)| *y).max().unwrap_or(max_y);
-            svg.push_str(&format!(
+            let _ = write!(
+                svg,
                 r#"<rect x="{}" y="{}" width="{}" height="{}" rx="8" fill="none" stroke="gray" stroke-dasharray="6 4"/><text x="{}" y="{}" font-size="12">{}</text>"#,
                 min_x.saturating_sub(12),
                 top.saturating_sub(20),
@@ -208,7 +210,7 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
                 min_x,
                 top.saturating_sub(6),
                 escape(&subgraph.label)
-            ));
+            );
         }
     }
     for edge in &model.edges {
@@ -251,16 +253,18 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
             crate::flowchart::EdgeEndpoint::None if edge.marker == "---" => "",
             crate::flowchart::EdgeEndpoint::None => r#" marker-end="url(#arrow)""#,
         };
-        svg.push_str(&format!(
+        let _ = write!(
+            svg,
             r#"<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="black"{dash}{width}{arrow}/>"#
-        ));
+        );
         if let Some(label) = &edge.label {
-            svg.push_str(&format!(
+            let _ = write!(
+                svg,
                 r#"<text x="{}" y="{}" text-anchor="middle" dominant-baseline="middle">{}</text>"#,
                 (x1 + x2) / 2,
                 (y1 + y2) / 2,
                 escape(label)
-            ));
+            );
         }
     }
     for (node, (x, y)) in model.nodes.iter().zip(&positions) {
@@ -288,12 +292,13 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
             )),
             Shape::Cylinder => {
                 let bottom = y + NODE_HEIGHT;
-                svg.push_str(&format!(
+                let _ = write!(
+                    svg,
                     r#"<path d="M{x} {y_plus} A60 8 0 0 1 {right} {y_plus} V{bottom_minus} A60 8 0 0 1 {x} {bottom_minus} Z" fill="white" stroke="black"{shape_style}/>"#,
                     y_plus = y + 8,
                     right = x + NODE_WIDTH,
                     bottom_minus = bottom - 8,
-                ));
+                );
             }
             Shape::Hexagon => svg.push_str(&format!(
                 r#"<polygon points="{},{} {},{} {},{} {},{} {},{} {},{}" fill="white" stroke="black"{shape_style}/>"#,
@@ -311,10 +316,11 @@ pub fn render_flowchart(model: &FlowchartModel) -> Rendered {
                 cy
             )),
         }
-        svg.push_str(&format!(
+        let _ = write!(
+            svg,
             r#"<text x="{cx}" y="{cy}" text-anchor="middle" dominant-baseline="middle"{text_style}>{}</text>"#,
             escape(&node.label)
-        ));
+        );
     }
     svg.push_str("</svg>");
     Rendered { svg, width, height }

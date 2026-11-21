@@ -12,6 +12,7 @@ use crate::text::icons::icon_markup;
 use crate::text::label::{Label, label_line, layout_label, line_middle};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const SHAPES: [&str; 7] = ["", "rounded", "rect", "circle", "cloud", "bang", "hex"];
 const ROOT_SHAPE: &str = "stadium";
@@ -93,10 +94,11 @@ fn flush(
     if body.is_empty() {
         return;
     }
-    out.push_str(&format!(
+    let _ = write!(
+        out,
         "<g class=\"pelers-branch pelers-section-{}\"><g class=\"pelers-edges\" fill=\"none\" stroke=\"{color}\" stroke-width=\"1.5\">{edges}</g>{body}</g>",
         section.unwrap_or(0)
-    ));
+    );
     edges.clear();
     body.clear();
 }
@@ -349,7 +351,8 @@ fn draw(model: &MindmapDb, config: &Config, options: &RenderOptions, down: bool)
             let y2 = top + anchor[i];
             let bend = js_max(0.0, js_min(js_min(BEND, x2 - x1), y2 - y1));
             trunk[p] = y2 - bend;
-            edges.push_str(&format!(
+            let _ = write!(
+                edges,
                 "<path class=\"pelers-edge\" d=\"M{},{}V{}Q{},{} {},{}H{}\"/>",
                 num(x1),
                 num(y1),
@@ -359,7 +362,7 @@ fn draw(model: &MindmapDb, config: &Config, options: &RenderOptions, down: bool)
                 num(x1 + bend),
                 num(y2),
                 num(x2)
-            ));
+            );
         } else if i > 0 {
             if parent[i] == 0 {
                 color = series_color(node.section.unwrap_or(0));
@@ -385,7 +388,8 @@ fn draw(model: &MindmapDb, config: &Config, options: &RenderOptions, down: bool)
                 };
             let y2 = top + anchor[i];
             let mid = num((x1 + x2) / 2.0);
-            edges.push_str(&format!(
+            let _ = write!(
+                edges,
                 "<path class=\"pelers-edge\" d=\"M{},{}C{mid},{} {mid},{} {},{}\"/>",
                 num(x1),
                 num(y1),
@@ -393,7 +397,7 @@ fn draw(model: &MindmapDb, config: &Config, options: &RenderOptions, down: bool)
                 num(y2),
                 num(x2),
                 num(y2)
-            ));
+            );
         }
 
         let pill = shape.is_empty() && !node.children.is_empty();

@@ -16,6 +16,7 @@ use crate::text::measurer::{BOLD_STYLE, MEASURE_MONO, width as measure};
 use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Head {
@@ -1196,7 +1197,7 @@ fn draw(
     let mut y = head_bottom + 6.0;
 
     for i in 0..count {
-        let m = messages[i].clone();
+        let m = &messages[i];
         let view = ctx.views[i].clone();
         let frame = ctx.frame_at[i];
         let type_ = m.type_;
@@ -1258,11 +1259,12 @@ fn draw(
                     let label = labels.get(k).cloned().unwrap_or_else(no_label);
                     let fx0 = ctx.frames[fi].x0;
                     let fx1 = ctx.frames[fi].x1;
-                    inner.push_str(&format!(
+                    let _ = write!(
+                        inner,
                         "<path d=\"M{frame_x},{}H{}\"{DASH}/>",
                         num(*dy),
                         num(fx1)
-                    ));
+                    );
                     inner.push_str(&ctx.backed(
                         &label,
                         fx0 + 8.0 + label.width / 2.0,
@@ -1274,17 +1276,19 @@ fn draw(
                 let tab_w = ctx.frames[fi].tab_w;
                 let fx0 = ctx.frames[fi].x0;
                 let top = ctx.frames[fi].top;
-                inner.push_str(&format!(
+                let _ = write!(
+                    inner,
                     "<rect x=\"{frame_x}\" y=\"{}\" width=\"{}\" height=\"{TAB_H}\" fill=\"var(--_s)\"{ROUNDED}/>",
                     num(top),
                     num(tab_w)
-                ));
-                inner.push_str(&format!(
+                );
+                let _ = write!(
+                    inner,
                     "<text class=\"pelers-frame-kind\" x=\"{}\" y=\"{}\" text-anchor=\"middle\" font-size=\"{}\" font-weight=\"var(--_hw)\" fill=\"var(--_m)\" stroke=\"none\">{kind}</text>",
                     num(fx0 + tab_w / 2.0),
                     num(top + TAB_H / 2.0 + tiny * 0.35),
                     js_number_to_string(tiny)
-                ));
+                );
                 let title = ctx.frames[fi].title.clone();
                 inner.push_str(&ctx.backed(
                     &title,
@@ -1292,9 +1296,10 @@ fn draw(
                     top + js_max(TAB_H, title.height) / 2.0,
                     true,
                 ));
-                frames_out.push_str(&format!(
+                let _ = write!(
+                    frames_out,
                     "<g class=\"pelers-frame pelers-frame-{kind}\">{inner}</g>"
-                ));
+                );
             }
             y = bottom;
         } else if matches!(
@@ -1322,12 +1327,13 @@ fn draw(
             let top = y + 10.0;
             let mut x = view.x;
             if m.placement == Some(placement::RIGHTOF) {
-                x += right_edge(&ctx.cols[a_index], 0) - ctx.cols[a_index].x;
+                x += right_edge(ctx.cols[a_index].spot(), 0) - ctx.cols[a_index].x;
             } else if m.placement == Some(placement::LEFTOF) {
-                x += left_edge(&ctx.cols[a_index], 0) - ctx.cols[a_index].x;
+                x += left_edge(ctx.cols[a_index].spot(), 0) - ctx.cols[a_index].x;
             }
             ctx.extend(x, x + view.w);
-            notes_out.push_str(&format!(
+            let _ = write!(
+                notes_out,
                 "<g class=\"pelers-note\" data-id=\"i{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"{ROUNDED}/>{}</g>",
                 esc_text(&m.id),
                 num(x),
@@ -1341,7 +1347,7 @@ fn draw(
                     " class=\"pelers-label\" stroke=\"none\" fill=\"var(--_fg)\"",
                     icons
                 )
-            ));
+            );
             y = top + h;
         } else if let Some(view) = view {
             let st = line_style(type_.unwrap_or(0)).unwrap_or(LineStyle {
@@ -1351,8 +1357,8 @@ fn draw(
                 at_end: false,
                 bottom: false,
             });
-            let a = ctx.cols[view.a].clone();
-            let b = ctx.cols[view.b].clone();
+            let a = ctx.cols[view.a].spot();
+            let b = ctx.cols[view.b].spot();
             let label = view.label.clone();
             let bw = ctx.badge_width(i);
             let mut starting = 0usize;
@@ -1387,12 +1393,12 @@ fn draw(
                 let mut x0 = if circle_from {
                     a.x + CENTRAL_R
                 } else {
-                    right_edge(&a, 0)
+                    right_edge(a, 0)
                 };
                 let mut x1 = if circle_to {
                     a.x + CENTRAL_R
                 } else {
-                    right_edge(&a, starting)
+                    right_edge(a, starting)
                 };
                 let out = js_max(x0, x1) + SELF_W + bw / 2.0;
                 line = ctx.ink_of(&ctx.fill_under(a.x, out).unwrap_or_default());
@@ -1448,7 +1454,8 @@ fn draw(
                             .unwrap_or_default();
                         ctx.ink_on(&fill)
                     };
-                    labels_out.push_str(&format!(
+                    let _ = write!(
+                        labels_out,
                         "<g class=\"pelers-edge-label\" data-id=\"i{}\">{}</g>",
                         esc_text(&m.id),
                         label_svg_with(
@@ -1458,7 +1465,7 @@ fn draw(
                             &fill_attr,
                             icons
                         )
-                    ));
+                    );
                 }
                 js_max(bottom, (top + bottom) / 2.0 + label.height / 2.0)
             } else {
@@ -1480,20 +1487,20 @@ fn draw(
                             6.0
                         },
                         if creating {
-                            b.size.h / 2.0 - ctx.msg_gap + 6.0
+                            b.h / 2.0 - ctx.msg_gap + 6.0
                         } else {
                             0.0
                         },
                     );
                 let mut x0 = if dir > 0.0 {
-                    right_edge(&a, 0)
+                    right_edge(a, 0)
                 } else {
-                    left_edge(&a, 0)
+                    left_edge(a, 0)
                 };
                 let mut x1 = if dir > 0.0 {
-                    left_edge(&b, starting)
+                    left_edge(b, starting)
                 } else {
-                    right_edge(&b, starting)
+                    right_edge(b, starting)
                 };
                 if creating {
                     let bi = view.b;
@@ -1564,24 +1571,26 @@ fn draw(
                     ctx.extend(cx - label.width / 2.0, cx + label.width / 2.0);
                     let cy = ly - 4.0 - label.height / 2.0;
                     let back = ctx.backed(&label, cx, cy, false);
-                    labels_out.push_str(&format!(
+                    let _ = write!(
+                        labels_out,
                         "<g class=\"pelers-edge-label\" data-id=\"i{}\">{back}</g>",
                         esc_text(&m.id)
-                    ));
+                    );
                 }
                 if creating {
                     y = ly + ctx.cols[view.b].size.h / 2.0 - 6.0;
                 }
                 ly
             };
-            edges_out.push_str(&format!(
+            let _ = write!(
+                edges_out,
                 "<g class=\"pelers-edge pelers-message\" data-id=\"i{}\"{}>{inner}</g>",
                 esc_text(&m.id),
                 match &line {
                     Some(l) => format!(" stroke=\"{l}\""),
                     None => String::new(),
                 }
-            ));
+            );
             y = js_max(y, line_y);
             if ctx.cols[view.a].destroy_at == Some(i) {
                 let d = destroy(&mut ctx, view.a, line_y, &mut crosses_out);
@@ -1603,29 +1612,34 @@ fn draw(
     let mut bottom = y;
     if mirror {
         let mut foot_h = 0.0f64;
-        for col in ctx.cols.clone() {
+        let cols = std::mem::take(&mut ctx.cols);
+        for col in &cols {
             if col.life_end.is_some() {
                 continue;
             }
             foot_h = js_max(foot_h, col.size.h);
-            actors_out.push_str(&actor_svg(&mut ctx, &col, y, true));
+            actors_out.push_str(&actor_svg(&mut ctx, col, y, true));
         }
+        ctx.cols = cols;
         bottom = y + foot_h;
     }
     let mut lifelines = String::new();
-    for col in ctx.cols.clone() {
-        actors_out.push_str(&actor_svg(&mut ctx, &col, col.top, false));
+    let cols = std::mem::take(&mut ctx.cols);
+    for col in &cols {
+        actors_out.push_str(&actor_svg(&mut ctx, col, col.top, false));
         let end = col.life_end.unwrap_or(y);
         if end > col.life_start {
-            lifelines.push_str(&format!(
+            let _ = write!(
+                lifelines,
                 "<path class=\"pelers-lifeline\" data-id=\"{}\" d=\"M{},{}V{}\"/>",
                 esc_text(&col.id),
                 num(col.x),
                 num(col.life_start),
                 num(end)
-            ));
+            );
         }
     }
+    ctx.cols = cols;
 
     let mut boxes_out = String::new();
     for run in ctx.runs.clone() {
@@ -1657,7 +1671,8 @@ fn draw(
                 color
             }
         };
-        boxes_out.push_str(&format!(
+        let _ = write!(
+            boxes_out,
             "<g class=\"pelers-cluster pelers-box\"{name_attr}><rect x=\"{}\" y=\"0\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\" stroke=\"var(--_b)\"{}/>{}</g>",
             num(x0),
             num(x1 - x0),
@@ -1670,7 +1685,7 @@ fn draw(
                 &format!(" class=\"pelers-cluster-label\"{fill_attr}"),
                 icons
             )
-        ));
+        );
     }
     if !ctx.runs.is_empty() {
         bottom += ctx.box_pad;
@@ -1727,45 +1742,52 @@ fn draw(
     );
     content.push_str(&title_out);
     if !boxes_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-boxes\" font-size=\"{}\">{boxes_out}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     if !rects_out.is_empty() {
         rects_out.reverse();
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-rects\" fill=\"var(--_a)\">{}</g>",
             rects_out.concat()
-        ));
+        );
     }
     if !lifelines.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-lifelines\" fill=\"none\" stroke=\"var(--_b)\">{lifelines}</g>"
-        ));
+        );
     }
     if !activations_out.is_empty() {
         activations_out.reverse();
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-activations\" fill=\"var(--_s)\" stroke=\"var(--_b)\">{}</g>",
             activations_out.concat()
-        ));
+        );
     }
     if !frames_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-frames\" font-size=\"{}\" stroke=\"var(--_b)\">{frames_out}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     if !edges_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\">{edges_out}</g>"
-        ));
+        );
     }
     if !crosses_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-destroys\" fill=\"none\" stroke=\"var(--_l)\" stroke-width=\"1.5\" stroke-linecap=\"round\">{crosses_out}</g>"
-        ));
+        );
     }
     if !labels_out.is_empty() {
         let mono_attr = if monospaced {
@@ -1773,19 +1795,21 @@ fn draw(
         } else {
             String::new()
         };
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edge-labels\" font-size=\"{}\"{mono_attr}>{labels_out}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     if !notes_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-notes\" font-size=\"{}\" fill=\"var(--_a)\" stroke=\"var(--_b)\">{notes_out}</g>",
             js_number_to_string(small)
-        ));
+        );
     }
     if !actors_out.is_empty() {
-        content.push_str(&format!("<g class=\"pelers-nodes\">{actors_out}</g>"));
+        let _ = write!(content, "<g class=\"pelers-nodes\">{actors_out}</g>");
     }
     content.push_str("</g>");
 
@@ -1809,16 +1833,33 @@ fn draw(
     }
 }
 
-fn left_edge(col: &Column, extra: usize) -> f64 {
-    if !col.activations.is_empty() || extra > 0 {
+#[derive(Clone, Copy)]
+struct Spot {
+    x: f64,
+    depth: usize,
+    h: f64,
+}
+
+impl Column {
+    fn spot(&self) -> Spot {
+        Spot {
+            x: self.x,
+            depth: self.activations.len(),
+            h: self.size.h,
+        }
+    }
+}
+
+fn left_edge(col: Spot, extra: usize) -> f64 {
+    if col.depth > 0 || extra > 0 {
         col.x - ACT_W / 2.0
     } else {
         col.x
     }
 }
 
-fn right_edge(col: &Column, extra: usize) -> f64 {
-    let depth = col.activations.len() + extra;
+fn right_edge(col: Spot, extra: usize) -> f64 {
+    let depth = col.depth + extra;
     if depth > 0 {
         col.x + ACT_W / 2.0 + (depth as f64 - 1.0) * ACT_STEP
     } else {
@@ -1845,7 +1886,8 @@ fn destroy(ctx: &mut Ctx, col: usize, line_y: f64, out: &mut String) -> f64 {
     let cx = ctx.cols[col].x;
     let cy = line_y + 16.0;
     ctx.cols[col].life_end = Some(cy);
-    out.push_str(&format!(
+    let _ = write!(
+        out,
         "<path class=\"pelers-destroy\" data-id=\"{}\" d=\"M{},{}L{},{}M{},{}L{},{}\"/>",
         esc_text(&ctx.cols[col].id),
         num(cx - 6.0),
@@ -1856,7 +1898,7 @@ fn destroy(ctx: &mut Ctx, col: usize, line_y: f64, out: &mut String) -> f64 {
         num(cy - 6.0),
         num(cx - 6.0),
         num(cy + 6.0)
-    ));
+    );
     cy + 6.0
 }
 

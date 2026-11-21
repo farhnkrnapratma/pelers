@@ -15,6 +15,7 @@ use crate::util::chars::trim;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::{link_url, rel_attr, safe_url};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const COLUMN_GAP: f64 = 12.0;
 const COLUMN_PAD: f64 = 8.0;
@@ -116,14 +117,15 @@ fn text_block(label: &Label, x: f64, y: f64, attrs: &str, icons: bool, end: bool
         let line = &label.lines[i];
         let cy = y + line_middle(label, i);
         if line.len() == 1 && is_plain(&line[0]) {
-            out.push_str(&format!(
+            let _ = write!(
+                out,
                 "<text{} x=\"{}\" y=\"{}\"{}>{}</text>",
                 text_style(attrs, line[0].style),
                 num(x),
                 num(cy + label.size * 0.35),
                 if end { " text-anchor=\"end\"" } else { "" },
                 esc(&line[0].text)
-            ));
+            );
         } else {
             let w = label.widths[i];
             out.push_str(&label_svg_with(
@@ -371,13 +373,14 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
             icons,
             false,
         ));
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<text class=\"pelers-count\" x=\"{}\" y=\"{}\" text-anchor=\"end\" font-size=\"{}\" fill=\"var(--_m)\">{}</text>",
             js_number_to_string(edge),
             num(COLUMN_PAD + line / 2.0 + small * 0.35),
             js_number_to_string(small),
             section.items.len()
-        ));
+        );
         if has(section.node.icon.as_deref()) {
             body.push_str(&icon_svg(
                 section.node.icon.as_deref().unwrap_or(""),
@@ -398,10 +401,11 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
                 num(card.height)
             );
             if let Some(color) = &color {
-                inner.push_str(&format!(
+                let _ = write!(
+                    inner,
                     "<path class=\"pelers-priority\" d=\"M2.5,5V{}\" fill=\"none\" {color} stroke-width=\"3\" stroke-linecap=\"round\"/>",
                     num(card.height - 5.0)
-                ));
+                );
             }
             inner.push_str(&text_block(
                 &card.label,
@@ -440,11 +444,12 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
                         false,
                     )),
                     Some(href) => {
-                        inner.push_str(&format!(
+                        let _ = write!(
+                            inner,
                             "<a href=\"{}\" target=\"_blank\"{}>",
                             esc(&href),
                             rel_attr(options)
-                        ));
+                        );
                         inner.push_str(&text_block(
                             &card.ticket,
                             CARD_PAD,
@@ -476,24 +481,26 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
                 Some(_) => format!(" pelers-priority-{}", priority.replacen(' ', "-", 1)),
                 None => String::new(),
             };
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "<g class=\"pelers-node pelers-card{priority_class}{}\" data-id=\"{}\" transform=\"translate({},{})\" font-size=\"{}\">{inner}</g>",
                 class_names(item.css_classes.as_deref().unwrap_or("")),
                 esc_text(&item.id),
                 js_number_to_string(COLUMN_PAD),
                 num(y),
                 js_number_to_string(small)
-            ));
+            );
             y += card.height + CARD_GAP;
         }
 
-        out.push_str(&format!(
+        let _ = write!(
+            out,
             "<g class=\"pelers-cluster pelers-column{}\" data-id=\"{}\" transform=\"translate({},{})\">{body}</g>",
             class_names(section.node.css_classes.as_deref().unwrap_or("")),
             esc_text(&section.node.id),
             num(left + (index as f64 % per_row) * (column_width + COLUMN_GAP)),
             num(pad + title_height + row_tops[row])
-        ));
+        );
     }
 
     let total_width = (width_total + 2.0 * pad).ceil();

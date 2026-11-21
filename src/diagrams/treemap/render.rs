@@ -15,6 +15,7 @@ use crate::text::label::layout_label;
 use crate::text::measurer::{BOLD_STYLE, ITALIC, width as measure};
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const HEADER: f64 = 28.0;
 const SHORT_HEADER: f64 = 18.0;
@@ -222,7 +223,8 @@ pub fn render_treemap(model: &TreemapModel, config: &Config, options: &RenderOpt
                 let baseline = y + b.header / 2.0 + 1.0;
                 drawn = label.as_ref().map(|l| l.text.clone());
                 if let Some(label) = &label {
-                    text.push_str(&format!(
+                    let _ = write!(
+                        text,
                         "<text x=\"{}\" y=\"{}\" font-weight=\"var(--_hw)\"{}{ink}{}>{}</text>",
                         num(x + SIDE + 2.0),
                         num(baseline + label_size * 0.35),
@@ -233,10 +235,11 @@ pub fn render_treemap(model: &TreemapModel, config: &Config, options: &RenderOpt
                         },
                         style.text,
                         esc(&label.text)
-                    ));
+                    );
                 }
                 if with_value && value_size * LINE <= HEADER {
-                    text.push_str(&format!(
+                    let _ = write!(
+                        text,
                         "<text class=\"pelers-value\" x=\"{}\" y=\"{}\" font-size=\"{}\" text-anchor=\"end\"{}{}>{}</text>",
                         num(x + b.w - SIDE - 2.0),
                         num(baseline + value_size * 0.35),
@@ -248,7 +251,7 @@ pub fn render_treemap(model: &TreemapModel, config: &Config, options: &RenderOpt
                         },
                         style.text,
                         esc(&value)
-                    ));
+                    );
                 }
             }
             let shape = if b.headed {
@@ -272,11 +275,12 @@ pub fn render_treemap(model: &TreemapModel, config: &Config, options: &RenderOpt
                     num(b.h)
                 )
             };
-            sections.push_str(&format!(
+            let _ = write!(
+                sections,
                 "<g class=\"pelers-node pelers-section{}\" {group}{}{shape}{text}</g>",
                 class_names(node.class_selector.as_deref().unwrap_or("")),
                 tooltip(drawn.as_deref())
-            ));
+            );
             continue;
         }
 
@@ -330,12 +334,13 @@ pub fn render_treemap(model: &TreemapModel, config: &Config, options: &RenderOpt
                 );
             }
         }
-        leaves.push_str(&format!(
+        let _ = write!(
+            leaves,
             "<g class=\"pelers-node pelers-leaf{}\" {group}{}{rect}{}/>{text}</g>",
             class_names(node.class_selector.as_deref().unwrap_or("")),
             tooltip(label.as_ref().map(|l| l.text.as_str())),
             corners(&style.shape, b)
-        ));
+        );
     }
 
     let total_width = (js_max(width, title.width) + 2.0 * pad).ceil();

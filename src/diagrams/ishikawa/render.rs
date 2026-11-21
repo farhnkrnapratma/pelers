@@ -10,6 +10,7 @@ use crate::svg::theme::ROUNDED;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_round};
+use std::fmt::Write as _;
 
 const SLANT: f64 = 0.5;
 const FIRST_ROW: f64 = 14.0;
@@ -235,21 +236,23 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
             for bone in &category.bones {
                 let y = sign * bone.rise;
                 if bone.depth % 2 == 0 {
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "M{},{}H{}",
                         num(px(bone.at, bone.rise)),
                         num(y),
                         num(px(bone.text_end + TEXT_GAP, bone.rise))
-                    ));
+                    );
                 } else {
                     let from = category.bones[bone.parent as usize].rise;
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "M{},{}L{},{}",
                         num(px(bone.at, from)),
                         num(sign * from),
                         num(px(bone.at, bone.rise)),
                         num(y)
-                    ));
+                    );
                 }
                 let right = px(bone.text_end, bone.rise);
                 texts.push_str(&label_svg(
@@ -269,10 +272,19 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
             max_x = js_max(max_x, end_x + category.box_w / 2.0);
             min_y = js_min(min_y, box_y - category.box_h / 2.0);
             max_y = js_max(max_y, box_y + category.box_h / 2.0);
-            groups.push_str(&format!(
+            let _ = write!(
+                groups,
                 "<g class=\"pelers-ishikawa-category\" data-id=\"{}\"><path class=\"pelers-ishikawa-bones\" d=\"{d}\" fill=\"none\" stroke=\"var(--_l)\"/>{}<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{}</g>",
                 esc_text(&category.node.text),
-                marker("arrow_point", ax, 0.0, SLANT / js_hypot(SLANT, 1.0), -sign / js_hypot(SLANT, 1.0), "var(--_l)", "none"),
+                marker(
+                    "arrow_point",
+                    ax,
+                    0.0,
+                    SLANT / js_hypot(SLANT, 1.0),
+                    -sign / js_hypot(SLANT, 1.0),
+                    "var(--_l)",
+                    "none"
+                ),
                 num(end_x - category.box_w / 2.0),
                 num(box_y - category.box_h / 2.0),
                 num(category.box_w),
@@ -281,9 +293,12 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
                 if texts.is_empty() {
                     String::new()
                 } else {
-                    format!("<g class=\"pelers-ishikawa-causes\" font-size=\"{}\">{texts}</g>", crate::util::jsnum::js_number_to_string(small))
+                    format!(
+                        "<g class=\"pelers-ishikawa-causes\" font-size=\"{}\">{texts}</g>",
+                        crate::util::jsnum::js_number_to_string(small)
+                    )
                 }
-            ));
+            );
         }
 
         let r = head_h / 2.0;
@@ -435,7 +450,8 @@ fn vertical_causes(model: &IshikawaDb, options: &RenderOptions) -> Drawn {
             1 => "pelers-ishikawa-category",
             _ => "pelers-ishikawa-cause",
         };
-        nodes.push_str(&format!(
+        let _ = write!(
+            nodes,
             "<g class=\"pelers-node {class}\" data-id=\"{}\">{}{}</g>",
             esc_text(text),
             if framed {
@@ -456,25 +472,33 @@ fn vertical_causes(model: &IshikawaDb, options: &RenderOptions) -> Drawn {
                 entry_y + h / 2.0,
                 &format!(
                     " class=\"pelers-label\"{}{}",
-                    if entry_depth < 2 { " font-weight=\"var(--_hw)\"" } else { "" },
+                    if entry_depth < 2 {
+                        " font-weight=\"var(--_hw)\""
+                    } else {
+                        ""
+                    },
                     if entry_depth > 1 {
-                        format!(" font-size=\"{}\"", crate::util::jsnum::js_number_to_string(small))
+                        format!(
+                            " font-size=\"{}\"",
+                            crate::util::jsnum::js_number_to_string(small)
+                        )
                     } else {
                         String::new()
                     }
                 ),
             )
-        ));
+        );
         if entry_parent >= 0 {
             let parent = &order[entry_parent as usize];
             let gx = parent.x + indent / 2.0;
-            edges.push_str(&format!(
+            let _ = write!(
+                edges,
                 "<path class=\"pelers-edge\" d=\"M{},{}V{}H{}\" fill=\"none\" stroke=\"var(--_b)\"/>",
                 num(gx),
                 num(parent.y + parent.h),
                 num(entry_y + h / 2.0),
                 num(x)
-            ));
+            );
         }
         let entry = &mut order[k];
         entry.x = x;

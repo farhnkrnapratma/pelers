@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::fmt::Write as _;
 
 use super::builder::esc;
 use super::ink::{ink, plain_color};
@@ -201,7 +202,7 @@ pub fn palette(kind: &str, config: &Object) -> Palette {
         let Some(color) = safe_color(&list[i % list.len()]) else {
             continue;
         };
-        style.push_str(&format!(";--pelers-series-{}:{color}", i + 1));
+        let _ = write!(style, ";--pelers-series-{}:{color}", i + 1);
         inks[i] = ink(&format!(";fill:{color}"), "");
     }
     if style.is_empty() {

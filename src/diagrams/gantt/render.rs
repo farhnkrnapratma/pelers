@@ -1,3 +1,4 @@
+use std::fmt::Write as _;
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -177,7 +178,7 @@ pub fn render_gantt(
     let top_axis = db.top_axis || flag(config, "topAxis");
 
     db.get_tasks(Some(now))?;
-    let all: Vec<Task> = db.tasks.clone();
+    let all: Vec<Task> = std::mem::take(&mut db.tasks);
     let row_tasks: Vec<usize> = (0..all.len()).filter(|&t| !all[t].vert).collect();
     let verts: Vec<usize> = (0..all.len())
         .filter(|&t| all[t].vert && scheduled(&all[t]))
@@ -425,12 +426,13 @@ pub fn render_gantt(
     let top_y = plot_top - grid_lead - tick_height / 2.0 - 2.0;
     for &t in &ticks {
         let tx = x(t);
-        grid.push_str(&format!(
+        let _ = write!(
+            grid,
             "M{},{}V{}",
             num(tx),
             num(plot_top - grid_lead),
             num(plot_bottom)
-        ));
+        );
         let label = tick_label(t);
         let width = measure(&label, tick_size, 0);
         if tx - width / 2.0 < last_right + 8.0 || label == last_label {
@@ -440,17 +442,19 @@ pub fn render_gantt(
         last_label = label.clone();
         extent = js_max(extent, last_right);
         let body = format!("text-anchor=\"middle\">{}</text>", esc(&label));
-        axis_bottom.push_str(&format!(
+        let _ = write!(
+            axis_bottom,
             "<text x=\"{}\" y=\"{}\" {body}",
             num(tx),
             num(bottom_y + tick_size * 0.35)
-        ));
+        );
         if top_axis {
-            axis_top.push_str(&format!(
+            let _ = write!(
+                axis_top,
                 "<text x=\"{}\" y=\"{}\" {body}",
                 num(tx),
                 num(top_y + tick_size * 0.35)
-            ));
+            );
         }
     }
 
@@ -480,13 +484,14 @@ pub fn render_gantt(
             vert_ends[line] = end;
         }
         extent = js_max(extent, vert_ends[line]);
-        vert_lines.push_str(&format!(
+        let _ = write!(
+            vert_lines,
             "<path class=\"pelers-vert\" data-id=\"{}\" d=\"M{},{}V{}\"/>",
             esc_text(&all[task].id),
             num(vx),
             num(plot_top - grid_lead),
             num(plot_bottom)
-        ));
+        );
         vert_labels.push_str(&label_svg_with(
             &label,
             cx,
@@ -523,14 +528,19 @@ pub fn render_gantt(
         let y = plot_top + row as f64 * row_height;
         let h = (end - row) as f64 * row_height;
         if categories.len() > 1 || !section.is_empty() {
-            bands.push_str(&format!(
+            let _ = write!(
+                bands,
                 "<rect class=\"pelers-section pelers-section-{}\" x=\"0\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{}\"/>",
                 js_number_to_string(index),
                 num(y),
                 js_number_to_string(width),
                 num(h),
-                if index % 2.0 == 0.0 { "var(--_s)" } else { "none" }
-            ));
+                if index % 2.0 == 0.0 {
+                    "var(--_s)"
+                } else {
+                    "none"
+                }
+            );
         }
         let idx = categories
             .iter()
@@ -603,7 +613,7 @@ pub fn render_gantt(
         };
         let mut classes = "pelers-task".to_owned();
         if !state.is_empty() {
-            classes.push_str(&format!(" pelers-{state}"));
+            let _ = write!(classes, " pelers-{state}");
         }
         if task.crit {
             classes.push_str(" pelers-crit");
@@ -684,10 +694,11 @@ pub fn render_gantt(
         if let Some(url) = db.links.get(&task.id).cloned() {
             body = linked(&body, &url, &task.id, &mut links, options, "");
         }
-        tasks_out.push_str(&format!(
+        let _ = write!(
+            tasks_out,
             "<g class=\"{classes}\" data-id=\"{}\">{body}</g>",
             esc_text(&task.id)
-        ));
+        );
     }
 
     let mut today = String::new();
@@ -744,39 +755,46 @@ pub fn render_gantt(
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !bands.is_empty() {
-        content.push_str(&format!("<g class=\"pelers-sections\">{bands}</g>"));
+        let _ = write!(content, "<g class=\"pelers-sections\">{bands}</g>");
     }
     if !excluded.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-excluded\" fill=\"var(--_a)\">{excluded}</g>"
-        ));
+        );
     }
-    content.push_str(&format!(
+    let _ = write!(
+        content,
         "<g class=\"pelers-grid\" fill=\"none\"><path d=\"{grid}\" stroke=\"var(--_b)\" stroke-dasharray=\"1 3\"/><path d=\"{axis_line}\" stroke=\"var(--_b)\"/></g>"
-    ));
+    );
     if !vert_lines.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-verts\" fill=\"none\" stroke=\"var(--_l)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\">{vert_lines}</g>"
-        ));
+        );
     }
     content.push_str(&today);
-    content.push_str(&format!(
+    let _ = write!(
+        content,
         "<g class=\"pelers-tasks\" font-size=\"{}\">{tasks_out}</g>",
         num(label_size)
-    ));
-    content.push_str(&format!(
+    );
+    let _ = write!(
+        content,
         "<g class=\"pelers-section-labels\" font-size=\"{}\">{section_out}</g>",
         num(section_size)
-    ));
-    content.push_str(&format!(
+    );
+    let _ = write!(
+        content,
         "<g class=\"pelers-axis\" font-size=\"{}\" fill=\"var(--_m)\">{axis_bottom}{axis_top}</g>",
         js_number_to_string(tick_size)
-    ));
+    );
     if !vert_labels.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-vert-labels\" font-size=\"{}\">{vert_labels}</g>",
             num(label_size)
-        ));
+        );
     }
 
     let svg = svg_document(
@@ -820,13 +838,14 @@ fn flush_excluded(
     let ex0 = js_max(left, x(day_start.time()));
     let ex1 = js_min(right, x(day_end.time()));
     if ex1 > ex0 {
-        excluded.push_str(&format!(
+        let _ = write!(
+            excluded,
             "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"/>",
             num(ex0),
             num(plot_top),
             num(ex1 - ex0),
             num(plot_height)
-        ));
+        );
     }
     *from = None;
     *to = None;

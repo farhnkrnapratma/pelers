@@ -28,6 +28,7 @@ use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::linked;
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const NODE_SEP: f64 = 40.0;
 const EDGE_SEP: f64 = 16.0;
@@ -1016,7 +1017,8 @@ fn draw(
                     i,
                 ));
             }
-            clusters.push_str(&format!(
+            let _ = write!(
+                clusters,
                 "<g class=\"pelers-cluster pelers-namespace\" data-id=\"{id}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\" fill-opacity=\"0.5\" stroke=\"var(--_b)\"{ROUNDED}/>{}</g>",
                 num(x - w / 2.0),
                 num(y - h / 2.0),
@@ -1027,7 +1029,7 @@ fn draw(
                 } else {
                     label_svg(&view.label, title_x + ox, title_y, title_attrs)
                 }
-            ));
+            );
             continue;
         }
         let at = format!(" transform=\"translate({},{})\"", num(x), num(y));
@@ -1036,7 +1038,8 @@ fn draw(
         } else if node.shape == NodeShape::Note {
             let r = w / 2.0;
             let t = -h / 2.0;
-            nodes_out.push_str(&format!(
+            let _ = write!(
+                nodes_out,
                 "<g class=\"pelers-node pelers-note\" data-id=\"{id}\"{at}><path d=\"M{},{}H{}L{},{}V{}H{}Z\" fill=\"var(--_a)\" stroke=\"var(--_b)\" stroke-linejoin=\"round\"/><path d=\"M{},{}V{}H{}\" fill=\"none\" stroke=\"var(--_b)\" stroke-linejoin=\"round\"/>{}</g>",
                 num(-r),
                 num(t),
@@ -1049,10 +1052,17 @@ fn draw(
                 num(t),
                 num(t + FOLD),
                 num(r),
-                label_svg_with(&view.label, 0.0, 0.0, &format!(" class=\"pelers-label\" font-size=\"{}\"", num(small)), icons)
-            ));
+                label_svg_with(
+                    &view.label,
+                    0.0,
+                    0.0,
+                    &format!(" class=\"pelers-label\" font-size=\"{}\"", num(small)),
+                    icons
+                )
+            );
         } else {
-            nodes_out.push_str(&format!(
+            let _ = write!(
+                nodes_out,
                 "<g class=\"pelers-node pelers-interface\" data-id=\"{id}\"{at}>{}</g>",
                 label_svg_with(
                     &view.label,
@@ -1061,7 +1071,7 @@ fn draw(
                     &format!(" class=\"pelers-label\" font-size=\"{}\"", num(small)),
                     icons
                 )
-            ));
+            );
         }
     }
 
@@ -1121,13 +1131,14 @@ fn draw(
         } else {
             " pelers-relation"
         };
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge{kind}\" data-id=\"{}\"><path d=\"{}\"{attrs}/>{}{}</g>",
             esc_text(&edge.id),
             path.d,
             class_marker(start_type, path.sx, path.sy, path.sdx, path.sdy, LINE),
             class_marker(end_type, path.ex, path.ey, path.edx, path.edy, LINE)
-        ));
+        );
         if label.width > 0.0 {
             labels_out.push_str(&edge_label_svg(
                 &edge.id,
@@ -1278,7 +1289,8 @@ fn class_svg(
             Some(stroke) => format!(" style=\"stroke:{}\"", esc(stroke)),
             None => String::new(),
         };
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<path class=\"pelers-divider\" d=\"M{},{}H{}M{},{}H{}\" fill=\"none\" stroke=\"var(--_b)\"{stroke}/>",
             num(left),
             num(first),
@@ -1286,7 +1298,7 @@ fn class_svg(
             num(left),
             num(second),
             num(-left)
-        ));
+        );
     }
     let mut y = top + TITLE_PAD;
     let fill_attr = if ink.is_empty() {
@@ -1297,12 +1309,13 @@ fn class_svg(
     for annotation in &view.annotations {
         match annotation {
             Annotation::Text(text) => {
-                body.push_str(&format!(
+                let _ = write!(
+                    body,
                     "<text class=\"pelers-annotation\" x=\"0\" y=\"{}\" text-anchor=\"middle\" font-size=\"{}\"{fill_attr}>{}</text>",
                     num(y + tiny_height / 2.0 + tiny * 0.35),
                     js_number_to_string(tiny),
                     esc(text)
-                ));
+                );
                 y += tiny_height;
             }
             Annotation::Math(label) => {
@@ -1352,12 +1365,13 @@ fn class_svg(
                 "*" => format!(" pelers-abstract\" font-style=\"italic\"{}", style.text),
                 _ => format!("\"{}", style.text),
             };
-            out.push_str(&format!(
+            let _ = write!(
+                out,
                 "<text class=\"pelers-member pelers-{kind}{mark} x=\"{}\" y=\"{}\">{}</text>",
                 num(left + PAD_X),
                 num(baseline),
                 esc(&line.text)
-            ));
+            );
             baseline += line_height;
         }
         out
@@ -1368,12 +1382,13 @@ fn class_svg(
         } else {
             String::new()
         };
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-members\" font-size=\"{}\"{ink}{font_family}>{}{}</g>",
             js_number_to_string(member_size),
             lines(&view.attributes, "attribute", first),
             lines(&view.methods, "method", second)
-        ));
+        );
     }
     if let Some(tooltip) = &cls.tooltip {
         body = format!("<title>{}</title>{body}", esc_text(tooltip));

@@ -29,6 +29,7 @@ use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::{internal_link, rel_attr};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const NODE_SEP: f64 = 48.0;
 const EDGE_SEP: f64 = 20.0;
@@ -142,7 +143,8 @@ fn text_left(label: &Label, x: f64, y: f64, attrs: &str, icons: bool, mono: u32)
         for span in line {
             if let Some(icon) = &span.icon {
                 let side = label.size * 1.1;
-                extra.push_str(&format!(
+                let _ = write!(
+                    extra,
                     "<svg class=\"pelers-icon\" data-icon=\"{}\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">{}</svg>",
                     esc_text(icon),
                     num(sx),
@@ -150,18 +152,19 @@ fn text_left(label: &Label, x: f64, y: f64, attrs: &str, icons: bool, mono: u32)
                     num(side),
                     num(side),
                     icon_markup(icon)
-                ));
+                );
             } else if !span.text.is_empty() {
                 let pos = if has_icon || !placed {
                     format!(" x=\"{}\" y=\"{}\"", num(sx), num(y))
                 } else {
                     String::new()
                 };
-                body.push_str(&format!(
+                let _ = write!(
+                    body,
                     "<tspan{pos}{}>{}</tspan>",
                     span_style(span.style & !shared),
                     esc(&span.text)
-                ));
+                );
                 placed = true;
             }
             sx += span.width;
@@ -524,14 +527,19 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
                     shape: shape.clone(),
                 });
             }
-            clusters.push_str(&format!(
+            let _ = write!(
+                clusters,
                 "<g class=\"pelers-cluster{classes}\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\"{} stroke=\"var(--_b)\"{}/>{}</g>",
                 esc_text(&node.id),
                 num(x),
                 num(y),
                 num(c.w),
                 num(c.h),
-                if sets_fill(&shape) { "" } else { " fill-opacity=\"0.5\"" },
+                if sets_fill(&shape) {
+                    ""
+                } else {
+                    " fill-opacity=\"0.5\""
+                },
                 rounded(&shape),
                 label_svg_with(
                     &view.label,
@@ -543,7 +551,7 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
                     ),
                     icons
                 )
-            ));
+            );
             continue;
         }
 
@@ -619,19 +627,21 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
                 if r % 2 == 0 {
                     let span = format!("x=\"{}\" width=\"{}\"", num(x0), num(w));
                     if r == view.rows.len() - 1 {
-                        stripes.push_str(&format!(
+                        let _ = write!(
+                            stripes,
                             "<rect {span} y=\"{}\" height=\"{}\"{ROUNDED}/><rect {span} y=\"{}\" height=\"{}\"/>",
                             num(y),
                             num(row.h),
                             num(y),
                             num(row.h / 2.0)
-                        ));
+                        );
                     } else {
-                        stripes.push_str(&format!(
+                        let _ = write!(
+                            stripes,
                             "<rect {span} y=\"{}\" height=\"{}\"/>",
                             num(y),
                             num(row.h)
-                        ));
+                        );
                     }
                 }
                 let baseline = y + ROW_PAD / 2.0 + row_line / 2.0 + view.row_size * 0.35;
@@ -693,12 +703,13 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
                 js_number_to_string(view.row_size)
             )
         };
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<g class=\"pelers-node pelers-entity{classes}\" data-id=\"{}\" transform=\"translate({},{})\">{body}</g>",
             esc_text(&node.label),
             num(c.x),
             num(c.y)
-        ));
+        );
     }
 
     for (i, own) in &loops {
@@ -820,12 +831,21 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
             .as_deref()
             .filter(|ink| !ink.is_empty())
             .map_or_else(String::new, |ink| format!(" stroke=\"{ink}\""));
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge pelers-er-{}\" data-id=\"{}\"{over_attr}><path d=\"{d}\"{}/>{start}{end}</g>",
-            if dashed { "non-identifying" } else { "identifying" },
+            if dashed {
+                "non-identifying"
+            } else {
+                "identifying"
+            },
             esc_text(&edge.id),
-            if dashed { " stroke-dasharray=\"4 3\"" } else { "" }
-        ));
+            if dashed {
+                " stroke-dasharray=\"4 3\""
+            } else {
+                ""
+            }
+        );
         if label.width > 0.0 {
             labels_out.push_str(&edge_label_svg(
                 &edge.id,
@@ -845,21 +865,23 @@ fn draw(db: &ErDb, config: &Config, options: &RenderOptions, turned: bool) -> Dr
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !clusters.is_empty() {
-        content.push_str(&format!("<g class=\"pelers-clusters\">{clusters}</g>"));
+        let _ = write!(content, "<g class=\"pelers-clusters\">{clusters}</g>");
     }
     content.push_str(&casings_svg(&casings));
     if !edges_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\">{edges_out}</g>"
-        ));
+        );
     }
     if !labels_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edge-labels\" font-size=\"{}\">{labels_out}</g>",
             js_number_to_string(small_size)
-        ));
+        );
     }
-    content.push_str(&format!("<g class=\"pelers-nodes\">{nodes_out}</g>"));
+    let _ = write!(content, "<g class=\"pelers-nodes\">{nodes_out}</g>");
 
     let svg = svg_document(
         "er",

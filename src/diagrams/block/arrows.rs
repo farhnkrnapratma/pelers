@@ -1,6 +1,7 @@
 use crate::svg::builder::num;
 use crate::util::chars::trim;
 use crate::util::jsnum::{js_max, js_min};
+use std::fmt::Write as _;
 
 pub const RIGHT: u32 = 1;
 pub const LEFT: u32 = 2;
@@ -156,7 +157,7 @@ pub fn draw_arrow(mask: u32, w: f64, h: f64, attrs: &str) -> String {
         if k > 0 {
             points.push(' ');
         }
-        points.push_str(&format!("{},{}", num(pair[0]), num(pair[1])));
+        let _ = write!(points, "{},{}", num(pair[0]), num(pair[1]));
     }
     format!("<polygon points=\"{points}\" stroke-linejoin=\"round\"{attrs}/>")
 }

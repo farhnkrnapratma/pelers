@@ -12,6 +12,7 @@ use crate::text::label::Label;
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const PAD_X: f64 = 12.0;
 const PAD_Y: f64 = 8.0;
@@ -331,27 +332,23 @@ fn draw(model: &TimelineModel, config: &Config, options: &RenderOptions, vertica
                 for label in &event_labels[i] {
                     let eh = event_height(label);
                     last = ey + eh / 2.0;
-                    d.push_str(&format!(
-                        "M{},{}H{}",
-                        num(spine_x),
-                        num(last),
-                        num(events_x)
-                    ));
+                    let _ = write!(d, "M{},{}H{}", num(spine_x), num(last), num(events_x));
                     cards.push_str(&event_svg(label, &color, events_x, ey, eh));
                     ey += eh + EVENT_GAP;
                 }
                 if !cards.is_empty() {
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "M{},{}H{}V{}",
                         num(axis_x),
                         num(cy),
                         num(spine_x),
                         num(last)
-                    ));
+                    );
                 }
                 body.push_str(&open_period(i));
                 body.push_str(&period_svg(i, group, &color, left, cy - h / 2.0, h));
-                body.push_str(&format!("<path class=\"pelers-edge\" d=\"{d}\"{LINE}/>"));
+                let _ = write!(body, "<path class=\"pelers-edge\" d=\"{d}\"{LINE}/>");
                 body.push_str(&dot(axis_x, cy, &color));
                 body.push_str(&cards);
                 body.push_str("</g>");
@@ -440,7 +437,7 @@ fn draw(model: &TimelineModel, config: &Config, options: &RenderOptions, vertica
                 for event_label in &event_labels[i] {
                     let eh = event_height(event_label);
                     if ey > events_y {
-                        d.push_str(&format!("M{},{}V{}", num(cx), num(ey - EVENT_GAP), num(ey)));
+                        let _ = write!(d, "M{},{}V{}", num(cx), num(ey - EVENT_GAP), num(ey));
                     }
                     cards.push_str(&event_svg(event_label, &color, x, ey, eh));
                     ey += eh + EVENT_GAP;
@@ -448,7 +445,7 @@ fn draw(model: &TimelineModel, config: &Config, options: &RenderOptions, vertica
                 bottom = js_max(bottom, ey - EVENT_GAP);
                 body.push_str(&open_period(i));
                 body.push_str(&period_svg(i, group, &color, x, periods_y, chip_h));
-                body.push_str(&format!("<path class=\"pelers-edge\" d=\"{d}\"{LINE}/>"));
+                let _ = write!(body, "<path class=\"pelers-edge\" d=\"{d}\"{LINE}/>");
                 body.push_str(&dot(cx, axis_y, &color));
                 body.push_str(&cards);
                 body.push_str("</g>");

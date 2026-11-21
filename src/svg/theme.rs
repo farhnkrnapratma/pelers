@@ -1,3 +1,4 @@
+use std::fmt::Write as _;
 pub const ROOT_STYLE: &str = "--_bg:var(--pelers-bg,#fff);--_fg:var(--pelers-fg,#1f1f1f);--_m:var(--pelers-muted,#6e6e6e);\
 --_l:var(--pelers-line,#1f1f1f);--_s:var(--pelers-surface,#f3f3f3);--_a:var(--pelers-surface-alt,#e6e6e6);\
 --_b:var(--pelers-border,#8a8a8a);--_c:var(--pelers-accent,#5b7bd5);color:var(--_fg)";
@@ -230,14 +231,14 @@ pub fn resolve_style(declarations: &[String]) -> ResolvedStyle {
     let mut shape_css = String::new();
     let mut line_css = String::new();
     for (prop, value) in &shape {
-        shape_css.push_str(&format!("{prop}:{value};"));
+        let _ = write!(shape_css, "{prop}:{value};");
         if prop != "fill" && prop != "fill-opacity" {
-            line_css.push_str(&format!("{prop}:{value};"));
+            let _ = write!(line_css, "{prop}:{value};");
         }
     }
     let mut text_css = String::new();
     for (prop, value) in &text {
-        text_css.push_str(&format!("{prop}:{value};"));
+        let _ = write!(text_css, "{prop}:{value};");
     }
     let weight = get_entry(&text, "font-weight");
     let size = get_entry(&text, "font-size");

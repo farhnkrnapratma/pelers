@@ -13,6 +13,7 @@ use crate::text::measurer::{BOLD_STYLE, width as measure};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 const LABEL_GAP: f64 = 6.0;
 const VALUE_GAP: f64 = 15.0;
@@ -307,7 +308,8 @@ fn draw(
         let name = decode_entities(id);
         let height = js_max(node.height, 1.0);
         let style = node_style(i);
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<rect class=\"pelers-sankey-node\" data-id=\"{}\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"{}\" fill=\"{}\"{style}/>",
             esc_text(id),
             num(node.x),
@@ -316,7 +318,7 @@ fn draw(
             num(height),
             num(js_min(2.0, height / 2.0)),
             series_color(i)
-        ));
+        );
 
         if nodes.len() <= CAREFUL
             && overlaps(&bands, &labels, line_height, i, labels[i].left, labels[i].y)
@@ -399,10 +401,11 @@ fn draw(
         } else {
             String::new()
         };
-        labels_out.push_str(&format!(
+        let _ = write!(
+            labels_out,
             "<g class=\"pelers-label\" data-id=\"{}\">{outline}<text{position}>{text}</text></g>",
             esc_text(id)
-        ));
+        );
     }
 
     let fixed = if matches!(link_color.as_str(), "gradient" | "source" | "target") {
@@ -458,7 +461,8 @@ fn draw(
         let mid = num((x0 + x1) / 2.0);
         let from = esc_text(&model.nodes[link.source].id);
         let to = esc_text(&model.nodes[link.target].id);
-        links_out.push_str(&format!(
+        let _ = write!(
+            links_out,
             "<path class=\"pelers-sankey-link\" data-id=\"{from}-&gt;{to}\" d=\"M{},{}C{mid},{} {mid},{} {},{}L{},{}C{mid},{} {mid},{} {},{}Z\" {paint}><title>{from} → {to}: {}{}{}</title></path>",
             num(x0),
             num(link.source_y - half),
@@ -475,7 +479,7 @@ fn draw(
             esc(&prefix),
             js_number_to_string(rounded(link.value)),
             esc(&suffix),
-        ));
+        );
     }
 
     let title = layout_label(
