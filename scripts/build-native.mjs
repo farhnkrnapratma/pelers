@@ -8,17 +8,8 @@ const host = /^host: (.+)$/m.exec(rustc("-vV"))[1];
 const at = process.argv.indexOf("--target");
 const target = at > 0 ? process.argv[at + 1] : host;
 const os = (triple) => /apple|windows|freebsd|linux/.exec(triple)?.[0];
-const napiCross = new Set([
-  "aarch64-unknown-linux-gnu",
-  "armv7-unknown-linux-gnueabihf",
-  "powerpc64le-unknown-linux-gnu",
-  "s390x-unknown-linux-gnu",
-  "x86_64-unknown-linux-gnu",
-]);
-
 function crossFlags() {
   if (target === host || (os(target) === os(host) && os(host) !== "linux")) return [];
-  if (os(host) === "linux" && napiCross.has(target)) return ["--use-napi-cross"];
   return ["--cross-compile"];
 }
 

@@ -13,10 +13,12 @@ executors:
     docker:
       - image: rust:1.99.1-alpine
     resource_class: medium
+    shell: /bin/bash -eo pipefail
   alpine-arm:
     docker:
       - image: rust:1.99.1-alpine
     resource_class: arm.medium
+    shell: /bin/bash -eo pipefail
 
 commands:
   setup-bun:
