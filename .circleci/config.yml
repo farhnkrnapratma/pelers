@@ -5,6 +5,18 @@ executors:
     docker:
       - image: cimg/rust:1.99.1-node
     resource_class: medium
+  rust-arm:
+    docker:
+      - image: cimg/rust:1.99.1-node
+    resource_class: arm.medium
+  alpine:
+    docker:
+      - image: rust:1.99.1-alpine
+    resource_class: medium
+  alpine-arm:
+    docker:
+      - image: rust:1.99.1-alpine
+    resource_class: arm.medium
 
 commands:
   setup-bun:
@@ -50,6 +62,25 @@ commands:
             tar -xzf wasm-bindgen.tar.gz --strip-components=1 -C .local/bin wasm-bindgen-0.2.130-x86_64-unknown-linux-musl/wasm-bindgen
             tar -xzf binaryen.tar.gz --strip-components=2 -C .local/bin binaryen-version_130/bin/wasm-opt
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
+  setup-zig:
+    steps:
+      - run:
+          name: Install zig
+          command: |
+            mkdir -p "$HOME/.local"
+            curl -fsSL -o "$HOME/zig.tar.xz" https://ziglang.org/download/0.15.2/zig-x86_64-linux-0.15.2.tar.xz
+            echo "02aa270f183da276e5b5920b1dac44a63f1a49e55050ebde3aecc9eb82f93239  $HOME/zig.tar.xz" | sha256sum -c -
+            tar -xJf "$HOME/zig.tar.xz" -C "$HOME/.local"
+            echo 'export PATH="$HOME/.local/zig-x86_64-linux-0.15.2:$PATH"' >> "$BASH_ENV"
+  keep-addons:
+    steps:
+      - run:
+          name: Collect the addons
+          command: mkdir -p addons && cp ./*.node addons/
+      - persist_to_workspace:
+          root: .
+          paths:
+            - addons
   restore-cargo:
     parameters:
       scope:
@@ -118,8 +149,95 @@ jobs:
             cp -r ./*.node index.native.js index.native.d.ts wasm dist artifacts/
       - store_artifacts:
           path: artifacts
+      - keep-addons
       - save-cargo:
           scope: test
+
+  addon-linux:
+    parameters:
+      platform:
+        type: executor
+      prepare:
+        type: steps
+        default: []
+    executor: << parameters.platform >>
+    steps:
+      - steps: << parameters.prepare >>
+      - checkout
+      - setup-bun
+      - run: rustup component add llvm-tools
+      - run: bun install --frozen-lockfile
+      - run: bun run build:release
+      - run: bun run test:bindings
+      - keep-addons
+
+  addon-macos:
+    macos:
+      xcode: 27.1.0
+    resource_class: m4pro.medium
+    steps:
+      - checkout
+      - run:
+          name: Install rust and node
+          command: |
+            curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain 1.99.1 \
+              --component llvm-tools --target x86_64-apple-darwin
+            echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$BASH_ENV"
+            command -v node || brew install node
+      - setup-bun
+      - run: bun install --frozen-lockfile
+      - run: bun run build:release
+      - run: bun run test:bindings
+      - run: bun run build:release --target x86_64-apple-darwin
+      - keep-addons
+
+  addon-windows:
+    machine:
+      image: windows-server-2022-gui:current
+      shell: bash.exe
+    resource_class: windows.medium
+    steps:
+      - checkout
+      - run:
+          name: Install rust and bun
+          command: |
+            curl -fsSL -o rustup-init.exe https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe
+            ./rustup-init.exe -y --profile minimal --default-toolchain 1.99.1 --component llvm-tools
+            rm rustup-init.exe
+            powershell.exe -NoProfile -Command "\$env:BUN_VERSION='bun-v1.4.5'; irm bun.sh/install.ps1 | iex"
+            echo 'export PATH="$HOME/.cargo/bin:$HOME/.bun/bin:$PATH"' >> "$BASH_ENV"
+      - run: bun install --frozen-lockfile
+      - run: bun run build:release
+      - run: bun run test:bindings
+      - keep-addons
+
+  addon-cross:
+    parameters:
+      target:
+        type: string
+    executor: rust
+    steps:
+      - checkout
+      - setup-bun
+      - setup-zig
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq clang lld llvm
+      - run: rustup target add << parameters.target >>
+      - run: bun install --frozen-lockfile
+      - run: bun run build:release --target << parameters.target >>
+      - keep-addons
+
+  package:
+    executor: rust
+    steps:
+      - checkout
+      - setup-bun
+      - attach_workspace:
+          at: .
+      - run: bun install --frozen-lockfile
+      - run: bunx napi create-npm-dirs
+      - run: bunx napi artifacts --output-dir addons
+      - store_artifacts:
+          path: npm
 
   coverage:
     executor: rust
@@ -172,6 +290,53 @@ workflows:
       - reuse
       - lint
       - test
+      - addon-linux:
+          name: addon-linux-arm64-gnu
+          platform: rust-arm
+          filters: &release-branches
+            branches:
+              only:
+                - main
+                - /release\/.*/
+      - addon-linux:
+          name: addon-linux-x64-musl
+          platform: alpine
+          filters: *release-branches
+          prepare: &alpine-tools
+            - run:
+                name: Install the build tools
+                shell: /bin/sh -eo pipefail
+                command: apk add --no-cache bash curl git openssh-client unzip nodejs build-base libstdc++ libgcc
+      - addon-linux:
+          name: addon-linux-arm64-musl
+          platform: alpine-arm
+          filters: *release-branches
+          prepare: *alpine-tools
+      - addon-macos:
+          filters: *release-branches
+      - addon-windows:
+          filters: *release-branches
+      - addon-cross:
+          filters: *release-branches
+          matrix:
+            parameters:
+              target:
+                - armv7-unknown-linux-gnueabihf
+                - powerpc64le-unknown-linux-gnu
+                - s390x-unknown-linux-gnu
+                - riscv64gc-unknown-linux-gnu
+                - aarch64-pc-windows-msvc
+                - i686-pc-windows-msvc
+      - package:
+          filters: *release-branches
+          requires:
+            - test
+            - addon-linux-arm64-gnu
+            - addon-linux-x64-musl
+            - addon-linux-arm64-musl
+            - addon-macos
+            - addon-windows
+            - addon-cross
       - coverage
       - secrets
       - commitlint
