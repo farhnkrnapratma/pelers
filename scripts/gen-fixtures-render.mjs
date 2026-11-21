@@ -1,9 +1,7 @@
 import { mulberry32 } from "./random.mjs";
-import { peleCore, writeFixture } from "./oracle.mjs";
+import { peleCore, root, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const { render } = await peleCore();
 
 const random = mulberry32(20261105);

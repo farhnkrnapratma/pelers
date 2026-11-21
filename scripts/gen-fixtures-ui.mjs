@@ -1,10 +1,7 @@
 import { mulberry32 } from "./random.mjs";
-import { peleInternals, peleSrc, writeFixture } from "./oracle.mjs";
+import { fixtures as OUT, peleInternals, peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 const zoom = await peleInternals("zoom.ts", [
   "BAR_STYLE",
   "BUTTON_STYLE",

@@ -1,10 +1,7 @@
-import { peleSrc, writeFixture } from "./oracle.mjs";
+import { fixtures as OUT, peleSrc, root, writeFixture } from "./oracle.mjs";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 const { parse, register } = await peleSrc("core.ts");
 const { all } = await peleSrc("diagrams/registry.ts");
 register(...all);

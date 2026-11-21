@@ -1,11 +1,9 @@
+import { fixtures as OUT } from "./oracle.mjs";
 import { mulberry32 } from "./random.mjs";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 20261109));
 const values = [

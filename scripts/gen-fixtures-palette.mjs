@@ -1,11 +1,8 @@
 import { mulberry32 } from "./random.mjs";
-import { peleSrc, toUpstream, writeFixture } from "./oracle.mjs";
+import { fixtures as OUT, peleSrc, toUpstream, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 const { palette } = await peleSrc("svg/palette.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 4242));
 const between = (low, high) => low + Math.floor(random() * (high - low + 1));

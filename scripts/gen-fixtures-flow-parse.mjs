@@ -1,11 +1,8 @@
-import { peleSrc, writeFixture } from "./oracle.mjs";
+import { fixtures as OUT, peleSrc, root, writeFixture } from "./oracle.mjs";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 const { FlowDb } = await peleSrc("diagrams/flowchart/db.ts");
 const { parseFlowchart } = await peleSrc("diagrams/flowchart/parser.ts");
 const { buildFlowGraph } = await peleSrc("diagrams/flowchart/graph.ts");
