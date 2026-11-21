@@ -1,7 +1,9 @@
 import { readdirSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { root } from "./oracle.mjs";
 
-const engine = await import(process.argv[2]);
+const engine = await import(pathToFileURL(resolve(process.argv[2])).href);
 engine.setOffsets((ms) => -new Date(ms).getTimezoneOffset() * 60000);
 const golden = new URL("tests/golden/", `file://${root}`);
 const sources = [

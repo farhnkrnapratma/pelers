@@ -16,6 +16,7 @@ use crate::{PelersError, PelersErrorCode, detect_diagram, preprocess};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
+#[cfg(not(target_env = "musl"))]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 

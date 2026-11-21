@@ -28,9 +28,11 @@ wasm = []
 regex-perf = ["regex/perf"]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-mimalloc = "0.1.52"
 napi = { version = "3", optional = true }
 napi-derive = { version = "3", optional = true }
+
+[target.'cfg(not(any(target_arch = "wasm32", target_env = "musl")))'.dependencies]
+mimalloc = "0.1.52"
 
 [target.'cfg(not(all(target_arch = "wasm32", target_os = "unknown")))'.dependencies]
 jiff = "1.0.1"

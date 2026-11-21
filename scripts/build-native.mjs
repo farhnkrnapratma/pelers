@@ -8,10 +8,8 @@ const host = /^host: (.+)$/m.exec(rustc("-vV"))[1];
 const at = process.argv.indexOf("--target");
 const target = at > 0 ? process.argv[at + 1] : host;
 const os = (triple) => /apple|windows|freebsd|linux/.exec(triple)?.[0];
-function crossFlags() {
-  if (target === host || (os(target) === os(host) && os(host) !== "linux")) return [];
-  return ["--cross-compile"];
-}
+const crossFlags = () =>
+  os(target) === os(host) && os(host) !== "linux" ? [] : ["--cross-compile"];
 
 const napi = [
   "x",
@@ -26,9 +24,7 @@ const napi = [
   "index.native.js",
   "--dts",
   "index.native.d.ts",
-  "--target",
-  target,
-  ...crossFlags(),
+  ...(target === host ? [] : ["--target", target, ...crossFlags()]),
 ];
 const run = (command, args, flags) =>
   execFileSync(command, args, {

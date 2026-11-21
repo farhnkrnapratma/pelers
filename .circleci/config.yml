@@ -242,13 +242,11 @@ jobs:
           command: |
             case "<< parameters.target >>" in *windows*) ;; *) exit 0 ;; esac
             sudo apt-get update -qq
-            for v in 21 20 19; do
-              if sudo apt-get install -y -qq "clang-$v" "lld-$v" "llvm-$v"; then
-                echo "export PATH=\"/usr/lib/llvm-$v/bin:\$PATH\"" >> "$BASH_ENV"
-                exit 0
-              fi
-            done
-            exit 1
+            sudo apt-get install -y -qq lsb-release software-properties-common gnupg
+            curl -fsSL -o llvm.sh https://apt.llvm.org/llvm.sh
+            sudo bash llvm.sh 20
+            rm llvm.sh
+            echo 'export PATH="/usr/lib/llvm-20/bin:$PATH"' >> "$BASH_ENV"
       - run: rustup target add << parameters.target >>
       - run: bun install --frozen-lockfile
       - run:
