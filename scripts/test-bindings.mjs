@@ -69,15 +69,17 @@ const sources = readdirSync(golden, { recursive: true })
   .sort()
   .map((name) => readFileSync(new URL(name, golden), "utf8"));
 
-const wasmModule = new URL("wasm/pelers_bg.wasm", root);
-let wasm;
-if (existsSync(wasmModule)) {
-  const engine = await import(new URL("wasm/pelers.js", root));
+const { bind } = await import(new URL("js/native.js", root));
+const { napi } = await import(new URL("js/napi.js", root));
+const engines = [];
+for (const variant of ["fast", "small"]) {
+  const wasmModule = new URL(`wasm/${variant}/pelers_bg.wasm`, root);
+  if (!existsSync(wasmModule)) continue;
+  const engine = await import(new URL(`wasm/${variant}/pelers.js`, root));
   engine.initSync({ module: readFileSync(wasmModule) });
-  const { bind } = await import(new URL("js/native.js", root));
-  const napi = await import(new URL("index.native.js", root));
-  wasm = {
-    render(source, options) {
+  engines.push([
+    variant,
+    (source, options) => {
       bind(engine);
       try {
         return render(source, options);
@@ -85,7 +87,7 @@ if (existsSync(wasmModule)) {
         bind(napi);
       }
     },
-  };
+  ]);
 }
 
 const pele = existsSync(join(peleDir, "src/index.ts")) ? await peleCore() : undefined;
@@ -137,7 +139,7 @@ for (const [index, source] of sources.entries())
     const got = outcome(() => render(source, options));
     const checks = [
       ["pele", pele && (() => outcome(() => pele.render(source, options)))],
-      ["wasm", wasm && (() => outcome(() => wasm.render(source, options)))],
+      ...engines.map(([name, run]) => [name, () => outcome(() => run(source, options))]),
     ];
     for (const [name, want] of checks) {
       if (!want) continue;
@@ -159,5 +161,5 @@ if (failures.length > 0) {
 }
 assert.deepEqual(failures.slice(0, 20), [], `${failures.length} of ${cases} differ`);
 console.log(
-  `bindings ok (${cases} checks; pele ${pele ? "compared" : `skipped, no checkout at ${peleDir}`}; wasm ${wasm ? "compared" : "not built"})`,
+  `bindings ok (${cases} checks; pele ${pele ? "compared" : `skipped, no checkout at ${peleDir}`}; wasm ${engines.length > 0 ? engines.map(([name]) => name).join(", ") : "not built"})`,
 );

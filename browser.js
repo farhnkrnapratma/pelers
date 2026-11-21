@@ -1,4 +1,4 @@
-import init, * as engine from "./wasm/pelers.js";
+import init, * as engine from "./wasm/fast/pelers.js";
 import { bind } from "./js/native.js";
 
 await init();

@@ -33,7 +33,16 @@
       "types": "./lazy.d.ts",
       "default": "./lazy.js"
     },
+    "./small": {
+      "types": "./index.d.ts",
+      "default": "./small.js"
+    },
+    "./small/lazy": {
+      "types": "./lazy.d.ts",
+      "default": "./small-lazy.js"
+    },
     "./global": "./dist/pelers.global.js",
+    "./small/global": "./dist/pelers.small.global.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -44,12 +53,12 @@
     "browser.js",
     "lazy.js",
     "lazy.d.ts",
+    "small.js",
+    "small-lazy.js",
     "js/",
-    "wasm/pelers.js",
-    "wasm/pelers.d.ts",
-    "wasm/pelers_bg.wasm",
-    "wasm/pelers_bg.wasm.d.ts",
+    "wasm/",
     "dist/pelers.global.js",
+    "dist/pelers.small.global.js",
     "README.md",
     "NOTICE",
     "LICENSE-MIT",
@@ -59,7 +68,7 @@
   "scripts": {
     "prepare": "bash .githooks/install.sh",
     "build": "napi build --platform --features napi --esm --js index.native.js --dts index.native.d.ts",
-    "build:release": "napi build --platform --release --features napi --esm --js index.native.js --dts index.native.d.ts",
+    "build:release": "bun scripts/build-native.mjs",
     "test:bindings": "bun scripts/test-bindings.mjs",
     "test:native": "bun run build:release && bun run test:bindings",
     "build:wasm": "bun scripts/build-wasm.mjs",
