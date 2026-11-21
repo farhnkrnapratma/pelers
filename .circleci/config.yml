@@ -19,6 +19,8 @@ executors:
       - image: rust:1.99.1-alpine
     resource_class: arm.medium
     shell: /bin/bash -eo pipefail
+    environment:
+      CARGO_TARGET_AARCH64_UNKNOWN_LINUX_MUSL_LINKER: cc
 
 commands:
   setup-bun:
@@ -112,6 +114,16 @@ jobs:
       - checkout
       - run: pip install --quiet reuse==6.3.0
       - run: reuse lint
+
+  biome:
+    docker:
+      - image: cimg/node:24.22
+    resource_class: small
+    steps:
+      - checkout
+      - setup-bun
+      - run: bun install --frozen-lockfile
+      - run: bunx biome ci
 
   lint:
     executor: rust
@@ -317,6 +329,7 @@ workflows:
   ci:
     jobs:
       - reuse
+      - biome
       - lint
       - test
       - addon-linux:
