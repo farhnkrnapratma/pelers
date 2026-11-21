@@ -1,12 +1,11 @@
 use std::borrow::Cow;
 use std::fmt::Write as _;
-use std::sync::OnceLock;
 
 use crate::text::entities::decode_entities;
 use crate::text::label::Label;
 use crate::text::math::MathMarkup;
 use crate::text::measurer::{BOLD_STYLE, ITALIC, MEASURE_MONO, MONO, SUB, SUP, UNDERLINE};
-use crate::util::chars::trim;
+use crate::util::chars::{find, trim};
 use crate::util::jsnum::{js_number_to_string, js_round};
 
 pub fn invalid_xml(c: char) -> bool {
@@ -65,23 +64,9 @@ pub fn esc_text(text: &str) -> String {
     esc(&decode_entities(text)).into_owned()
 }
 
-fn fraction(i: usize) -> &'static str {
-    static TABLE: OnceLock<Vec<String>> = OnceLock::new();
-    &TABLE.get_or_init(|| {
-        (0..100)
-            .map(|i| match i {
-                0 => String::new(),
-                i if i % 10 == 0 => format!(".{}", i / 10),
-                i if i < 10 => format!(".0{i}"),
-                i => format!(".{i}"),
-            })
-            .collect()
-    })[i]
-}
-
 #[derive(Clone, Copy, Debug)]
 pub struct Num {
-    len: usize,
+    start: usize,
     bytes: [u8; NUM_CAP],
 }
 
@@ -89,23 +74,10 @@ const NUM_CAP: usize = 32;
 
 impl Num {
     fn of(text: &str) -> Self {
-        let mut out = Self {
-            len: 0,
-            bytes: [0; NUM_CAP],
-        };
-        out.push_str(text);
-        out
-    }
-
-    fn push(&mut self, byte: u8) {
-        self.bytes[self.len] = byte;
-        self.len += 1;
-    }
-
-    fn push_str(&mut self, text: &str) {
-        for &byte in text.as_bytes() {
-            self.push(byte);
-        }
+        let mut bytes = [0; NUM_CAP];
+        let start = NUM_CAP - text.len();
+        bytes[start..].copy_from_slice(text.as_bytes());
+        Self { start, bytes }
     }
 }
 
@@ -113,7 +85,7 @@ impl std::ops::Deref for Num {
     type Target = str;
 
     fn deref(&self) -> &str {
-        std::str::from_utf8(&self.bytes[..self.len]).expect("ascii number")
+        std::str::from_utf8(&self.bytes[self.start..]).expect("ascii number")
     }
 }
 
@@ -135,37 +107,39 @@ impl From<Num> for String {
     }
 }
 
-fn push_integer(out: &mut Num, mut value: u64) {
-    let mut digits = [0u8; 20];
-    let mut at = digits.len();
-    loop {
-        at -= 1;
-        digits[at] = b'0' + (value % 10) as u8;
-        value /= 10;
-        if value == 0 {
-            break;
-        }
-    }
-    for &digit in &digits[at..] {
-        out.push(digit);
-    }
-}
-
 pub fn num(value: f64) -> Num {
     let n = js_round(value * 100.0);
-    if n == 0.0 {
-        return Num::of("0");
-    }
-    if (n > 0.0 && n < 1e11) || (n < 0.0 && n > -1e11) {
-        let m = n.abs();
-        let q = (m / 100.0) as u64;
-        let mut out = Num::of("");
-        if n < 0.0 {
-            out.push(b'-');
+    if n > -1e11 && n < 1e11 {
+        let mut bytes = [0; NUM_CAP];
+        let mut at = NUM_CAP;
+        let mut m = n.abs() as u64;
+        let cents = m % 100;
+        if cents != 0 {
+            if cents % 10 == 0 {
+                at -= 2;
+                bytes[at] = b'.';
+                bytes[at + 1] = b'0' + (cents / 10) as u8;
+            } else {
+                at -= 3;
+                bytes[at] = b'.';
+                bytes[at + 1] = b'0' + (cents / 10) as u8;
+                bytes[at + 2] = b'0' + (cents % 10) as u8;
+            }
         }
-        push_integer(&mut out, q);
-        out.push_str(fraction((m - q as f64 * 100.0) as usize));
-        return out;
+        m /= 100;
+        loop {
+            at -= 1;
+            bytes[at] = b'0' + (m % 10) as u8;
+            m /= 10;
+            if m == 0 {
+                break;
+            }
+        }
+        if n < 0.0 {
+            at -= 1;
+            bytes[at] = b'-';
+        }
+        return Num { start: at, bytes };
     }
     Num::of(&js_number_to_string(n / 100.0))
 }
@@ -213,9 +187,9 @@ pub fn shared_style(label: &Label) -> u32 {
 }
 
 pub fn text_style(attrs: &str, shared: u32) -> Cow<'_, str> {
-    let bold = shared & BOLD_STYLE != 0 && !attrs.contains(" font-weight=\"");
-    let italic = shared & ITALIC != 0 && !attrs.contains(" font-style=\"");
-    let mono = shared & MONO != 0 && !attrs.contains(" font-family=\"");
+    let bold = shared & BOLD_STYLE != 0 && find(attrs, " font-weight=\"").is_none();
+    let italic = shared & ITALIC != 0 && find(attrs, " font-style=\"").is_none();
+    let mono = shared & MONO != 0 && find(attrs, " font-family=\"").is_none();
     if !(bold || italic || mono) {
         return Cow::Borrowed(attrs);
     }
@@ -237,9 +211,26 @@ pub fn label_svg(label: &Label, cx: f64, cy: f64, attrs: &str) -> String {
 }
 
 pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool) -> String {
+    let mut out = String::new();
+    push_label_with(&mut out, label, cx, cy, attrs, icons);
+    out
+}
+
+pub fn push_label(out: &mut String, label: &Label, cx: f64, cy: f64, attrs: &str) {
+    push_label_with(out, label, cx, cy, attrs, false);
+}
+
+pub fn push_label_with(
+    out: &mut String,
+    label: &Label,
+    cx: f64,
+    cy: f64,
+    attrs: &str,
+    icons: bool,
+) {
     let lines = &label.lines;
     if lines.is_empty() {
-        return String::new();
+        return;
     }
     let lh = label.line_height;
     let shift = label.size * 0.35;
@@ -251,8 +242,7 @@ pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool)
         && only.icon.is_none()
         && only.math.is_none()
     {
-        let text = esc(&only.text);
-        let mut out = String::with_capacity(text.len() + attrs.len() + 64);
+        out.reserve(only.text.len() + attrs.len() + 64);
         out.push_str("<text");
         out.push_str(attrs);
         out.push_str(" x=\"");
@@ -260,9 +250,9 @@ pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool)
         out.push_str("\" y=\"");
         out.push_str(&num(top + lh / 2.0 + shift));
         out.push_str("\" text-anchor=\"middle\">");
-        out.push_str(&text);
+        out.push_str(&esc(&only.text));
         out.push_str("</text>");
-        return out;
+        return;
     }
 
     let shared = shared_style(label);
@@ -348,7 +338,12 @@ pub fn label_svg_with(label: &Label, cx: f64, cy: f64, attrs: &str, icons: bool)
         }
         top += h;
     }
-    format!("<text{attrs} text-anchor=\"middle\" xml:space=\"preserve\">{body}</text>{extra}")
+    out.push_str("<text");
+    out.push_str(&attrs);
+    out.push_str(" text-anchor=\"middle\" xml:space=\"preserve\">");
+    out.push_str(&body);
+    out.push_str("</text>");
+    out.push_str(&extra);
 }
 
 struct MathLook {

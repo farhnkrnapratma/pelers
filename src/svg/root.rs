@@ -82,6 +82,18 @@ pub fn svg_document(
     acc: Accessible<'_>,
     content: &str,
 ) -> String {
+    svg_document_parts(kind, width, height, font_size, options, acc, &[content])
+}
+
+pub fn svg_document_parts(
+    kind: &str,
+    width: f64,
+    height: f64,
+    font_size: f64,
+    options: &RenderOptions,
+    acc: Accessible<'_>,
+    parts: &[&str],
+) -> String {
     let prefix = esc(options.id_prefix.as_deref().unwrap_or("pelers"));
     let mut head = String::new();
     let mut aria = String::new();
@@ -106,7 +118,13 @@ pub fn svg_document(
     } else {
         "max-width:100%;height:auto;"
     };
-    let used = used_aliases(content);
+    let mut used = [false; 4];
+    for part in parts {
+        for (seen, found) in used.iter_mut().zip(used_aliases(part)) {
+            *seen |= found;
+        }
+    }
+    let content_len: usize = parts.iter().map(|part| part.len()).sum();
     let mut weights = if used[0] {
         format!(";--_r:{RADIUS}")
     } else {
@@ -127,7 +145,7 @@ pub fn svg_document(
     let mut out = String::with_capacity(
         head.len()
             + aria.len()
-            + content.len()
+            + content_len
             + fonts.len()
             + palette_len
             + ROOT_STYLE.len()
@@ -158,7 +176,9 @@ pub fn svg_document(
     out.push_str(&aria);
     out.push('>');
     out.push_str(&head);
-    out.push_str(content);
+    for part in parts {
+        out.push_str(part);
+    }
     out.push_str("</svg>");
     out
 }

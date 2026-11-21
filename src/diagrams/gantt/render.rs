@@ -11,9 +11,9 @@ use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::cap_width;
 use crate::errors::PelersError;
 use crate::preprocess::Config;
-use crate::svg::builder::{esc, esc_text, label_svg, label_svg_with, num};
+use crate::svg::builder::{esc, esc_text, label_svg, label_svg_with, num, push_label_with};
 use crate::svg::options::LinkInfo;
-use crate::svg::root::{Accessible, RenderOptions, svg_document};
+use crate::svg::root::{Accessible, RenderOptions, svg_document, svg_document_parts};
 use crate::svg::theme::{CRITICAL, ROUNDED, resolve_style};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
@@ -625,33 +625,50 @@ pub fn render_gantt(
             classes.push_str(" pelers-clickable");
         }
 
-        let mut shape = String::new();
-        let mut text_fill = String::new();
+        let _ = write!(
+            tasks_out,
+            "<g class=\"{classes}{}\" data-id=\"{}\">",
+            if bar.x0.is_nan() {
+                " pelers-unscheduled"
+            } else {
+                ""
+            },
+            esc_text(&task.id)
+        );
+        let url = db.links.get(&task.id).cloned();
+        let mut body = String::new();
+        let out = if url.is_some() {
+            &mut body
+        } else {
+            &mut tasks_out
+        };
+        let mut text_attrs = " class=\"pelers-label\"";
         if bar.x0.is_nan() {
-            classes.push_str(" pelers-unscheduled");
-            text_fill = " fill=\"var(--_m)\"".to_owned();
+            text_attrs = " class=\"pelers-label\" fill=\"var(--_m)\"";
         } else {
             let color = if task.crit { CRITICAL } else { "var(--_c)" };
-            let paint = if state == "done" {
-                "fill=\"var(--_a)\"".to_owned()
-            } else if state == "active" {
-                format!("fill=\"{color}\" fill-opacity=\"0.25\"")
+            let stroke = if state == "done" && !task.crit {
+                "var(--_b)"
             } else {
-                format!("fill=\"{color}\"")
+                color
             };
-            let stroke = format!(
-                "stroke=\"{}\"",
-                if state == "done" && !task.crit {
-                    "var(--_b)"
+            let paint = |out: &mut String| {
+                if state == "done" {
+                    out.push_str("fill=\"var(--_a)\"");
                 } else {
-                    color
+                    let _ = write!(out, "fill=\"{color}\"");
+                    if state == "active" {
+                        out.push_str(" fill-opacity=\"0.25\"");
+                    }
                 }
-            );
+                let _ = write!(out, " stroke=\"{stroke}\"");
+            };
             if task.milestone {
                 let cx = (bar.x0 + bar.x1) / 2.0;
                 let r = bar_height / 2.0;
-                shape = format!(
-                    "<path d=\"M{},{}L{},{}L{},{}L{},{}Z\" {paint} {stroke} stroke-linejoin=\"round\"/>",
+                let _ = write!(
+                    out,
+                    "<path d=\"M{},{}L{},{}L{},{}L{},{}Z\" ",
                     num(cx),
                     num(cy - r),
                     num(cx + r),
@@ -661,44 +678,34 @@ pub fn render_gantt(
                     num(cx - r),
                     num(cy)
                 );
+                paint(out);
+                out.push_str(" stroke-linejoin=\"round\"/>");
             } else {
-                shape = format!(
-                    "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" {paint} {stroke}{ROUNDED}/>",
+                let _ = write!(
+                    out,
+                    "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" ",
                     num(bar.x0),
                     num(cy - bar_height / 2.0),
                     num(bar.x1 - bar.x0),
                     num(bar_height)
                 );
+                paint(out);
+                out.push_str(ROUNDED);
+                out.push_str("/>");
             }
             if bar.inside {
-                text_fill = if state.is_empty() {
-                    " fill=\"var(--_bg)\"".to_owned()
-                } else {
-                    String::new()
-                };
+                if state.is_empty() {
+                    text_attrs = " class=\"pelers-label\" fill=\"var(--_bg)\"";
+                }
             } else if state == "done" {
-                text_fill = " fill=\"var(--_m)\"".to_owned();
+                text_attrs = " class=\"pelers-label\" fill=\"var(--_m)\"";
             }
         }
-
-        let mut body = format!(
-            "{shape}{}",
-            label_svg_with(
-                &bar.label,
-                bar.label_x,
-                cy,
-                &format!(" class=\"pelers-label\"{text_fill}"),
-                false
-            )
-        );
-        if let Some(url) = db.links.get(&task.id).cloned() {
-            body = linked(&body, &url, &task.id, &mut links, options, "");
+        push_label_with(out, &bar.label, bar.label_x, cy, text_attrs, false);
+        if let Some(url) = url {
+            tasks_out.push_str(&linked(&body, &url, &task.id, &mut links, options, ""));
         }
-        let _ = write!(
-            tasks_out,
-            "<g class=\"{classes}\" data-id=\"{}\">{body}</g>",
-            esc_text(&task.id)
-        );
+        tasks_out.push_str("</g>");
     }
 
     let mut today = String::new();
@@ -776,28 +783,31 @@ pub fn render_gantt(
     content.push_str(&today);
     let _ = write!(
         content,
-        "<g class=\"pelers-tasks\" font-size=\"{}\">{tasks_out}</g>",
+        "<g class=\"pelers-tasks\" font-size=\"{}\">",
         num(label_size)
     );
+    let mut tail = String::with_capacity(
+        section_out.len() + axis_bottom.len() + axis_top.len() + vert_labels.len() + 256,
+    );
     let _ = write!(
-        content,
-        "<g class=\"pelers-section-labels\" font-size=\"{}\">{section_out}</g>",
+        tail,
+        "</g><g class=\"pelers-section-labels\" font-size=\"{}\">{section_out}</g>",
         num(section_size)
     );
     let _ = write!(
-        content,
+        tail,
         "<g class=\"pelers-axis\" font-size=\"{}\" fill=\"var(--_m)\">{axis_bottom}{axis_top}</g>",
         js_number_to_string(tick_size)
     );
     if !vert_labels.is_empty() {
         let _ = write!(
-            content,
+            tail,
             "<g class=\"pelers-vert-labels\" font-size=\"{}\">{vert_labels}</g>",
             num(label_size)
         );
     }
 
-    let svg = svg_document(
+    let svg = svg_document_parts(
         "gantt",
         width,
         height,
@@ -807,7 +817,7 @@ pub fn render_gantt(
             acc_title: db.acc_title.as_deref(),
             acc_descr: db.acc_descr.as_deref(),
         },
-        &content,
+        &[&content, &tasks_out, &tail],
     );
     Ok(Drawn {
         svg,

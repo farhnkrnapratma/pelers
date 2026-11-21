@@ -599,8 +599,11 @@ fn loose(input: &str, template: &str, now: &JsDate) -> Option<JsDate> {
                 start += length;
             }
             Step::Token(reader, re) => {
-                let tail: String = rest.chars().skip(start).collect();
-                let m = re.find(&tail)?;
+                let at = rest
+                    .char_indices()
+                    .nth(start)
+                    .map_or(rest.len(), |(i, _)| i);
+                let m = re.find(&rest[at..])?;
                 if !reader.read(&mut f, m.as_str()) {
                     return None;
                 }

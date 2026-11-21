@@ -1,5 +1,5 @@
 use crate::errors::{Edit, PelersError, PelersErrorCode};
-use crate::util::chars::{is_js_space, is_word, trim, trim_start};
+use crate::util::chars::{find, is_js_space, is_word, trim, trim_start};
 use crate::util::json;
 use crate::util::value::{Object, Value};
 use crate::util::yaml::parse_yaml;
@@ -132,7 +132,7 @@ fn directive_at(text: &str, start: usize) -> Option<Directive> {
 fn directives_in(text: &str) -> Vec<Directive> {
     let mut found = Vec::new();
     let mut at = 0;
-    while let Some(i) = text[at..].find("%%{") {
+    while let Some(i) = find(&text[at..], "%%{") {
         let start = at + i;
         match directive_at(text, start) {
             Some(directive) => {
@@ -169,7 +169,7 @@ fn remove_all(text: &str, spans: Vec<(usize, usize)>, steps: &mut Steps) -> Stri
 }
 
 pub fn cleanup_comments(text: &str, steps: &mut Steps) -> String {
-    let text = if text.contains("%%") {
+    let text = if find(text, "%%").is_some() {
         let spans = comment_spans(text);
         remove_all(text, spans, steps)
     } else {
@@ -296,7 +296,7 @@ fn merge(target: &mut Object, source: &Object) {
 }
 
 fn apply_directives(text: &str, config: &mut Config, steps: &mut Steps) -> String {
-    if !text.contains("%%{") {
+    if find(text, "%%{").is_none() {
         return text.to_owned();
     }
     let normalized = trim(text).replace('\'', "\"");
@@ -320,7 +320,7 @@ fn apply_directives(text: &str, config: &mut Config, steps: &mut Steps) -> Strin
 fn rewrite_attributes(attrs: &str) -> String {
     let mut out = String::with_capacity(attrs.len());
     let mut rest = attrs;
-    while let Some(at) = rest.find("=\"") {
+    while let Some(at) = find(rest, "=\"") {
         let Some(close) = rest[at + 2..].find('"') else {
             break;
         };
@@ -383,7 +383,7 @@ pub fn preprocess_steps(source: &str, mut steps: Steps) -> Result<Preprocessed, 
     let mut title = None;
     let mut line_offset = 0;
 
-    let front = if text.contains("---") {
+    let front = if find(&text, "---").is_some() {
         match_front_matter(&text)
     } else {
         None

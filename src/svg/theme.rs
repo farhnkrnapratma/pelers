@@ -1,3 +1,4 @@
+use crate::util::chars::find;
 use std::fmt::Write as _;
 pub const ROOT_STYLE: &str = "--_bg:var(--pelers-bg,#fff);--_fg:var(--pelers-fg,#1f1f1f);--_m:var(--pelers-muted,#6e6e6e);\
 --_l:var(--pelers-line,#1f1f1f);--_s:var(--pelers-surface,#f3f3f3);--_a:var(--pelers-surface-alt,#e6e6e6);\
@@ -103,7 +104,7 @@ pub fn series_color(index: usize) -> String {
 }
 
 pub fn rounded(attrs: &str) -> String {
-    match attrs.find(" style=\"") {
+    match find(attrs, " style=\"") {
         None => {
             let mut out = String::with_capacity(attrs.len() + ROUNDED.len());
             out.push_str(attrs);

@@ -3,7 +3,7 @@ use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::title_room;
 use crate::diagrams::common::icon::icon_svg;
 use crate::preprocess::Config;
-use crate::svg::builder::{esc, esc_text, label_svg, label_svg_with, num, text_style};
+use crate::svg::builder::{esc, esc_text, num, push_label, push_label_with, text_style};
 use crate::svg::options::LinkInfo;
 use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::{CRITICAL, ROUNDED, class_names};
@@ -11,7 +11,7 @@ use crate::svg::title::title_label;
 use crate::text::icons::icon_markup;
 use crate::text::label::{Label, Span, label_line, layout_label, line_middle, with_heights};
 use crate::text::measurer::{BOLD_STYLE, SUB, SUP, UNDERLINE, width};
-use crate::util::chars::trim;
+use crate::util::chars::{find, trim};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::url::{link_url, rel_attr, safe_url};
 use crate::util::value::Value;
@@ -111,8 +111,15 @@ fn is_plain(span: &Span) -> bool {
     span.icon.is_none() && span.math.is_none() && span.style & (SUB | SUP | UNDERLINE) == 0
 }
 
-fn text_block(label: &Label, x: f64, y: f64, attrs: &str, icons: bool, end: bool) -> String {
-    let mut out = String::new();
+fn text_block(
+    out: &mut String,
+    label: &Label,
+    x: f64,
+    y: f64,
+    attrs: &str,
+    icons: bool,
+    end: bool,
+) {
     for i in 0..label.lines.len() {
         let line = &label.lines[i];
         let cy = y + line_middle(label, i);
@@ -128,16 +135,16 @@ fn text_block(label: &Label, x: f64, y: f64, attrs: &str, icons: bool, end: bool
             );
         } else {
             let w = label.widths[i];
-            out.push_str(&label_svg_with(
+            push_label_with(
+                out,
                 &label_line(label, i),
                 x + (if end { -w } else { w }) / 2.0,
                 cy,
                 attrs,
                 icons,
-            ));
+            );
         }
     }
-    out
 }
 
 struct Card<'a> {
@@ -154,7 +161,7 @@ fn has(name: Option<&str>) -> bool {
 }
 
 fn holds(raw: Option<&str>, font: f64, reserved: f64, math_width: &mut f64) {
-    let Some(raw) = raw.filter(|r| r.contains("$$")) else {
+    let Some(raw) = raw.filter(|r| find(r, "$$").is_some()) else {
         return;
     };
     let label = layout_label(Some(raw), true, font, f64::INFINITY, 0);
@@ -357,32 +364,49 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
     let left = pad + (width_total - board_width) / 2.0;
     let edge = column_width - COLUMN_PAD - 4.0;
 
-    let mut out = String::new();
+    let total_width = (width_total + 2.0 * pad).ceil();
+    let total_height = (board_height + title_height + 2.0 * pad).ceil();
+    let mut out = String::with_capacity(
+        1024 + sections.len() * 600 + cards.iter().map(Vec::len).sum::<usize>() * 700,
+    );
+    push_label(
+        &mut out,
+        &title,
+        total_width / 2.0,
+        pad + title.height / 2.0,
+        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
+    );
+    let font = js_number_to_string(small);
     for (index, section) in sections.iter().enumerate() {
         let row = (index as f64 / per_row).floor() as usize;
-        let mut body = format!(
-            "<rect width=\"{}\" height=\"{}\" fill=\"var(--_s)\"{ROUNDED}/>",
+        let _ = write!(
+            out,
+            "<g class=\"pelers-cluster pelers-column{}\" data-id=\"{}\" transform=\"translate({},{})\"><rect width=\"{}\" height=\"{}\" fill=\"var(--_s)\"{ROUNDED}/>",
+            class_names(section.node.css_classes.as_deref().unwrap_or("")),
+            esc_text(&section.node.id),
+            num(left + (index as f64 % per_row) * (column_width + COLUMN_GAP)),
+            num(pad + title_height + row_tops[row]),
             js_number_to_string(column_width),
             num(row_heights[row])
         );
-        body.push_str(&text_block(
+        text_block(
+            &mut out,
             &titles[index],
             COLUMN_PAD + 4.0,
             COLUMN_PAD,
             " class=\"pelers-cluster-label\" font-weight=\"var(--_hw)\"",
             icons,
             false,
-        ));
+        );
         let _ = write!(
-            body,
-            "<text class=\"pelers-count\" x=\"{}\" y=\"{}\" text-anchor=\"end\" font-size=\"{}\" fill=\"var(--_m)\">{}</text>",
+            out,
+            "<text class=\"pelers-count\" x=\"{}\" y=\"{}\" text-anchor=\"end\" font-size=\"{font}\" fill=\"var(--_m)\">{}</text>",
             js_number_to_string(edge),
             num(COLUMN_PAD + line / 2.0 + small * 0.35),
-            js_number_to_string(small),
             section.items.len()
         );
         if has(section.node.icon.as_deref()) {
-            body.push_str(&icon_svg(
+            out.push_str(&icon_svg(
                 section.node.icon.as_deref().unwrap_or(""),
                 edge - count_widths[index] - ICON_GAP - glyph,
                 COLUMN_PAD + (line - glyph) / 2.0,
@@ -395,28 +419,38 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
             let item = card.item;
             let priority = trim(item.priority.as_deref().unwrap_or("")).to_lowercase();
             let color = priority_stroke(&priority);
-            let mut inner = format!(
-                "<rect width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>",
+            let _ = write!(out, "<g class=\"pelers-node pelers-card");
+            if color.is_some() {
+                let _ = write!(out, " pelers-priority-{}", priority.replacen(' ', "-", 1));
+            }
+            let _ = write!(
+                out,
+                "{}\" data-id=\"{}\" transform=\"translate({},{})\" font-size=\"{font}\"><rect width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{ROUNDED}/>",
+                class_names(item.css_classes.as_deref().unwrap_or("")),
+                esc_text(&item.id),
+                js_number_to_string(COLUMN_PAD),
+                num(y),
                 js_number_to_string(card_width),
                 num(card.height)
             );
             if let Some(color) = &color {
                 let _ = write!(
-                    inner,
+                    out,
                     "<path class=\"pelers-priority\" d=\"M2.5,5V{}\" fill=\"none\" {color} stroke-width=\"3\" stroke-linecap=\"round\"/>",
                     num(card.height - 5.0)
                 );
             }
-            inner.push_str(&text_block(
+            text_block(
+                &mut out,
                 &card.label,
                 CARD_PAD,
                 CARD_PAD,
                 " class=\"pelers-label\"",
                 icons,
                 false,
-            ));
+            );
             if has(item.icon.as_deref()) {
-                inner.push_str(&icon_svg(
+                out.push_str(&icon_svg(
                     item.icon.as_deref().unwrap_or(""),
                     card_width - CARD_PAD - glyph,
                     CARD_PAD + (small_line - glyph) / 2.0,
@@ -435,30 +469,32 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
                     )
                 };
                 match href {
-                    None => inner.push_str(&text_block(
+                    None => text_block(
+                        &mut out,
                         &card.ticket,
                         CARD_PAD,
                         top,
                         " class=\"pelers-ticket\" fill=\"var(--_m)\"",
                         icons,
                         false,
-                    )),
+                    ),
                     Some(href) => {
                         let _ = write!(
-                            inner,
+                            out,
                             "<a href=\"{}\" target=\"_blank\"{}>",
                             esc(&href),
                             rel_attr(options)
                         );
-                        inner.push_str(&text_block(
+                        text_block(
+                            &mut out,
                             &card.ticket,
                             CARD_PAD,
                             top,
                             " class=\"pelers-ticket\" fill=\"var(--_c)\"",
                             icons,
                             false,
-                        ));
-                        inner.push_str("</a>");
+                        );
+                        out.push_str("</a>");
                         links.push(LinkInfo {
                             id: item.id.clone(),
                             href,
@@ -468,49 +504,22 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
                 }
             }
             if item.assigned.as_deref().is_some_and(|a| !a.is_empty()) {
-                inner.push_str(&text_block(
+                text_block(
+                    &mut out,
                     &card.assigned,
                     card_width - CARD_PAD,
                     bottom - card.assigned.height,
                     " class=\"pelers-assigned\" fill=\"var(--_m)\"",
                     icons,
                     true,
-                ));
+                );
             }
-            let priority_class = match color {
-                Some(_) => format!(" pelers-priority-{}", priority.replacen(' ', "-", 1)),
-                None => String::new(),
-            };
-            let _ = write!(
-                body,
-                "<g class=\"pelers-node pelers-card{priority_class}{}\" data-id=\"{}\" transform=\"translate({},{})\" font-size=\"{}\">{inner}</g>",
-                class_names(item.css_classes.as_deref().unwrap_or("")),
-                esc_text(&item.id),
-                js_number_to_string(COLUMN_PAD),
-                num(y),
-                js_number_to_string(small)
-            );
+            out.push_str("</g>");
             y += card.height + CARD_GAP;
         }
-
-        let _ = write!(
-            out,
-            "<g class=\"pelers-cluster pelers-column{}\" data-id=\"{}\" transform=\"translate({},{})\">{body}</g>",
-            class_names(section.node.css_classes.as_deref().unwrap_or("")),
-            esc_text(&section.node.id),
-            num(left + (index as f64 % per_row) * (column_width + COLUMN_GAP)),
-            num(pad + title_height + row_tops[row])
-        );
+        out.push_str("</g>");
     }
 
-    let total_width = (width_total + 2.0 * pad).ceil();
-    let total_height = (board_height + title_height + 2.0 * pad).ceil();
-    let content = label_svg(
-        &title,
-        total_width / 2.0,
-        pad + title.height / 2.0,
-        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &out;
     Drawn {
         svg: svg_document(
             "kanban",
@@ -519,7 +528,7 @@ pub fn render_kanban(model: &KanbanDb, config: &Config, options: &RenderOptions)
             size,
             options,
             Accessible::default(),
-            &content,
+            &out,
         ),
         width: total_width,
         height: total_height,

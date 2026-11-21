@@ -52,9 +52,41 @@ pub fn utf16_to_byte(text: &str, unit: usize) -> usize {
     text.len()
 }
 
+pub fn find(hay: &str, needle: &str) -> Option<usize> {
+    let (bytes, wanted) = (hay.as_bytes(), needle.as_bytes());
+    let Some(&first) = wanted.first() else {
+        return Some(0);
+    };
+    let mut from = 0;
+    while let Some(i) = bytes[from..].iter().position(|&b| b == first) {
+        let at = from + i;
+        if bytes[at..].starts_with(wanted) {
+            return Some(at);
+        }
+        from = at + 1;
+    }
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finds_substrings_like_str_find() {
+        for (hay, needle) in [
+            ("a%%b%%", "%%"),
+            ("%%{x}%%", "}%%"),
+            ("no", "%%"),
+            ("ü---", "---"),
+            ("", ""),
+            ("abc", ""),
+            ("a=\"b", "=\""),
+            ("%", "%%"),
+        ] {
+            assert_eq!(find(hay, needle), hay.find(needle), "{hay} {needle}");
+        }
+    }
 
     #[test]
     fn follows_javascript_whitespace() {

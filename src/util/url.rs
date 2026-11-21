@@ -63,7 +63,15 @@ fn decode(uri: &str) -> String {
     decode_uri_component(uri).unwrap_or_else(|| uri.to_owned())
 }
 
+fn settled(url: &str) -> bool {
+    url.bytes()
+        .all(|b| (0x20..0x7f).contains(&b) && !matches!(b, b'&' | b'\\' | b'%'))
+}
+
 fn unwrap_url(url: &str, percent: bool) -> Option<String> {
+    if settled(url) {
+        return Some(url.trim().to_owned());
+    }
     let r = res();
     let mut out = if percent {
         decode(url.trim())

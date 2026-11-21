@@ -4,7 +4,7 @@ use super::entities::decode_entities;
 use super::icons::icon_markup;
 use super::math::{MathMarkup, math_active, typeset};
 use super::measurer::{BOLD_STYLE, ITALIC, MONO, SUB, SUP, UNDERLINE, width};
-use crate::util::chars::{is_js_space, is_word, trim, trim_end, trim_start};
+use crate::util::chars::{find, is_js_space, is_word, trim, trim_end, trim_start};
 use crate::util::jsnum::js_round;
 
 #[derive(Debug, Clone, PartialEq)]
@@ -224,7 +224,7 @@ fn find_icon(text: &str, from: usize) -> Option<(usize, usize)> {
         return None;
     }
     let mut at = from;
-    while let Some(found) = text[at..].find("fa") {
+    while let Some(found) = find(&text[at..], "fa") {
         let start = at + found;
         let mut p = start + 2;
         if text[p..].starts_with(['b', 'k', 'l', 'r', 's']) {
@@ -315,7 +315,7 @@ fn push_text(line: &mut Vec<Span>, text: &str, style: u32) {
 }
 
 fn push_icons(line: &mut Vec<Span>, text: &str, style: u32) {
-    if !text.contains(":fa-") {
+    if find(text, ":fa-").is_none() {
         push_text(line, text, style);
         return;
     }
