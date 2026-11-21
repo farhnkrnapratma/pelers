@@ -40,18 +40,10 @@ export interface NativeMath {
   height: number
 }
 
-export interface NativeOutcome {
-  result?: NativeResult
-  error?: NativeError
-}
-
-export interface NativeParseOptions {
+export interface NativeOptions {
   limit?: number
   maxEdges?: number
   config?: string
-}
-
-export interface NativeRenderOptions {
   fontFamily?: string
   fontFamilyMono?: string
   monospace?: Array<string>
@@ -68,7 +60,6 @@ export interface NativeRenderOptions {
   links?: boolean
   images?: boolean
   linkRel?: string
-  now?: number
 }
 
 export interface NativeResult {
@@ -81,8 +72,10 @@ export interface NativeResult {
   title?: string
 }
 
-export declare function parse(source: string, options?: NativeParseOptions | undefined | null, offsets?: OffsetCallback | undefined | null): Parsed | NativeError
+export declare function parse(source: string, options?: NativeOptions | undefined | null): Outcome<Parsed>
 
-export declare function renderParsed(model: Parsed, options?: NativeRenderOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null, offsets?: OffsetCallback | undefined | null): NativeOutcome
+export declare function renderParsed(model: Parsed, now: number, options?: NativeOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null): Rendered
 
-export declare function renderSource(source: string, parse?: NativeParseOptions | undefined | null, options?: NativeRenderOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null, offsets?: OffsetCallback | undefined | null): NativeOutcome
+export declare function renderSource(source: string, now: number, options?: NativeOptions | undefined | null, icons?: IconCallback | undefined | null, math?: MathCallback | undefined | null, measurer?: MeasureCallback | undefined | null): Rendered
+
+export declare function setOffsets(offsets: OffsetCallback): void

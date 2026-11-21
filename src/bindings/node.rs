@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::mem::ManuallyDrop;
 use std::rc::Rc;
 
 use crate::api::{ParseOptions, ParsedDiagram, parse_with, render_with};
@@ -8,6 +9,7 @@ use crate::text::icons::IconFn;
 use crate::text::math::{MathFn, MathMarkup};
 use crate::text::measurer::MeasureFn;
 use crate::util::hook::Hook;
+use crate::util::jsnum::js_number_to_string;
 use crate::util::json;
 use crate::util::value::Value;
 use crate::{PelersError, PelersErrorCode, detect_diagram, preprocess};
@@ -49,20 +51,10 @@ pub struct NativeError {
 }
 
 #[napi(object)]
-pub struct NativeOutcome {
-    pub result: Option<NativeResult>,
-    pub error: Option<NativeError>,
-}
-
-#[napi(object)]
-pub struct NativeParseOptions {
+pub struct NativeOptions {
     pub limit: Option<f64>,
     pub max_edges: Option<f64>,
     pub config: Option<String>,
-}
-
-#[napi(object)]
-pub struct NativeRenderOptions {
     pub font_family: Option<String>,
     pub font_family_mono: Option<String>,
     pub monospace: Option<Vec<String>>,
@@ -79,7 +71,6 @@ pub struct NativeRenderOptions {
     pub links: Option<bool>,
     pub images: Option<bool>,
     pub link_rel: Option<String>,
-    pub now: Option<f64>,
 }
 
 #[napi(object)]
@@ -149,17 +140,20 @@ fn count(value: f64) -> usize {
     }
 }
 
-fn parse_options(options: Option<NativeParseOptions>) -> ParseOptions {
+fn parse_options(options: Option<&NativeOptions>) -> ParseOptions {
     let Some(options) = options else {
         return ParseOptions::default();
     };
     ParseOptions {
         limit: options.limit.map(count),
         max_edges: options.max_edges.map(count),
-        config: options.config.and_then(|text| match json::parse(&text) {
-            Some(Value::Object(config)) => Some(config),
-            _ => None,
-        }),
+        config: options
+            .config
+            .as_deref()
+            .and_then(|text| match json::parse(text) {
+                Some(Value::Object(config)) => Some(config),
+                _ => None,
+            }),
     }
 }
 
@@ -185,7 +179,8 @@ struct Callbacks<'a> {
 
 fn render_options(
     env: Env,
-    options: Option<NativeRenderOptions>,
+    now: f64,
+    options: Option<NativeOptions>,
     callbacks: Callbacks<'_>,
     failed: &Failure,
 ) -> Result<RenderOptions> {
@@ -201,7 +196,6 @@ fn render_options(
             responsive: options.responsive,
             id_prefix: options.id_prefix,
             monospace: options.monospace,
-            now: options.now,
             output_limit: options.output_limit.map(count),
             link_schemes: options.link_schemes,
             image_schemes: options.image_schemes,
@@ -212,6 +206,7 @@ fn render_options(
         },
         None => RenderOptions::default(),
     };
+    out.now = Some(now);
     if let Some(icons) = callbacks.icons {
         let reference = icons.create_ref()?;
         let failed = Rc::clone(failed);
@@ -276,61 +271,104 @@ fn render_options(
     Ok(out)
 }
 
-fn offsets_hook(
-    env: Env,
-    offsets: Option<OffsetCallback<'_>>,
-    failed: &Failure,
-) -> Result<Option<Hook<OffsetFn>>> {
-    let Some(offsets) = offsets else {
-        return Ok(None);
-    };
-    let reference = offsets.create_ref()?;
+thread_local! {
+    static OFFSETS: RefCell<Option<ManuallyDrop<FunctionRef<f64, f64>>>> =
+        const { RefCell::new(None) };
+}
+
+#[napi(js_name = "setOffsets")]
+pub fn set_offsets(offsets: OffsetCallback<'_>) -> Result<()> {
+    let reference = ManuallyDrop::new(offsets.create_ref()?);
+    let previous = OFFSETS.with(|slot| slot.borrow_mut().replace(reference));
+    drop(previous.map(ManuallyDrop::into_inner));
+    Ok(())
+}
+
+fn offsets_hook(env: Env, failed: &Failure) -> Option<Hook<OffsetFn>> {
+    if OFFSETS.with(|slot| slot.borrow().is_none()) {
+        return None;
+    }
     let failed = Rc::clone(failed);
     let offset = move |ms: f64| {
-        let called = reference
-            .borrow_back(&env)
-            .and_then(|function| function.call(ms));
+        let called = OFFSETS.with(|slot| match slot.borrow().as_ref() {
+            Some(reference) => reference
+                .borrow_back(&env)
+                .and_then(|function| function.call(ms)),
+            None => Ok(0.0),
+        });
         called.unwrap_or_else(|error| {
             failed.borrow_mut().get_or_insert(error);
             0.0
         })
     };
-    Ok(Some(Hook(Rc::new(offset) as Rc<OffsetFn>)))
+    Some(Hook(Rc::new(offset) as Rc<OffsetFn>))
 }
 
-fn outcome(rendered: Core<crate::RenderResult>, model: Option<&ParsedDiagram>) -> NativeOutcome {
+type Outcome<T> = Either<T, NativeError>;
+
+fn outcome(
+    rendered: Core<crate::RenderResult>,
+    model: Option<&ParsedDiagram>,
+) -> Outcome<NativeResult> {
     match rendered {
         Ok(rendered) => {
             let model = model.expect("a rendered diagram has a model");
-            NativeOutcome {
-                result: Some(NativeResult {
-                    svg: rendered.svg,
-                    width: rendered.width,
-                    height: rendered.height,
-                    links: rendered
-                        .links
-                        .into_iter()
-                        .map(|link| NativeLink {
-                            id: link.id,
-                            href: link.href,
-                            internal: link.internal,
-                        })
-                        .collect(),
-                    diagram_type: model.diagram_type.as_str().to_owned(),
-                    mermaid_type: model.mermaid_type.as_str().to_owned(),
-                    title: rendered.title,
-                }),
-                error: None,
-            }
+            Either::A(NativeResult {
+                svg: rendered.svg,
+                width: rendered.width,
+                height: rendered.height,
+                links: rendered
+                    .links
+                    .into_iter()
+                    .map(|link| NativeLink {
+                        id: link.id,
+                        href: link.href,
+                        internal: link.internal,
+                    })
+                    .collect(),
+                diagram_type: model.diagram_type.as_str().to_owned(),
+                mermaid_type: model.mermaid_type.as_str().to_owned(),
+                title: rendered.title,
+            })
         }
-        Err(error) => NativeOutcome {
-            result: None,
-            error: Some(native_error(error)),
-        },
+        Err(error) => Either::B(native_error(error)),
     }
 }
 
-fn finish(failed: &Failure, outcome: NativeOutcome) -> Result<NativeOutcome> {
+type Rendered = Either3<String, Buffer, Outcome<NativeResult>>;
+
+fn number(value: f64) -> String {
+    if value == 0.0 && value.is_sign_negative() {
+        "-0".to_owned()
+    } else {
+        js_number_to_string(value)
+    }
+}
+
+fn rendered(result: Core<crate::RenderResult>, model: Option<&ParsedDiagram>) -> Rendered {
+    match (result, model) {
+        (Ok(result), Some(model)) if result.title.is_none() && result.links.is_empty() => {
+            let head = format!(
+                "{} {} {} {}\n",
+                number(result.width),
+                number(result.height),
+                model.diagram_type.as_str(),
+                model.mermaid_type.as_str()
+            );
+            let mut text = String::with_capacity(head.len() + result.svg.len());
+            text.push_str(&head);
+            text.push_str(&result.svg);
+            if text.is_ascii() {
+                Either3::A(text)
+            } else {
+                Either3::B(text.into_bytes().into())
+            }
+        }
+        (result, model) => Either3::C(outcome(result, model)),
+    }
+}
+
+fn finish<T>(failed: &Failure, outcome: T) -> Result<T> {
     match failed.borrow_mut().take() {
         Some(error) => Err(error),
         None => Ok(outcome),
@@ -338,41 +376,35 @@ fn finish(failed: &Failure, outcome: NativeOutcome) -> Result<NativeOutcome> {
 }
 
 #[napi]
-pub fn parse(
-    env: Env,
-    source: String,
-    options: Option<NativeParseOptions>,
-    offsets: Option<OffsetCallback<'_>>,
-) -> Result<Either<Parsed, NativeError>> {
+pub fn parse(env: Env, source: String, options: Option<NativeOptions>) -> Result<Outcome<Parsed>> {
     let failed = Failure::default();
-    let offsets = offsets_hook(env, offsets, &failed)?;
-    let parsed = with_offsets(offsets, || {
-        catching_panics(|| parse_with(&source, &parse_options(options)))
+    let parsed = with_offsets(offsets_hook(env, &failed), || {
+        catching_panics(|| parse_with(&source, &parse_options(options.as_ref())))
     });
-    if let Some(error) = failed.borrow_mut().take() {
-        return Err(error);
-    }
-    Ok(match parsed {
-        Ok(inner) => Either::A(Parsed { inner }),
-        Err(error) => Either::B(native_error(error)),
-    })
+    finish(
+        &failed,
+        match parsed {
+            Ok(inner) => Either::A(Parsed { inner }),
+            Err(error) => Either::B(native_error(error)),
+        },
+    )
 }
 
 #[napi(js_name = "renderSource")]
-#[allow(clippy::too_many_arguments)]
 pub fn render_source(
     env: Env,
     source: String,
-    parse: Option<NativeParseOptions>,
-    options: Option<NativeRenderOptions>,
+    now: f64,
+    options: Option<NativeOptions>,
     icons: Option<IconCallback<'_>>,
     math: Option<MathCallback<'_>>,
     measurer: Option<MeasureCallback<'_>>,
-    offsets: Option<OffsetCallback<'_>>,
-) -> Result<NativeOutcome> {
+) -> Result<Rendered> {
     let failed = Failure::default();
+    let parse = parse_options(options.as_ref());
     let options = render_options(
         env,
+        now,
         options,
         Callbacks {
             icons,
@@ -381,33 +413,32 @@ pub fn render_source(
         },
         &failed,
     )?;
-    let offsets = offsets_hook(env, offsets, &failed)?;
     let mut model = None;
-    let rendered = with_offsets(offsets, || {
+    let result = with_offsets(offsets_hook(env, &failed), || {
         catching_panics(|| {
-            let parsed = parse_with(&source, &parse_options(parse))?;
+            let parsed = parse_with(&source, &parse)?;
             let rendered = render_with(&parsed, &options);
             model = Some(parsed);
             rendered
         })
     });
-    finish(&failed, outcome(rendered, model.as_ref()))
+    finish(&failed, rendered(result, model.as_ref()))
 }
 
 #[napi(js_name = "renderParsed")]
-#[allow(clippy::too_many_arguments)]
 pub fn render_parsed(
     env: Env,
     model: &Parsed,
-    options: Option<NativeRenderOptions>,
+    now: f64,
+    options: Option<NativeOptions>,
     icons: Option<IconCallback<'_>>,
     math: Option<MathCallback<'_>>,
     measurer: Option<MeasureCallback<'_>>,
-    offsets: Option<OffsetCallback<'_>>,
-) -> Result<NativeOutcome> {
+) -> Result<Rendered> {
     let failed = Failure::default();
     let options = render_options(
         env,
+        now,
         options,
         Callbacks {
             icons,
@@ -416,11 +447,10 @@ pub fn render_parsed(
         },
         &failed,
     )?;
-    let offsets = offsets_hook(env, offsets, &failed)?;
-    let rendered = with_offsets(offsets, || {
+    let result = with_offsets(offsets_hook(env, &failed), || {
         catching_panics(|| render_with(&model.inner, &options))
     });
-    finish(&failed, outcome(rendered, Some(&model.inner)))
+    finish(&failed, rendered(result, Some(&model.inner)))
 }
 
 #[napi(js_name = "detectType")]

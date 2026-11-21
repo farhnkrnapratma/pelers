@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use js_sys::{Array, Function, Object, Reflect};
+use js_sys::{Array, Function};
 use wasm_bindgen::prelude::*;
 
 use crate::api::{ParseOptions, ParsedDiagram, parse_with, render_with};
@@ -40,33 +40,141 @@ impl Parsed {
     }
 }
 
-fn get(object: &JsValue, key: &str) -> Option<JsValue> {
-    if !object.is_object() {
-        return None;
+#[wasm_bindgen(inline_js = "
+export function rendered(svg, width, height, type, mermaidType, links, title) {
+  const result = { svg, width, height, links: links ?? [], type, mermaidType };
+  if (title !== undefined) result.title = title;
+  return result;
+}
+export function link(id, href, internal) {
+  return { id, href, internal };
+}
+export function failure(message, code, type, mermaidType, line, column, snippet) {
+  return { message, code, type: type ?? null, mermaidType: mermaidType ?? null, line, column, snippet };
+}
+const utf8 = new TextDecoder();
+let memory;
+let bytes;
+export function attach(value) {
+  memory = value;
+}
+function text(at, length) {
+  if (bytes === undefined || bytes.buffer !== memory.buffer) bytes = new Uint8Array(memory.buffer);
+  if (length < 64) {
+    let out = '';
+    for (let i = at, end = at + length; i < end; i++) {
+      const byte = bytes[i];
+      if (byte > 127) return utf8.decode(bytes.subarray(at, end));
+      out += String.fromCharCode(byte);
     }
-    Reflect::get(object, &JsValue::from_str(key))
-        .ok()
-        .filter(|value| !value.is_undefined() && !value.is_null())
+    return out;
+  }
+  return utf8.decode(bytes.subarray(at, at + length));
+}
+export function measure(f, at, length, size, style) {
+  const width = f(text(at, length), size, style);
+  return typeof width === 'number' ? width : NaN;
+}
+export function icon(f, at, length) {
+  const markup = f(text(at, length));
+  return typeof markup === 'string' ? markup : undefined;
+}
+export function math(value) {
+  return value === null || typeof value !== 'object'
+    ? undefined
+    : [value.svg, value.html, value.width, value.height];
+}
+")]
+extern "C" {
+    fn rendered(
+        svg: &str,
+        width: f64,
+        height: f64,
+        kind: &JsValue,
+        mermaid: &JsValue,
+        links: JsValue,
+        title: Option<String>,
+    ) -> JsValue;
+    fn link(id: &str, href: &str, internal: bool) -> JsValue;
+    #[allow(clippy::too_many_arguments)]
+    fn failure(
+        message: &str,
+        code: &JsValue,
+        kind: Option<String>,
+        mermaid: Option<String>,
+        line: f64,
+        column: f64,
+        snippet: &str,
+    ) -> JsValue;
+    fn math(value: &JsValue) -> Option<Array>;
+    fn attach(memory: JsValue);
+    #[wasm_bindgen(catch)]
+    fn measure(f: &Function, at: u32, length: u32, size: f64, style: u32) -> Result<f64, JsValue>;
+    #[wasm_bindgen(catch)]
+    fn icon(f: &Function, at: u32, length: u32) -> Result<Option<String>, JsValue>;
 }
 
-fn number(object: &JsValue, key: &str) -> Option<f64> {
-    get(object, key).and_then(|value| value.as_f64())
+fn address(text: &str) -> (u32, u32) {
+    (text.as_ptr() as u32, text.len() as u32)
 }
 
-fn text(object: &JsValue, key: &str) -> Option<String> {
-    get(object, key).and_then(|value| value.as_string())
+#[wasm_bindgen]
+extern "C" {
+    pub type Options;
+    #[wasm_bindgen(method, getter)]
+    fn limit(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter, js_name = maxEdges)]
+    fn max_edges(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter)]
+    fn config(this: &Options) -> Option<String>;
+    #[wasm_bindgen(method, getter, js_name = fontFamily)]
+    fn font_family(this: &Options) -> Option<String>;
+    #[wasm_bindgen(method, getter, js_name = fontFamilyMono)]
+    fn font_family_mono(this: &Options) -> Option<String>;
+    #[wasm_bindgen(method, getter)]
+    fn monospace(this: &Options) -> Option<Vec<String>>;
+    #[wasm_bindgen(method, getter, js_name = fontSize)]
+    fn font_size(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter, js_name = idPrefix)]
+    fn id_prefix(this: &Options) -> Option<String>;
+    #[wasm_bindgen(method, getter)]
+    fn responsive(this: &Options) -> Option<bool>;
+    #[wasm_bindgen(method, getter, js_name = maxWidth)]
+    fn max_width(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter, js_name = autoDirection)]
+    fn auto_direction(this: &Options) -> Option<bool>;
+    #[wasm_bindgen(method, getter, js_name = directionBreakpoint)]
+    fn direction_breakpoint(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter)]
+    fn padding(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter, js_name = outputLimit)]
+    fn output_limit(this: &Options) -> Option<f64>;
+    #[wasm_bindgen(method, getter, js_name = linkSchemes)]
+    fn link_schemes(this: &Options) -> Option<Vec<String>>;
+    #[wasm_bindgen(method, getter, js_name = imageSchemes)]
+    fn image_schemes(this: &Options) -> Option<Vec<String>>;
+    #[wasm_bindgen(method, getter)]
+    fn links(this: &Options) -> Option<bool>;
+    #[wasm_bindgen(method, getter)]
+    fn images(this: &Options) -> Option<bool>;
+    #[wasm_bindgen(method, getter, js_name = linkRel)]
+    fn link_rel(this: &Options) -> Option<String>;
 }
 
-fn flag(object: &JsValue, key: &str) -> Option<bool> {
-    get(object, key).and_then(|value| value.as_bool())
+thread_local! {
+    static NAMES: RefCell<Vec<(&'static str, JsValue)>> = const { RefCell::new(Vec::new()) };
+    static OFFSETS: RefCell<Option<Function>> = const { RefCell::new(None) };
 }
 
-fn texts(object: &JsValue, key: &str) -> Option<Vec<String>> {
-    get(object, key).filter(Array::is_array).map(|value| {
-        Array::from(&value)
-            .iter()
-            .filter_map(|item| item.as_string())
-            .collect()
+fn name(text: &'static str) -> JsValue {
+    NAMES.with(|names| {
+        let mut names = names.borrow_mut();
+        if let Some((_, value)) = names.iter().find(|(known, _)| *known == text) {
+            return value.clone();
+        }
+        let value = JsValue::from_str(text);
+        names.push((text, value.clone()));
+        value
     })
 }
 
@@ -76,10 +184,6 @@ fn count(value: f64) -> usize {
     } else {
         value as usize
     }
-}
-
-fn set(object: &Object, key: &str, value: impl Into<JsValue>) {
-    let _ = Reflect::set(object, &JsValue::from_str(key), &value.into());
 }
 
 fn code(error: &PelersError) -> &'static str {
@@ -92,62 +196,54 @@ fn code(error: &PelersError) -> &'static str {
 }
 
 fn error_object(error: PelersError) -> JsValue {
-    let object = Object::new();
-    set(&object, "message", error.message.as_str());
-    set(&object, "code", code(&error));
-    set(
-        &object,
-        "type",
-        error.diagram_type.map_or(JsValue::NULL, JsValue::from),
-    );
-    set(
-        &object,
-        "mermaidType",
-        error.mermaid_type.map_or(JsValue::NULL, JsValue::from),
-    );
-    set(&object, "line", error.line as f64);
-    set(&object, "column", error.column as f64);
-    set(&object, "snippet", error.snippet.as_str());
-    object.into()
+    failure(
+        &error.message,
+        &name(code(&error)),
+        error.diagram_type,
+        error.mermaid_type,
+        error.line as f64,
+        error.column as f64,
+        &error.snippet,
+    )
 }
 
-fn result_object(rendered: RenderResult, model: &ParsedDiagram) -> JsValue {
-    let object = Object::new();
-    set(&object, "svg", rendered.svg.as_str());
-    set(&object, "width", rendered.width);
-    set(&object, "height", rendered.height);
-    let links = Array::new();
-    for link in rendered.links {
-        let entry = Object::new();
-        set(&entry, "id", link.id.as_str());
-        set(&entry, "href", link.href.as_str());
-        set(&entry, "internal", link.internal);
-        links.push(&entry);
-    }
-    set(&object, "links", links);
-    set(&object, "type", model.diagram_type.as_str());
-    set(&object, "mermaidType", model.mermaid_type.as_str());
-    if let Some(title) = rendered.title {
-        set(&object, "title", title.as_str());
-    }
-    object.into()
+fn result_object(rendered_result: RenderResult, model: &ParsedDiagram) -> JsValue {
+    let links = if rendered_result.links.is_empty() {
+        JsValue::UNDEFINED
+    } else {
+        let links = Array::new();
+        for entry in &rendered_result.links {
+            links.push(&link(&entry.id, &entry.href, entry.internal));
+        }
+        links.into()
+    };
+    rendered(
+        &rendered_result.svg,
+        rendered_result.width,
+        rendered_result.height,
+        &name(model.diagram_type.as_str()),
+        &name(model.mermaid_type.as_str()),
+        links,
+        rendered_result.title,
+    )
 }
 
 fn outcome(rendered: Result<RenderResult, PelersError>, model: Option<&ParsedDiagram>) -> JsValue {
-    let object = Object::new();
     match (rendered, model) {
-        (Ok(rendered), Some(model)) => set(&object, "result", result_object(rendered, model)),
-        (Err(error), _) => set(&object, "error", error_object(error)),
+        (Ok(rendered), Some(model)) => result_object(rendered, model),
+        (Err(error), _) => error_object(error),
         (Ok(_), None) => unreachable!("a rendered diagram has a model"),
     }
-    object.into()
 }
 
-fn parse_options(options: &JsValue) -> ParseOptions {
+fn parse_options(options: Option<&Options>) -> ParseOptions {
+    let Some(options) = options else {
+        return ParseOptions::default();
+    };
     ParseOptions {
-        limit: number(options, "limit").map(count),
-        max_edges: number(options, "maxEdges").map(count),
-        config: text(options, "config").and_then(|text| match json::parse(&text) {
+        limit: options.limit().map(count),
+        max_edges: options.max_edges().map(count),
+        config: options.config().and_then(|text| match json::parse(&text) {
             Some(Value::Object(config)) => Some(config),
             _ => None,
         }),
@@ -164,50 +260,53 @@ fn failing<T>(failed: &Failure, error: JsValue, fallback: T) -> T {
 }
 
 fn render_options(
-    options: &JsValue,
+    now: f64,
+    options: Option<&Options>,
     icons: Option<Function>,
-    math: Option<Function>,
+    math_hook: Option<Function>,
     measurer: Option<Function>,
     failed: &Failure,
 ) -> RenderOptions {
-    let mut out = RenderOptions {
-        font_size: number(options, "fontSize"),
-        font_family: text(options, "fontFamily"),
-        font_family_mono: text(options, "fontFamilyMono"),
-        padding: number(options, "padding"),
-        max_width: number(options, "maxWidth"),
-        auto_direction: flag(options, "autoDirection"),
-        direction_breakpoint: number(options, "directionBreakpoint"),
-        responsive: flag(options, "responsive"),
-        id_prefix: text(options, "idPrefix"),
-        monospace: texts(options, "monospace"),
-        now: number(options, "now"),
-        output_limit: number(options, "outputLimit").map(count),
-        link_schemes: texts(options, "linkSchemes"),
-        image_schemes: texts(options, "imageSchemes"),
-        links: flag(options, "links"),
-        images: flag(options, "images"),
-        link_rel: text(options, "linkRel"),
-        ..RenderOptions::default()
+    let mut out = match options {
+        Some(options) => RenderOptions {
+            font_size: options.font_size(),
+            font_family: options.font_family(),
+            font_family_mono: options.font_family_mono(),
+            padding: options.padding(),
+            max_width: options.max_width(),
+            auto_direction: options.auto_direction(),
+            direction_breakpoint: options.direction_breakpoint(),
+            responsive: options.responsive(),
+            id_prefix: options.id_prefix(),
+            monospace: options.monospace(),
+            output_limit: options.output_limit().map(count),
+            link_schemes: options.link_schemes(),
+            image_schemes: options.image_schemes(),
+            links: options.links(),
+            images: options.images(),
+            link_rel: options.link_rel(),
+            ..RenderOptions::default()
+        },
+        None => RenderOptions::default(),
     };
+    out.now = Some(now);
     if let Some((function, failed)) = calling(icons, failed) {
-        let resolve =
-            move |name: &str| match function.call1(&JsValue::NULL, &JsValue::from_str(name)) {
-                Ok(value) => value.as_string(),
-                Err(error) => failing(&failed, error, None),
-            };
+        let resolve = move |name: &str| {
+            let (at, length) = address(name);
+            icon(&function, at, length).unwrap_or_else(|error| failing(&failed, error, None))
+        };
         out.icons = Some(Hook(Rc::new(resolve) as Rc<IconFn>));
     }
-    if let Some((function, failed)) = calling(math, failed) {
+    if let Some((function, failed)) = calling(math_hook, failed) {
         let resolve = move |tex: &str, size: f64| match function.call2(
             &JsValue::NULL,
             &JsValue::from_str(tex),
             &JsValue::from_f64(size),
         ) {
-            Ok(value) => {
-                let width = number(&value, "width").unwrap_or(f64::NAN);
-                let height = number(&value, "height").unwrap_or(f64::NAN);
-                match (text(&value, "svg"), text(&value, "html")) {
+            Ok(value) => math(&value).and_then(|parts| {
+                let width = parts.get(2).as_f64().unwrap_or(f64::NAN);
+                let height = parts.get(3).as_f64().unwrap_or(f64::NAN);
+                match (parts.get(0).as_string(), parts.get(1).as_string()) {
                     (Some(svg), _) => Some(MathMarkup::Svg { svg, width, height }),
                     (None, Some(html)) => Some(MathMarkup::Html {
                         html,
@@ -216,34 +315,36 @@ fn render_options(
                     }),
                     (None, None) => None,
                 }
-            }
+            }),
             Err(error) => failing(&failed, error, None),
         };
         out.math = Some(Hook(Rc::new(resolve) as Rc<MathFn>));
     }
     if let Some((function, failed)) = calling(measurer, failed) {
-        let measure = move |text: &str, size: f64, style: u32| match function.call3(
-            &JsValue::NULL,
-            &JsValue::from_str(text),
-            &JsValue::from_f64(size),
-            &JsValue::from_f64(f64::from(style)),
-        ) {
-            Ok(value) => value.as_f64().unwrap_or(f64::NAN),
-            Err(error) => failing(&failed, error, f64::NAN),
+        let measured = move |text: &str, size: f64, style: u32| {
+            let (at, length) = address(text);
+            measure(&function, at, length, size, style)
+                .unwrap_or_else(|error| failing(&failed, error, f64::NAN))
         };
-        out.measurer = Some(Hook(Rc::new(measure) as Rc<MeasureFn>));
+        out.measurer = Some(Hook(Rc::new(measured) as Rc<MeasureFn>));
     }
     out
 }
 
-fn offsets_hook(offsets: Option<Function>, failed: &Failure) -> Option<Hook<OffsetFn>> {
-    calling(offsets, failed).map(|(function, failed)| {
-        let offset = move |ms: f64| match function.call1(&JsValue::NULL, &JsValue::from_f64(ms)) {
-            Ok(value) => value.as_f64().unwrap_or(0.0),
-            Err(error) => failing(&failed, error, 0.0),
-        };
-        Hook(Rc::new(offset) as Rc<OffsetFn>)
-    })
+#[wasm_bindgen(js_name = "setOffsets")]
+pub fn set_offsets(offsets: Function) {
+    attach(wasm_bindgen::memory());
+    OFFSETS.with(|slot| *slot.borrow_mut() = Some(offsets));
+}
+
+fn offsets_hook(failed: &Failure) -> Option<Hook<OffsetFn>> {
+    let function = OFFSETS.with(|slot| slot.borrow().clone())?;
+    let failed = Rc::clone(failed);
+    let offset = move |ms: f64| match function.call1(&JsValue::NULL, &JsValue::from_f64(ms)) {
+        Ok(value) => value.as_f64().unwrap_or(0.0),
+        Err(error) => failing(&failed, error, 0.0),
+    };
+    Some(Hook(Rc::new(offset) as Rc<OffsetFn>))
 }
 
 fn finish(failed: &Failure, value: JsValue) -> Result<JsValue, JsValue> {
@@ -254,14 +355,10 @@ fn finish(failed: &Failure, value: JsValue) -> Result<JsValue, JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn parse(
-    source: &str,
-    options: JsValue,
-    offsets: Option<Function>,
-) -> Result<JsValue, JsValue> {
+pub fn parse(source: &str, options: Option<Options>) -> Result<JsValue, JsValue> {
     let failed = Failure::default();
-    let parsed = with_offsets(offsets_hook(offsets, &failed), || {
-        parse_with(source, &parse_options(&options))
+    let parsed = with_offsets(offsets_hook(&failed), || {
+        parse_with(source, &parse_options(options.as_ref()))
     });
     let value = match parsed {
         Ok(inner) => JsValue::from(Parsed { inner }),
@@ -271,21 +368,20 @@ pub fn parse(
 }
 
 #[wasm_bindgen(js_name = "renderSource")]
-#[allow(clippy::too_many_arguments)]
 pub fn render_source(
     source: &str,
-    parse: JsValue,
-    options: JsValue,
+    now: f64,
+    options: Option<Options>,
     icons: Option<Function>,
-    math: Option<Function>,
+    math_hook: Option<Function>,
     measurer: Option<Function>,
-    offsets: Option<Function>,
 ) -> Result<JsValue, JsValue> {
     let failed = Failure::default();
-    let options = render_options(&options, icons, math, measurer, &failed);
+    let parse = parse_options(options.as_ref());
+    let options = render_options(now, options.as_ref(), icons, math_hook, measurer, &failed);
     let mut model = None;
-    let rendered = with_offsets(offsets_hook(offsets, &failed), || {
-        let parsed = parse_with(source, &parse_options(&parse))?;
+    let rendered = with_offsets(offsets_hook(&failed), || {
+        let parsed = parse_with(source, &parse)?;
         let rendered = render_with(&parsed, &options);
         model = Some(parsed);
         rendered
@@ -296,15 +392,15 @@ pub fn render_source(
 #[wasm_bindgen(js_name = "renderParsed")]
 pub fn render_parsed(
     model: &Parsed,
-    options: JsValue,
+    now: f64,
+    options: Option<Options>,
     icons: Option<Function>,
-    math: Option<Function>,
+    math_hook: Option<Function>,
     measurer: Option<Function>,
-    offsets: Option<Function>,
 ) -> Result<JsValue, JsValue> {
     let failed = Failure::default();
-    let options = render_options(&options, icons, math, measurer, &failed);
-    let rendered = with_offsets(offsets_hook(offsets, &failed), || {
+    let options = render_options(now, options.as_ref(), icons, math_hook, measurer, &failed);
+    let rendered = with_offsets(offsets_hook(&failed), || {
         render_with(&model.inner, &options)
     });
     finish(&failed, outcome(rendered, Some(&model.inner)))
@@ -313,9 +409,8 @@ pub fn render_parsed(
 #[wasm_bindgen(js_name = "detectType")]
 pub fn detect_type(source: &str) -> JsValue {
     match preprocess(source) {
-        Ok(prepared) => detect_diagram(&prepared.text).map_or(JsValue::NULL, |found| {
-            JsValue::from_str(found.diagram_type.as_str())
-        }),
+        Ok(prepared) => detect_diagram(&prepared.text)
+            .map_or(JsValue::NULL, |found| name(found.diagram_type.as_str())),
         Err(error) => error_object(error),
     }
 }

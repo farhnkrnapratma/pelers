@@ -63,38 +63,59 @@ const thrown = (error) =>
     snippet: error.snippet,
   });
 
-const parseOptions = (options) => ({
-  limit: options.limit,
-  maxEdges: options.maxEdges,
-  config:
-    options.config === undefined ? undefined : JSON.stringify(options.config),
-});
+const KEYS = [
+  "limit",
+  "maxEdges",
+  "config",
+  "fontFamily",
+  "fontFamilyMono",
+  "monospace",
+  "fontSize",
+  "idPrefix",
+  "responsive",
+  "maxWidth",
+  "autoDirection",
+  "directionBreakpoint",
+  "padding",
+  "outputLimit",
+  "linkSchemes",
+  "imageSchemes",
+  "links",
+  "images",
+  "linkRel",
+];
 
-const renderOptions = (options) => ({
-  fontFamily: options.fontFamily,
-  fontFamilyMono: options.fontFamilyMono,
-  monospace:
-    options.monospace === undefined ? undefined : [...options.monospace],
-  fontSize: options.fontSize,
-  idPrefix: options.idPrefix,
-  responsive: options.responsive,
-  maxWidth: options.maxWidth,
-  autoDirection: options.autoDirection,
-  directionBreakpoint: options.directionBreakpoint,
-  padding: options.padding,
-  outputLimit: options.outputLimit,
-  linkSchemes: options.linkSchemes,
-  imageSchemes: options.imageSchemes,
-  links: options.links,
-  images: options.images,
-  linkRel: options.linkRel,
-  now:
-    options.now instanceof Date
-      ? options.now.getTime()
-      : (options.now ?? Date.now()),
-});
+function nativeOptions(options) {
+  if (KEYS.every((key) => options[key] === undefined)) return undefined;
+  return {
+    limit: options.limit,
+    maxEdges: options.maxEdges,
+    config:
+      options.config === undefined ? undefined : JSON.stringify(options.config),
+    fontFamily: options.fontFamily,
+    fontFamilyMono: options.fontFamilyMono,
+    monospace:
+      options.monospace === undefined ? undefined : [...options.monospace],
+    fontSize: options.fontSize,
+    idPrefix: options.idPrefix,
+    responsive: options.responsive,
+    maxWidth: options.maxWidth,
+    autoDirection: options.autoDirection,
+    directionBreakpoint: options.directionBreakpoint,
+    padding: options.padding,
+    outputLimit: options.outputLimit,
+    linkSchemes: options.linkSchemes,
+    imageSchemes: options.imageSchemes,
+    links: options.links,
+    images: options.images,
+    linkRel: options.linkRel,
+  };
+}
 
-const offsets = (ms) => -new Date(ms).getTimezoneOffset() * 60000;
+const now = (options) =>
+  options.now instanceof Date
+    ? options.now.getTime()
+    : (options.now ?? Date.now());
 
 function measurerFor(options) {
   const measurer =
@@ -104,9 +125,8 @@ function measurerFor(options) {
 }
 
 function settled(outcome) {
-  if (outcome.error) throw thrown(outcome.error);
-  const { title, ...result } = outcome.result;
-  return title === undefined || title === null ? result : { ...result, title };
+  if (outcome.code !== undefined) throw thrown(outcome);
+  return outcome;
 }
 
 function loaded() {
@@ -120,26 +140,37 @@ function loaded() {
 
 export function parse(text, options = {}) {
   const engine = loaded();
-  const parsed = engine.parse(text, parseOptions(options), offsets);
+  const parsed = engine.parse(text, nativeOptions(options));
   if (parsed instanceof engine.Parsed) return parsed;
   throw thrown(parsed);
 }
 
 export function render(source, options = {}) {
   const engine = loaded();
-  const callbacks = [options.icons, options.math, measurerFor(options), offsets];
+  const at = now(options);
+  const given = nativeOptions(options);
+  const measurer = measurerFor(options);
   if (typeof source === "string")
     return settled(
       engine.renderSource(
         source,
-        parseOptions(options),
-        renderOptions(options),
-        ...callbacks,
+        at,
+        given,
+        options.icons,
+        options.math,
+        measurer,
       ),
     );
   if (source instanceof engine.Parsed)
     return settled(
-      engine.renderParsed(source, renderOptions(options), ...callbacks),
+      engine.renderParsed(
+        source,
+        at,
+        given,
+        options.icons,
+        options.math,
+        measurer,
+      ),
     );
   throw new TypeError(
     "render() takes diagram text or a model that parse() returned.",

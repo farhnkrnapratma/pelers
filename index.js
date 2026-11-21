@@ -1,6 +1,6 @@
-import * as engine from "./index.native.js";
+import { napi } from "./js/napi.js";
 import { bind } from "./js/native.js";
 
-bind(engine);
+bind(napi);
 
 export * from "./js/core.js";
