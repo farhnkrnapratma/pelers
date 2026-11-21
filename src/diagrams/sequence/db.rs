@@ -436,16 +436,15 @@ impl SeqDb {
     }
 
     pub fn apply(&mut self, item: &Item) -> Result<(), PelersError> {
-        match item {
-            Item::Text(_) => Ok(()),
-            Item::List(items) => {
-                for child in items {
-                    self.apply(child)?;
-                }
-                Ok(())
+        let mut pending = vec![item];
+        while let Some(item) = pending.pop() {
+            match item {
+                Item::Text(_) => {}
+                Item::List(items) => pending.extend(items.iter().rev()),
+                Item::Statement(statement) => self.apply_one(statement)?,
             }
-            Item::Statement(statement) => self.apply_one(statement),
         }
+        Ok(())
     }
 
     fn apply_one(&mut self, param: &Statement) -> Result<(), PelersError> {

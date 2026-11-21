@@ -367,22 +367,22 @@ impl Parser<'_, '_> {
         Ok(Item::Statement(Box::new(node)))
     }
 
-    fn fold(&self, frame: &Frame, divider: &str, key: &str, signal: i32) -> Vec<Item> {
-        let mut list = frame.list.clone();
-        if let Some(sections) = &frame.sections {
-            for (section_list, section_text) in sections.iter().rev() {
+    fn fold(&self, frame: &mut Frame, divider: &str, key: &str, signal: i32) -> Vec<Item> {
+        let mut list = std::mem::take(&mut frame.list);
+        if let Some(sections) = frame.sections.take() {
+            for (section_list, section_text) in sections.into_iter().rev() {
                 let mut head = Statement {
                     type_: divider.to_owned(),
                     signal_type: Some(signal),
                     ..Statement::default()
                 };
-                let parsed = Some(self.db.parse_message(section_text));
+                let parsed = Some(self.db.parse_message(&section_text));
                 match key {
                     "altText" => head.alt_text = parsed,
                     "parText" => head.par_text = parsed,
                     _ => head.option_text = parsed,
                 }
-                let mut next = section_list.clone();
+                let mut next = section_list;
                 next.push(Item::Statement(Box::new(head)));
                 next.push(Item::List(list));
                 list = next;
@@ -391,13 +391,18 @@ impl Parser<'_, '_> {
         list
     }
 
-    fn close(&self, frame: Frame) -> Vec<Item> {
-        let text = frame.text.clone();
+    fn close(&self, mut frame: Frame) -> Vec<Item> {
+        let text = std::mem::take(&mut frame.text);
         let mut list = match frame.kind {
-            K::Alt => self.fold(&frame, "else", "altText", linetype::ALT_ELSE),
-            K::Par => self.fold(&frame, "and", "parText", linetype::PAR_AND),
-            K::Critical => self.fold(&frame, "option", "optionText", linetype::CRITICAL_OPTION),
-            _ => frame.list.clone(),
+            K::Alt => self.fold(&mut frame, "else", "altText", linetype::ALT_ELSE),
+            K::Par => self.fold(&mut frame, "and", "parText", linetype::PAR_AND),
+            K::Critical => self.fold(
+                &mut frame,
+                "option",
+                "optionText",
+                linetype::CRITICAL_OPTION,
+            ),
+            _ => std::mem::take(&mut frame.list),
         };
         let (head, tail) = match frame.kind {
             K::Box => (
