@@ -94,7 +94,7 @@ bun scripts/gen-golden.mjs          # tests/golden from ../pele/tests/corpus
 bun scripts/gen-fixtures-render.mjs # and the other scripts/gen-fixtures-*.mjs
 ```
 
-`build:release` builds an instrumented addon, renders the corpus with it and rebuilds with the collected profile. Without node or `llvm-profdata` it falls back to a plain release build, except under CI, where the job fails instead so the tested and stored builds are always the profile-guided ones. `bun run build:release --target <triple>` cross-compiles for another platform (with `--use-napi-cross` for Linux glibc targets, `--cross-compile` otherwise) and skips profile-guided optimization, since the profile has to be collected on the target itself.
+`build:release` builds an instrumented addon, renders the corpus with it and rebuilds with the collected profile. Without node or `llvm-profdata` it falls back to a plain release build, except under CI, where the job fails instead so the tested and stored builds are always the profile-guided ones. `bun run build:release --target <triple>` cross-compiles for another platform (through `napi build --cross-compile`, which needs `zig`) and skips profile-guided optimization, since the profile has to be collected on the target itself.
 
 On `main` and `release/*` branches CI builds an addon for every target in `package.json`. Linux x64 and arm64 (glibc and musl), macOS arm64 and Windows x64 are built on their own machines with profile-guided optimization and tested there. Linux armv7, ppc64le, s390x and riscv64, macOS x64 and Windows arm64 and ia32 are cross-compiled without it and never run in CI. The `package` job collects them into `npm/`.
 

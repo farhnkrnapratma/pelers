@@ -115,7 +115,7 @@ pub fn num(value: f64) -> Num {
         let mut m = n.abs() as u64;
         let cents = m % 100;
         if cents != 0 {
-            if cents % 10 == 0 {
+            if cents.is_multiple_of(10) {
                 at -= 2;
                 bytes[at] = b'.';
                 bytes[at + 1] = b'0' + (cents / 10) as u8;
