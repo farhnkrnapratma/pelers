@@ -63,7 +63,10 @@ function canvasMeasurer(fontFamily, monoFamily = "monospace") {
   };
 }
 const shared = new Map;
+let last;
 export function defaultMeasurer(fontFamily = "sans-serif", monoFamily = "monospace") {
+  if (last !== undefined && last.fontFamily === fontFamily && last.monoFamily === monoFamily)
+    return last.measurer;
   const key = fontFamily + `
 ` + monoFamily;
   let m = shared.get(key);
@@ -71,8 +74,10 @@ export function defaultMeasurer(fontFamily = "sans-serif", monoFamily = "monospa
     m = canvasMeasurer(fontFamily, monoFamily);
     shared.set(key, m);
   }
+  last = { fontFamily, monoFamily, measurer: m };
   return m;
 }
 export function forgetTextWidths() {
   shared.clear();
+  last = undefined;
 }

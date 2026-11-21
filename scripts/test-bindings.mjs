@@ -49,6 +49,10 @@ const model = parse("flowchart LR\n  A --> B", { maxEdges: 10 });
 assert.equal(model.type, "flowchart");
 assert.equal(model.mermaidType, "flowchart-v2");
 assert.equal(render(model).svg, render("flowchart LR\n  A --> B").svg);
+assert.equal(
+  render("pie\n  \"a\": 1", Object.create({ fontSize: 20 })).svg,
+  render("pie\n  \"a\": 1", { fontSize: 20 }).svg,
+);
 assert.throws(() => render(42), TypeError);
 assert.throws(
   () => render("hello"),

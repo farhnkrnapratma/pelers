@@ -85,8 +85,20 @@ const KEYS = [
   "linkRel",
 ];
 
+const NATIVE = new Set(KEYS);
+
+function given(options) {
+  if (Object.getPrototypeOf(options) === Object.prototype) {
+    for (const key in options)
+      if (NATIVE.has(key) && options[key] !== undefined) return true;
+    return false;
+  }
+  for (const key of KEYS) if (options[key] !== undefined) return true;
+  return false;
+}
+
 function nativeOptions(options) {
-  if (KEYS.every((key) => options[key] === undefined)) return undefined;
+  if (!given(options)) return undefined;
   return {
     limit: options.limit,
     maxEdges: options.maxEdges,

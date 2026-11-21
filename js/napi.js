@@ -7,15 +7,17 @@ function result(out) {
     if (!(out instanceof Uint8Array)) return out;
     out = utf8.decode(out);
   }
-  const line = out.indexOf("\n");
-  const [width, height, type, mermaidType] = out.slice(0, line).split(" ");
+  const a = out.indexOf(" ");
+  const b = out.indexOf(" ", a + 1);
+  const c = out.indexOf(" ", b + 1);
+  const line = out.indexOf("\n", c + 1);
   return {
     svg: out.slice(line + 1),
-    width: Number(width),
-    height: Number(height),
+    width: Number(out.slice(0, a)),
+    height: Number(out.slice(a + 1, b)),
     links: [],
-    type,
-    mermaidType,
+    type: out.slice(b + 1, c),
+    mermaidType: out.slice(c + 1, line),
   };
 }
 
