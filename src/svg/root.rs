@@ -36,8 +36,41 @@ pub struct Accessible<'a> {
     pub acc_descr: Option<&'a str>,
 }
 
+const ALIASES: [&str; 4] = ["var(--_r)", "var(--_tw)", "var(--_hw)", "var(--_w)"];
+
+#[cfg(not(target_arch = "wasm32"))]
 fn used_aliases(content: &str) -> [bool; 4] {
-    ["var(--_r)", "var(--_tw)", "var(--_hw)", "var(--_w)"].map(|alias| content.contains(alias))
+    ALIASES.map(|alias| content.contains(alias))
+}
+
+#[cfg(target_arch = "wasm32")]
+fn used_aliases(content: &str) -> [bool; 4] {
+    scanned_aliases(content)
+}
+
+#[cfg_attr(not(any(target_arch = "wasm32", test)), allow(dead_code))]
+fn scanned_aliases(content: &str) -> [bool; 4] {
+    let bytes = content.as_bytes();
+    let mut used = [false; 4];
+    let mut from = 0;
+    while let Some(at) = bytes[from..].iter().position(|&byte| byte == b'_') {
+        let at = from + at;
+        from = at + 1;
+        if !bytes[..at].ends_with(b"var(--") {
+            continue;
+        }
+        let rest = &bytes[from..];
+        if let Some(k) = ALIASES
+            .iter()
+            .position(|alias| rest.starts_with(&alias.as_bytes()[7..]))
+        {
+            used[k] = true;
+            if used == [true; 4] {
+                break;
+            }
+        }
+    }
+    used
 }
 
 pub fn svg_document(
@@ -133,6 +166,18 @@ pub fn svg_document(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn scans_aliases_like_the_substring_search() {
+        for content in [
+            "<g style=\"rx:var(--_r)\" font-weight=\"var(--_tw)\"/>",
+            "var(--_wx) var(--_w) _x var(--x_)",
+            "var(--_r) var(--_tw) var(--_hw) var(--_w) var(--_r)",
+            "none",
+        ] {
+            assert_eq!(scanned_aliases(content), used_aliases(content));
+        }
+    }
 
     #[test]
     fn finds_the_aliases_a_diagram_uses() {
