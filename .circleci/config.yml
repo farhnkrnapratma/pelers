@@ -140,7 +140,10 @@ jobs:
       - run: rustup target add wasm32-unknown-unknown
       - run: bun install --frozen-lockfile
       - run: cargo test --locked
-      - run: bun run build:release
+      - run:
+          name: Build the release addon
+          command: bun run build:release
+          no_output_timeout: 45m
       - run: bun run build:wasm
       - run: bun run test:bindings
       - run: bun run test:dom
@@ -169,7 +172,10 @@ jobs:
       - setup-bun
       - run: rustup component add llvm-tools
       - run: bun install --frozen-lockfile
-      - run: bun run build:release
+      - run:
+          name: Build the release addon
+          command: bun run build:release
+          no_output_timeout: 45m
       - run: bun run test:bindings
       - keep-addons
 
@@ -188,9 +194,15 @@ jobs:
             command -v node || brew install node
       - setup-bun
       - run: bun install --frozen-lockfile
-      - run: bun run build:release
+      - run:
+          name: Build the release addon
+          command: bun run build:release
+          no_output_timeout: 45m
       - run: bun run test:bindings
-      - run: bun run build:release --target x86_64-apple-darwin
+      - run:
+          name: Cross-compile the x64 addon
+          command: bun run build:release --target x86_64-apple-darwin
+          no_output_timeout: 45m
       - keep-addons
 
   addon-windows:
@@ -209,7 +221,10 @@ jobs:
             powershell.exe -NoProfile -Command "\$env:BUN_VERSION='bun-v1.4.5'; irm bun.sh/install.ps1 | iex"
             echo 'export PATH="$HOME/.cargo/bin:$HOME/.bun/bin:$PATH"' >> "$BASH_ENV"
       - run: bun install --frozen-lockfile
-      - run: bun run build:release
+      - run:
+          name: Build the release addon
+          command: bun run build:release
+          no_output_timeout: 45m
       - run: bun run test:bindings
       - keep-addons
 
@@ -222,10 +237,24 @@ jobs:
       - checkout
       - setup-bun
       - setup-zig
-      - run: sudo apt-get update -qq && sudo apt-get install -y -qq clang lld llvm
+      - run:
+          name: Install LLVM for the MSVC headers
+          command: |
+            case "<< parameters.target >>" in *windows*) ;; *) exit 0 ;; esac
+            sudo apt-get update -qq
+            for v in 21 20 19; do
+              if sudo apt-get install -y -qq "clang-$v" "lld-$v" "llvm-$v"; then
+                echo "export PATH=\"/usr/lib/llvm-$v/bin:\$PATH\"" >> "$BASH_ENV"
+                exit 0
+              fi
+            done
+            exit 1
       - run: rustup target add << parameters.target >>
       - run: bun install --frozen-lockfile
-      - run: bun run build:release --target << parameters.target >>
+      - run:
+          name: Cross-compile the addon
+          command: bun run build:release --target << parameters.target >>
+          no_output_timeout: 45m
       - keep-addons
 
   package:
