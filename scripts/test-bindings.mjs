@@ -94,6 +94,12 @@ for (const variant of ["fast", "small"]) {
   ]);
 }
 
+for (const [name, run] of engines) {
+  assert.throws(() => run("flowchart LR\n  A[fa:fa-car x]", { icons: boom }), /boom/, name);
+  assert.throws(() => run("flowchart LR\n  A --> B", { measurer: { width: boom } }), /boom/, name);
+  assert.match(run("flowchart LR\n  A --> B").svg, /^<svg/, name);
+}
+
 const pele = existsSync(join(peleDir, "src/index.ts")) ? await peleCore() : undefined;
 
 const widths = { width: (text, size, style) => text.length * size * (style & 1 ? 0.62 : 0.55) };

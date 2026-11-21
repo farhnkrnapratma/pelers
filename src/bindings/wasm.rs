@@ -71,17 +71,38 @@ function text(at, length) {
   }
   return utf8.decode(bytes.subarray(at, at + length));
 }
+let thrown;
+export function failed() {
+  const out = thrown;
+  thrown = undefined;
+  return out;
+}
 export function measure(f, at, length, size, style) {
-  const width = f(text(at, length), size, style);
-  return typeof width === 'number' ? width : NaN;
+  try {
+    const width = f(text(at, length), size, style);
+    return typeof width === 'number' ? width : NaN;
+  } catch (error) {
+    thrown ??= [error];
+    return NaN;
+  }
 }
 export function offset(f, ms) {
-  const value = f(ms);
-  return typeof value === 'number' ? value : 0;
+  try {
+    const value = f(ms);
+    return typeof value === 'number' ? value : 0;
+  } catch (error) {
+    thrown ??= [error];
+    return 0;
+  }
 }
 export function icon(f, at, length) {
-  const markup = f(text(at, length));
-  return typeof markup === 'string' ? markup : undefined;
+  try {
+    const markup = f(text(at, length));
+    return typeof markup === 'string' ? markup : undefined;
+  } catch (error) {
+    thrown ??= [error];
+    return undefined;
+  }
 }
 export function math(value) {
   return value === null || typeof value !== 'object'
@@ -112,12 +133,10 @@ extern "C" {
     ) -> JsValue;
     fn math(value: &JsValue) -> Option<Array>;
     fn attach(memory: JsValue);
-    #[wasm_bindgen(catch)]
-    fn measure(f: &Function, at: u32, length: u32, size: f64, style: u32) -> Result<f64, JsValue>;
-    #[wasm_bindgen(catch)]
-    fn icon(f: &Function, at: u32, length: u32) -> Result<Option<String>, JsValue>;
-    #[wasm_bindgen(catch)]
-    fn offset(f: &Function, ms: f64) -> Result<f64, JsValue>;
+    fn failed() -> Option<Array>;
+    fn measure(f: &Function, at: u32, length: u32, size: f64, style: u32) -> f64;
+    fn icon(f: &Function, at: u32, length: u32) -> Option<String>;
+    fn offset(f: &Function, ms: f64) -> f64;
 }
 
 fn address(text: &str) -> (u32, u32) {
@@ -170,7 +189,6 @@ extern "C" {
 thread_local! {
     static NAMES: RefCell<Vec<(&'static str, JsValue)>> = const { RefCell::new(Vec::new()) };
     static HOST: RefCell<Option<Rc<OffsetFn>>> = const { RefCell::new(None) };
-    static OFFSET_ERROR: RefCell<Option<JsValue>> = const { RefCell::new(None) };
 }
 
 fn name(text: &'static str) -> JsValue {
@@ -297,10 +315,10 @@ fn render_options(
         None => RenderOptions::default(),
     };
     out.now = Some(now);
-    if let Some((function, failed)) = calling(icons, failed) {
+    if let Some(function) = icons {
         let resolve = move |name: &str| {
             let (at, length) = address(name);
-            icon(&function, at, length).unwrap_or_else(|error| failing(&failed, error, None))
+            icon(&function, at, length)
         };
         out.icons = Some(Hook(Rc::new(resolve) as Rc<IconFn>));
     }
@@ -327,11 +345,10 @@ fn render_options(
         };
         out.math = Some(Hook(Rc::new(resolve) as Rc<MathFn>));
     }
-    if let Some((function, failed)) = calling(measurer, failed) {
+    if let Some(function) = measurer {
         let measured = move |text: &str, size: f64, style: u32| {
             let (at, length) = address(text);
             measure(&function, at, length, size, style)
-                .unwrap_or_else(|error| failing(&failed, error, f64::NAN))
         };
         out.measurer = Some(Hook(Rc::new(measured) as Rc<MeasureFn>));
     }
@@ -341,14 +358,7 @@ fn render_options(
 #[wasm_bindgen(js_name = "setOffsets")]
 pub fn set_offsets(offsets: Function) {
     attach(wasm_bindgen::memory());
-    let host = move |ms: f64| {
-        offset(&offsets, ms).unwrap_or_else(|error| {
-            OFFSET_ERROR.with(|slot| {
-                slot.borrow_mut().get_or_insert(error);
-            });
-            0.0
-        })
-    };
+    let host = move |ms: f64| offset(&offsets, ms);
     HOST.with(|slot| *slot.borrow_mut() = Some(Rc::new(host)));
 }
 
@@ -357,8 +367,8 @@ fn offsets_hook() -> Option<Hook<OffsetFn>> {
 }
 
 fn finish(failed: &Failure, value: JsValue) -> Result<JsValue, JsValue> {
-    let offset_error = OFFSET_ERROR.with(|slot| slot.borrow_mut().take());
-    match failed.borrow_mut().take().or(offset_error) {
+    let thrown = self::failed().map(|error| error.get(0));
+    match failed.borrow_mut().take().or(thrown) {
         Some(error) => Err(error),
         None => Ok(value),
     }
