@@ -1,5 +1,5 @@
 use crate::diagrams::common::scan::slice;
-use crate::util::chars::is_word;
+use crate::util::chars::{is_word, utf16_string};
 
 pub const END: i32 = 0;
 pub const STUCK: i32 = 1;
@@ -72,7 +72,7 @@ pub fn tokenize(src: &[u16]) -> Tokens {
     };
     let keyword = |p: usize, word: &str| -> bool {
         let end = (p + word.len()).min(n);
-        let text = String::from_utf16_lossy(&src[p.min(n)..end]).to_lowercase();
+        let text = utf16_string(&src[p.min(n)..end]).to_lowercase();
         let after_word = src.get(p + word.len()).copied().unwrap_or(0);
         text == word && !(after_word < 128 && is_word(after_word as u8 as char))
     };

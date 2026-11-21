@@ -9,7 +9,7 @@ use super::types::{
     Severity, StatementType, VertexKind,
 };
 use crate::errors::{PelersError, PelersErrorCode};
-use crate::util::chars::{is_js_space, trim, trim_start, utf16_len, utf16_to_byte};
+use crate::util::chars::{is_js_space, trim, trim_start, utf16_len, utf16_string, utf16_to_byte};
 use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::js_number_to_string;
 use crate::util::ordered::OrderedMap;
@@ -167,10 +167,7 @@ fn merge(into: Option<Metadata>, doc: &Value) -> Metadata {
         }
         Value::String(text) => {
             for (index, unit) in text.encode_utf16().enumerate() {
-                out.set(
-                    index.to_string(),
-                    Value::String(String::from_utf16_lossy(&[unit])),
-                );
+                out.set(index.to_string(), Value::String(utf16_string(&[unit])));
             }
         }
         _ => {}

@@ -1,4 +1,5 @@
 use super::tokens::*;
+use crate::util::chars::utf16_string;
 
 pub struct Tokens {
     pub types: Vec<usize>,
@@ -72,7 +73,7 @@ impl Lexer {
     }
 
     fn slice(&self, s: i64, e: i64) -> String {
-        String::from_utf16_lossy(&self.units[s as usize..e.clamp(s, self.n) as usize])
+        utf16_string(&self.units[s as usize..e.clamp(s, self.n) as usize])
     }
 
     fn index_of(&self, c: u16, from: i64) -> i64 {

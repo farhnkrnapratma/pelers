@@ -9,6 +9,7 @@ use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::ROUNDED;
 use crate::text::label::{Label, Span, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
+use crate::util::chars::utf16_string;
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
@@ -122,7 +123,7 @@ fn fit(label: &Label, max_width: f64, max_lines: usize) -> Label {
                     let mut hi = units.len();
                     while lo < hi {
                         let mid = (lo + hi).div_ceil(2);
-                        let piece = String::from_utf16_lossy(&units[..mid]);
+                        let piece = utf16_string(&units[..mid]);
                         if rest + measure(&piece, label.size, span.style) + dots <= max_width {
                             lo = mid;
                         } else {
@@ -133,7 +134,7 @@ fn fit(label: &Label, max_width: f64, max_lines: usize) -> Label {
                     if (0xd800..=0xdbff).contains(&code) {
                         lo -= 1;
                     }
-                    let kept = String::from_utf16_lossy(&units[..lo]);
+                    let kept = utf16_string(&units[..lo]);
                     span.text = format!(
                         "{}…",
                         kept.trim_end_matches(crate::util::chars::is_js_space)

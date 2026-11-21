@@ -1,4 +1,5 @@
 use super::tokens::*;
+use crate::util::chars::utf16_string;
 
 pub struct Tokens {
     pub types: Vec<i32>,
@@ -132,7 +133,7 @@ impl Lexer {
     }
 
     fn emit(&mut self, t: i32, s: i64, e: i64) {
-        let text = String::from_utf16_lossy(&self.units[s as usize..e.min(self.n).max(s) as usize]);
+        let text = utf16_string(&self.units[s as usize..e.min(self.n).max(s) as usize]);
         self.types.push(t);
         self.texts.push(text);
         self.starts.push(s as usize);

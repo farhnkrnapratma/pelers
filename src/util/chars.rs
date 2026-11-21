@@ -28,6 +28,14 @@ pub fn trim_end(text: &str) -> &str {
     text.trim_end_matches(is_js_space)
 }
 
+pub fn utf16_string(units: &[u16]) -> String {
+    if units.iter().all(|&unit| unit < 0x80) {
+        units.iter().map(|&unit| char::from(unit as u8)).collect()
+    } else {
+        String::from_utf16_lossy(units)
+    }
+}
+
 pub fn utf16_len(text: &str) -> usize {
     text.encode_utf16().count()
 }

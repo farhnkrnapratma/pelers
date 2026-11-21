@@ -11,6 +11,7 @@ use super::types::{
     StatementKind, UseCaseShape, UsecaseModel, arrow,
 };
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::chars::utf16_string;
 use std::sync::OnceLock;
 
 const LINE: u8 = 1;
@@ -238,7 +239,7 @@ impl Parser<'_> {
     }
 
     fn text(&self, a: usize, b: usize) -> String {
-        String::from_utf16_lossy(&self.units[a.min(self.units.len())..b.min(self.units.len())])
+        utf16_string(&self.units[a.min(self.units.len())..b.min(self.units.len())])
     }
 
     fn image(&self, k: usize) -> String {

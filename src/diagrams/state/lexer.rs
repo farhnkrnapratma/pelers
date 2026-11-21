@@ -1,5 +1,5 @@
 use super::tokens::*;
-use crate::util::chars::{is_js_space, trim};
+use crate::util::chars::{is_js_space, trim, utf16_string};
 
 pub struct Tokens {
     pub types: Vec<usize>,
@@ -184,7 +184,7 @@ impl Lexer {
         if s >= e {
             return String::new();
         }
-        String::from_utf16_lossy(&self.u[s..e])
+        utf16_string(&self.u[s..e])
     }
 
     fn emit(&mut self, t: usize, s: usize, e: usize) {

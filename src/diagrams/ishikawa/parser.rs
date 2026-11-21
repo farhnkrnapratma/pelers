@@ -1,7 +1,7 @@
 use super::db::IshikawaDb;
 use super::lexer::{END, EOF, ISHIKAWA, NL, SPACELINE, SPACELIST, TEXT, TOKEN_NAMES, tokenize};
 use crate::errors::{PelersError, syntax_error};
-use crate::util::chars::{trim, utf16_to_byte};
+use crate::util::chars::{trim, utf16_string, utf16_to_byte};
 
 const STOP: &str = "'SPACELINE', 'NL', 'EOF'";
 
@@ -21,8 +21,7 @@ pub fn parse_ishikawa(source: &str, db: &mut IshikawaDb) -> Result<(), PelersErr
     };
     let stop = |kind: i32| kind == SPACELINE || kind == NL || kind == EOF;
     let units: Vec<u16> = source.encode_utf16().collect();
-    let text_of =
-        |from: usize, to: usize| trim(&String::from_utf16_lossy(&units[from..to])).to_owned();
+    let text_of = |from: usize, to: usize| trim(&utf16_string(&units[from..to])).to_owned();
 
     let mut i = 0usize;
     if types[i] == SPACELINE {

@@ -1,3 +1,4 @@
+use crate::util::chars::utf16_string;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct JsonError {
     pub offset: usize,
@@ -40,7 +41,7 @@ fn is_ident_part(c: u16) -> bool {
 }
 
 fn char_text(c: u16) -> String {
-    String::from_utf16_lossy(&[c])
+    utf16_string(&[c])
 }
 
 struct Parser<'a> {
@@ -136,7 +137,7 @@ impl Parser<'_> {
                         self.p += 6;
                         continue;
                     }
-                    let raw = String::from_utf16_lossy(&self.u[self.p..self.p + 6]);
+                    let raw = utf16_string(&self.u[self.p..self.p + 6]);
                     return Err(fail(
                         self.p,
                         format!("\"{raw}\" is not a valid unicode escape"),
@@ -235,7 +236,7 @@ impl Parser<'_> {
         while self.at(end).is_some_and(is_ident_part) {
             end += 1;
         }
-        String::from_utf16_lossy(&self.u[start..end])
+        utf16_string(&self.u[start..end])
     }
 
     fn object(&mut self) -> Parsed<()> {

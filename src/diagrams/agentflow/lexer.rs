@@ -1,5 +1,5 @@
 use super::tokens::*;
-use crate::util::chars::{is_js_space, is_word};
+use crate::util::chars::{is_js_space, is_word, utf16_string};
 use crate::util::unicode::is_unicode_letter;
 
 pub struct Tokens {
@@ -121,7 +121,7 @@ impl Lexer {
     }
 
     fn slice(&self, from: usize, to: usize) -> String {
-        String::from_utf16_lossy(&self.u[from.min(self.n)..to.min(self.n)])
+        utf16_string(&self.u[from.min(self.n)..to.min(self.n)])
     }
 
     fn advance(&mut self, e: usize) {

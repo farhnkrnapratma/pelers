@@ -1,5 +1,5 @@
 use crate::diagrams::common::generics::parse_generic_types;
-use crate::util::chars::trim;
+use crate::util::chars::{trim, utf16_string};
 use std::fmt::Write as _;
 
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -21,7 +21,7 @@ fn is_visibility(c: u16) -> bool {
 }
 
 fn unit_string(u: &[u16]) -> String {
-    String::from_utf16_lossy(u)
+    utf16_string(u)
 }
 
 fn slice(u: &[u16], from: isize, to: isize) -> &[u16] {
