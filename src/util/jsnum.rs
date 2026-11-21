@@ -395,6 +395,58 @@ pub fn js_to_exponential(x: f64, digits: usize) -> String {
     out
 }
 
+struct Digits {
+    len: usize,
+    bytes: [u8; 40],
+}
+
+impl std::fmt::Write for Digits {
+    fn write_str(&mut self, text: &str) -> std::fmt::Result {
+        let end = self.len + text.len();
+        let slot = self.bytes.get_mut(self.len..end).ok_or(std::fmt::Error)?;
+        slot.copy_from_slice(text.as_bytes());
+        self.len = end;
+        Ok(())
+    }
+}
+
+fn scientific_digits(args: std::fmt::Arguments<'_>) -> Option<Digits> {
+    let mut out = Digits {
+        len: 0,
+        bytes: [0; 40],
+    };
+    std::fmt::Write::write_fmt(&mut out, args).ok()?;
+    Some(out)
+}
+
+pub fn js_to_precision_number(x: f64, precision: usize) -> f64 {
+    if x == 0.0 {
+        return 0.0;
+    }
+    if !x.is_finite() {
+        return x;
+    }
+    if precision <= 15
+        && let Some(shortest) = scientific_digits(format_args!("{x:e}"))
+    {
+        let text = &shortest.bytes[..shortest.len];
+        let mantissa = text.split(|&byte| byte == b'e').next().unwrap_or(text);
+        let count = mantissa.iter().filter(|byte| byte.is_ascii_digit()).count();
+        if count <= precision {
+            return x;
+        }
+        if count > precision + 1
+            && let Some(rounded) = scientific_digits(format_args!("{:.*e}", precision - 1, x))
+            && let Ok(value) = std::str::from_utf8(&rounded.bytes[..rounded.len])
+                .unwrap_or("")
+                .parse::<f64>()
+        {
+            return value;
+        }
+    }
+    js_number(&js_to_precision(x, precision))
+}
+
 pub fn js_to_precision(x: f64, precision: usize) -> String {
     if let Some(text) = non_finite(x) {
         return text;
@@ -430,9 +482,34 @@ pub fn js_to_precision(x: f64, precision: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::{
-        exact_parts, js_min, js_number_to_string, js_round, js_to_exponential, js_to_precision,
-        to_fixed_0,
+        exact_parts, js_min, js_number, js_number_to_string, js_round, js_to_exponential,
+        js_to_precision, js_to_precision_number, to_fixed_0,
     };
+
+    #[test]
+    fn precision_numbers_match_parsing_the_precision_text() {
+        for x in [
+            0.30000000000000004,
+            1234567890123.125,
+            0.1 + 0.7,
+            3.0 * 1e23,
+            -2.675,
+            1e-7 * 3.0,
+            123.0,
+            -0.0,
+            f64::MAX,
+            5e-324,
+            f64::NAN,
+            f64::NEG_INFINITY,
+        ] {
+            let want = js_number(&js_to_precision(x, 15));
+            let got = js_to_precision_number(x, 15);
+            assert!(
+                got.to_bits() == want.to_bits() || (got.is_nan() && want.is_nan()),
+                "{x}"
+            );
+        }
+    }
 
     #[test]
     fn precision_rounds_ties_away_from_zero_and_noise_to_nearest() {

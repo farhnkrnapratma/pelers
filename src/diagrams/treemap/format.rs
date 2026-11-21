@@ -3,7 +3,8 @@ use std::sync::OnceLock;
 use regex::Regex;
 
 use crate::util::jsnum::{
-    js_number, js_number_to_string, js_round, js_to_exponential, js_to_fixed, js_to_precision,
+    js_number, js_number_to_string, js_round, js_to_exponential, js_to_fixed,
+    js_to_precision_number,
 };
 
 fn spec_re() -> &'static Regex {
@@ -82,7 +83,7 @@ impl Formatter {
             "e" => js_to_exponential(abs, self.precision.unwrap_or(6)),
             _ => {
                 let digits = js_max_digits(self.precision);
-                js_number_to_string(js_number(&js_to_precision(abs, digits)))
+                js_number_to_string(js_to_precision_number(abs, digits))
             }
         };
         if self.trim && body.contains('.') && !body.contains('e') {
