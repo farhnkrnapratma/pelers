@@ -4,7 +4,7 @@ use super::lexer::{
 };
 use crate::errors::{Edit, PelersError, input_offset, syntax_error};
 use crate::text::entities::decode_entities;
-use crate::util::chars::{is_js_space, utf16_to_byte};
+use crate::util::chars::{is_js_space, utf16_string, utf16_to_byte};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::js_parse_float;
 
@@ -150,7 +150,7 @@ pub fn parse_sankey(src: &[u16], db: &mut SankeyDb, source: &[u16]) -> Result<()
     } else {
         Vec::new()
     };
-    let source_text = String::from_utf16_lossy(source);
+    let source_text = utf16_string(source);
     let error = |at: usize, detail: &str| -> PelersError {
         let offset = if at > 0 && at >= src.len() {
             input_offset(&steps, src.len() - 1) + 1

@@ -11,6 +11,8 @@ import { fileURLToPath } from "node:url";
 
 export const root = fileURLToPath(new URL("../", import.meta.url));
 export const peleDir = resolve(root, process.env.PELE_DIR ?? "../pele");
+export const fixtures =
+  process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 
 const upstream = "pele";
 const upstreamName = /pele(?!rs)/g;

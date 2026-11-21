@@ -78,25 +78,28 @@ pub fn width(text: &str, size: f64, style: u32) -> f64 {
     } else {
         regular()
     };
-    let mut units: u32 = 0;
-    for c in text.encode_utf16() {
-        if c < 32 {
-            continue;
-        }
-        if c < 127 {
-            units += if mono {
+    let unit = |c: u16| {
+        if c < 32 || (c >= 127 && is_zero_width(c)) {
+            0
+        } else if c < 127 {
+            if mono {
                 600
             } else {
                 u32::from(table[usize::from(c) - 32])
-            };
-        } else if is_zero_width(c) {
-            continue;
+            }
         } else if is_wide(c) {
-            units += if mono { 1200 } else { 1000 };
+            if mono { 1200 } else { 1000 }
+        } else if mono {
+            600
         } else {
-            units += if mono { 600 } else { 580 };
+            580
         }
-    }
+    };
+    let units: u32 = if text.is_ascii() {
+        text.bytes().map(|b| unit(u16::from(b))).sum()
+    } else {
+        text.encode_utf16().map(unit).sum()
+    };
     (f64::from(units) * eff) / 1000.0
 }
 

@@ -1,3 +1,4 @@
+use crate::util::chars::utf16_string;
 #[derive(Debug)]
 pub enum Span {
     Bytes(usize, usize),
@@ -39,7 +40,7 @@ impl Spans {
     pub fn span(&self, units: &[u16], from: usize, to: usize) -> Span {
         match (self.byte(from), self.byte(to)) {
             (Some(a), Some(b)) => Span::Bytes(a, b),
-            _ => Span::Lossy(String::from_utf16_lossy(&units[from..to])),
+            _ => Span::Lossy(utf16_string(&units[from..to])),
         }
     }
 }

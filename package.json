@@ -26,14 +26,39 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
+      "browser": "./browser.js",
       "default": "./index.js"
-    }
+    },
+    "./lazy": {
+      "types": "./lazy.d.ts",
+      "default": "./lazy.js"
+    },
+    "./small": {
+      "types": "./index.d.ts",
+      "default": "./small.js"
+    },
+    "./small/lazy": {
+      "types": "./lazy.d.ts",
+      "default": "./small-lazy.js"
+    },
+    "./global": "./dist/pelers.global.js",
+    "./small/global": "./dist/pelers.small.global.js",
+    "./package.json": "./package.json"
   },
   "files": [
     "index.js",
     "index.native.js",
     "index.d.ts",
     "index.native.d.ts",
+    "browser.js",
+    "lazy.js",
+    "lazy.d.ts",
+    "small.js",
+    "small-lazy.js",
+    "js/",
+    "wasm/",
+    "dist/pelers.global.js",
+    "dist/pelers.small.global.js",
     "README.md",
     "NOTICE",
     "LICENSE-MIT",
@@ -43,9 +68,12 @@
   "scripts": {
     "prepare": "bash .githooks/install.sh",
     "build": "napi build --platform --features napi --esm --js index.native.js --dts index.native.d.ts",
-    "build:release": "napi build --platform --release --features napi --esm --js index.native.js --dts index.native.d.ts",
+    "build:release": "bun scripts/build-native.mjs",
     "test:bindings": "bun scripts/test-bindings.mjs",
-    "test:native": "bun run build:release && bun run test:bindings"
+    "test:native": "bun run build:release && bun run test:bindings",
+    "build:wasm": "bun scripts/build-wasm.mjs",
+    "test:dom": "bun test tests/dom",
+    "prepublishOnly": "napi create-npm-dirs && napi pre-publish -t npm && bun run build:wasm"
   },
   "napi": {
     "binaryName": "pelers",
@@ -54,10 +82,15 @@
       "aarch64-unknown-linux-gnu",
       "x86_64-unknown-linux-musl",
       "aarch64-unknown-linux-musl",
+      "armv7-unknown-linux-gnueabihf",
+      "powerpc64le-unknown-linux-gnu",
+      "s390x-unknown-linux-gnu",
+      "riscv64gc-unknown-linux-gnu",
       "x86_64-apple-darwin",
       "aarch64-apple-darwin",
       "x86_64-pc-windows-msvc",
-      "aarch64-pc-windows-msvc"
+      "aarch64-pc-windows-msvc",
+      "i686-pc-windows-msvc"
     ]
   },
   "engines": {
@@ -71,5 +104,8 @@
     "@commitlint/config-conventional": "^21.2.4",
     "@napi-rs/cli": "^3.10.12",
     "fallow": "^3.44.0"
+  },
+  "browser": {
+    "./index.js": "./browser.js"
   }
 }

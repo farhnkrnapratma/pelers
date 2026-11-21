@@ -28,6 +28,14 @@ pub fn trim_end(text: &str) -> &str {
     text.trim_end_matches(is_js_space)
 }
 
+pub fn utf16_string(units: &[u16]) -> String {
+    if units.iter().all(|&unit| unit < 0x80) {
+        units.iter().map(|&unit| char::from(unit as u8)).collect()
+    } else {
+        String::from_utf16_lossy(units)
+    }
+}
+
 pub fn utf16_len(text: &str) -> usize {
     text.encode_utf16().count()
 }
@@ -44,9 +52,41 @@ pub fn utf16_to_byte(text: &str, unit: usize) -> usize {
     text.len()
 }
 
+pub fn find(hay: &str, needle: &str) -> Option<usize> {
+    let (bytes, wanted) = (hay.as_bytes(), needle.as_bytes());
+    let Some(&first) = wanted.first() else {
+        return Some(0);
+    };
+    let mut from = 0;
+    while let Some(i) = bytes[from..].iter().position(|&b| b == first) {
+        let at = from + i;
+        if bytes[at..].starts_with(wanted) {
+            return Some(at);
+        }
+        from = at + 1;
+    }
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn finds_substrings_like_str_find() {
+        for (hay, needle) in [
+            ("a%%b%%", "%%"),
+            ("%%{x}%%", "}%%"),
+            ("no", "%%"),
+            ("ü---", "---"),
+            ("", ""),
+            ("abc", ""),
+            ("a=\"b", "=\""),
+            ("%", "%%"),
+        ] {
+            assert_eq!(find(hay, needle), hay.find(needle), "{hay} {needle}");
+        }
+    }
 
     #[test]
     fn follows_javascript_whitespace() {

@@ -28,6 +28,7 @@ use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{internal_link, linked, rel_attr};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 pub const PALETTE: usize = 8;
 
@@ -244,12 +245,15 @@ fn put(
         ""
     };
     let style_line = style.as_ref().map_or(String::new(), |s| s.line.clone());
-    out.edges.push_str(&format!(
+    let _ = write!(
+        out.edges,
         "<g class=\"pelers-edge pelers-edge-{kind}{classes}\" data-id=\"{}\"{stroke_attr}{style_line}><path d=\"{}\"{dashed}/>{}</g>",
         esc_text(&edge.id),
         path.d,
-        marker(end_type, path.ex, path.ey, path.edx, path.edy, &color, "none")
-    ));
+        marker(
+            end_type, path.ex, path.ey, path.edx, path.edy, &color, "none"
+        )
+    );
     if label.width > 0.0 {
         let text_attrs = style.as_ref().map_or(String::new(), |s| s.text.clone());
         out.labels.push_str(&edge_label_svg(
@@ -565,13 +569,18 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
             }
             let title_x = cluster_title_x(&c, view.label.width, &crossings, GROUP_PAD);
             let slot = node.color_index.unwrap_or(KIND_COUNT);
-            clusters.push_str(&format!(
+            let _ = write!(
+                clusters,
                 "<g class=\"pelers-cluster pelers-flow{classes}\" data-id=\"{id}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"{}/>{}</g>",
                 num(x - c.w / 2.0),
                 num(y - c.h / 2.0),
                 num(c.w),
                 num(c.h),
-                rounded(&format!("{}{}", tint(slot, "0.06", &view.style), view.style.shape)),
+                rounded(&format!(
+                    "{}{}",
+                    tint(slot, "0.06", &view.style),
+                    view.style.shape
+                )),
                 label_svg_with(
                     &view.label,
                     title_x,
@@ -583,7 +592,7 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
                     ),
                     icons
                 )
-            ));
+            );
             continue;
         }
 
@@ -675,12 +684,13 @@ fn draw(model: &AgentflowModel, config: &Object, options: &RenderOptions, turned
             };
             body = linked(&body, link, &node.id, &mut links, options, &attrs);
         }
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<g class=\"pelers-node pelers-shape-{}{kind}{classes}\" data-id=\"{id}\" transform=\"translate({},{})\">{body}</g>",
             view.shape,
             num(x),
             num(y)
-        ));
+        );
     }
 
     let mut out = Out::default();

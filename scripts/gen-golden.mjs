@@ -1,4 +1,4 @@
-import { peleCore, peleDir, writeFixture } from "./oracle.mjs";
+import { peleCore, peleDir, root, writeFixture } from "./oracle.mjs";
 import {
   mkdirSync,
   readdirSync,
@@ -7,11 +7,9 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
 process.env.TZ = "UTC";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const corpus = join(peleDir, "tests/corpus");
 const out = join(root, "tests/golden");
 const { render } = await peleCore();

@@ -24,10 +24,23 @@ crate-type = ["cdylib", "rlib"]
 
 [features]
 napi = ["dep:napi", "dep:napi-derive", "dep:napi-build"]
+wasm = []
+regex-perf = ["regex/perf"]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+mimalloc = "0.1.52"
 napi = { version = "3", optional = true }
 napi-derive = { version = "3", optional = true }
+
+[target.'cfg(not(all(target_arch = "wasm32", target_os = "unknown")))'.dependencies]
+jiff = "1.0.1"
+regex = { version = "1.13.1", default-features = false, features = ["perf"] }
+url = "2.5.8"
+
+[target.'cfg(all(target_arch = "wasm32", target_os = "unknown"))'.dependencies]
+jiff = { version = "1.0.1", default-features = false, features = ["std", "tz-system"] }
+js-sys = "0.3.107"
+wasm-bindgen = "=0.2.130"
 
 [dev-dependencies]
 flate2 = "1.1.11"
@@ -38,10 +51,7 @@ sha2 = "0.11.1"
 napi-build = { version = "2", optional = true }
 
 [dependencies]
-jiff = "1.0.1"
-mimalloc = "0.1.52"
-regex = "1.13.1"
-url = "2.5.8"
+regex = { version = "1.13.1", default-features = false, features = ["std", "unicode-case", "unicode-perl"] }
 
 [profile.release]
 lto = "fat"

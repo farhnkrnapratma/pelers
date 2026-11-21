@@ -15,6 +15,7 @@ use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_pow, js_round};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 const QUADRANTS: [(DomainName, usize, usize, usize); 4] = [
     (DomainName::Complex, 0, 0, 0),
@@ -302,12 +303,13 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
 
     let mut fills = String::new();
     for (name, _, _, color) in QUADRANTS {
-        fills.push_str(&format!(
+        let _ = write!(
+            fills,
             "<path class=\"pelers-cynefin-region\" data-id=\"{}\" d=\"{}\" fill=\"{}\" fill-opacity=\"0.14\"/>",
             name.as_str(),
             regions[&name],
             series_color(color)
-        ));
+        );
     }
     let boundaries = format!(
         "<g class=\"pelers-cynefin-boundaries\" fill=\"none\" stroke=\"var(--_b)\" stroke-dasharray=\"6 3\"><path d=\"{}\"/><path d=\"{}\"/><path d=\"{}\"/><path class=\"pelers-cynefin-cliff\" d=\"{}\" stroke=\"var(--_l)\" stroke-width=\"2\" stroke-dasharray=\"none\" stroke-linecap=\"round\"/></g>",
@@ -356,7 +358,8 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
             } else {
                 format!(" data-id=\"{}\"", esc_text(&item.text))
             };
-            out.push_str(&format!(
+            let _ = write!(
+                out,
                 "<g class=\"pelers-node{node_class}\"{node_id}><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_b)\"{}{ROUNDED}/>{}</g>",
                 num(b.cx - item.w / 2.0),
                 num(y),
@@ -382,7 +385,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
                     ),
                     icons,
                 )
-            ));
+            );
             y += item.h;
         }
         format!(
@@ -555,7 +558,8 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
                 icons,
             );
         }
-        edges.push_str(&format!(
+        let _ = write!(
+            edges,
             "<g class=\"pelers-edge\" data-id=\"{}-{}\"><path d=\"M{},{}Q{},{} {},{}\" fill=\"none\" stroke=\"var(--_l)\"/>{head}{text}</g>",
             transition.from.as_str(),
             transition.to.as_str(),
@@ -565,7 +569,7 @@ pub fn render_cynefin(model: &CynefinModel, config: &Config, options: &RenderOpt
             num(qy),
             num(ex),
             num(ey)
-        ));
+        );
     }
 
     let total_width = js_max(width, title.width) + 2.0 * pad;

@@ -1,10 +1,7 @@
 import { mulberry32 } from "./random.mjs";
-import { peleSrc, writeFixture } from "./oracle.mjs";
-import { fileURLToPath } from "node:url";
+import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
-const OUT = process.env.PELERS_FUZZ_OUT ?? `${root}tests/fixtures`;
 const { parseYaml } = await peleSrc("util/yaml.ts");
 const { cleanupComments, encodeEntities, preprocess } = await peleSrc("preprocess.ts");
 const { inputOffset } = await peleSrc("errors.ts");

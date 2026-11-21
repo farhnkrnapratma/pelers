@@ -1,8 +1,9 @@
 use std::cell::RefCell;
+use std::fmt::Write as _;
 
 use super::builder::esc;
 use super::ink::{ink, plain_color};
-use crate::util::chars::trim;
+use crate::util::chars::{find, trim};
 use crate::util::value::{Object, Value};
 
 const SLOTS: usize = 8;
@@ -78,7 +79,7 @@ fn function_names_allowed(color: &str) -> bool {
 fn variables_allowed(color: &str) -> bool {
     let lower = color.to_ascii_lowercase();
     let mut from = 0;
-    while let Some(found) = lower[from..].find("var(") {
+    while let Some(found) = find(&lower[from..], "var(") {
         let mut at = from + found + 4;
         while let Some(c) = color[at..].chars().next() {
             if !crate::util::chars::is_js_space(c) {
@@ -201,7 +202,7 @@ pub fn palette(kind: &str, config: &Object) -> Palette {
         let Some(color) = safe_color(&list[i % list.len()]) else {
             continue;
         };
-        style.push_str(&format!(";--pelers-series-{}:{color}", i + 1));
+        let _ = write!(style, ";--pelers-series-{}:{color}", i + 1);
         inks[i] = ink(&format!(";fill:{color}"), "");
     }
     if style.is_empty() {

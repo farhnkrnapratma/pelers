@@ -2,7 +2,9 @@ use super::{JourneyModel, JourneyTask, journey_actors};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit::{fit_label, plain_label};
 use crate::diagrams::common::fit_width::turn_to_fit;
-use crate::svg::builder::{esc_text, label_svg, num};
+use std::fmt::Write;
+
+use crate::svg::builder::{esc_text, num, push_label};
 use crate::svg::root::{Accessible, RenderOptions, svg_document};
 use crate::svg::theme::{ROUNDED, series_color};
 use crate::text::label::Label;
@@ -45,14 +47,15 @@ fn mouth(mood: &str) -> &'static str {
     }
 }
 
-fn face(x: f64, y: f64, mood: &str) -> String {
-    format!(
+fn push_face(out: &mut String, x: f64, y: f64, mood: &str) {
+    let _ = write!(
+        out,
         "<g class=\"pelers-face pelers-face-{mood}\" transform=\"translate({},{})\"><circle r=\"{}\" fill=\"var(--_bg)\" stroke=\"var(--_l)\"/><g fill=\"var(--_l)\">{EYES}</g><path d=\"{}\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\"/></g>",
         num(x),
         num(y),
         js_number_to_string(FACE),
         mouth(mood)
-    )
+    );
 }
 
 pub fn render_journey(model: &JourneyModel, options: &RenderOptions) -> Drawn {
@@ -219,126 +222,150 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
     let chart_bottom = chart_top + 4.0 * LEVEL;
     let right = left + plot_w;
 
-    let mut body = String::new();
+    let mut body = String::with_capacity(2048 + n * 900);
+    push_label(
+        &mut body,
+        &title,
+        pad + width / 2.0,
+        pad + title.height / 2.0,
+        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
+    );
     let mut bottom = top;
     if n > 0 {
-        let mut grid = String::new();
-        let mut scale = String::new();
+        body.push_str("<path class=\"pelers-grid\" d=\"");
         for score in (1..=5).rev() {
-            let y = chart_top + (5 - score) as f64 * LEVEL;
-            grid += &format!("M{},{}H{}", num(left - 6.0), num(y), num(right));
-            scale += &format!(
+            let y = chart_top + f64::from(5 - score) * LEVEL;
+            let _ = write!(body, "M{},{}H{}", num(left - 6.0), num(y), num(right));
+        }
+        let _ = write!(
+            body,
+            "\" fill=\"none\" stroke=\"var(--_a)\"/><g class=\"pelers-scale\" font-size=\"{}\" text-anchor=\"end\" fill=\"var(--_m)\">",
+            js_number_to_string(tiny)
+        );
+        for score in (1..=5).rev() {
+            let y = chart_top + f64::from(5 - score) * LEVEL;
+            let _ = write!(
+                body,
                 "<text x=\"{}\" y=\"{}\">{score}</text>",
                 num(left - 12.0),
                 num(y + tiny * 0.35)
             );
         }
-        body += &format!(
-            "<path class=\"pelers-grid\" d=\"{grid}\" fill=\"none\" stroke=\"var(--_a)\"/><g class=\"pelers-scale\" font-size=\"{}\" text-anchor=\"end\" fill=\"var(--_m)\">{scale}</g>",
-            js_number_to_string(tiny)
-        );
+        body.push_str("</g>");
 
-        let mut line = String::new();
-        let mut stems = String::new();
-        let mut faces = String::new();
-        let mut cards: Vec<String> = Vec::with_capacity(n);
-        for (i, task) in tasks.iter().enumerate() {
-            let x = left + i as f64 * pitch;
-            let cx = x + card_w / 2.0;
-            let score = task.score;
-            let level = if score.is_nan() {
-                3.0
-            } else {
-                js_min(5.0, js_max(1.0, score))
-            };
-            let y = chart_top + (5.0 - level) * LEVEL;
-            line.push_str(if i == 0 { "M" } else { "L" });
-            line.push_str(&num(cx));
-            line.push(',');
-            line.push_str(&num(y));
-            stems.push('M');
-            stems.push_str(&num(cx));
-            stems.push(',');
-            stems.push_str(&num(cards_y + card_h));
-            stems.push('V');
-            stems.push_str(&num(y - FACE));
-            faces += &face(cx, y, mood(score));
-
-            let people: Vec<&str> = task
-                .people
-                .iter()
-                .filter(|name| !name.is_empty())
-                .map(String::as_str)
-                .collect();
-            let step = js_min(
-                DOT_STEP,
-                (card_w - 2.0 * PAD_X - 2.0 * DOT) / js_max(people.len() as f64 - 1.0, 1.0),
-            );
-            let mut dots = String::new();
-            for (k, name) in people.iter().enumerate() {
-                let dot_x = cx + (k as f64 - (people.len() as f64 - 1.0) / 2.0) * step;
-                dots.push_str("<circle class=\"pelers-actor\" cx=\"");
-                dots.push_str(&num(dot_x));
-                dots.push_str("\" cy=\"");
-                dots.push_str(&num(cards_y + card_h - PAD_Y - DOT));
-                dots.push_str("\" r=\"");
-                dots.push_str(&js_number_to_string(DOT));
-                dots.push_str("\" fill=\"");
-                dots.push_str(&series_color(actor.get(name).copied().unwrap_or(0)));
-                dots.push_str("\" stroke=\"var(--_s)\"><title>");
-                dots.push_str(&esc_text(name));
-                dots.push_str("</title></circle>");
+        let spots: Vec<(f64, f64)> = tasks
+            .iter()
+            .enumerate()
+            .map(|(i, task)| {
+                let score = task.score;
+                let level = if score.is_nan() {
+                    3.0
+                } else {
+                    js_min(5.0, js_max(1.0, score))
+                };
+                (
+                    left + i as f64 * pitch + card_w / 2.0,
+                    chart_top + (5.0 - level) * LEVEL,
+                )
+            })
+            .collect();
+        let card_bottom = num(cards_y + card_h);
+        body.push_str("<path class=\"pelers-stems\" d=\"");
+        for &(cx, y) in &spots {
+            body.push('M');
+            body.push_str(&num(cx));
+            body.push(',');
+            body.push_str(&card_bottom);
+            body.push('V');
+            body.push_str(&num(y - FACE));
+        }
+        body.push_str("\" fill=\"none\" stroke=\"var(--_b)\" stroke-dasharray=\"2 3\"/>");
+        if n > 1 {
+            body.push_str("<path class=\"pelers-edge\" d=\"");
+            for (i, &(cx, y)) in spots.iter().enumerate() {
+                body.push(if i == 0 { 'M' } else { 'L' });
+                body.push_str(&num(cx));
+                body.push(',');
+                body.push_str(&num(y));
             }
-            cards.push(format!(
-                "<g class=\"pelers-node pelers-task\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{dots}</g>",
-                esc_text(trim(&task.task)),
-                num(x),
-                num(cards_y),
-                num(card_w),
-                num(card_h),
-                label_svg(
+            body.push_str("\" fill=\"none\" stroke=\"var(--_l)\" stroke-linejoin=\"round\"/>");
+        }
+        for (task, &(cx, y)) in tasks.iter().zip(&spots) {
+            push_face(&mut body, cx, y, mood(task.score));
+        }
+
+        let font = format!(" font-size=\"{}\"", js_number_to_string(small));
+        let dot_r = js_number_to_string(DOT);
+        let dot_y = num(cards_y + card_h - PAD_Y - DOT);
+        for run in &runs {
+            if let Some(label) = &run.label {
+                let x = left + run.start as f64 * pitch;
+                let w = run.count as f64 * pitch - GAP;
+                let _ = write!(
+                    body,
+                    "<g class=\"pelers-cluster pelers-section\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\"{ROUNDED}/>",
+                    esc_text(trim(&tasks[run.start].section)),
+                    num(x),
+                    num(top),
+                    num(w),
+                    num(band_h),
+                );
+                push_label(
+                    &mut body,
+                    label,
+                    x + w / 2.0,
+                    top + band_h / 2.0,
+                    &format!(
+                        " font-size=\"{}\" font-weight=\"var(--_hw)\"",
+                        js_number_to_string(small)
+                    ),
+                );
+            }
+            for i in run.start..run.start + run.count {
+                let task = &tasks[i];
+                let x = left + i as f64 * pitch;
+                let cx = spots[i].0;
+                let _ = write!(
+                    body,
+                    "<g class=\"pelers-node pelers-task\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
+                    esc_text(trim(&task.task)),
+                    num(x),
+                    num(cards_y),
+                    num(card_w),
+                    num(card_h),
+                );
+                push_label(
+                    &mut body,
                     &labels[i],
                     cx,
                     cards_y + PAD_Y + text_h / 2.0,
-                    &format!(" font-size=\"{}\"", js_number_to_string(small))
-                )
-            ));
-        }
-        body += &format!(
-            "<path class=\"pelers-stems\" d=\"{stems}\" fill=\"none\" stroke=\"var(--_b)\" stroke-dasharray=\"2 3\"/>"
-        );
-        if n > 1 {
-            body += &format!(
-                "<path class=\"pelers-edge\" d=\"{line}\" fill=\"none\" stroke=\"var(--_l)\" stroke-linejoin=\"round\"/>"
-            );
-        }
-        body += &faces;
-
-        for run in &runs {
-            let members = cards[run.start..run.start + run.count].concat();
-            match &run.label {
-                None => body += &members,
-                Some(label) => {
-                    let x = left + run.start as f64 * pitch;
-                    let w = run.count as f64 * pitch - GAP;
-                    body += &format!(
-                        "<g class=\"pelers-cluster pelers-section\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_a)\"{ROUNDED}/>{}{members}</g>",
-                        esc_text(trim(&tasks[run.start].section)),
-                        num(x),
-                        num(top),
-                        num(w),
-                        num(band_h),
-                        label_svg(
-                            label,
-                            x + w / 2.0,
-                            top + band_h / 2.0,
-                            &format!(
-                                " font-size=\"{}\" font-weight=\"var(--_hw)\"",
-                                js_number_to_string(small)
-                            )
-                        )
-                    );
+                    &font,
+                );
+                let people = task.people.iter().filter(|name| !name.is_empty());
+                let count = people.clone().count() as f64;
+                let step = js_min(
+                    DOT_STEP,
+                    (card_w - 2.0 * PAD_X - 2.0 * DOT) / js_max(count - 1.0, 1.0),
+                );
+                for (k, name) in people.enumerate() {
+                    body.push_str("<circle class=\"pelers-actor\" cx=\"");
+                    body.push_str(&num(cx + (k as f64 - (count - 1.0) / 2.0) * step));
+                    body.push_str("\" cy=\"");
+                    body.push_str(&dot_y);
+                    body.push_str("\" r=\"");
+                    body.push_str(&dot_r);
+                    body.push_str("\" fill=\"");
+                    body.push_str(&series_color(
+                        actor.get(name.as_str()).copied().unwrap_or(0),
+                    ));
+                    body.push_str("\" stroke=\"var(--_s)\"><title>");
+                    body.push_str(&esc_text(name));
+                    body.push_str("</title></circle>");
                 }
+                body.push_str("</g>");
+            }
+            if run.label.is_some() {
+                body.push_str("</g>");
             }
         }
         bottom = chart_bottom + FACE;
@@ -346,40 +373,33 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
         if !legend.is_empty() {
             let x0 = left + (plot_w - legend_w) / 2.0;
             let y0 = bottom + 16.0;
-            let mut items = String::new();
+            let _ = write!(body, "<g class=\"pelers-legend\"{font}>");
             for item in &legend {
                 let cy = y0 + item.y + item.h / 2.0;
-                items += &format!(
-                    "<g class=\"pelers-legend-item\" data-id=\"{}\"><circle cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\"/>{}</g>",
+                let _ = write!(
+                    body,
+                    "<g class=\"pelers-legend-item\" data-id=\"{}\"><circle cx=\"{}\" cy=\"{}\" r=\"{dot_r}\" fill=\"{}\"/>",
                     esc_text(&item.name),
                     num(x0 + item.x + DOT),
                     num(cy),
-                    js_number_to_string(DOT),
                     series_color(actor.get(item.name.as_str()).copied().unwrap_or(0)),
-                    label_svg(
-                        &item.label,
-                        x0 + item.x + 2.0 * DOT + 6.0 + item.label.width / 2.0,
-                        cy,
-                        ""
-                    )
                 );
+                push_label(
+                    &mut body,
+                    &item.label,
+                    x0 + item.x + 2.0 * DOT + 6.0 + item.label.width / 2.0,
+                    cy,
+                    "",
+                );
+                body.push_str("</g>");
             }
-            body += &format!(
-                "<g class=\"pelers-legend\" font-size=\"{}\">{items}</g>",
-                js_number_to_string(small)
-            );
+            body.push_str("</g>");
             bottom = y0 + legend_h;
         }
     }
 
     let total_width = (width + 2.0 * pad).ceil();
     let total_height = (js_max(bottom, pad) + pad).ceil();
-    let content = label_svg(
-        &title,
-        pad + width / 2.0,
-        pad + title.height / 2.0,
-        " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &body;
     Drawn {
         svg: svg_document(
             "journey",
@@ -388,7 +408,7 @@ fn across(model: &JourneyModel, options: &RenderOptions) -> Drawn {
             size,
             options,
             accessible(model),
-            &content,
+            &body,
         ),
         width: total_width,
         height: total_height,
@@ -420,14 +440,20 @@ fn vertical(model: &JourneyModel, options: &RenderOptions) -> Drawn {
             0.0
         };
     let mut section: Option<&str> = None;
-    let mut body = String::new();
+    let mut body = String::with_capacity(1024 + tasks.len() * 900);
     let mut width = title.width;
+    let actor_attrs = format!(
+        " class=\"pelers-journey-actor\" font-size=\"{}\"",
+        js_number_to_string(small)
+    );
+    let dot_r = js_number_to_string(DOT);
     for (index, task) in tasks.iter().enumerate() {
         if section != Some(task.section.as_str()) {
             section = Some(&task.section);
             let head = fit_label(Some(&task.section), size, room - 16.0, BOLD_STYLE);
             if head.height != 0.0 {
-                body += &label_svg(
+                push_label(
+                    &mut body,
                     &head,
                     pad + 8.0 + head.width / 2.0,
                     y + head.height / 2.0,
@@ -450,23 +476,26 @@ fn vertical(model: &JourneyModel, options: &RenderOptions) -> Drawn {
             h += js_max(16.0, person.height) + 4.0;
         }
         let w = js_max(room, label.width + 72.0);
-        body += &format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-node pelers-journey-step\" data-id=\"{index}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
             num(pad),
             num(y),
             num(w),
             num(h)
         );
-        body += &label_svg(
+        push_label(
+            &mut body,
             &label,
             pad + PAD_X + label.width / 2.0,
             y + PAD_Y + label.height / 2.0,
             " class=\"pelers-label\"",
         );
         let cx = pad + w - 28.0;
-        body += &face(cx, y + PAD_Y + FACE, mood(task.score));
+        push_face(&mut body, cx, y + PAD_Y + FACE, mood(task.score));
         if !task.score.is_nan() {
-            body += &format!(
+            let _ = write!(
+                body,
                 "<text class=\"pelers-journey-score\" x=\"{}\" y=\"{}\" font-size=\"{}\" text-anchor=\"middle\">{}</text>",
                 num(cx),
                 num(y + PAD_Y + 2.0 * FACE + small),
@@ -477,28 +506,27 @@ fn vertical(model: &JourneyModel, options: &RenderOptions) -> Drawn {
         let mut py = y + PAD_Y + text_h + 4.0;
         for (name, person) in &people {
             let ph = js_max(16.0, person.height);
-            body += &format!(
-                "<circle class=\"pelers-actor\" cx=\"{}\" cy=\"{}\" r=\"{}\" fill=\"{}\"/>",
+            let _ = write!(
+                body,
+                "<circle class=\"pelers-actor\" cx=\"{}\" cy=\"{}\" r=\"{dot_r}\" fill=\"{}\"/>",
                 num(pad + 16.0),
                 num(py + ph / 2.0),
-                js_number_to_string(DOT),
                 series_color(actors.get(name).copied().unwrap_or(0))
             );
-            body += &label_svg(
+            push_label(
+                &mut body,
                 person,
                 pad + 28.0 + person.width / 2.0,
                 py + ph / 2.0,
-                &format!(
-                    " class=\"pelers-journey-actor\" font-size=\"{}\"",
-                    js_number_to_string(small)
-                ),
+                &actor_attrs,
             );
             py += ph + 4.0;
         }
-        body += "</g>";
+        body.push_str("</g>");
         y += h;
         if index + 1 < tasks.len() {
-            body += &format!(
+            let _ = write!(
+                body,
                 "<path class=\"pelers-edge\" d=\"M{},{}v16\" fill=\"none\" stroke=\"var(--_l)\"/>",
                 num(pad + w / 2.0),
                 num(y)
@@ -513,12 +541,15 @@ fn vertical(model: &JourneyModel, options: &RenderOptions) -> Drawn {
         y - if tasks.is_empty() { 0.0 } else { 16.0 },
     ) + pad)
         .ceil();
-    let content = label_svg(
+    let mut content = String::with_capacity(body.len() + 256);
+    push_label(
+        &mut content,
         &title,
         total_width / 2.0,
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &body;
+    );
+    content.push_str(&body);
     Drawn {
         svg: svg_document(
             "journey",

@@ -1,3 +1,4 @@
+use std::fmt::Write as _;
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -5,14 +6,14 @@ use regex::Regex;
 use super::axis::{auto_ticks, interval_ticks, time_format};
 use super::dates::add;
 use super::db::{GanttDb, Task};
-use super::jsdate::JsDate;
+use super::jsdate::{JsDate, now_ms};
 use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::cap_width;
 use crate::errors::PelersError;
 use crate::preprocess::Config;
-use crate::svg::builder::{esc, esc_text, label_svg, label_svg_with, num};
+use crate::svg::builder::{esc, esc_text, label_svg, label_svg_with, num, push_label_with};
 use crate::svg::options::LinkInfo;
-use crate::svg::root::{Accessible, RenderOptions, svg_document};
+use crate::svg::root::{Accessible, RenderOptions, svg_document, svg_document_parts};
 use crate::svg::theme::{CRITICAL, ROUNDED, resolve_style};
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width as measure};
@@ -161,9 +162,7 @@ pub fn render_gantt(
     let pad = options.padding.unwrap_or(8.0);
     let now = match options.now {
         Some(given) if given.is_finite() => given,
-        _ => std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map_or(0.0, |d| d.as_millis() as f64),
+        _ => now_ms(),
     };
 
     let label_size = setting(config, "fontSize", 4.0, 72.0).unwrap_or(js_round(size * 0.8125));
@@ -179,7 +178,7 @@ pub fn render_gantt(
     let top_axis = db.top_axis || flag(config, "topAxis");
 
     db.get_tasks(Some(now))?;
-    let all: Vec<Task> = db.tasks.clone();
+    let all: Vec<Task> = std::mem::take(&mut db.tasks);
     let row_tasks: Vec<usize> = (0..all.len()).filter(|&t| !all[t].vert).collect();
     let verts: Vec<usize> = (0..all.len())
         .filter(|&t| all[t].vert && scheduled(&all[t]))
@@ -427,12 +426,13 @@ pub fn render_gantt(
     let top_y = plot_top - grid_lead - tick_height / 2.0 - 2.0;
     for &t in &ticks {
         let tx = x(t);
-        grid.push_str(&format!(
+        let _ = write!(
+            grid,
             "M{},{}V{}",
             num(tx),
             num(plot_top - grid_lead),
             num(plot_bottom)
-        ));
+        );
         let label = tick_label(t);
         let width = measure(&label, tick_size, 0);
         if tx - width / 2.0 < last_right + 8.0 || label == last_label {
@@ -442,17 +442,19 @@ pub fn render_gantt(
         last_label = label.clone();
         extent = js_max(extent, last_right);
         let body = format!("text-anchor=\"middle\">{}</text>", esc(&label));
-        axis_bottom.push_str(&format!(
+        let _ = write!(
+            axis_bottom,
             "<text x=\"{}\" y=\"{}\" {body}",
             num(tx),
             num(bottom_y + tick_size * 0.35)
-        ));
+        );
         if top_axis {
-            axis_top.push_str(&format!(
+            let _ = write!(
+                axis_top,
                 "<text x=\"{}\" y=\"{}\" {body}",
                 num(tx),
                 num(top_y + tick_size * 0.35)
-            ));
+            );
         }
     }
 
@@ -482,13 +484,14 @@ pub fn render_gantt(
             vert_ends[line] = end;
         }
         extent = js_max(extent, vert_ends[line]);
-        vert_lines.push_str(&format!(
+        let _ = write!(
+            vert_lines,
             "<path class=\"pelers-vert\" data-id=\"{}\" d=\"M{},{}V{}\"/>",
             esc_text(&all[task].id),
             num(vx),
             num(plot_top - grid_lead),
             num(plot_bottom)
-        ));
+        );
         vert_labels.push_str(&label_svg_with(
             &label,
             cx,
@@ -525,14 +528,19 @@ pub fn render_gantt(
         let y = plot_top + row as f64 * row_height;
         let h = (end - row) as f64 * row_height;
         if categories.len() > 1 || !section.is_empty() {
-            bands.push_str(&format!(
+            let _ = write!(
+                bands,
                 "<rect class=\"pelers-section pelers-section-{}\" x=\"0\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"{}\"/>",
                 js_number_to_string(index),
                 num(y),
                 js_number_to_string(width),
                 num(h),
-                if index % 2.0 == 0.0 { "var(--_s)" } else { "none" }
-            ));
+                if index % 2.0 == 0.0 {
+                    "var(--_s)"
+                } else {
+                    "none"
+                }
+            );
         }
         let idx = categories
             .iter()
@@ -605,7 +613,7 @@ pub fn render_gantt(
         };
         let mut classes = "pelers-task".to_owned();
         if !state.is_empty() {
-            classes.push_str(&format!(" pelers-{state}"));
+            let _ = write!(classes, " pelers-{state}");
         }
         if task.crit {
             classes.push_str(" pelers-crit");
@@ -617,33 +625,50 @@ pub fn render_gantt(
             classes.push_str(" pelers-clickable");
         }
 
-        let mut shape = String::new();
-        let mut text_fill = String::new();
+        let _ = write!(
+            tasks_out,
+            "<g class=\"{classes}{}\" data-id=\"{}\">",
+            if bar.x0.is_nan() {
+                " pelers-unscheduled"
+            } else {
+                ""
+            },
+            esc_text(&task.id)
+        );
+        let url = db.links.get(&task.id).cloned();
+        let mut body = String::new();
+        let out = if url.is_some() {
+            &mut body
+        } else {
+            &mut tasks_out
+        };
+        let mut text_attrs = " class=\"pelers-label\"";
         if bar.x0.is_nan() {
-            classes.push_str(" pelers-unscheduled");
-            text_fill = " fill=\"var(--_m)\"".to_owned();
+            text_attrs = " class=\"pelers-label\" fill=\"var(--_m)\"";
         } else {
             let color = if task.crit { CRITICAL } else { "var(--_c)" };
-            let paint = if state == "done" {
-                "fill=\"var(--_a)\"".to_owned()
-            } else if state == "active" {
-                format!("fill=\"{color}\" fill-opacity=\"0.25\"")
+            let stroke = if state == "done" && !task.crit {
+                "var(--_b)"
             } else {
-                format!("fill=\"{color}\"")
+                color
             };
-            let stroke = format!(
-                "stroke=\"{}\"",
-                if state == "done" && !task.crit {
-                    "var(--_b)"
+            let paint = |out: &mut String| {
+                if state == "done" {
+                    out.push_str("fill=\"var(--_a)\"");
                 } else {
-                    color
+                    let _ = write!(out, "fill=\"{color}\"");
+                    if state == "active" {
+                        out.push_str(" fill-opacity=\"0.25\"");
+                    }
                 }
-            );
+                let _ = write!(out, " stroke=\"{stroke}\"");
+            };
             if task.milestone {
                 let cx = (bar.x0 + bar.x1) / 2.0;
                 let r = bar_height / 2.0;
-                shape = format!(
-                    "<path d=\"M{},{}L{},{}L{},{}L{},{}Z\" {paint} {stroke} stroke-linejoin=\"round\"/>",
+                let _ = write!(
+                    out,
+                    "<path d=\"M{},{}L{},{}L{},{}L{},{}Z\" ",
                     num(cx),
                     num(cy - r),
                     num(cx + r),
@@ -653,43 +678,34 @@ pub fn render_gantt(
                     num(cx - r),
                     num(cy)
                 );
+                paint(out);
+                out.push_str(" stroke-linejoin=\"round\"/>");
             } else {
-                shape = format!(
-                    "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" {paint} {stroke}{ROUNDED}/>",
+                let _ = write!(
+                    out,
+                    "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" ",
                     num(bar.x0),
                     num(cy - bar_height / 2.0),
                     num(bar.x1 - bar.x0),
                     num(bar_height)
                 );
+                paint(out);
+                out.push_str(ROUNDED);
+                out.push_str("/>");
             }
             if bar.inside {
-                text_fill = if state.is_empty() {
-                    " fill=\"var(--_bg)\"".to_owned()
-                } else {
-                    String::new()
-                };
+                if state.is_empty() {
+                    text_attrs = " class=\"pelers-label\" fill=\"var(--_bg)\"";
+                }
             } else if state == "done" {
-                text_fill = " fill=\"var(--_m)\"".to_owned();
+                text_attrs = " class=\"pelers-label\" fill=\"var(--_m)\"";
             }
         }
-
-        let mut body = format!(
-            "{shape}{}",
-            label_svg_with(
-                &bar.label,
-                bar.label_x,
-                cy,
-                &format!(" class=\"pelers-label\"{text_fill}"),
-                false
-            )
-        );
-        if let Some(url) = db.links.get(&task.id).cloned() {
-            body = linked(&body, &url, &task.id, &mut links, options, "");
+        push_label_with(out, &bar.label, bar.label_x, cy, text_attrs, false);
+        if let Some(url) = url {
+            tasks_out.push_str(&linked(&body, &url, &task.id, &mut links, options, ""));
         }
-        tasks_out.push_str(&format!(
-            "<g class=\"{classes}\" data-id=\"{}\">{body}</g>",
-            esc_text(&task.id)
-        ));
+        tasks_out.push_str("</g>");
     }
 
     let mut today = String::new();
@@ -746,42 +762,52 @@ pub fn render_gantt(
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !bands.is_empty() {
-        content.push_str(&format!("<g class=\"pelers-sections\">{bands}</g>"));
+        let _ = write!(content, "<g class=\"pelers-sections\">{bands}</g>");
     }
     if !excluded.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-excluded\" fill=\"var(--_a)\">{excluded}</g>"
-        ));
+        );
     }
-    content.push_str(&format!(
+    let _ = write!(
+        content,
         "<g class=\"pelers-grid\" fill=\"none\"><path d=\"{grid}\" stroke=\"var(--_b)\" stroke-dasharray=\"1 3\"/><path d=\"{axis_line}\" stroke=\"var(--_b)\"/></g>"
-    ));
+    );
     if !vert_lines.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-verts\" fill=\"none\" stroke=\"var(--_l)\" stroke-width=\"1.5\" stroke-dasharray=\"4 3\">{vert_lines}</g>"
-        ));
+        );
     }
     content.push_str(&today);
-    content.push_str(&format!(
-        "<g class=\"pelers-tasks\" font-size=\"{}\">{tasks_out}</g>",
+    let _ = write!(
+        content,
+        "<g class=\"pelers-tasks\" font-size=\"{}\">",
         num(label_size)
-    ));
-    content.push_str(&format!(
-        "<g class=\"pelers-section-labels\" font-size=\"{}\">{section_out}</g>",
+    );
+    let mut tail = String::with_capacity(
+        section_out.len() + axis_bottom.len() + axis_top.len() + vert_labels.len() + 256,
+    );
+    let _ = write!(
+        tail,
+        "</g><g class=\"pelers-section-labels\" font-size=\"{}\">{section_out}</g>",
         num(section_size)
-    ));
-    content.push_str(&format!(
+    );
+    let _ = write!(
+        tail,
         "<g class=\"pelers-axis\" font-size=\"{}\" fill=\"var(--_m)\">{axis_bottom}{axis_top}</g>",
         js_number_to_string(tick_size)
-    ));
+    );
     if !vert_labels.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            tail,
             "<g class=\"pelers-vert-labels\" font-size=\"{}\">{vert_labels}</g>",
             num(label_size)
-        ));
+        );
     }
 
-    let svg = svg_document(
+    let svg = svg_document_parts(
         "gantt",
         width,
         height,
@@ -791,7 +817,7 @@ pub fn render_gantt(
             acc_title: db.acc_title.as_deref(),
             acc_descr: db.acc_descr.as_deref(),
         },
-        &content,
+        &[&content, &tasks_out, &tail],
     );
     Ok(Drawn {
         svg,
@@ -822,13 +848,14 @@ fn flush_excluded(
     let ex0 = js_max(left, x(day_start.time()));
     let ex1 = js_min(right, x(day_end.time()));
     if ex1 > ex0 {
-        excluded.push_str(&format!(
+        let _ = write!(
+            excluded,
             "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"/>",
             num(ex0),
             num(plot_top),
             num(ex1 - ex0),
             num(plot_height)
-        ));
+        );
     }
     *from = None;
     *to = None;

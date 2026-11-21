@@ -1,3 +1,4 @@
+use crate::util::chars::utf16_string;
 use std::sync::OnceLock;
 
 use regex::Regex;
@@ -143,7 +144,7 @@ impl Lx {
     }
 
     fn slice(&self, s: usize, e: usize) -> String {
-        String::from_utf16_lossy(&self.src[s..e])
+        utf16_string(&self.src[s..e])
     }
 
     fn index_of(&self, pat: &str, from: usize) -> isize {

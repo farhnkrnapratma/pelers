@@ -3,6 +3,7 @@ use super::parser::{TreeViewAst, parse_treeview};
 use crate::errors::{PelersError, locate};
 use crate::util::chars::{is_js_space, utf16_to_byte};
 use crate::util::fxhash::FastMap;
+use std::fmt::Write as _;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum NodeType {
@@ -115,7 +116,7 @@ fn remap_error_lines(message: &str, lines: &FastMap<usize, usize>) -> String {
                 let number: usize = message[digits_start..j].parse().unwrap_or(0);
                 if let Some(&original) = lines.get(&number).filter(|&&o| o != 0) {
                     out.push_str(&message[copied..at]);
-                    out.push_str(&format!("line {original}"));
+                    let _ = write!(out, "line {original}");
                     copied = j;
                 }
                 at = j;

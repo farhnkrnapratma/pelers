@@ -2,6 +2,7 @@ use super::builder::{esc, esc_text};
 use super::palette::{palette_style_len, push_palette_style};
 use super::theme::{RADIUS, ROOT_STYLE, font_style};
 use crate::util::jsnum::js_number_to_string;
+use std::fmt::Write as _;
 
 const WEIGHTS: [(&str, &str); 3] = [("tw", "title"), ("hw", "heading"), ("w", "bold")];
 
@@ -35,27 +36,38 @@ pub struct Accessible<'a> {
     pub acc_descr: Option<&'a str>,
 }
 
+const ALIASES: [&str; 4] = ["var(--_r)", "var(--_tw)", "var(--_hw)", "var(--_w)"];
+
+#[cfg(not(target_arch = "wasm32"))]
 fn used_aliases(content: &str) -> [bool; 4] {
+    ALIASES.map(|alias| content.contains(alias))
+}
+
+#[cfg(target_arch = "wasm32")]
+fn used_aliases(content: &str) -> [bool; 4] {
+    scanned_aliases(content)
+}
+
+#[cfg_attr(not(any(target_arch = "wasm32", test)), allow(dead_code))]
+fn scanned_aliases(content: &str) -> [bool; 4] {
+    let bytes = content.as_bytes();
     let mut used = [false; 4];
-    let mut rest = content;
-    while let Some(at) = rest.find('v') {
-        rest = &rest[at..];
-        let Some(tail) = rest.strip_prefix("var(--_") else {
-            rest = &rest[1..];
+    let mut from = 0;
+    while let Some(at) = bytes[from..].iter().position(|&byte| byte == b'_') {
+        let at = from + at;
+        from = at + 1;
+        if !bytes[..at].ends_with(b"var(--") {
             continue;
-        };
-        rest = tail;
-        for (k, alias) in ["r", "tw", "hw", "w"].iter().enumerate() {
-            if rest
-                .strip_prefix(alias)
-                .is_some_and(|tail| tail.starts_with(')'))
-            {
-                used[k] = true;
+        }
+        let rest = &bytes[from..];
+        if let Some(k) = ALIASES
+            .iter()
+            .position(|alias| rest.starts_with(&alias.as_bytes()[7..]))
+        {
+            used[k] = true;
+            if used == [true; 4] {
                 break;
             }
-        }
-        if used.iter().all(|&u| u) {
-            break;
         }
     }
     used
@@ -70,29 +82,49 @@ pub fn svg_document(
     acc: Accessible<'_>,
     content: &str,
 ) -> String {
+    svg_document_parts(kind, width, height, font_size, options, acc, &[content])
+}
+
+pub fn svg_document_parts(
+    kind: &str,
+    width: f64,
+    height: f64,
+    font_size: f64,
+    options: &RenderOptions,
+    acc: Accessible<'_>,
+    parts: &[&str],
+) -> String {
     let prefix = esc(options.id_prefix.as_deref().unwrap_or("pelers"));
     let mut head = String::new();
     let mut aria = String::new();
     if let Some(title) = acc.acc_title.filter(|t| !t.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<title id=\"{prefix}-title\">{}</title>",
             esc_text(title)
-        ));
-        aria.push_str(&format!(" aria-labelledby=\"{prefix}-title\""));
+        );
+        let _ = write!(aria, " aria-labelledby=\"{prefix}-title\"");
     }
     if let Some(descr) = acc.acc_descr.filter(|d| !d.is_empty()) {
-        head.push_str(&format!(
+        let _ = write!(
+            head,
             "<desc id=\"{prefix}-desc\">{}</desc>",
             esc_text(descr)
-        ));
-        aria.push_str(&format!(" aria-describedby=\"{prefix}-desc\""));
+        );
+        let _ = write!(aria, " aria-describedby=\"{prefix}-desc\"");
     }
     let fit = if options.responsive == Some(false) {
         ""
     } else {
         "max-width:100%;height:auto;"
     };
-    let used = used_aliases(content);
+    let mut used = [false; 4];
+    for part in parts {
+        for (seen, found) in used.iter_mut().zip(used_aliases(part)) {
+            *seen |= found;
+        }
+    }
+    let content_len: usize = parts.iter().map(|part| part.len()).sum();
     let mut weights = if used[0] {
         format!(";--_r:{RADIUS}")
     } else {
@@ -100,7 +132,7 @@ pub fn svg_document(
     };
     for (k, (alias, name)) in WEIGHTS.iter().enumerate() {
         if used[k + 1] {
-            weights.push_str(&format!(";--_{alias}:var(--pelers-{name}-weight,bold)"));
+            let _ = write!(weights, ";--_{alias}:var(--pelers-{name}-weight,bold)");
         }
     }
     let fonts = font_style(
@@ -113,7 +145,7 @@ pub fn svg_document(
     let mut out = String::with_capacity(
         head.len()
             + aria.len()
-            + content.len()
+            + content_len
             + fonts.len()
             + palette_len
             + ROOT_STYLE.len()
@@ -134,7 +166,7 @@ pub fn svg_document(
     out.push_str(fit);
     out.push_str(ROOT_STYLE);
     out.push_str(&weights);
-    out.push_str(&esc(&fonts));
+    out.push_str(&fonts);
     push_palette_style(&mut out);
     out.push_str(
         "\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"",
@@ -144,7 +176,9 @@ pub fn svg_document(
     out.push_str(&aria);
     out.push('>');
     out.push_str(&head);
-    out.push_str(content);
+    for part in parts {
+        out.push_str(part);
+    }
     out.push_str("</svg>");
     out
 }
@@ -152,6 +186,18 @@ pub fn svg_document(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn scans_aliases_like_the_substring_search() {
+        for content in [
+            "<g style=\"rx:var(--_r)\" font-weight=\"var(--_tw)\"/>",
+            "var(--_wx) var(--_w) _x var(--x_)",
+            "var(--_r) var(--_tw) var(--_hw) var(--_w) var(--_r)",
+            "none",
+        ] {
+            assert_eq!(scanned_aliases(content), used_aliases(content));
+        }
+    }
 
     #[test]
     fn finds_the_aliases_a_diagram_uses() {

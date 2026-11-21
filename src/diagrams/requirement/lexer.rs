@@ -1,6 +1,6 @@
 use super::tokens::{T, keyword_kind};
 use crate::diagrams::common::spans::{Span, Spans, empty};
-use crate::util::chars::is_js_space;
+use crate::util::chars::{is_js_space, utf16_string};
 
 pub struct Tokens {
     pub types: Vec<i32>,
@@ -110,7 +110,7 @@ fn find_directions(units: &[u16]) -> [(Vec<usize>, Vec<usize>); 4] {
 }
 
 fn text_of(units: &[u16], s: usize, e: usize) -> String {
-    String::from_utf16_lossy(&units[s.min(units.len())..e.min(units.len())])
+    utf16_string(&units[s.min(units.len())..e.min(units.len())])
 }
 
 fn emit(out: &mut Tokens, units: &[u16], kind: i32, s: usize, e: usize) -> usize {

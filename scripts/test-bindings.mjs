@@ -49,6 +49,10 @@ const model = parse("flowchart LR\n  A --> B", { maxEdges: 10 });
 assert.equal(model.type, "flowchart");
 assert.equal(model.mermaidType, "flowchart-v2");
 assert.equal(render(model).svg, render("flowchart LR\n  A --> B").svg);
+assert.equal(
+  render("pie\n  \"a\": 1", Object.create({ fontSize: 20 })).svg,
+  render("pie\n  \"a\": 1", { fontSize: 20 }).svg,
+);
 assert.throws(() => render(42), TypeError);
 assert.throws(
   () => render("hello"),
@@ -63,17 +67,40 @@ const boom = () => {
 };
 assert.throws(() => render("flowchart LR\n  A[fa:fa-car x]", { icons: boom }), /boom/);
 
-if (!existsSync(join(peleDir, "src/index.ts"))) {
-  console.log(`bindings ok (parity skipped: no pele checkout at ${peleDir})`);
-  process.exit(0);
+const golden = new URL("tests/golden/", root);
+const sources = readdirSync(golden, { recursive: true })
+  .filter((name) => name.endsWith(".mmd"))
+  .sort()
+  .map((name) => readFileSync(new URL(name, golden), "utf8"));
+
+const { bind } = await import(new URL("js/native.js", root));
+const { napi } = await import(new URL("js/napi.js", root));
+const engines = [];
+for (const variant of ["fast", "small"]) {
+  const wasmModule = new URL(`wasm/${variant}/pelers_bg.wasm`, root);
+  if (!existsSync(wasmModule)) continue;
+  const engine = await import(new URL(`wasm/${variant}/pelers.js`, root));
+  engine.initSync({ module: readFileSync(wasmModule) });
+  engines.push([
+    variant,
+    (source, options) => {
+      bind(engine);
+      try {
+        return render(source, options);
+      } finally {
+        bind(napi);
+      }
+    },
+  ]);
 }
 
-const pele = await peleCore();
-const corpus = join(peleDir, "tests/corpus");
-const sources = readdirSync(corpus)
-  .filter((name) => name.endsWith("-docs.json"))
-  .sort()
-  .flatMap((name) => JSON.parse(readFileSync(join(corpus, name), "utf8")));
+for (const [name, run] of engines) {
+  assert.throws(() => run("flowchart LR\n  A[fa:fa-car x]", { icons: boom }), /boom/, name);
+  assert.throws(() => run("flowchart LR\n  A --> B", { measurer: { width: boom } }), /boom/, name);
+  assert.match(run("flowchart LR\n  A --> B").svg, /^<svg/, name);
+}
+
+const pele = existsSync(join(peleDir, "src/index.ts")) ? await peleCore() : undefined;
 
 const widths = { width: (text, size, style) => text.length * size * (style & 1 ? 0.62 : 0.55) };
 const OPTIONS = [
@@ -119,22 +146,51 @@ const failures = [];
 for (const [index, source] of sources.entries())
   for (const [set, given] of OPTIONS.entries()) {
     const options = { now: Date.UTC(2026, 10, 20, 9), ...given };
-    const want = outcome(() => pele.render(source, options));
     const got = outcome(() => render(source, options));
-    cases += 1;
-    try {
-      assert.deepEqual(got, want);
-    } catch {
-      failures.push(`source ${index} options ${set} (${got.type ?? got.code})`);
+    const checks = [
+      ["pele", pele && (() => outcome(() => pele.render(source, options)))],
+      ...engines.map(([name, run]) => [name, () => outcome(() => run(source, options))]),
+    ];
+    for (const [name, want] of checks) {
+      if (!want) continue;
+      cases += 1;
+      try {
+        assert.deepEqual(got, want());
+      } catch {
+        failures.push(`${name} source ${index} options ${set} (${got.type ?? got.code})`);
+      }
     }
   }
+if (pele) {
+  const source =
+    "gantt\n  dateFormat YYYY-MM-DD HH:mm\n  axisFormat %d %H:%M\n  section A\n  Task :a1, 2024-03-09 22:00, 8h";
+  const options = { now: Date.UTC(2024, 2, 10) };
+  const zones = ["UTC", "America/New_York", "Asia/Jakarta", "UTC"];
+  const seen = new Set();
+  for (const zone of zones) {
+    process.env.TZ = zone;
+    const got = outcome(() => render(source, options));
+    seen.add(got.svg);
+    assert.deepEqual(got, outcome(() => pele.render(source, options)), zone);
+  }
+  assert.equal(seen.size, 3, "the gantt check depends on the time zone");
+  for (const [name, run] of engines)
+    for (const zone of zones) {
+      process.env.TZ = zone;
+      assert.deepEqual(outcome(() => run(source, options)), outcome(() => pele.render(source, options)), `${name} ${zone}`);
+    }
+  process.env.TZ = "UTC";
+}
+
 if (failures.length > 0) {
   const tally = {};
   for (const failure of failures) {
-    const key = failure.replace(/^source \d+ /, "");
+    const key = failure.replace(/ source \d+ /, " ");
     tally[key] = (tally[key] ?? 0) + 1;
   }
   console.log(tally);
 }
 assert.deepEqual(failures.slice(0, 20), [], `${failures.length} of ${cases} differ`);
-console.log(`bindings ok (${cases} option cases match pele)`);
+console.log(
+  `bindings ok (${cases} checks; pele ${pele ? "compared" : `skipped, no checkout at ${peleDir}`}; wasm ${engines.length > 0 ? engines.map(([name]) => name).join(", ") : "not built"})`,
+);

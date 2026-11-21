@@ -1,3 +1,7 @@
+#[cfg(not(feature = "napi"))]
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 fn main() {
     let wanted = std::env::args()
         .nth(1)
@@ -10,7 +14,7 @@ fn main() {
     let corpus: Vec<serde_json::Value> = serde_json::from_str(&text).unwrap();
     let sources: Vec<&str> = corpus
         .iter()
-        .filter(|item| item["type"].as_str() == Some(wanted.as_str()))
+        .filter(|item| wanted == "all" || item["type"].as_str() == Some(wanted.as_str()))
         .map(|item| item["source"].as_str().unwrap())
         .collect();
     let start = std::time::Instant::now();

@@ -10,6 +10,7 @@ use crate::text::label::{Label, layout_label};
 use crate::text::measurer::{BOLD_STYLE, width};
 use crate::util::jsnum::{js_max, js_number_to_string, js_round, to_fixed_0};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const RADIUS: f64 = 120.0;
 const SWATCH: f64 = 12.0;
@@ -231,12 +232,13 @@ fn draw(
             continue;
         }
         let end = angle + share * std::f64::consts::PI * 2.0;
-        slices.push_str(&format!(
+        let _ = write!(
+            slices,
             "<path class=\"pelers-slice\" data-id=\"{}\" d=\"{}\" fill=\"{}\"/>",
             esc_text(label),
             slice(angle, end, radius, inner),
             series_color(index)
-        ));
+        );
         let mid = (angle + end) / 2.0;
         let text = format!("{}%", to_fixed_0(share * 100.0));
         if narrow[index] {
@@ -261,19 +263,21 @@ fn draw(
                 y,
                 width: text_width,
             });
-            outside.push_str(&format!(
+            let _ = write!(
+                outside,
                 "<text x=\"{}\" y=\"{}\">{text}</text>",
                 num(x),
                 num(y + small * 0.35)
-            ));
+            );
         } else {
             let r = radius * text_position;
-            labels.push_str(&format!(
+            let _ = write!(
+                labels,
                 "<text x=\"{}\" y=\"{}\"{}>{text}</text>",
                 num(mid.sin() * r),
                 num(-mid.cos() * r + small * 0.35),
                 series_ink_fill(index)
-            ));
+            );
         }
         angle = end;
     }
@@ -303,7 +307,8 @@ fn draw(
     let mut legend_out = String::new();
     for (index, label) in legend.iter().enumerate() {
         let y = ly + index as f64 * ROW + ROW / 2.0;
-        legend_out.push_str(&format!(
+        let _ = write!(
+            legend_out,
             "<g class=\"pelers-legend-item\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"2\" fill=\"{}\"/>{}</g>",
             esc_text(&entries[index].0),
             num(lx),
@@ -312,7 +317,7 @@ fn draw(
             js_number_to_string(SWATCH),
             series_color(index),
             label_svg(label, lx + SWATCH + 8.0 + label.width / 2.0, y, "")
-        ));
+        );
     }
 
     let total_width = (total + 2.0 * pad).ceil();
@@ -325,23 +330,27 @@ fn draw(
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
-    content.push_str(&format!(
+    let _ = write!(
+        content,
         "<g class=\"pelers-slices\" transform=\"{translate}\" stroke=\"var(--_bg)\" stroke-width=\"1\" stroke-linejoin=\"round\">{slices}</g>"
-    ));
+    );
     if !labels.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\" fill=\"var(--_bg)\">{labels}</g>"
-        ));
+        );
     }
     if !outside.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-slice-labels\" transform=\"{translate}\" font-size=\"{small_text}\" text-anchor=\"middle\">{outside}</g>"
-        ));
+        );
     }
     if !legend_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-legend\" font-size=\"{small_text}\">{legend_out}</g>"
-        ));
+        );
     }
 
     let acc = Accessible {

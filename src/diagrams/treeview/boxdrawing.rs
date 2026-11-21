@@ -1,5 +1,5 @@
 use crate::errors::{PelersError, PelersErrorCode, locate};
-use crate::util::chars::{is_js_space, trim, trim_end};
+use crate::util::chars::{is_js_space, trim, trim_end, utf16_string};
 use crate::util::fxhash::FastMap;
 
 const INDENT_UNIT: &str = "    ";
@@ -178,7 +178,7 @@ pub fn preprocess_box_drawing(input: &str) -> Result<Preprocessed, PelersError> 
             while pos < text.len() && text[pos] == u16::from(b' ') {
                 pos += 1;
             }
-            let content = trim_end(&String::from_utf16_lossy(&text[pos..])).to_owned();
+            let content = trim_end(&utf16_string(&text[pos..])).to_owned();
             if content.is_empty() {
                 return Err(fail(
                     input,

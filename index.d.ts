@@ -187,3 +187,47 @@ export declare function supports(text: string): boolean;
 export declare function register(...list: unknown[]): void;
 export declare function registered(type: DiagramType): boolean;
 export declare function forgetTextWidths(): void;
+
+export interface ZoomOptions {
+  always?: boolean;
+  maxScale?: number;
+  controls?: boolean;
+  labels?: { zoomIn?: string; zoomOut?: string; reset?: string };
+}
+
+export interface Zoom {
+  readonly scale: number;
+  readonly fit: number;
+  zoomBy(factor: number): void;
+  zoomTo(scale: number): void;
+  reset(): void;
+  refresh(): void;
+  destroy(): void;
+}
+
+export interface MountOptions extends RenderOptions {
+  onRender?: (result: RenderResult) => void;
+  zoom?: boolean | "auto" | ZoomOptions;
+  sanitize?: (svg: string) => Node;
+  onError?: (error: unknown) => void;
+}
+
+export interface Mounted {
+  readonly result: RenderResult | undefined;
+  readonly source: string;
+  readonly error: unknown;
+  readonly zoom: Zoom | undefined;
+  update(text: string, options?: MountOptions): void;
+  refresh(): void;
+  destroy(): void;
+}
+
+export declare function mount(
+  element: HTMLElement,
+  text: string,
+  options?: MountOptions,
+): Mounted;
+export declare function enableZoom(
+  element: HTMLElement,
+  options?: ZoomOptions,
+): Zoom;

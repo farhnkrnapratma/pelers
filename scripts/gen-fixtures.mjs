@@ -1,10 +1,7 @@
 import { mulberry32 } from "./random.mjs";
-import { peleSrc, writeFixture } from "./oracle.mjs";
-import { fileURLToPath } from "node:url";
+import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
-const OUT = process.env.PELERS_FUZZ_OUT ?? `${root}tests/fixtures`;
 const { layoutLabel } = await peleSrc("text/label.ts");
 const { metricsMeasurer } = await peleSrc("text/measurer.ts");
 const { esc, labelSvg, num } = await peleSrc("svg/builder.ts");

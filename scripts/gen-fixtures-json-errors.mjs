@@ -1,9 +1,7 @@
+import { fixtures as OUT } from "./oracle.mjs";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
-const OUT = process.env.PELERS_FUZZ_OUT ?? join(root, "tests/fixtures");
 const COUNT = Number(process.env.PELERS_FUZZ_COUNT ?? 3000);
 
 function mulberry32(seed) {

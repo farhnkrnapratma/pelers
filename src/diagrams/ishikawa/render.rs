@@ -3,13 +3,14 @@ use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::{title_room, turn_to_fit};
 use crate::diagrams::common::literal_label::break_label;
 use crate::preprocess::Config;
-use crate::svg::builder::{esc_text, label_svg, num};
+use crate::svg::builder::{esc_text, num, push_label};
 use crate::svg::edges::{ARROW, marker};
-use crate::svg::root::{Accessible, RenderOptions, svg_document};
+use crate::svg::root::{Accessible, RenderOptions, svg_document_parts};
 use crate::svg::theme::ROUNDED;
 use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::jsnum::{js_hypot, js_max, js_min, js_round};
+use std::fmt::Write as _;
 
 const SLANT: f64 = 0.5;
 const FIRST_ROW: f64 = 14.0;
@@ -164,7 +165,9 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
         0.0
     };
 
-    let mut body = String::new();
+    let mut spine = String::new();
+    let mut groups = String::new();
+    let mut close = String::new();
     let mut min_x = 0.0f64;
     let mut max_x = 0.0f64;
     let mut min_y = 0.0f64;
@@ -216,7 +219,7 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
         min_x = tail;
         min_y = -head_h / 2.0;
         max_y = head_h / 2.0;
-        let mut groups = String::new();
+        groups.reserve(categories.len() * 1200);
         for (i, category) in categories.iter_mut().enumerate() {
             let sign: f64 = if i % 2 == 0 { -1.0 } else { 1.0 };
             let ax = xs[i];
@@ -235,24 +238,27 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
             for bone in &category.bones {
                 let y = sign * bone.rise;
                 if bone.depth % 2 == 0 {
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "M{},{}H{}",
                         num(px(bone.at, bone.rise)),
                         num(y),
                         num(px(bone.text_end + TEXT_GAP, bone.rise))
-                    ));
+                    );
                 } else {
                     let from = category.bones[bone.parent as usize].rise;
-                    d.push_str(&format!(
+                    let _ = write!(
+                        d,
                         "M{},{}L{},{}",
                         num(px(bone.at, from)),
                         num(sign * from),
                         num(px(bone.at, bone.rise)),
                         num(y)
-                    ));
+                    );
                 }
                 let right = px(bone.text_end, bone.rise);
-                texts.push_str(&label_svg(
+                push_label(
+                    &mut texts,
                     &bone.label,
                     right - bone.label.width / 2.0,
                     y,
@@ -261,7 +267,7 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
                     } else {
                         ""
                     },
-                ));
+                );
                 min_x = js_min(min_x, right - bone.label.width);
             }
             let box_y = end_y + sign * (category.box_h / 2.0);
@@ -269,29 +275,52 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
             max_x = js_max(max_x, end_x + category.box_w / 2.0);
             min_y = js_min(min_y, box_y - category.box_h / 2.0);
             max_y = js_max(max_y, box_y + category.box_h / 2.0);
-            groups.push_str(&format!(
-                "<g class=\"pelers-ishikawa-category\" data-id=\"{}\"><path class=\"pelers-ishikawa-bones\" d=\"{d}\" fill=\"none\" stroke=\"var(--_l)\"/>{}<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>{}{}</g>",
+            let _ = write!(
+                groups,
+                "<g class=\"pelers-ishikawa-category\" data-id=\"{}\"><path class=\"pelers-ishikawa-bones\" d=\"{d}\" fill=\"none\" stroke=\"var(--_l)\"/>{}<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"{ROUNDED}/>",
                 esc_text(&category.node.text),
-                marker("arrow_point", ax, 0.0, SLANT / js_hypot(SLANT, 1.0), -sign / js_hypot(SLANT, 1.0), "var(--_l)", "none"),
+                marker(
+                    "arrow_point",
+                    ax,
+                    0.0,
+                    SLANT / js_hypot(SLANT, 1.0),
+                    -sign / js_hypot(SLANT, 1.0),
+                    "var(--_l)",
+                    "none"
+                ),
                 num(end_x - category.box_w / 2.0),
                 num(box_y - category.box_h / 2.0),
                 num(category.box_w),
                 num(category.box_h),
-                label_svg(&category.label, end_x, box_y, " class=\"pelers-label\""),
-                if texts.is_empty() {
-                    String::new()
-                } else {
-                    format!("<g class=\"pelers-ishikawa-causes\" font-size=\"{}\">{texts}</g>", crate::util::jsnum::js_number_to_string(small))
-                }
-            ));
+            );
+            push_label(
+                &mut groups,
+                &category.label,
+                end_x,
+                box_y,
+                " class=\"pelers-label\"",
+            );
+            if !texts.is_empty() {
+                let _ = write!(
+                    groups,
+                    "<g class=\"pelers-ishikawa-causes\" font-size=\"{}\">{texts}</g>",
+                    crate::util::jsnum::js_number_to_string(small)
+                );
+            }
+            groups.push_str("</g>");
         }
 
         let r = head_h / 2.0;
-        body = format!(
-            "<path class=\"pelers-ishikawa-spine\" d=\"M{},0H{}\" fill=\"none\" stroke=\"var(--_l)\"/>{}{groups}<g class=\"pelers-ishikawa-head\" data-id=\"{}\"><path d=\"M0,{}H{}A{},{} 0 0 1 {},{}H0Z\" fill=\"var(--_s)\" stroke=\"var(--_b)\" stroke-linejoin=\"round\"/>{}</g>",
+        let _ = write!(
+            spine,
+            "<path class=\"pelers-ishikawa-spine\" d=\"M{},0H{}\" fill=\"none\" stroke=\"var(--_l)\"/>{}",
             num(tail),
             num(-(ARROW - 1.0)),
             marker("arrow_point", 0.0, 0.0, 1.0, 0.0, "var(--_l)", "none"),
+        );
+        let _ = write!(
+            close,
+            "<g class=\"pelers-ishikawa-head\" data-id=\"{}\"><path d=\"M0,{}H{}A{},{} 0 0 1 {},{}H0Z\" fill=\"var(--_s)\" stroke=\"var(--_b)\" stroke-linejoin=\"round\"/>",
             esc_text(&root_node.text),
             num(-r),
             num(head_w - r),
@@ -299,13 +328,15 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
             num(r),
             num(head_w - r),
             num(r),
-            label_svg(
-                &head,
-                12.0 + head.width / 2.0,
-                0.0,
-                " class=\"pelers-label\" font-weight=\"var(--_hw)\""
-            ),
         );
+        push_label(
+            &mut close,
+            &head,
+            12.0 + head.width / 2.0,
+            0.0,
+            " class=\"pelers-label\" font-weight=\"var(--_hw)\"",
+        );
+        close.push_str("</g>");
     }
 
     let inner = js_max(max_x - min_x, title.width);
@@ -313,29 +344,28 @@ fn draw(model: &IshikawaDb, _config: &Config, options: &RenderOptions, down: boo
     let height = (max_y - min_y + title_height + 2.0 * pad).ceil();
     let ox = pad + (inner - (max_x - min_x)) / 2.0 - min_x;
     let oy = pad + title_height - min_y;
-    let content = label_svg(
+    let mut open = String::with_capacity(spine.len() + 256);
+    push_label(
+        &mut open,
         &title,
         width / 2.0,
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &if body.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "<g transform=\"translate({},{})\">{body}</g>",
-            num(ox),
-            num(oy)
-        )
-    };
+    );
+    if !spine.is_empty() {
+        let _ = write!(open, "<g transform=\"translate({},{})\">", num(ox), num(oy));
+        open.push_str(&spine);
+        close.push_str("</g>");
+    }
     Drawn {
-        svg: svg_document(
+        svg: svg_document_parts(
             "ishikawa",
             width,
             height,
             size,
             options,
             Accessible::default(),
-            &content,
+            &[&open, &groups, &close],
         ),
         width,
         height,
@@ -406,8 +436,12 @@ fn vertical_causes(model: &IshikawaDb, options: &RenderOptions) -> Drawn {
             0.0
         };
     let mut width = title.width;
-    let mut nodes = String::new();
-    let mut edges = String::new();
+    let mut nodes = String::with_capacity(order.len() * 300);
+    let mut edges = String::with_capacity(order.len() * 120);
+    let cause_attrs = format!(
+        " class=\"pelers-label\" font-size=\"{}\"",
+        crate::util::jsnum::js_number_to_string(small)
+    );
     for k in 0..order.len() {
         let (entry_depth, entry_node, entry_parent) = {
             let e = &order[k];
@@ -435,46 +469,45 @@ fn vertical_causes(model: &IshikawaDb, options: &RenderOptions) -> Drawn {
             1 => "pelers-ishikawa-category",
             _ => "pelers-ishikawa-cause",
         };
-        nodes.push_str(&format!(
-            "<g class=\"pelers-node {class}\" data-id=\"{}\">{}{}</g>",
-            esc_text(text),
-            if framed {
-                format!(
-                    "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"/>",
-                    num(x),
-                    num(entry_y),
-                    num(w),
-                    num(h),
-                    if entry_depth == 0 { 12 } else { 4 }
-                )
+        let _ = write!(
+            nodes,
+            "<g class=\"pelers-node {class}\" data-id=\"{}\">",
+            esc_text(text)
+        );
+        if framed {
+            let _ = write!(
+                nodes,
+                "<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"{}\" fill=\"var(--_s)\" stroke=\"var(--_b)\"/>",
+                num(x),
+                num(entry_y),
+                num(w),
+                num(h),
+                if entry_depth == 0 { 12 } else { 4 }
+            );
+        }
+        push_label(
+            &mut nodes,
+            &label,
+            x + w / 2.0,
+            entry_y + h / 2.0,
+            if entry_depth < 2 {
+                " class=\"pelers-label\" font-weight=\"var(--_hw)\""
             } else {
-                String::new()
+                &cause_attrs
             },
-            label_svg(
-                &label,
-                x + w / 2.0,
-                entry_y + h / 2.0,
-                &format!(
-                    " class=\"pelers-label\"{}{}",
-                    if entry_depth < 2 { " font-weight=\"var(--_hw)\"" } else { "" },
-                    if entry_depth > 1 {
-                        format!(" font-size=\"{}\"", crate::util::jsnum::js_number_to_string(small))
-                    } else {
-                        String::new()
-                    }
-                ),
-            )
-        ));
+        );
+        nodes.push_str("</g>");
         if entry_parent >= 0 {
             let parent = &order[entry_parent as usize];
             let gx = parent.x + indent / 2.0;
-            edges.push_str(&format!(
+            let _ = write!(
+                edges,
                 "<path class=\"pelers-edge\" d=\"M{},{}V{}H{}\" fill=\"none\" stroke=\"var(--_b)\"/>",
                 num(gx),
                 num(parent.y + parent.h),
                 num(entry_y + h / 2.0),
                 num(x)
-            ));
+            );
         }
         let entry = &mut order[k];
         entry.x = x;
@@ -485,22 +518,23 @@ fn vertical_causes(model: &IshikawaDb, options: &RenderOptions) -> Drawn {
     }
     let total_width = (width + 2.0 * pad).ceil();
     let height = (js_max(pad + title.height, y - 12.0) + pad).ceil();
-    let content = label_svg(
+    let mut head = String::new();
+    push_label(
+        &mut head,
         &title,
         total_width / 2.0,
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &edges
-        + &nodes;
+    );
     Drawn {
-        svg: svg_document(
+        svg: svg_document_parts(
             "ishikawa",
             total_width,
             height,
             size,
             options,
             Accessible::default(),
-            &content,
+            &[&head, &edges, &nodes],
         ),
         width: total_width,
         height,

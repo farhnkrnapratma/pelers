@@ -4,8 +4,8 @@ use crate::diagrams::common::Drawn;
 use crate::diagrams::common::fit_width::{fit_width, title_room};
 use crate::errors::PelersError;
 use crate::preprocess::Config;
-use crate::svg::builder::{esc, esc_text, label_svg, num};
-use crate::svg::root::{Accessible, RenderOptions, svg_document};
+use crate::svg::builder::{esc, esc_text, num, push_label};
+use crate::svg::root::{Accessible, RenderOptions, svg_document_parts};
 use crate::svg::theme::{resolve_style, series_color};
 use crate::text::entities::decode_entities;
 use crate::text::label::layout_label;
@@ -13,6 +13,7 @@ use crate::text::measurer::{BOLD_STYLE, width as measure};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::{Object, Value};
+use std::fmt::Write as _;
 
 const LABEL_GAP: f64 = 6.0;
 const VALUE_GAP: f64 = 15.0;
@@ -307,7 +308,8 @@ fn draw(
         let name = decode_entities(id);
         let height = js_max(node.height, 1.0);
         let style = node_style(i);
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<rect class=\"pelers-sankey-node\" data-id=\"{}\" x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"{}\" fill=\"{}\"{style}/>",
             esc_text(id),
             num(node.x),
@@ -316,7 +318,7 @@ fn draw(
             num(height),
             num(js_min(2.0, height / 2.0)),
             series_color(i)
-        ));
+        );
 
         if nodes.len() <= CAREFUL
             && overlaps(&bands, &labels, line_height, i, labels[i].left, labels[i].y)
@@ -371,38 +373,38 @@ fn draw(
         } else {
             node.x - LABEL_GAP
         };
-        let position = format!(
-            " x=\"{}\" y=\"{}\" text-anchor=\"{}\"",
-            num(x),
-            num(label.y + small * 0.35),
-            if label.after { "start" } else { "end" }
-        );
-        let text = esc(&name).into_owned()
-            + &if label.value.is_empty() {
-                String::new()
-            } else {
-                format!(
-                    " <tspan class=\"pelers-sankey-value\" fill=\"var(--_m)\">{}</tspan>",
-                    esc(&label.value)
-                )
-            };
-        let outline = if outlined {
-            format!(
-                "<text{position} fill=\"none\" stroke=\"var(--_bg)\" stroke-width=\"3\" stroke-linejoin=\"round\">{}{}</text>",
-                esc(&name),
-                if label.value.is_empty() {
-                    String::new()
-                } else {
-                    format!(" {}", esc(&label.value))
-                }
-            )
-        } else {
-            String::new()
-        };
-        labels_out.push_str(&format!(
-            "<g class=\"pelers-label\" data-id=\"{}\">{outline}<text{position}>{text}</text></g>",
+        let _ = write!(
+            labels_out,
+            "<g class=\"pelers-label\" data-id=\"{}\">",
             esc_text(id)
-        ));
+        );
+        let x = num(x);
+        let y = num(label.y + small * 0.35);
+        let anchor = if label.after { "start" } else { "end" };
+        let name = esc(&name);
+        let value = esc(&label.value);
+        if outlined {
+            let _ = write!(
+                labels_out,
+                "<text x=\"{x}\" y=\"{y}\" text-anchor=\"{anchor}\" fill=\"none\" stroke=\"var(--_bg)\" stroke-width=\"3\" stroke-linejoin=\"round\">{name}"
+            );
+            if !value.is_empty() {
+                labels_out.push(' ');
+                labels_out.push_str(&value);
+            }
+            labels_out.push_str("</text>");
+        }
+        let _ = write!(
+            labels_out,
+            "<text x=\"{x}\" y=\"{y}\" text-anchor=\"{anchor}\">{name}"
+        );
+        if !value.is_empty() {
+            let _ = write!(
+                labels_out,
+                " <tspan class=\"pelers-sankey-value\" fill=\"var(--_m)\">{value}</tspan>"
+            );
+        }
+        labels_out.push_str("</text></g>");
     }
 
     let fixed = if matches!(link_color.as_str(), "gradient" | "source" | "target") {
@@ -427,15 +429,7 @@ fn draw(
         let half = js_max(link.thickness, 1.0) / 2.0;
         let x0 = nodes[link.source].x + node_width;
         let x1 = nodes[link.target].x;
-        let mut paint = format!(
-            "fill=\"{}\"{}",
-            series_color(end),
-            if fixed.is_empty() {
-                node_style(end)
-            } else {
-                fixed.clone()
-            }
-        );
+        let mut paint = None;
         if gradient {
             let stops = format!(
                 "x1=\"{}\" x2=\"{}\"><stop offset=\"0\" stop-color=\"{}\"/><stop offset=\"1\" stop-color=\"{}\"/>",
@@ -453,13 +447,14 @@ fn draw(
                     ),
                 ));
             }
-            paint = format!("fill=\"url(#{id}) {}\"", node_color(link.source));
+            paint = Some(id);
         }
         let mid = num((x0 + x1) / 2.0);
         let from = esc_text(&model.nodes[link.source].id);
         let to = esc_text(&model.nodes[link.target].id);
-        links_out.push_str(&format!(
-            "<path class=\"pelers-sankey-link\" data-id=\"{from}-&gt;{to}\" d=\"M{},{}C{mid},{} {mid},{} {},{}L{},{}C{mid},{} {mid},{} {},{}Z\" {paint}><title>{from} → {to}: {}{}{}</title></path>",
+        let _ = write!(
+            links_out,
+            "<path class=\"pelers-sankey-link\" data-id=\"{from}-&gt;{to}\" d=\"M{},{}C{mid},{} {mid},{} {},{}L{},{}C{mid},{} {mid},{} {},{}Z\" ",
             num(x0),
             num(link.source_y - half),
             num(link.source_y - half),
@@ -472,10 +467,27 @@ fn draw(
             num(link.source_y + half),
             num(x0),
             num(link.source_y + half),
+        );
+        match paint {
+            Some(id) => {
+                let _ = write!(links_out, "fill=\"url(#{id}) {}\"", node_color(link.source));
+            }
+            None => {
+                let _ = write!(links_out, "fill=\"{}\"", series_color(end));
+                if fixed.is_empty() {
+                    links_out.push_str(&node_style(end));
+                } else {
+                    links_out.push_str(&fixed);
+                }
+            }
+        }
+        let _ = write!(
+            links_out,
+            "><title>{from} → {to}: {}{}{}</title></path>",
             esc(&prefix),
             js_number_to_string(rounded(link.value)),
             esc(&suffix),
-        ));
+        );
     }
 
     let title = layout_label(
@@ -496,38 +508,46 @@ fn draw(
     let width = (inner + 2.0 * pad).ceil();
     let height = (max_y - min_y + title_height + 2.0 * pad).ceil();
 
-    let defs = if gradients.is_empty() {
-        String::new()
-    } else {
-        format!(
-            "<defs>{}</defs>",
-            gradients
-                .iter()
-                .map(|(_, markup)| markup.as_str())
-                .collect::<String>()
-        )
-    };
-    let content = label_svg(
+    let mut head =
+        String::with_capacity(512 + gradients.iter().map(|(_, g)| g.len()).sum::<usize>());
+    push_label(
+        &mut head,
         &title,
         width / 2.0,
         pad + title.height / 2.0,
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
-    ) + &format!(
-        "<g transform=\"translate({},{})\">{defs}<g class=\"pelers-sankey-links\" fill-opacity=\"0.4\">{links_out}</g><g class=\"pelers-sankey-nodes\">{nodes_out}</g><g class=\"pelers-labels\" font-size=\"{}\">{labels_out}</g></g>",
-        num(ox),
-        num(oy),
+    );
+    let _ = write!(head, "<g transform=\"translate({},{})\">", num(ox), num(oy));
+    if !gradients.is_empty() {
+        head.push_str("<defs>");
+        for (_, markup) in &gradients {
+            head.push_str(markup);
+        }
+        head.push_str("</defs>");
+    }
+    head.push_str("<g class=\"pelers-sankey-links\" fill-opacity=\"0.4\">");
+    let labels_open = format!(
+        "</g><g class=\"pelers-labels\" font-size=\"{}\">",
         js_number_to_string(small)
     );
 
     Ok(Drawn {
-        svg: svg_document(
+        svg: svg_document_parts(
             "sankey",
             width,
             height,
             size,
             options,
             Accessible::default(),
-            &content,
+            &[
+                &head,
+                &links_out,
+                "</g><g class=\"pelers-sankey-nodes\">",
+                &nodes_out,
+                &labels_open,
+                &labels_out,
+                "</g></g>",
+            ],
         ),
         width,
         height,

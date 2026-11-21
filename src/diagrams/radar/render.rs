@@ -9,6 +9,7 @@ use crate::text::label::{Label, layout_label};
 use crate::text::measurer::BOLD_STYLE;
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const SWATCH: f64 = 12.0;
 const ROW: f64 = 26.0;
@@ -49,7 +50,8 @@ fn closed_round_curve(points: &[Point], tension: f64) -> String {
         let p1 = points[i];
         let p2 = points[(i + 1) % n];
         let p3 = points[(i + 2) % n];
-        d.push_str(&format!(
+        let _ = write!(
+            d,
             " C{},{} {},{} {},{}",
             num(p1.x + (p2.x - p0.x) * tension),
             num(p1.y + (p2.y - p0.y) * tension),
@@ -57,7 +59,7 @@ fn closed_round_curve(points: &[Point], tension: f64) -> String {
             num(p2.y - (p3.y - p1.y) * tension),
             num(p2.x),
             num(p2.y)
-        ));
+        );
     }
     d.push_str(" Z");
     d
@@ -69,7 +71,7 @@ fn polygon(points: &[Point]) -> String {
         if !out.is_empty() {
             out.push(' ');
         }
-        out.push_str(&format!("{},{}", num(p.x), num(p.y)));
+        let _ = write!(out, "{},{}", num(p.x), num(p.y));
     }
     out
 }
@@ -141,7 +143,7 @@ fn draw(
     while i < ticks {
         let r = js_min(radius, radius * (i + 1.0) / ticks);
         if graticule == "circle" {
-            grid.push_str(&format!("<circle r=\"{}\"/>", num(r)));
+            let _ = write!(grid, "<circle r=\"{}\"/>", num(r));
         } else {
             let scaled: Vec<Point> = unit
                 .iter()
@@ -150,7 +152,7 @@ fn draw(
                     y: u.y * r,
                 })
                 .collect();
-            grid.push_str(&format!("<polygon points=\"{}\"/>", polygon(&scaled)));
+            let _ = write!(grid, "<polygon points=\"{}\"/>", polygon(&scaled));
         }
         i += 1.0;
     }
@@ -159,7 +161,7 @@ fn draw(
     let mut labels = String::new();
     for (i, u) in unit.iter().enumerate() {
         let reach = radius * axis_scale;
-        spokes.push_str(&format!("M0,0L{},{}", num(u.x * reach), num(u.y * reach)));
+        let _ = write!(spokes, "M0,0L{},{}", num(u.x * reach), num(u.y * reach));
         let label: Label = layout_label(Some(&axes[i].label), false, small, 4000.0, 0);
         let at = radius * label_factor + 6.0;
         let cx = u.x * at
@@ -178,11 +180,12 @@ fn draw(
             } else {
                 0.0
             };
-        labels.push_str(&format!(
+        let _ = write!(
+            labels,
             "<g class=\"pelers-axis-label\" data-id=\"{}\">{}</g>",
             esc_text(&axes[i].name),
             label_svg(&label, cx, cy, "")
-        ));
+        );
         x0 = js_min(x0, cx - label.width / 2.0);
         x1 = js_max(x1, cx + label.width / 2.0);
         y0 = js_min(y0, cy - label.height / 2.0);
@@ -213,15 +216,13 @@ fn draw(
             esc_text(&curve.name)
         );
         if graticule == "circle" {
-            shapes.push_str(&format!(
+            let _ = write!(
+                shapes,
                 "<path{attrs} d=\"{}\"/>",
                 closed_round_curve(&points, tension)
-            ));
+            );
         } else {
-            shapes.push_str(&format!(
-                "<polygon{attrs} points=\"{}\"/>",
-                polygon(&points)
-            ));
+            let _ = write!(shapes, "<polygon{attrs} points=\"{}\"/>", polygon(&points));
         }
     }
 
@@ -261,7 +262,8 @@ fn draw(
     for (index, label) in legend.iter().enumerate() {
         let y = legend_top + index as f64 * ROW + ROW / 2.0;
         let color = series_color(index);
-        legend_out.push_str(&format!(
+        let _ = write!(
+            legend_out,
             "<g class=\"pelers-legend-item\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"2\" fill=\"{color}\" fill-opacity=\"0.4\" stroke=\"{color}\"/>{}</g>",
             esc_text(&curves[index].name),
             num(legend_x),
@@ -269,7 +271,7 @@ fn draw(
             js_number_to_string(SWATCH),
             js_number_to_string(SWATCH),
             label_svg(label, legend_x + SWATCH + 8.0 + label.width / 2.0, y, "")
-        ));
+        );
     }
 
     let title = layout_label(

@@ -773,10 +773,11 @@ if (
   }
 }
 
-const { Parsed, detectType, parse, renderParsed, renderSource } = nativeBinding
+const { Parsed, detectType, parse, renderParsed, renderSource, setOffsets } = nativeBinding
 export { Parsed }
 export { detectType }
 export { parse }
 export { renderParsed }
 export { renderSource }
+export { setOffsets }
 export const __napiBindingTarget = __napiLoadedBindingTarget

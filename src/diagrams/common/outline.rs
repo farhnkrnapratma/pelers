@@ -1,6 +1,7 @@
 use super::spans::{Span, Spans, empty, text as span_text};
 use crate::diagrams::common::scan::{space, word};
 use crate::errors::{PelersError, lexical_error, syntax_error};
+use crate::util::chars::utf16_string;
 use crate::util::chars::utf16_to_byte;
 
 pub const END: i32 = 0;
@@ -172,7 +173,7 @@ fn js_text(src: &[u16], from: isize, to: isize) -> String {
     if a >= b {
         String::new()
     } else {
-        String::from_utf16_lossy(&src[a as usize..b as usize])
+        utf16_string(&src[a as usize..b as usize])
     }
 }
 

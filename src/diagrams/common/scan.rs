@@ -1,5 +1,5 @@
 use super::spans::{Span, Spans, empty, text as span_text};
-use crate::util::chars::is_js_space;
+use crate::util::chars::{is_js_space, utf16_string};
 
 #[derive(Debug)]
 pub struct Tokens {
@@ -51,7 +51,7 @@ pub fn word_at(src: &[u16], at: usize, word: &str) -> bool {
 }
 
 pub fn slice(src: &[u16], from: usize, to: usize) -> String {
-    String::from_utf16_lossy(&src[from..to])
+    utf16_string(&src[from..to])
 }
 
 pub fn line_end(src: &[u16], from: usize) -> usize {

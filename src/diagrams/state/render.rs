@@ -22,6 +22,7 @@ use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{linked, safe_url};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const NODE_SEP: f64 = 40.0;
 const EDGE_SEP: f64 = 16.0;
@@ -263,7 +264,7 @@ fn divide(
             } else {
                 format!("M{},{at}H{}", num(left), num(right))
             };
-            dividers.push_str(&format!("<path class=\"pelers-divider\" d=\"{d}\"/>"));
+            let _ = write!(dividers, "<path class=\"pelers-divider\" d=\"{d}\"/>");
         }
         return;
     }
@@ -858,13 +859,14 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
                     ),
                 );
                 if view.title_h > 0.0 {
-                    body.push_str(&format!(
+                    let _ = write!(
+                        body,
                         "<path d=\"M{},{}H{}\"{RULE}{}/>",
                         num(left),
                         num(top + view.title_h),
                         num(left + c.w),
                         style.line
-                    ));
+                    );
                     body.push_str(&label_svg_with(
                         &view.label,
                         title_x(&c, view.label.width, &crossings) + pad,
@@ -940,13 +942,14 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
                     body.push_str(&label_svg_with(&view.label, 0.0, 0.0, &label_attrs, icons));
                 } else {
                     let mut at = PAD_Y - h / 2.0 + view.label.height;
-                    body.push_str(&format!(
+                    let _ = write!(
+                        body,
                         "<path d=\"M{},{}H{}\"{RULE}{}/>",
                         num(-w / 2.0),
                         num(at + 6.0),
                         num(w / 2.0),
                         style.line
-                    ));
+                    );
                     body.push_str(&label_svg_with(
                         &view.label,
                         0.0,
@@ -995,19 +998,21 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
             esc_text(&node.id)
         );
         if view.kind == K::Composite {
-            clusters.push_str(&format!("{open}>{body}</g>"));
+            let _ = write!(clusters, "{open}>{body}</g>");
         } else if view.kind == K::Note {
-            notes_out.push_str(&format!(
+            let _ = write!(
+                notes_out,
                 "{open} transform=\"translate({},{})\">{body}</g>",
                 num(x),
                 num(y)
-            ));
+            );
         } else {
-            nodes_out.push_str(&format!(
+            let _ = write!(
+                nodes_out,
                 "{open} transform=\"translate({},{})\">{body}</g>",
                 num(x),
                 num(y)
-            ));
+            );
         }
     }
 
@@ -1179,12 +1184,13 @@ fn draw(db: &StateDb, config: &Config, options: &RenderOptions, turned: bool) ->
         } else {
             over_color
         };
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge {kind}\" data-id=\"{}\"><path d=\"{}\"/>{}</g>",
             esc_text(&edge.id),
             path.d,
             marker(end_type, path.ex, path.ey, path.edx, path.edy, &ink, "none")
-        ));
+        );
         if label.width > 0.0 {
             let x = cedges[i].label_x + pad;
             let y = cedges[i].label_y + pad;

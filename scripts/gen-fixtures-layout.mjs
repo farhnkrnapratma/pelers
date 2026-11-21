@@ -1,9 +1,7 @@
 import { mulberry32 } from "./random.mjs";
-import { peleSrc, writeFixture } from "./oracle.mjs";
+import { peleSrc, root, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
 
-const root = fileURLToPath(new URL("../", import.meta.url));
 const { layered, lnode, ledge } = await peleSrc("layout/layered.ts");
 
 const KIND_NODE = 0;

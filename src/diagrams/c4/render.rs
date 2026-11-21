@@ -20,6 +20,7 @@ use crate::text::measurer::{BOLD_STYLE, ITALIC};
 use crate::util::fxhash::{FastMap, FastSet};
 use crate::util::jsnum::{js_max, js_min, js_round};
 use crate::util::url::{linked, sanitize_url};
+use std::fmt::Write as _;
 
 const PAIR_SHIFT: f64 = 7.0;
 const NARROW_GAP: f64 = 36.0;
@@ -331,7 +332,8 @@ fn draw(
                 "none",
             ));
         }
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge\" data-id=\"{}\"{}{}><path d=\"{}\"/>{markers}</g>",
             esc_text(&format!("{}-{}", rel.from, rel.to)),
             if over_text.is_empty() {
@@ -341,7 +343,7 @@ fn draw(
             },
             style.line,
             r.d
-        ));
+        );
         routes.push(r);
     }
 
@@ -461,7 +463,8 @@ fn draw(
                 )
             )
         );
-        labels_out.push_str(&format!(
+        let _ = write!(
+            labels_out,
             "<g class=\"pelers-edge-label\" data-id=\"{}\">{}<rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" rx=\"3\" fill=\"var(--_bg)\"/>{}</g>",
             esc_text(&id),
             rel.descr
@@ -473,7 +476,7 @@ fn draw(
             num(lw),
             num(lh),
             link(&body, rel.link.as_deref(), &id, &mut links, options)
-        ));
+        );
     }
 
     let mut clusters = String::new();
@@ -529,7 +532,8 @@ fn draw(
             } else {
                 " stroke-dasharray=\"6 4\""
             };
-            clusters.push_str(&format!(
+            let _ = write!(
+                clusters,
                 "<g class=\"pelers-cluster pelers-c4-{kind}\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\" fill=\"none\" stroke=\"var(--_b)\"{dashed}{}/>{}</g>",
                 esc_text(&boundary.alias),
                 num(group.boxed.x),
@@ -537,8 +541,14 @@ fn draw(
                 num(group.boxed.w),
                 num(group.boxed.h),
                 rounded(&style.shape),
-                link(&text, boundary.link.as_deref(), &boundary.alias, &mut links, options)
-            ));
+                link(
+                    &text,
+                    boundary.link.as_deref(),
+                    &boundary.alias,
+                    &mut links,
+                    options
+                )
+            );
         }
         for &n in &layout.groups[g].nodes {
             let node = &layout.nodes[n];
@@ -619,7 +629,8 @@ fn draw(
                 &format!(" fill=\"var({fill_var})\"{stroke}{}", style.shape),
                 &format!("{stroke}{}", style.line),
             );
-            nodes_out.push_str(&format!(
+            let _ = write!(
+                nodes_out,
                 "<g class=\"pelers-node pelers-shape-{form} pelers-c4-{}{}\" data-id=\"{}\" transform=\"translate({},{})\">{}</g>",
                 shape.kind,
                 if external { " pelers-c4-external" } else { "" },
@@ -633,7 +644,7 @@ fn draw(
                     &mut links,
                     options
                 )
-            ));
+            );
         }
     }
 
@@ -656,28 +667,26 @@ fn draw(
     let oy = pad + title_height - min_y;
 
     let mut body = String::new();
-    body.push_str(&format!(
-        "<g transform=\"translate({},{})\">",
-        num(ox),
-        num(oy)
-    ));
+    let _ = write!(body, "<g transform=\"translate({},{})\">", num(ox), num(oy));
     if !clusters.is_empty() {
-        body.push_str(&format!("<g class=\"pelers-clusters\">{clusters}</g>"));
+        let _ = write!(body, "<g class=\"pelers-clusters\">{clusters}</g>");
     }
     body.push_str(&casings_svg(&casings));
     if !edges_out.is_empty() {
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\">{edges_out}</g>"
-        ));
+        );
     }
     if !nodes_out.is_empty() {
-        body.push_str(&format!("<g class=\"pelers-nodes\">{nodes_out}</g>"));
+        let _ = write!(body, "<g class=\"pelers-nodes\">{nodes_out}</g>");
     }
     if !labels_out.is_empty() {
-        body.push_str(&format!(
+        let _ = write!(
+            body,
             "<g class=\"pelers-edge-labels\" font-size=\"{}\">{labels_out}</g>",
             num(small)
-        ));
+        );
     }
     body.push_str("</g>");
 

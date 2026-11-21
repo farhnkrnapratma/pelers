@@ -1,5 +1,5 @@
 pub mod api;
-#[cfg(feature = "napi")]
+#[cfg(any(feature = "napi", feature = "wasm"))]
 mod bindings;
 pub mod detect;
 pub mod diagrams;

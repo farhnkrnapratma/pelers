@@ -14,6 +14,7 @@ use crate::text::label::{Label, has_math, label_line, layout_label, line_middle}
 use crate::text::measurer::{BOLD_STYLE, ITALIC, width as measure};
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_round};
+use std::fmt::Write as _;
 
 const NODE_SEP: f64 = 40.0;
 const EDGE_SEP: f64 = 16.0;
@@ -523,13 +524,14 @@ fn draw(
         ));
         if !view.rows.is_empty() {
             let divider = top + view.head_height;
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "<path class=\"pelers-divider\" d=\"M{},{}H{}\" stroke=\"var(--_b)\"{}/>",
                 num(left),
                 num(divider),
                 num(-left),
                 style.line
-            ));
+            );
             let mut y = divider + PAD_Y;
             let mut rows_out = String::new();
             for row in &view.rows {
@@ -547,23 +549,25 @@ fn draw(
                 ));
                 y += row.height + ROW_GAP;
             }
-            body.push_str(&format!(
+            let _ = write!(
+                body,
                 "<g class=\"pelers-fields\" font-size=\"{}\">{rows_out}</g>",
                 crate::util::jsnum::js_number_to_string(view.rows[0].key.size)
-            ));
+            );
         }
         let class_kind = if node.requirement.is_some() {
             "pelers-requirement"
         } else {
             "pelers-element"
         };
-        nodes_out.push_str(&format!(
+        let _ = write!(
+            nodes_out,
             "<g class=\"pelers-node {class_kind}{}\" data-id=\"{}\" transform=\"translate({},{})\">{body}</g>",
             class_names(strip_default(&node.css_classes)),
             esc_text(&node.id),
             num(cnodes[i].x + ox),
             num(cnodes[i].y + oy)
-        ));
+        );
     }
 
     let mut edges_out = String::new();
@@ -661,7 +665,8 @@ fn draw(
                 edy: routed.edy,
             }
         };
-        edges_out.push_str(&format!(
+        let _ = write!(
+            edges_out,
             "<g class=\"pelers-edge pelers-relationship-{}\" data-id=\"{}\"><path d=\"{}\"{}/>{}</g>",
             if edge.contains { "contains" } else { "arrow" },
             esc_text(&edge.id),
@@ -676,7 +681,7 @@ fn draw(
             } else {
                 arrow_marker(path.ex, path.ey, path.edx, path.edy)
             }
-        ));
+        );
         labels_out.push_str(&edge_label_svg(
             &edge.id, label, label_x, label_y, "", false,
         ));
@@ -689,17 +694,19 @@ fn draw(
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !edges_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edges\" fill=\"none\" stroke=\"var(--_l)\" stroke-linecap=\"round\">{edges_out}</g>"
-        ));
+        );
     }
     if !labels_out.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-edge-labels\" font-size=\"{}\" fill=\"var(--_m)\">{labels_out}</g>",
             crate::util::jsnum::js_number_to_string(small)
-        ));
+        );
     }
-    content.push_str(&format!("<g class=\"pelers-nodes\">{nodes_out}</g>"));
+    let _ = write!(content, "<g class=\"pelers-nodes\">{nodes_out}</g>");
 
     Drawn {
         svg: svg_document(

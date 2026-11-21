@@ -1,4 +1,4 @@
-use crate::util::jsnum::{js_max, js_number, js_pow, js_round, js_to_precision};
+use crate::util::jsnum::{js_max, js_pow, js_round, js_to_precision_number};
 
 pub fn tick_step(span: f64, count: f64) -> f64 {
     let raw = span / js_max(count, 1.0);
@@ -29,16 +29,14 @@ pub fn tick_index(step: f64, value: f64) -> f64 {
 }
 
 pub fn tick_value(step: f64, index: f64) -> f64 {
-    let value = if step > 0.0 {
-        index * step
-    } else {
-        index / -step
-    };
-    if value.is_finite() {
-        js_number(&js_to_precision(value, 15))
-    } else {
-        value
-    }
+    js_to_precision_number(
+        if step > 0.0 {
+            index * step
+        } else {
+            index / -step
+        },
+        15,
+    )
 }
 
 pub fn ticks_between(lo: f64, hi: f64, step: f64) -> Vec<f64> {

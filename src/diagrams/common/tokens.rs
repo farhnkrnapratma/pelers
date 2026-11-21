@@ -1,5 +1,5 @@
 use crate::errors::{PelersError, lexical_error, syntax_error};
-use crate::util::chars::{is_js_space, trim};
+use crate::util::chars::{find, is_js_space, trim};
 
 pub type Matcher = fn(src: &str, at: usize) -> Option<usize>;
 
@@ -57,7 +57,7 @@ fn line_end(src: &str, at: usize) -> usize {
 
 fn until_comment(src: &str, at: usize) -> usize {
     let end = line_end(src, at);
-    src[at..end].find("%%").map_or(end, |i| at + i)
+    find(&src[at..end], "%%").map_or(end, |i| at + i)
 }
 
 fn newline(src: &str, at: usize) -> Option<usize> {
@@ -148,7 +148,7 @@ fn directive_opener(src: &str, at: usize) -> Option<usize> {
 fn directive(src: &str, at: usize) -> Option<usize> {
     let p = directive_opener(src, at)? + 3;
     let mut from = p;
-    while let Some(found) = src[from..].find("}%%") {
+    while let Some(found) = find(&src[from..], "}%%") {
         let close = from + found + 3;
         if let Some(end) = newline(src, close) {
             return Some(end);
@@ -222,7 +222,7 @@ pub fn title_before(
         Some(b'\t' | b' ') => {
             let from = r + 1;
             let line = line_end(src, from);
-            Some(src[from..line].find("%%").map_or(line, |i| from + i))
+            Some(find(&src[from..line], "%%").map_or(line, |i| from + i))
         }
         _ if run_has(src, r, run, last) => None,
         _ => Some(r),

@@ -10,6 +10,7 @@ use crate::text::label::layout_label;
 use crate::text::measurer::{BOLD_STYLE, ITALIC, MONO, width as measure};
 use crate::util::jsnum::{js_max, js_min, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const FONT_MONO: &str = "var(--_fm)";
 const LEAD: f64 = 12.0;
@@ -402,7 +403,8 @@ impl Placer {
                             let next_offset =
                                 offset + kid.down + js_max(self.m.sep, 2.0 * arc) + next.up;
                             let mid = y + offset + kid.down + js_max(self.m.sep, 2.0 * arc) / 2.0;
-                            self.track.push_str(&format!(
+                            let _ = write!(
+                                self.track,
                                 "M{},{}H{}V{}H{}V{}H{}",
                                 num(start + kid.width),
                                 num(ky),
@@ -411,8 +413,9 @@ impl Placer {
                                 num(x + arc),
                                 num(y + next_offset),
                                 num(start)
-                            ));
-                            self.arrows.push_str(&format!(
+                            );
+                            let _ = write!(
+                                self.arrows,
                                 "M{},{}l{},{}l{},{}z",
                                 num(start - ARROW),
                                 num(y + next_offset - ARROW / 2.0),
@@ -420,17 +423,18 @@ impl Placer {
                                 num(ARROW / 2.0),
                                 num(-ARROW),
                                 num(ARROW / 2.0)
-                            ));
+                            );
                             offset = next_offset;
                         } else {
-                            self.track.push_str(&format!(
+                            let _ = write!(
+                                self.track,
                                 "M{},{}H{}V{}H{}",
                                 num(start + kid.width),
                                 num(ky),
                                 num(right - arc),
                                 num(y),
                                 num(right)
-                            ));
+                            );
                         }
                     }
                     reverse(&mut boxes[from..], 0);
@@ -502,7 +506,8 @@ impl Placer {
                     let kx = x + 2.0 * arc;
                     self.line(x, y, kx);
                     self.line(kx + kid.width, y, right);
-                    self.track.push_str(&format!(
+                    let _ = write!(
+                        self.track,
                         "M{},{}{}V{}{}H{}{}V{}{}",
                         num(x),
                         num(y),
@@ -513,7 +518,7 @@ impl Placer {
                         self.turn_east_south,
                         num(y - arc),
                         self.turn_south_east
-                    ));
+                    );
                     boxes.push(kid);
                     at.push(kx);
                     at.push(y);
@@ -525,7 +530,8 @@ impl Placer {
                     let middle = x + box_n.width / 2.0;
                     self.line(x, y, kx);
                     self.line(kx + kid.width, y, right);
-                    self.track.push_str(&format!(
+                    let _ = write!(
+                        self.track,
                         "M{},{}{}V{}{}H{}{}V{}{}",
                         num(x + arc),
                         num(y),
@@ -536,23 +542,25 @@ impl Placer {
                         self.turn_east_north,
                         num(y + arc),
                         self.loop_up
-                    ));
-                    self.arrows.push_str(&format!(
+                    );
+                    let _ = write!(
+                        self.arrows,
                         "M{},{}l{},{}v{}z",
                         num(middle - ARROW / 2.0),
                         num(loop_y),
                         num(ARROW),
                         num(-ARROW / 2.0),
                         num(ARROW)
-                    ));
+                    );
                     if !box_n.text.is_empty() {
-                        self.nodes.push_str(&format!(
+                        let _ = write!(
+                            self.nodes,
                             "<text class=\"pelers-edge-label pelers-count\" x=\"{}\" y=\"{}\" font-size=\"{}\" fill=\"var(--_m)\">{}</text>",
                             num(middle),
                             num(loop_y + COUNT_SIZE + 3.0),
                             js_number_to_string(COUNT_SIZE),
                             esc(&box_n.text)
-                        ));
+                        );
                     }
                     boxes.push(kid);
                     at.push(kx);
@@ -597,11 +605,12 @@ impl Placer {
                                 .skip(2)
                                 .take(text.chars().count().saturating_sub(4))
                                 .collect();
-                            self.nodes.push_str(&format!(
+                            let _ = write!(
+                                self.nodes,
                                 "<g class=\"pelers-node pelers-special\">{shape} fill=\"var(--_bg)\" stroke=\"var(--_b)\" stroke-dasharray=\"4 3\"{}{ROUNDED}/>{label} font-style=\"italic\"><tspan fill=\"var(--_m)\">? </tspan>{}<tspan fill=\"var(--_m)\"> ?</tspan></text></g>",
                                 self.stroke,
                                 esc(&inner)
-                            ));
+                            );
                         }
                     }
                 }
@@ -743,7 +752,8 @@ fn draw(model: &RailroadModel, config: &Config, options: &RenderOptions, tight: 
         } else {
             String::new()
         };
-        rules.push_str(&format!(
+        let _ = write!(
+            rules,
             "<g class=\"pelers-rule\" data-id=\"{}\"><text class=\"pelers-rule-name\" x=\"{}\" y=\"{}\" font-size=\"{}\" font-weight=\"var(--_hw)\" text-anchor=\"start\">{}</text><path class=\"pelers-edge pelers-track\" d=\"{}\" fill=\"none\" stroke=\"var(--_l)\"{stroke}/>{}{markers}{}</g>",
             esc_text(&rule.name),
             num(pad),
@@ -754,10 +764,13 @@ fn draw(model: &RailroadModel, config: &Config, options: &RenderOptions, tight: 
             if placer.arrows.is_empty() {
                 String::new()
             } else {
-                format!("<path class=\"pelers-marker\" d=\"{}\" fill=\"var(--_l)\"/>", placer.arrows)
+                format!(
+                    "<path class=\"pelers-marker\" d=\"{}\" fill=\"var(--_l)\"/>",
+                    placer.arrows
+                )
             },
             placer.nodes
-        ));
+        );
         width = js_max(
             js_max(width, end + 2.0 * radius - pad),
             measure(&name, head_size, BOLD_STYLE),
@@ -775,10 +788,11 @@ fn draw(model: &RailroadModel, config: &Config, options: &RenderOptions, tight: 
         " class=\"pelers-title\" font-weight=\"var(--_tw)\"",
     );
     if !rules.is_empty() {
-        content.push_str(&format!(
+        let _ = write!(
+            content,
             "<g class=\"pelers-rules\" transform=\"translate(0.5,0.5)\" font-size=\"{}\" text-anchor=\"middle\">{rules}</g>",
             num(size)
-        ));
+        );
     }
 
     Drawn {

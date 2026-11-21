@@ -1,4 +1,5 @@
 use crate::errors::{PelersError, PelersErrorCode};
+use crate::util::chars::utf16_string;
 use crate::util::fxhash::FastMap;
 use crate::util::ordered::OrderedMap;
 use crate::util::value::Value;
@@ -36,7 +37,7 @@ fn is_digit(c: u16) -> bool {
 }
 
 fn token_text(c: u16) -> String {
-    String::from_utf16_lossy(&[c])
+    utf16_string(&[c])
 }
 
 fn walk(text: &str) -> Result<OrderedMap<Vec<String>>, WalkError> {
@@ -86,7 +87,7 @@ fn walk(text: &str) -> Result<OrderedMap<Vec<String>>, WalkError> {
             let ch = u[*at];
             *at += 1;
             if ch == 34 {
-                return Ok(String::from_utf16_lossy(&value));
+                return Ok(utf16_string(&value));
             }
             if ch < 0x20 {
                 return Err(WalkError {
@@ -122,8 +123,7 @@ fn walk(text: &str) -> Result<OrderedMap<Vec<String>>, WalkError> {
                             message: format!("Bad Unicode escape in JSON at position {}", *at),
                         });
                     }
-                    let code =
-                        u16::from_str_radix(&String::from_utf16_lossy(&hex), 16).unwrap_or(0);
+                    let code = u16::from_str_radix(&utf16_string(&hex), 16).unwrap_or(0);
                     *at += 4;
                     code
                 }

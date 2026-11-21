@@ -10,6 +10,7 @@ use crate::text::measurer::BOLD_STYLE;
 use crate::util::fxhash::FastMap;
 use crate::util::jsnum::{js_max, js_min, js_number, js_number_to_string, js_round};
 use crate::util::value::Value;
+use std::fmt::Write as _;
 
 const GAP: f64 = 4.0;
 const CAREFUL: usize = 300;
@@ -205,7 +206,8 @@ pub fn render_quadrant(model: &QuadrantDb, config: &Config, options: &RenderOpti
         taken.push(cy - text.height / 2.0);
         taken.push(cx + text.width / 2.0);
         taken.push(cy + text.height / 2.0);
-        quadrants.push_str(&format!(
+        let _ = write!(
+            quadrants,
             "<g class=\"pelers-quadrant\" data-id=\"{}\"><rect x=\"{}\" y=\"{}\" width=\"{}\" height=\"{}\"{ROUNDED}/>{}</g>",
             k + 1,
             num(x),
@@ -221,7 +223,7 @@ pub fn render_quadrant(model: &QuadrantDb, config: &Config, options: &RenderOpti
                     size_attr(quadrant_size, size)
                 )
             )
-        ));
+        );
     }
 
     let mut axes = String::new();

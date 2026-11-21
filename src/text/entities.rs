@@ -1,6 +1,6 @@
 use std::sync::OnceLock;
 
-use crate::util::chars::is_word;
+use crate::util::chars::{find, is_word};
 use crate::util::fxhash::FastMap;
 
 const NAMED: &str = "amp:38,lt:60,gt:62,quot:34,apos:39,nbsp:160,shy:173,iexcl:161,cent:162,pound:163,curren:164,yen:165,sect:167,\
@@ -80,7 +80,7 @@ fn restore_placeholders(text: &str) -> String {
 }
 
 pub fn written_codes(text: &str) -> String {
-    if !text.contains("¶ß") {
+    if find(text, "¶ß").is_none() {
         return text.to_owned();
     }
     let chars: Vec<char> = text.chars().collect();
@@ -139,7 +139,7 @@ fn entity_at(rest: &str) -> Option<(char, usize)> {
 }
 
 pub fn decode_entities(text: &str) -> String {
-    let text = if text.contains("¶ß") {
+    let text = if find(text, "¶ß").is_some() {
         restore_placeholders(text)
     } else {
         text.to_owned()

@@ -1,6 +1,6 @@
 use super::tokens::*;
 use crate::errors::{PelersError, PelersErrorCode, written};
-use crate::util::chars::{trim, utf16_to_byte};
+use crate::util::chars::{trim, utf16_string, utf16_to_byte};
 
 pub struct Tokens {
     pub types: Vec<usize>,
@@ -256,8 +256,7 @@ fn lex_error(src: &str, units: &[u16], offset: usize, length: usize) -> PelersEr
     let (line, column) = line_column(src, offset);
     let from = mapped(src, offset).1;
     let to = mapped(src, offset + length).1;
-    let ch =
-        String::from_utf16_lossy(&units[offset.min(units.len())..(offset + 1).min(units.len())]);
+    let ch = utf16_string(&units[offset.min(units.len())..(offset + 1).min(units.len())]);
     let mut error = PelersError::new(
         format!(
             "Error lexing usecase diagram: unexpected character: ->{ch}<- at offset: {from}, skipped {} characters. at line {line}, column {column} [{from},{to})",
@@ -543,7 +542,7 @@ pub fn tokenize(src: &str) -> Result<Tokens, PelersError> {
                         }
                         close += 1;
                     }
-                    if found && !trim(&String::from_utf16_lossy(&u[i..close])).is_empty() {
+                    if found && !trim(&utf16_string(&u[i..close])).is_empty() {
                         types.push(STEREOTYPE_TEXT);
                         starts.push(i);
                         ends.push(close);
