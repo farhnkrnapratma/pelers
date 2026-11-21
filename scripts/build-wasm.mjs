@@ -54,7 +54,8 @@ for (const { name, level, flag, features, global } of variants) {
   const module = join(out, "pelers_bg.wasm");
   try {
     run(wasmOpt(), [flag, "--all-features", "--strip-debug", module, "-o", module]);
-  } catch {
+  } catch (error) {
+    if (process.env.CI) throw error;
     console.warn("wasm-opt not found; the module is left unoptimized");
   }
   const entry = join(out, "global-entry.js");

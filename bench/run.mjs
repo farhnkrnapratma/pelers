@@ -185,7 +185,7 @@ function table(rows, columns) {
 const versions = `pele ${JSON.parse(readFileSync(join(peleDist, "../package.json"), "utf8")).version}, mermaid ${JSON.parse(readFileSync(join(dirname(require.resolve("mermaid/package.json")), "package.json"), "utf8")).version}`;
 const markdown = `# Benchmarks
 
-Corpus: ${corpus.length} sources (bench/corpus.json). Official packages: ${versions}. Times are medians of ${PASSES} passes of at least ${MIN_SAMPLE_MS} ms per source. "vs" is total time of the other renderer over pelers'; "worst" is the smallest per-source ratio. "identical" counts sources whose SVG equals Pele's after renaming to pelers names.
+Corpus: ${corpus.length} sources (bench/corpus.json). Official packages: ${versions}. Times are medians of ${PASSES} passes of at least ${MIN_SAMPLE_MS} ms per source. "vs" is total time of the other renderer over pelers'; "worst" is the smallest per-source ratio. "identical" counts sources whose SVG equals Pele's after renaming to pelers names. The addon comes from \`bun run build:release\` (profile-guided, the build CI tests and stores) and the WebAssembly modules from \`bun run build:wasm\`.
 
 ${runtimes.map(({ runtime, rows }) => `## Server: native addon under ${runtime}\n\n${table(rows, ["pele"])}`).join("\n\n")}
 

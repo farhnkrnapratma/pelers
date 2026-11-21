@@ -41,6 +41,8 @@ function node() {
 
 const tool = process.env.PELERS_PGO === "0" || !node() ? undefined : profdata();
 if (tool === undefined) {
+  if (process.env.CI && process.env.PELERS_PGO !== "0")
+    throw new Error("CI builds need node and llvm-profdata (rustup component add llvm-tools)");
   console.warn("node or llvm-profdata not found; building without profile-guided optimization");
   run("bunx", napi);
 } else {

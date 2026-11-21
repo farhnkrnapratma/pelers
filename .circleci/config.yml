@@ -34,6 +34,22 @@ commands:
             mkdir -p "$HOME/.local/bin"
             tar -xzf "$HOME/trufflehog.tar.gz" -C "$HOME/.local/bin" trufflehog
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
+  setup-wasm-tools:
+    steps:
+      - run:
+          name: Install wasm-bindgen and wasm-opt
+          command: |
+            mkdir -p "$HOME/.local/bin"
+            cd "$HOME"
+            curl -fsSL -o wasm-bindgen.tar.gz https://github.com/wasm-bindgen/wasm-bindgen/releases/download/0.2.130/wasm-bindgen-0.2.130-x86_64-unknown-linux-musl.tar.gz
+            curl -fsSL -o binaryen.tar.gz https://github.com/WebAssembly/binaryen/releases/download/version_130/binaryen-version_130-x86_64-linux.tar.gz
+            printf '%s\n' \
+              "9687f3bb551b9f66f37ed32a40d7913a00f7962db653054e56857bc306c3227f  wasm-bindgen.tar.gz" \
+              "0a18362361ad05465118cd8eeb72edaeec89de6894bc283576ef4e07aa3babcc  binaryen.tar.gz" \
+              | sha256sum -c -
+            tar -xzf wasm-bindgen.tar.gz --strip-components=1 -C .local/bin wasm-bindgen-0.2.130-x86_64-unknown-linux-musl/wasm-bindgen
+            tar -xzf binaryen.tar.gz --strip-components=2 -C .local/bin binaryen-version_130/bin/wasm-opt
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$BASH_ENV"
   restore-cargo:
     parameters:
       scope:
@@ -86,10 +102,22 @@ jobs:
       - restore-cargo:
           scope: test
       - setup-bun
+      - setup-wasm-tools
+      - run: rustup component add llvm-tools
+      - run: rustup target add wasm32-unknown-unknown
       - run: bun install --frozen-lockfile
       - run: cargo test --locked
-      - run: bun run test:native
+      - run: bun run build:release
+      - run: bun run build:wasm
+      - run: bun run test:bindings
       - run: bun run test:dom
+      - run:
+          name: Collect the release builds
+          command: |
+            mkdir -p artifacts
+            cp -r ./*.node index.native.js index.native.d.ts wasm dist artifacts/
+      - store_artifacts:
+          path: artifacts
       - save-cargo:
           scope: test
 
