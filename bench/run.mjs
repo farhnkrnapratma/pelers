@@ -1,27 +1,23 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { buildCorpus, sha256, toPelers } from "./corpus.mjs";
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import puppeteer from "puppeteer-core";
+import { buildCorpus, referenceOptions, root, toPelers } from "./corpus.mjs";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const require = createRequire(import.meta.url);
+process.env.TZ = "UTC";
 const PASSES = 5;
 const MIN_SAMPLE_MS = 25;
 const CHROME = process.env.CHROME ?? "/usr/sbin/google-chrome";
+const NOW = Date.UTC(2026, 0, 15, 10);
+const require = createRequire(import.meta.url);
+const peleDist = dirname(require.resolve("pele"));
 
 const pelers = await import(join(root, "index.js"));
-const oracle = JSON.parse(
-  readFileSync(join(root, "bench", "oracle-results.json"), "utf8"),
-);
-
+const pele = await import(require.resolve("pele"));
 const corpus = buildCorpus();
 
-function median(values) {
-  const sorted = [...values].sort((a, b) => a - b);
-  return sorted[Math.floor(sorted.length / 2)];
-}
+const median = (values) =>
+  [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 
 function timeSync(fn) {
   for (let i = 0; i < 3; i++) fn();
@@ -40,188 +36,179 @@ function timeSync(fn) {
   return median(passes);
 }
 
-let browser;
-let page;
+const attempt = (fn) => {
+  try {
+    return fn();
+  } catch {
+    return null;
+  }
+};
 
-async function launchBrowser() {
-  browser = await puppeteer.launch({
-    executablePath: CHROME,
-    headless: true,
-    args: ["--no-sandbox", "--disable-gpu"],
-    protocolTimeout: 60000,
-  });
-  page = await browser.newPage();
-  await page.setContent("<!doctype html><html><body></body></html>");
-  await page.addScriptTag({
-    content: readFileSync(
-      require.resolve("mermaid/dist/mermaid.min.js"),
-      "utf8",
-    ),
-  });
-  await page.evaluate(() => {
-    window.mermaid.initialize({ startOnLoad: false });
-    window.__benchId = 0;
-  });
-}
+console.error("server: pelers napi against pele npm under bun");
+const server = corpus.map(({ type, source }) => {
+  const options = { ...referenceOptions(type), now: NOW };
+  const ours = attempt(() => pelers.render(source, { now: NOW }).svg);
+  const theirs = attempt(() => toPelers(pele.render(source, options).svg));
+  return {
+    type,
+    same: ours !== null && ours === theirs,
+    pelers: ours === null ? null : timeSync(() => pelers.render(source, { now: NOW })),
+    pele: theirs === null ? null : timeSync(() => pele.render(source, options)),
+  };
+});
 
-await launchBrowser();
-const mermaidFailures = [];
-
-async function restartBrowser() {
-  await browser.close().catch(() => {});
-  await launchBrowser();
-}
-
-async function mermaidRender(source) {
-  return page.evaluate(async (text) => {
-    const id = `m${window.__benchId++}`;
-    try {
-      const { svg } = await window.mermaid.render(id, text);
-      document.getElementById(id)?.remove();
-      return svg;
-    } catch {
-      document.getElementById(id)?.remove();
-      return null;
+const files = new Map([
+  ["/", { body: "<!doctype html><html><body></body></html>", type: "text/html" }],
+]);
+const http = Bun.serve({
+  port: 0,
+  fetch(request) {
+    const path = new URL(request.url).pathname;
+    if (files.has(path)) {
+      const { body, type } = files.get(path);
+      return new Response(body, { headers: { "content-type": type } });
     }
-  }, source);
-}
+    if (path.startsWith("/pele/"))
+      return new Response(Bun.file(join(peleDist, path.slice(6))));
+    return new Response(Bun.file(join(root, path)));
+  },
+});
 
-async function mermaidTime(source) {
-  return page.evaluate(
-    async (text, passes, minMs) => {
-      const once = async () => {
-        const id = `m${window.__benchId++}`;
-        await window.mermaid.render(id, text);
-        document.getElementById(id)?.remove();
+const browser = await puppeteer.launch({
+  executablePath: CHROME,
+  headless: true,
+  args: ["--no-sandbox", "--disable-gpu"],
+  protocolTimeout: 600000,
+});
+const page = await browser.newPage();
+await page.goto(`http://localhost:${http.port}/`);
+await page.addScriptTag({
+  content: readFileSync(require.resolve("mermaid/dist/mermaid.min.js"), "utf8"),
+});
+await page.evaluate(async (entries) => {
+  window.pelers = await import(entries.pelers);
+  window.pele = await import(entries.pele);
+  window.mermaid.initialize({ startOnLoad: false });
+  window.mermaidId = 0;
+}, { pelers: "/browser.js", pele: "/pele/pele.js" });
+
+console.error("browser: pelers wasm against pele npm and mermaid in Chrome");
+const browserRows = [];
+for (const [index, { type, source }] of corpus.entries()) {
+  if (index % 50 === 0) console.error(`  ${index}/${corpus.length}`);
+  const row = await page.evaluate(
+    async (text, options, passes, minMs) => {
+      const median = (values) =>
+        values.sort((a, b) => a - b)[Math.floor(values.length / 2)];
+      const time = async (fn) => {
+        for (let i = 0; i < 3; i++) await fn();
+        const values = [];
+        for (let p = 0; p < passes; p++) {
+          let count = 0;
+          const start = performance.now();
+          let elapsed = 0;
+          do {
+            await fn();
+            count++;
+            elapsed = performance.now() - start;
+          } while (elapsed < minMs);
+          values.push(elapsed / count);
+        }
+        return median(values);
       };
-      for (let i = 0; i < 3; i++) await once();
-      const values = [];
-      for (let p = 0; p < passes; p++) {
-        let count = 0;
-        const start = performance.now();
-        let elapsed = 0;
-        do {
-          await once();
-          count++;
-          elapsed = performance.now() - start;
-        } while (elapsed < minMs);
-        values.push(elapsed / count);
-      }
-      values.sort((a, b) => a - b);
-      return values[Math.floor(values.length / 2)];
+      const safe = async (fn) => {
+        try {
+          return await fn();
+        } catch {
+          return null;
+        }
+      };
+      const ours = await safe(() => window.pelers.render(text, { now: options.now }).svg);
+      const theirs = await safe(() => window.pele.render(text, options).svg);
+      const drawMermaid = async () => {
+        const id = `m${window.mermaidId++}`;
+        try {
+          return (await window.mermaid.render(id, text)).svg;
+        } finally {
+          document.getElementById(id)?.remove();
+        }
+      };
+      const mermaidOk = (await safe(drawMermaid)) !== null;
+      return {
+        ours,
+        theirs,
+        pelers: ours === null ? null : await time(() => window.pelers.render(text, { now: options.now })),
+        pele: theirs === null ? null : await time(() => window.pele.render(text, options)),
+        mermaid: mermaidOk ? await safe(() => time(drawMermaid)) : null,
+      };
     },
     source,
+    { ...referenceOptions(type), now: NOW },
     PASSES,
     MIN_SAMPLE_MS,
   );
-}
-
-const rows = [];
-let identical = 0;
-for (const [index, { type, source }] of corpus.entries()) {
-  if (index % 25 === 0) console.error(`progress ${index}/${corpus.length}`);
-  let pelersSvg;
-  try {
-    pelersSvg = pelers.render(source).svg;
-  } catch {
-    pelersSvg = null;
-  }
-  if (pelersSvg === null) continue;
-  if (sha256(pelersSvg) === oracle[index].sha) identical++;
-  const row = {
+  browserRows.push({
     type,
-    pelers: timeSync(() => pelers.render(source).svg),
-    reference: oracle[index].ms,
-    mermaid: null,
-  };
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      if ((await mermaidRender(source)) !== null)
-        row.mermaid = await mermaidTime(source);
-      break;
-    } catch (error) {
-      if (attempt === 1)
-        mermaidFailures.push({
-          index: rows.length,
-          type,
-          message: String(error.message).split("\n")[0],
-        });
-      await restartBrowser();
-    }
-  }
-  rows.push(row);
+    same: row.ours !== null && row.theirs !== null && row.ours === toPelers(row.theirs),
+    pelers: row.pelers,
+    pele: row.pele,
+    mermaid: row.mermaid,
+  });
 }
 await browser.close();
+http.stop();
 
-const summary = {};
-for (const row of rows) {
-  const s = (summary[row.type] ??= {
-    n: 0,
-    pelers: 0,
-    reference: 0,
-    referenceN: 0,
-    mermaid: 0,
-    mermaidN: 0,
-  });
-  s.n++;
-  s.pelers += row.pelers;
-  if (row.reference !== null) {
-    s.reference += row.reference;
-    s.referenceN++;
+function table(rows, columns) {
+  const byType = new Map();
+  for (const row of rows) {
+    const entry = byType.get(row.type) ?? { type: row.type, n: 0, same: 0, rows: [] };
+    entry.n++;
+    if (row.same) entry.same++;
+    entry.rows.push(row);
+    byType.set(row.type, entry);
   }
-  if (row.mermaid !== null) {
-    s.mermaid += row.mermaid;
-    s.mermaidN++;
+  const mean = (list, key) => {
+    const values = list.map((row) => row[key]).filter((value) => value !== null);
+    return values.length === 0 ? null : values.reduce((a, b) => a + b, 0) / values.length;
+  };
+  const both = (list, key) => list.filter((row) => row.pelers !== null && row[key] !== null);
+  const speedup = (list, key) => {
+    const pairs = both(list, key);
+    if (pairs.length === 0) return ["-", "-"];
+    const total = pairs.reduce((a, row) => a + row[key], 0) / pairs.reduce((a, row) => a + row.pelers, 0);
+    const worst = Math.min(...pairs.map((row) => row[key] / row.pelers));
+    return [`${total.toFixed(2)}x`, `${worst.toFixed(2)}x`];
+  };
+  const fmt = (value) => (value === null ? "-" : value.toFixed(4));
+  const head = ["type", "n", "identical", "pelers ms", ...columns.map((c) => `${c} ms`)];
+  for (const column of columns) head.push(`vs ${column}`, `worst vs ${column}`);
+  const lines = [`| ${head.join(" | ")} |`, `| ${head.map((_, i) => (i === 0 ? "---" : "---:")).join(" | ")} |`];
+  const entries = [...byType.values()].sort((a, b) => a.type.localeCompare(b.type));
+  entries.push({ type: "**all**", n: rows.length, same: rows.filter((row) => row.same).length, rows });
+  for (const entry of entries) {
+    const cells = [entry.type, entry.n, `${entry.same}/${entry.n}`, fmt(mean(entry.rows, "pelers")), ...columns.map((c) => fmt(mean(entry.rows, c)))];
+    for (const column of columns) cells.push(...speedup(entry.rows, column));
+    lines.push(`| ${cells.join(" | ")} |`);
   }
+  return lines.join("\n");
 }
 
-const mean = (sum, n) => (n === 0 ? null : sum / n);
-const fmt = (v) => (v === null ? "-" : v.toFixed(3));
-const ratio = (a, b) =>
-  a === null || b === null ? "-" : `${(b / a).toFixed(1)}x`;
-const lines = [
-  "| type | n | pelers ms | oracle ms | mermaid ms | vs oracle | vs mermaid |",
-  "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
-];
-const totals = {
-  pelers: 0,
-  reference: 0,
-  referenceN: 0,
-  mermaid: 0,
-  mermaidN: 0,
-  n: 0,
-};
-for (const [type, s] of Object.entries(summary).sort()) {
-  const pelersMs = mean(s.pelers, s.n);
-  const referenceMs = mean(s.reference, s.referenceN);
-  const mermaidMs = mean(s.mermaid, s.mermaidN);
-  lines.push(
-    `| ${type} | ${s.n} | ${fmt(pelersMs)} | ${fmt(referenceMs)} | ${fmt(mermaidMs)} | ${ratio(pelersMs, referenceMs)} | ${ratio(pelersMs, mermaidMs)} |`,
-  );
-  totals.n += s.n;
-  totals.pelers += s.pelers;
-  totals.reference += s.reference;
-  totals.referenceN += s.referenceN;
-  totals.mermaid += s.mermaid;
-  totals.mermaidN += s.mermaidN;
-}
-const allPeler = mean(totals.pelers, totals.n);
-const allReference = mean(totals.reference, totals.referenceN);
-const allMermaid = mean(totals.mermaid, totals.mermaidN);
-lines.push(
-  `| **all** | ${totals.n} | ${fmt(allPeler)} | ${fmt(allReference)} | ${fmt(allMermaid)} | ${ratio(allPeler, allReference)} | ${ratio(allPeler, allMermaid)} |`,
-);
-lines.push("");
-lines.push(
-  `pelers output byte-identical to pele@1.13.0 npm under bun (names normalized to pelers, idPrefix pelers only for cynefin): ${identical} of ${corpus.length}`,
-);
-lines.push(`mermaid failures: ${mermaidFailures.length}`);
-console.log(lines.join("\n"));
+const versions = `pele ${JSON.parse(readFileSync(join(peleDist, "../package.json"), "utf8")).version}, mermaid ${JSON.parse(readFileSync(join(dirname(require.resolve("mermaid/package.json")), "package.json"), "utf8")).version}`;
+const markdown = `# Benchmarks
+
+Corpus: ${corpus.length} sources (bench/corpus.json). Official packages: ${versions}. Times are medians of ${PASSES} passes of at least ${MIN_SAMPLE_MS} ms per source. "vs" is total time of the other renderer over pelers'; "worst" is the smallest per-source ratio. "identical" counts sources whose SVG equals Pele's after renaming to pelers names.
+
+## Server: native addon under Bun
+
+${table(server, ["pele"])}
+
+## Browser: WebAssembly in headless Chrome
+
+${table(browserRows, ["pele", "mermaid"])}
+`;
+writeFileSync(join(root, "bench", "results.md"), markdown);
 writeFileSync(
   join(root, "bench", "results.json"),
-  JSON.stringify(
-    { corpus: corpus.length, identical, rows, summary, mermaidFailures },
-    null,
-    2,
-  ),
+  `${JSON.stringify({ versions, corpus: corpus.length, server, browser: browserRows }, null, 1)}\n`,
 );
+console.log(markdown);
