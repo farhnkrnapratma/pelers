@@ -81,14 +81,14 @@ const SLOTS: usize = 256;
 
 pub type OffsetFn = dyn Fn(f64) -> f64;
 
-#[cfg(not(all(target_arch = "wasm32", feature = "wasm")))]
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
 pub fn now_ms() -> f64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .map_or(0.0, |d| d.as_millis() as f64)
 }
 
-#[cfg(all(target_arch = "wasm32", feature = "wasm"))]
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
 pub fn now_ms() -> f64 {
     js_sys::Date::now()
 }

@@ -2,5 +2,5 @@
 #[cfg_attr(test, allow(dead_code))]
 mod node;
 
-#[cfg(all(feature = "wasm", target_arch = "wasm32"))]
+#[cfg(all(feature = "wasm", target_arch = "wasm32", target_os = "unknown"))]
 mod wasm;

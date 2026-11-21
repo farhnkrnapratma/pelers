@@ -130,16 +130,33 @@ pub fn sanitize_url(url: &str) -> String {
         return normalized;
     }
     if protocol == "http:" || protocol == "https:" {
-        return match url::Url::parse(&normalized) {
-            Ok(mut parsed) => {
-                let path = parsed.path().replace('^', "%5E");
-                parsed.set_path(&path);
-                parsed.to_string()
-            }
-            Err(_) => BLANK.to_owned(),
-        };
+        return whatwg(&normalized).unwrap_or_else(|| BLANK.to_owned());
     }
     normalized
+}
+
+#[cfg(not(all(target_arch = "wasm32", target_os = "unknown")))]
+fn whatwg(text: &str) -> Option<String> {
+    let mut parsed = url::Url::parse(text).ok()?;
+    let path = parsed.path().replace('^', "%5E");
+    parsed.set_path(&path);
+    Some(parsed.to_string())
+}
+
+#[cfg(all(target_arch = "wasm32", target_os = "unknown"))]
+fn whatwg(text: &str) -> Option<String> {
+    use wasm_bindgen::prelude::*;
+
+    #[wasm_bindgen]
+    extern "C" {
+        type Url;
+        #[wasm_bindgen(constructor, catch, js_class = "URL")]
+        fn new(text: &str) -> Result<Url, JsValue>;
+        #[wasm_bindgen(method, getter)]
+        fn href(this: &Url) -> String;
+    }
+
+    Url::new(text).ok().map(|parsed| parsed.href())
 }
 
 pub fn safe_url(url: &str) -> String {
