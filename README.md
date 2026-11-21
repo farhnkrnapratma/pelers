@@ -10,7 +10,7 @@ Alpha. All 33 diagram types of Pele 1.13.0 are ported and match Pele's output by
 
 | Registry  | Name                                             | State                                                                                                   |
 | --------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha1` is the old TypeScript build. The next release is the Rust binding with Pele's full API. |
+| npm       | [`pelers`](https://www.npmjs.com/package/pelers) | `1.0.0-alpha2` (`alpha` tag): the Rust binding with Pele's full API. `1.0.0-alpha1` is the old TypeScript build. |
 | crates.io | [`pelers`](https://crates.io/crates/pelers)      | The Rust core and a `pelers` command-line renderer.                                                    |
 
 The npm API follows Pele's: `render(source | model, options)` returns `{ svg, width, height, links, type, mermaidType, title? }`, and `parse`, `detectType`, `supports`, `register`, `registered`, `forgetTextWidths` and `PelersError` (with `code`, `type`, `mermaidType`, `line`, `column` and `snippet`) are exported. Every `RenderOptions` field is accepted, including the `icons`, `math` and `measurer` callbacks. CSS classes and variables use the `pelers-` prefix (`--pelers-bg` and so on).
