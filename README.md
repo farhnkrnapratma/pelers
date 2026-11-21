@@ -37,6 +37,15 @@ const model = parse("pie\n  \"Dogs\": 3\n  \"Cats\": 1");
 const again = render(model, { idPrefix: "pets" });
 ```
 
+In browsers `pelers` resolves to a WebAssembly build. Two builds ship with the package:
+
+| Import                                        | Build                         | Module size (gzip) |
+| --------------------------------------------- | ----------------------------- | ------------------ |
+| `pelers`, `pelers/lazy`, `pelers/global`      | fast (`opt-level 3`)          | 1.5 MB             |
+| `pelers/small`, `pelers/small/lazy`, `pelers/small/global` | small (`opt-level z`) | 0.96 MB            |
+
+Both render the same SVG; the fast build renders faster, the small one downloads less. `pelers/lazy` and `pelers/small/lazy` load the module on first use (`await load()`, `renderAsync`, `mountAsync`), and the `global` builds define `globalThis.pelers` for a plain `<script>` tag.
+
 Rust:
 
 ```rust
@@ -52,7 +61,10 @@ println!("{}", rendered.svg);
 ```
 src/*.rs                 the Rust core: api, detect, preprocess, flowchart, render, errors
 src/bindings/node.rs     the napi binding (feature `napi`)
-index.js, index.d.ts     hand-written wrapper over the generated index.native.js / index.native.d.ts
+src/bindings/wasm.rs     the WebAssembly binding (feature `wasm`)
+index.js, index.d.ts     Node entry over the generated index.native.js / index.native.d.ts
+browser.js, small.js     browser entries over wasm/fast and wasm/small
+js/                      the shared JavaScript API (render, parse, mount, zoom, lazy loading)
 scripts/                 binding checks
 scripts/oracle.mjs       loads Pele's source from ../pele (or PELE_DIR) as the oracle for fixtures and goldens
 bench/                   benchmarks and differential fuzzing against the npm pele and mermaid releases
@@ -65,6 +77,8 @@ Requirements: Rust (stable), [Bun](https://bun.sh) and Node.js 20 or newer.
 ```sh
 bun install                # JS dependencies and git hooks
 bun run build              # napi build (debug) -> pelers.<platform>.node, index.native.js
+bun run build:release      # profile-guided release addon (needs node and rustup's llvm-tools)
+bun run build:wasm         # wasm/fast, wasm/small and dist/*.global.js (needs wasm-bindgen 0.2.130, wasm-opt)
 bun run test:native        # release build + scripts/test-bindings.mjs
 cargo test --locked
 cargo clippy --all-targets --all-features --locked -- -D warnings
@@ -79,6 +93,8 @@ git clone --branch 1.13.0 https://github.com/obsidianmd/pele ../pele
 bun scripts/gen-golden.mjs          # tests/golden from ../pele/tests/corpus
 bun scripts/gen-fixtures-render.mjs # and the other scripts/gen-fixtures-*.mjs
 ```
+
+`build:release` builds an instrumented addon, renders the corpus with it and rebuilds with the collected profile. Without node or `llvm-profdata` it falls back to a plain release build, except under CI, where the job fails instead so the tested and stored builds are always the profile-guided ones.
 
 Releases are cut with git-flow (`git flow release start vX.Y.Z`), so the tag carries the `v`. The npm package is published with `--tag alpha` while the version is a prerelease, and the crate with `cargo publish`.
 
