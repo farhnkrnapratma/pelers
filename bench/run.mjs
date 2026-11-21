@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
@@ -12,49 +13,17 @@ const NOW = Date.UTC(2026, 0, 15, 10);
 const require = createRequire(import.meta.url);
 const peleDist = dirname(require.resolve("pele"));
 
-const pelers = await import(join(root, "index.js"));
-const pele = await import(require.resolve("pele"));
 const corpus = buildCorpus();
-
-const median = (values) =>
-  [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
-
-function timeSync(fn) {
-  for (let i = 0; i < 3; i++) fn();
-  const passes = [];
-  for (let p = 0; p < PASSES; p++) {
-    let count = 0;
-    const start = performance.now();
-    let elapsed = 0;
-    do {
-      fn();
-      count++;
-      elapsed = performance.now() - start;
-    } while (elapsed < MIN_SAMPLE_MS);
-    passes.push(elapsed / count);
-  }
-  return median(passes);
-}
-
-const attempt = (fn) => {
-  try {
-    return fn();
-  } catch {
-    return null;
-  }
-};
-
-console.error("server: pelers napi against pele npm under bun");
-const server = corpus.map(({ type, source }) => {
-  const options = { ...referenceOptions(type), now: NOW };
-  const ours = attempt(() => pelers.render(source, { now: NOW }).svg);
-  const theirs = attempt(() => toPelers(pele.render(source, options).svg));
-  return {
-    type,
-    same: ours !== null && ours === theirs,
-    pelers: ours === null ? null : timeSync(() => pelers.render(source, { now: NOW })),
-    pele: theirs === null ? null : timeSync(() => pele.render(source, options)),
-  };
+const runtimes = [
+  ["bun", "bun"],
+  ["node", "node"],
+].map(([label, command]) => {
+  const out = execFileSync(command, [join(root, "bench/server.mjs")], {
+    cwd: root,
+    stdio: ["ignore", "pipe", "inherit"],
+    maxBuffer: 1 << 26,
+  });
+  return { label, ...JSON.parse(out.toString()) };
 });
 
 const files = new Map([
@@ -62,15 +31,16 @@ const files = new Map([
 ]);
 const http = Bun.serve({
   port: 0,
-  fetch(request) {
+  async fetch(request) {
     const path = new URL(request.url).pathname;
     if (files.has(path)) {
       const { body, type } = files.get(path);
       return new Response(body, { headers: { "content-type": type } });
     }
-    if (path.startsWith("/pele/"))
-      return new Response(Bun.file(join(peleDist, path.slice(6))));
-    return new Response(Bun.file(join(root, path)));
+    const file = Bun.file(
+      path.startsWith("/pele/") ? join(peleDist, path.slice(6)) : join(root, path),
+    );
+    return (await file.exists()) ? new Response(file) : new Response(null, { status: 404 });
   },
 });
 
@@ -80,17 +50,30 @@ const browser = await puppeteer.launch({
   args: ["--no-sandbox", "--disable-gpu"],
   protocolTimeout: 600000,
 });
+const chrome = await browser.version();
 const page = await browser.newPage();
 await page.goto(`http://localhost:${http.port}/`);
 await page.addScriptTag({
   content: readFileSync(require.resolve("mermaid/dist/mermaid.min.js"), "utf8"),
 });
 await page.evaluate(async (entries) => {
-  window.pelers = await import(entries.pelers);
+  window.pelers = await import(entries.core);
+  window.native = await import(entries.native);
+  window.engines = {};
+  for (const [name, path] of Object.entries(entries.engines)) {
+    const engine = await import(path);
+    await engine.default();
+    window.engines[name] = engine;
+  }
   window.pele = await import(entries.pele);
   window.mermaid.initialize({ startOnLoad: false });
   window.mermaidId = 0;
-}, { pelers: "/browser.js", pele: "/pele/pele.js" });
+}, {
+  core: "/js/core.js",
+  native: "/js/native.js",
+  engines: { fast: "/wasm/fast/pelers.js", small: "/wasm/small/pelers.js" },
+  pele: "/pele/pele.js",
+});
 
 console.error("browser: pelers wasm against pele npm and mermaid in Chrome");
 const browserRows = [];
@@ -123,7 +106,11 @@ for (const [index, { type, source }] of corpus.entries()) {
           return null;
         }
       };
-      const ours = await safe(() => window.pelers.render(text, { now: options.now }).svg);
+      const on = (name) => () => {
+        window.native.bind(window.engines[name]);
+        return window.pelers.render(text, { now: options.now });
+      };
+      const ours = await safe(() => on("fast")().svg);
       const theirs = await safe(() => window.pele.render(text, options).svg);
       const drawMermaid = async () => {
         const id = `m${window.mermaidId++}`;
@@ -137,7 +124,8 @@ for (const [index, { type, source }] of corpus.entries()) {
       return {
         ours,
         theirs,
-        pelers: ours === null ? null : await time(() => window.pelers.render(text, { now: options.now })),
+        pelers: ours === null ? null : await time(on("fast")),
+        small: ours === null ? null : await time(on("small")),
         pele: theirs === null ? null : await time(() => window.pele.render(text, options)),
         mermaid: mermaidOk ? await safe(() => time(drawMermaid)) : null,
       };
@@ -151,6 +139,7 @@ for (const [index, { type, source }] of corpus.entries()) {
     type,
     same: row.ours !== null && row.theirs !== null && row.ours === toPelers(row.theirs),
     pelers: row.pelers,
+    small: row.small,
     pele: row.pele,
     mermaid: row.mermaid,
   });
@@ -198,17 +187,19 @@ const markdown = `# Benchmarks
 
 Corpus: ${corpus.length} sources (bench/corpus.json). Official packages: ${versions}. Times are medians of ${PASSES} passes of at least ${MIN_SAMPLE_MS} ms per source. "vs" is total time of the other renderer over pelers'; "worst" is the smallest per-source ratio. "identical" counts sources whose SVG equals Pele's after renaming to pelers names.
 
-## Server: native addon under Bun
+${runtimes.map(({ runtime, rows }) => `## Server: native addon under ${runtime}\n\n${table(rows, ["pele"])}`).join("\n\n")}
 
-${table(server, ["pele"])}
-
-## Browser: WebAssembly in headless Chrome
+## Browser: WebAssembly in ${chrome}, fast build (pelers)
 
 ${table(browserRows, ["pele", "mermaid"])}
+
+## Browser: WebAssembly in ${chrome}, small build (pelers/small)
+
+${table(browserRows.map((row) => ({ ...row, pelers: row.small })), ["pele", "mermaid"])}
 `;
 writeFileSync(join(root, "bench", "results.md"), markdown);
 writeFileSync(
   join(root, "bench", "results.json"),
-  `${JSON.stringify({ versions, corpus: corpus.length, server, browser: browserRows }, null, 1)}\n`,
+  `${JSON.stringify({ versions, corpus: corpus.length, server: Object.fromEntries(runtimes.map(({ label, runtime, rows }) => [label, { runtime, rows }])), browser: browserRows }, null, 1)}\n`,
 );
 console.log(markdown);
