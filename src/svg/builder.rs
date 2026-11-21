@@ -16,7 +16,27 @@ pub fn has_invalid_xml(text: &str) -> bool {
     text.chars().any(invalid_xml)
 }
 
+fn suspect(byte: u8) -> bool {
+    (byte < 0x20)
+        | (byte == b'&')
+        | (byte == b'<')
+        | (byte == b'>')
+        | (byte == b'"')
+        | (byte == 0x7f)
+        | (byte == 0xef)
+}
+
 fn needs_escape(text: &str) -> bool {
+    let (chunks, rest) = text.as_bytes().as_chunks::<16>();
+    let flagged = chunks.iter().any(|chunk| {
+        chunk
+            .iter()
+            .fold(false, |found, &byte| found | suspect(byte))
+    }) || rest.iter().any(|&byte| suspect(byte));
+    flagged && escapes(text)
+}
+
+fn escapes(text: &str) -> bool {
     text.bytes().any(|byte| match byte {
         b'&' | b'<' | b'>' | b'"' => true,
         0..=0x1f | 0x7f => invalid_xml(char::from(byte)),

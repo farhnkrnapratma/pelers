@@ -243,8 +243,23 @@ pub fn js_parse_float(text: &str) -> f64 {
     sign * body[..end].parse::<f64>().unwrap_or(f64::NAN)
 }
 
+fn fraction_digits(x: f64) -> usize {
+    let bits = x.to_bits() & !(1 << 63);
+    let biased = (bits >> 52) as i32;
+    let fraction = bits & ((1 << 52) - 1);
+    let (mantissa, exponent) = if biased == 0 {
+        (fraction, -1074)
+    } else {
+        (fraction | (1 << 52), biased - 1075)
+    };
+    if mantissa == 0 {
+        return 0;
+    }
+    (-(exponent + mantissa.trailing_zeros() as i32)).max(0) as usize
+}
+
 fn exact_parts(x: f64) -> (String, String) {
-    let text = format!("{:.1100}", x.abs());
+    let text = format!("{:.*}", fraction_digits(x), x.abs());
     match text.split_once('.') {
         Some((int, frac)) => (int.to_owned(), frac.to_owned()),
         None => (text, String::new()),
@@ -312,7 +327,23 @@ pub fn js_to_fixed(x: f64, digits: usize) -> String {
     out
 }
 
+fn scientific(text: &str) -> (Vec<u8>, i32) {
+    let (mantissa, exponent) = text.split_once('e').unwrap_or((text, "0"));
+    let digits = mantissa.bytes().filter(|&byte| byte != b'.').collect();
+    (digits, exponent.parse().unwrap_or(0))
+}
+
 fn significant(x: f64, significant: usize) -> (Vec<u8>, i32) {
+    if significant <= 15 {
+        let (mut digits, exponent) = scientific(&format!("{:e}", x.abs()));
+        if digits.len() <= significant {
+            digits.resize(significant, b'0');
+            return (digits, exponent);
+        }
+        if digits.len() > significant + 1 {
+            return scientific(&format!("{:.*e}", significant - 1, x.abs()));
+        }
+    }
     let (int, frac) = exact_parts(x);
     let all: Vec<u8> = int.bytes().chain(frac.bytes()).collect();
     let first = all.iter().position(|&d| d != b'0').unwrap_or(0);
@@ -398,7 +429,49 @@ pub fn js_to_precision(x: f64, precision: usize) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{js_min, js_number_to_string, js_round, to_fixed_0};
+    use super::{
+        exact_parts, js_min, js_number_to_string, js_round, js_to_exponential, js_to_precision,
+        to_fixed_0,
+    };
+
+    #[test]
+    fn precision_rounds_ties_away_from_zero_and_noise_to_nearest() {
+        assert_eq!(js_to_precision(1234567890123.125, 15), "1234567890123.13");
+        assert_eq!(
+            js_to_precision(0.30000000000000004, 15),
+            "0.300000000000000"
+        );
+        assert_eq!(js_to_precision(2.5, 1), "3");
+        assert_eq!(js_to_precision(0.125, 2), "0.13");
+        assert_eq!(js_to_precision(9.995, 3), "9.99");
+        assert_eq!(js_to_precision(99.99999999999999, 15), "100.000000000000");
+        assert_eq!(js_to_precision(-1e-7, 3), "-1.00e-7");
+        assert_eq!(js_to_exponential(1.45, 1), "1.4e+0");
+        assert_eq!(js_to_exponential(123456.0, 2), "1.23e+5");
+    }
+
+    #[test]
+    fn exact_parts_keep_every_digit_of_the_binary_value() {
+        for x in [
+            0.0,
+            -0.0,
+            1.0,
+            0.1,
+            0.30000000000000004,
+            1234567890123.125,
+            -2.5e-7,
+            1e21,
+            f64::MAX,
+            f64::MIN_POSITIVE,
+            5e-324,
+        ] {
+            let long = format!("{:.1100}", x.abs());
+            let (int, frac) = exact_parts(x);
+            let (long_int, long_frac) = long.split_once('.').unwrap();
+            assert_eq!(int, long_int);
+            assert_eq!(frac.trim_end_matches('0'), long_frac.trim_end_matches('0'));
+        }
+    }
 
     #[test]
     fn fixes_to_zero_places_like_javascript() {
