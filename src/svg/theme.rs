@@ -87,6 +87,7 @@ pub fn font_style(size: f64, family: Option<&str>, mono: Option<&str>) -> String
             crate::util::jsnum::js_number_to_string(size),
             families(family, "sans-serif")
         );
+        let css = crate::svg::builder::esc(&css).into_owned();
         *cache.borrow_mut() = Some((key, family.map(str::to_owned), mono.map(str::to_owned), css.clone()));
         css
     })

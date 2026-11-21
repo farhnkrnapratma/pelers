@@ -37,29 +37,7 @@ pub struct Accessible<'a> {
 }
 
 fn used_aliases(content: &str) -> [bool; 4] {
-    let mut used = [false; 4];
-    let mut rest = content;
-    while let Some(at) = rest.find('v') {
-        rest = &rest[at..];
-        let Some(tail) = rest.strip_prefix("var(--_") else {
-            rest = &rest[1..];
-            continue;
-        };
-        rest = tail;
-        for (k, alias) in ["r", "tw", "hw", "w"].iter().enumerate() {
-            if rest
-                .strip_prefix(alias)
-                .is_some_and(|tail| tail.starts_with(')'))
-            {
-                used[k] = true;
-                break;
-            }
-        }
-        if used.iter().all(|&u| u) {
-            break;
-        }
-    }
-    used
+    ["var(--_r)", "var(--_tw)", "var(--_hw)", "var(--_w)"].map(|alias| content.contains(alias))
 }
 
 pub fn svg_document(
@@ -137,7 +115,7 @@ pub fn svg_document(
     out.push_str(fit);
     out.push_str(ROOT_STYLE);
     out.push_str(&weights);
-    out.push_str(&esc(&fonts));
+    out.push_str(&fonts);
     push_palette_style(&mut out);
     out.push_str(
         "\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"",

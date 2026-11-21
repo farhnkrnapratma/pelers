@@ -64,11 +64,11 @@ pub fn svg_document(
     let height = js_number_to_string(height);
     format!(
         "<svg xmlns=\"http://www.w3.org/2000/svg\" class=\"pelers pelers-{kind}\" viewBox=\"0 0 {width} {height}\" width=\"{width}\" height=\"{height}\" style=\"{fit}{ROOT_STYLE}{weights}{}{}\" fill=\"var(--_fg)\" role=\"graphics-document document\" aria-roledescription=\"{kind}\"{aria}>{head}{content}</svg>",
-        esc(&font_style(
+        font_style(
             font_size,
             options.font_family.as_deref(),
             options.font_family_mono.as_deref()
-        )),
+        ),
         palette_style()
     )
 }

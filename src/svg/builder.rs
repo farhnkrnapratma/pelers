@@ -28,12 +28,10 @@ fn suspect(byte: u8) -> bool {
 }
 
 fn needs_escape(text: &str) -> bool {
-    let (chunks, rest) = text.as_bytes().as_chunks::<16>();
-    let flagged = chunks.iter().any(|chunk| {
-        chunk
-            .iter()
-            .fold(false, |found, &byte| found | suspect(byte))
-    }) || rest.iter().any(|&byte| suspect(byte));
+    let mut flagged = false;
+    for &byte in text.as_bytes() {
+        flagged |= suspect(byte);
+    }
     flagged && escapes(text)
 }
 
