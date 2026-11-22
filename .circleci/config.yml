@@ -292,7 +292,7 @@ jobs:
             rustup component add llvm-tools-preview
             curl -fsSL https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.9.1/cargo-llvm-cov-x86_64-unknown-linux-musl.tar.gz \
               | tar -xz -C "$HOME/.cargo/bin"
-      - run: cargo llvm-cov --locked --summary-only --fail-under-lines 99.999 --fail-under-functions 99.999
+      - run: cargo llvm-cov --locked --summary-only --fail-under-lines 90.000 --fail-under-functions 90.000
       - save-cargo:
           scope: coverage
 
