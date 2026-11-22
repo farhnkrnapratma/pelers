@@ -3,13 +3,14 @@ name = "pelers"
 version = "1.0.0-alpha2"
 authors = ["Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>"]
 edition = "2024"
-description = "Pelers, but in Rust"
+description = "Fast Mermaid renderer to themeable SVG, a Rust port of Pele with a CLI and Node.js and WebAssembly bindings"
 readme = "README.md"
-homepage = "https://fkp.my.id"
+homepage = "https://github.com/farhnkrnapratma/pelers"
+documentation = "https://docs.rs/pelers"
 repository = "https://github.com/farhnkrnapratma/pelers"
 license = "MIT OR Apache-2.0"
 keywords = ["mermaid", "diagram", "diagrams", "svg", "renderer"]
-categories = ["rendering"]
+categories = ["rendering", "visualization", "command-line-utilities", "wasm"]
 include = [
   "/build.rs",
   "/src/**/*.rs",
