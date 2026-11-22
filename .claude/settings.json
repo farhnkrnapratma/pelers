@@ -5,7 +5,7 @@
       {
         "hooks": [
           {
-            "command": "cargo-agents hook claude post-tool-use",
+            "command": "symposium hook claude post-tool-use",
             "type": "command"
           }
         ],
@@ -51,7 +51,7 @@
       {
         "hooks": [
           {
-            "command": "cargo-agents hook claude pre-tool-use",
+            "command": "symposium hook claude pre-tool-use",
             "type": "command"
           }
         ],
@@ -62,7 +62,7 @@
       {
         "hooks": [
           {
-            "command": "cargo-agents hook claude session-start",
+            "command": "symposium hook claude session-start",
             "type": "command"
           }
         ],
@@ -73,7 +73,7 @@
       {
         "hooks": [
           {
-            "command": "cargo-agents hook claude stop",
+            "command": "symposium hook claude stop",
             "type": "command"
           }
         ],
@@ -84,7 +84,7 @@
       {
         "hooks": [
           {
-            "command": "cargo-agents hook claude user-prompt-submit",
+            "command": "symposium hook claude user-prompt-submit",
             "type": "command"
           }
         ],

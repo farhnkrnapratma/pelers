@@ -107,7 +107,7 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@napi-rs/cli": "^3.10.12",
-    "fallow": "^3.44.0"
+    "fallow": "^3.46.0"
   },
   "browser": {
     "./index.js": "./browser.js"
