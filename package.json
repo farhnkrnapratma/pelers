@@ -67,6 +67,9 @@
   "sideEffects": false,
   "scripts": {
     "prepare": "bash .githooks/install.sh",
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "check": "biome check",
     "build": "napi build --platform --features napi --esm --js index.native.js --dts index.native.d.ts",
     "build:release": "bun scripts/build-native.mjs",
     "test:bindings": "bun scripts/test-bindings.mjs",
@@ -100,6 +103,7 @@
     "access": "public"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.8",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@napi-rs/cli": "^3.10.12",

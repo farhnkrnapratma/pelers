@@ -1,14 +1,14 @@
 @theme {
   --font-*: initial;
   --font-sans:
-    'Paper Mono', ui-monospace, SFMono-Regular, 'Cascadia Mono', 'Roboto Mono',
-    'DejaVu Sans Mono', 'Liberation Mono', Menlo, Monaco, Consolas, monospace;
+    "Paper Mono", ui-monospace, SFMono-Regular, "Cascadia Mono", "Roboto Mono",
+    "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace;
   --font-mono:
-    'Martian Mono', ui-monospace, SFMono-Regular, 'Cascadia Mono',
-    'Roboto Mono', 'DejaVu Sans Mono', 'Liberation Mono', Menlo, Monaco,
+    "Martian Mono", ui-monospace, SFMono-Regular, "Cascadia Mono",
+    "Roboto Mono", "DejaVu Sans Mono", "Liberation Mono", Menlo, Monaco,
     Consolas, monospace;
   --font-title:
-    'Archivo Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    "Archivo Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   --radius: 0;
   --radius-xs: 0;

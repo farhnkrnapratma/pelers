@@ -7,10 +7,8 @@ const SMALLER = 1.2;
 function context() {
   const g = globalThis;
   try {
-    if (g.OffscreenCanvas)
-      return new g.OffscreenCanvas(1, 1).getContext("2d");
-    if (g.document)
-      return g.document.createElement("canvas").getContext("2d");
+    if (g.OffscreenCanvas) return new g.OffscreenCanvas(1, 1).getContext("2d");
+    if (g.document) return g.document.createElement("canvas").getContext("2d");
   } catch {
     return null;
   }
@@ -30,9 +28,8 @@ function hasFont(fonts, font, text) {
 }
 function canvasMeasurer(fontFamily, monoFamily = "monospace") {
   const ctx = context();
-  if (!ctx)
-    return null;
-  const caches = new Map;
+  if (!ctx) return null;
+  const caches = new Map();
   let currentFont = "";
   let faces = canvasFonts()?.size;
   return {
@@ -43,32 +40,44 @@ function canvasMeasurer(fontFamily, monoFamily = "monospace") {
         caches.clear();
       }
       const eff = style & (SUB | SUP) ? size / SMALLER : size;
-      const font = (style & ITALIC ? "italic " : "") + (style & BOLD ? "bold " : "") + eff + "px " + (style & MONO ? monoFamily : fontFamily);
+      const font =
+        (style & ITALIC ? "italic " : "") +
+        (style & BOLD ? "bold " : "") +
+        eff +
+        "px " +
+        (style & MONO ? monoFamily : fontFamily);
       let cache = caches.get(font);
-      if (!cache)
-        caches.set(font, cache = new Map);
+      if (!cache) caches.set(font, (cache = new Map()));
       let w = cache.get(text);
       if (w === undefined) {
-        if (font !== currentFont)
-          ctx.font = currentFont = font;
+        if (font !== currentFont) ctx.font = currentFont = font;
         w = ctx.measureText(text).width;
         if (hasFont(fonts, font, text)) {
-          if (cache.size >= MAX_CACHED)
-            cache.clear();
+          if (cache.size >= MAX_CACHED) cache.clear();
           cache.set(text, w);
         }
       }
       return w;
-    }
+    },
   };
 }
-const shared = new Map;
+const shared = new Map();
 let last;
-export function defaultMeasurer(fontFamily = "sans-serif", monoFamily = "monospace") {
-  if (last !== undefined && last.fontFamily === fontFamily && last.monoFamily === monoFamily)
+export function defaultMeasurer(
+  fontFamily = "sans-serif",
+  monoFamily = "monospace",
+) {
+  if (
+    last !== undefined &&
+    last.fontFamily === fontFamily &&
+    last.monoFamily === monoFamily
+  )
     return last.measurer;
-  const key = fontFamily + `
-` + monoFamily;
+  const key =
+    fontFamily +
+    `
+` +
+    monoFamily;
   let m = shared.get(key);
   if (m === undefined) {
     m = canvasMeasurer(fontFamily, monoFamily);

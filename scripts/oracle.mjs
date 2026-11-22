@@ -33,8 +33,7 @@ export function peleSrc(path) {
 export const toPelers = (text) =>
   text.replace(upstreamName, "pelers").replace(upstreamTitle, "Pelers");
 
-export const toUpstream = (text) =>
-  text.replace(/--pelers/g, `--${upstream}`);
+export const toUpstream = (text) => text.replace(/--pelers/g, `--${upstream}`);
 
 function contentId(text) {
   let a = 0x811c9dc5;
@@ -56,17 +55,13 @@ function rehashSankey(svg) {
     ids.set(`${prefix}${hash}"`, `${prefix}${contentId(stops)}"`);
   for (const [before, after] of ids) svg = svg.replaceAll(before, after);
   for (const [before, after] of ids)
-    svg = svg.replaceAll(
-      `#${before.slice(0, -1)})`,
-      `#${after.slice(0, -1)})`,
-    );
+    svg = svg.replaceAll(`#${before.slice(0, -1)})`, `#${after.slice(0, -1)})`);
   return svg;
 }
 
 export const normalize = (svg) => rehashSankey(toPelers(svg));
 
-export const writeFixture = (path, text) =>
-  writeFileSync(path, toPelers(text));
+export const writeFixture = (path, text) => writeFileSync(path, toPelers(text));
 
 export async function peleCore() {
   const core = await peleSrc("index.ts");
@@ -118,7 +113,9 @@ export async function peleCore() {
     ...core,
     render(source, options = {}) {
       const rendered = core.render(toUpstream(source), {
-        ...(core.detectType(source) === "cynefin" ? { idPrefix: "pelers" } : {}),
+        ...(core.detectType(source) === "cynefin"
+          ? { idPrefix: "pelers" }
+          : {}),
         ...options,
         outputLimit: Infinity,
       });
