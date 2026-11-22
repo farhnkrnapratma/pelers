@@ -557,7 +557,7 @@ checksum = "2bf50223579dc7cdcfb3bfcacf7069ff68243f8c363f62ffa99cf000a6b9c451"
 
 [[package]]
 name = "pelers"
-version = "1.0.0-alpha2"
+version = "1.0.0-alpha3"
 dependencies = [
  "flate2",
  "jiff",
