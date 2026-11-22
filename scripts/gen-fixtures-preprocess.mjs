@@ -3,7 +3,8 @@ import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const { parseYaml } = await peleSrc("util/yaml.ts");
-const { cleanupComments, encodeEntities, preprocess } = await peleSrc("preprocess.ts");
+const { cleanupComments, encodeEntities, preprocess } =
+  await peleSrc("preprocess.ts");
 const { inputOffset } = await peleSrc("errors.ts");
 const random = mulberry32(Number(process.env.PELERS_FUZZ_SEED ?? 777));
 const pick = (list) => list[Math.floor(random() * list.length)];

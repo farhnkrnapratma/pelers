@@ -11,7 +11,7 @@ This repo uses **git-flow-next** (classic preset — https://git-flow.sh/). The 
 
 Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org), enforced by commitlint (`commitlint.config.js`) in the `commit-msg` hook and in CI; validate a candidate message with `printf '%s' "<message>" | bunx commitlint`.
 
-CI runs on CircleCI (`.circleci/config.yml`): `reuse lint`, format/lint, tests, `cargo deny`, secret scan (trufflehog) and commitlint on every push.
+CI runs on CircleCI (`.circleci/config.yml`): `reuse lint`, format/lint (`cargo fmt`, `clippy`, `biome ci`), tests, `cargo deny`, secret scan (trufflehog) and commitlint on every push.
 
 ## Rust port
 

@@ -10,7 +10,10 @@ for (const name of ["mount.test.ts", "zoom.test.ts"]) {
     .replace("import { setFlagsFromString } from 'node:v8';\n", "")
     .replace("import { runInNewContext } from 'node:vm';\n", "")
     .replace("setFlagsFromString('--expose-gc');\n", "")
-    .replace("const collect = runInNewContext('gc') as () => void;", "const collect = (): void => Bun.gc(true);")
+    .replace(
+      "const collect = runInNewContext('gc') as () => void;",
+      "const collect = (): void => Bun.gc(true);",
+    )
     .replace("from '../src/index.js'", "from '../../index.js'")
     .replace("from '../src/mount.js'", "from '../../js/mount.js'")
     .replace("from '../src/zoom.js'", "from '../../js/zoom.js'")

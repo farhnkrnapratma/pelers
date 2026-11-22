@@ -31,14 +31,22 @@ const run = (command, args, flags) =>
     cwd: root,
     stdio: "inherit",
     env: flags
-      ? { ...process.env, RUSTFLAGS: `${process.env.RUSTFLAGS ?? ""} ${flags}`.trim() }
+      ? {
+          ...process.env,
+          RUSTFLAGS: `${process.env.RUSTFLAGS ?? ""} ${flags}`.trim(),
+        }
       : process.env,
   });
 const bun = (args, flags) => run(process.execPath, args, flags);
 
 function profdata() {
   try {
-    const tool = join(rustc("--print", "sysroot").trim(), "lib/rustlib", host, "bin/llvm-profdata");
+    const tool = join(
+      rustc("--print", "sysroot").trim(),
+      "lib/rustlib",
+      host,
+      "bin/llvm-profdata",
+    );
     return existsSync(tool) || existsSync(`${tool}.exe`) ? tool : undefined;
   } catch {
     return undefined;
@@ -55,18 +63,33 @@ function node() {
 }
 
 const native = target === host;
-const tool = !native || process.env.PELERS_PGO === "0" || !node() ? undefined : profdata();
+const tool =
+  !native || process.env.PELERS_PGO === "0" || !node() ? undefined : profdata();
 if (tool === undefined) {
   if (native && process.env.CI && process.env.PELERS_PGO !== "0")
-    throw new Error("CI builds need node and llvm-profdata (rustup component add llvm-tools)");
-  if (native) console.warn("node or llvm-profdata not found; building without profile-guided optimization");
-  else console.warn(`cross-compiling ${target} on ${host} without profile-guided optimization`);
+    throw new Error(
+      "CI builds need node and llvm-profdata (rustup component add llvm-tools)",
+    );
+  if (native)
+    console.warn(
+      "node or llvm-profdata not found; building without profile-guided optimization",
+    );
+  else
+    console.warn(
+      `cross-compiling ${target} on ${host} without profile-guided optimization`,
+    );
   bun(napi);
 } else {
   const dir = join(root, "target/pgo", target);
   rmSync(dir, { recursive: true, force: true });
   bun(
-    [...napi, "--output-dir", join(dir, "gen"), "--target-dir", "target/pgo-gen"],
+    [
+      ...napi,
+      "--output-dir",
+      join(dir, "gen"),
+      "--target-dir",
+      "target/pgo-gen",
+    ],
     `-Cprofile-generate=${join(dir, "raw")} -Cllvm-args=-vp-counters-per-site=8`,
   );
   run("node", ["scripts/pgo-train.mjs", join(dir, "gen/index.native.js")]);

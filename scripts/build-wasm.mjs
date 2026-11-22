@@ -1,20 +1,42 @@
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { root } from "./oracle.mjs";
 
-const run = (command, args) => execFileSync(command, args, { cwd: root, stdio: "inherit" });
+const run = (command, args) =>
+  execFileSync(command, args, { cwd: root, stdio: "inherit" });
 
 const variants = [
-  { name: "fast", level: "3", flag: "-O3", features: "wasm,regex-perf", global: "pelers.global.js" },
-  { name: "small", level: '"z"', flag: "-Oz", features: "wasm", global: "pelers.small.global.js" },
+  {
+    name: "fast",
+    level: "3",
+    flag: "-O3",
+    features: "wasm,regex-perf",
+    global: "pelers.global.js",
+  },
+  {
+    name: "small",
+    level: '"z"',
+    flag: "-Oz",
+    features: "wasm",
+    global: "pelers.small.global.js",
+  },
 ];
 
 function wasmOpt() {
   const cache = join(homedir(), ".cache/.wasm-pack");
   if (existsSync(cache))
-    for (const entry of readdirSync(cache).filter((name) => name.startsWith("wasm-opt-"))) {
+    for (const entry of readdirSync(cache).filter((name) =>
+      name.startsWith("wasm-opt-"),
+    )) {
       const binary = join(cache, entry, "bin/wasm-opt");
       if (existsSync(binary)) return binary;
     }
@@ -53,7 +75,14 @@ for (const { name, level, flag, features, global } of variants) {
   ]);
   const module = join(out, "pelers_bg.wasm");
   try {
-    run(wasmOpt(), [flag, "--all-features", "--strip-debug", module, "-o", module]);
+    run(wasmOpt(), [
+      flag,
+      "--all-features",
+      "--strip-debug",
+      module,
+      "-o",
+      module,
+    ]);
   } catch (error) {
     if (process.env.CI) throw error;
     console.warn("wasm-opt not found; the module is left unoptimized");
@@ -76,7 +105,8 @@ globalThis.pelers = { ...api };
     minify: true,
     target: "browser",
   });
-  if (!built.success) throw new AggregateError(built.logs, "global build failed");
+  if (!built.success)
+    throw new AggregateError(built.logs, "global build failed");
   writeFileSync(join(root, "dist", global), await built.outputs[0].text());
   rmSync(entry);
   console.log(

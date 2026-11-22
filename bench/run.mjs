@@ -27,7 +27,10 @@ const runtimes = [
 });
 
 const files = new Map([
-  ["/", { body: "<!doctype html><html><body></body></html>", type: "text/html" }],
+  [
+    "/",
+    { body: "<!doctype html><html><body></body></html>", type: "text/html" },
+  ],
 ]);
 const http = Bun.serve({
   port: 0,
@@ -38,9 +41,13 @@ const http = Bun.serve({
       return new Response(body, { headers: { "content-type": type } });
     }
     const file = Bun.file(
-      path.startsWith("/pele/") ? join(peleDist, path.slice(6)) : join(root, path),
+      path.startsWith("/pele/")
+        ? join(peleDist, path.slice(6))
+        : join(root, path),
     );
-    return (await file.exists()) ? new Response(file) : new Response(null, { status: 404 });
+    return (await file.exists())
+      ? new Response(file)
+      : new Response(null, { status: 404 });
   },
 });
 
@@ -56,24 +63,27 @@ await page.goto(`http://localhost:${http.port}/`);
 await page.addScriptTag({
   content: readFileSync(require.resolve("mermaid/dist/mermaid.min.js"), "utf8"),
 });
-await page.evaluate(async (entries) => {
-  window.pelers = await import(entries.core);
-  window.native = await import(entries.native);
-  window.engines = {};
-  for (const [name, path] of Object.entries(entries.engines)) {
-    const engine = await import(path);
-    await engine.default();
-    window.engines[name] = engine;
-  }
-  window.pele = await import(entries.pele);
-  window.mermaid.initialize({ startOnLoad: false });
-  window.mermaidId = 0;
-}, {
-  core: "/js/core.js",
-  native: "/js/native.js",
-  engines: { fast: "/wasm/fast/pelers.js", small: "/wasm/small/pelers.js" },
-  pele: "/pele/pele.js",
-});
+await page.evaluate(
+  async (entries) => {
+    window.pelers = await import(entries.core);
+    window.native = await import(entries.native);
+    window.engines = {};
+    for (const [name, path] of Object.entries(entries.engines)) {
+      const engine = await import(path);
+      await engine.default();
+      window.engines[name] = engine;
+    }
+    window.pele = await import(entries.pele);
+    window.mermaid.initialize({ startOnLoad: false });
+    window.mermaidId = 0;
+  },
+  {
+    core: "/js/core.js",
+    native: "/js/native.js",
+    engines: { fast: "/wasm/fast/pelers.js", small: "/wasm/small/pelers.js" },
+    pele: "/pele/pele.js",
+  },
+);
 
 console.error("browser: pelers wasm against pele npm and mermaid in Chrome");
 const browserRows = [];
@@ -126,7 +136,10 @@ for (const [index, { type, source }] of corpus.entries()) {
         theirs,
         pelers: ours === null ? null : await time(on("fast")),
         small: ours === null ? null : await time(on("small")),
-        pele: theirs === null ? null : await time(() => window.pele.render(text, options)),
+        pele:
+          theirs === null
+            ? null
+            : await time(() => window.pele.render(text, options)),
         mermaid: mermaidOk ? await safe(() => time(drawMermaid)) : null,
       };
     },
@@ -137,7 +150,10 @@ for (const [index, { type, source }] of corpus.entries()) {
   );
   browserRows.push({
     type,
-    same: row.ours !== null && row.theirs !== null && row.ours === toPelers(row.theirs),
+    same:
+      row.ours !== null &&
+      row.theirs !== null &&
+      row.ours === toPelers(row.theirs),
     pelers: row.pelers,
     small: row.small,
     pele: row.pele,
@@ -150,32 +166,66 @@ http.stop();
 function table(rows, columns) {
   const byType = new Map();
   for (const row of rows) {
-    const entry = byType.get(row.type) ?? { type: row.type, n: 0, same: 0, rows: [] };
+    const entry = byType.get(row.type) ?? {
+      type: row.type,
+      n: 0,
+      same: 0,
+      rows: [],
+    };
     entry.n++;
     if (row.same) entry.same++;
     entry.rows.push(row);
     byType.set(row.type, entry);
   }
   const mean = (list, key) => {
-    const values = list.map((row) => row[key]).filter((value) => value !== null);
-    return values.length === 0 ? null : values.reduce((a, b) => a + b, 0) / values.length;
+    const values = list
+      .map((row) => row[key])
+      .filter((value) => value !== null);
+    return values.length === 0
+      ? null
+      : values.reduce((a, b) => a + b, 0) / values.length;
   };
-  const both = (list, key) => list.filter((row) => row.pelers !== null && row[key] !== null);
+  const both = (list, key) =>
+    list.filter((row) => row.pelers !== null && row[key] !== null);
   const speedup = (list, key) => {
     const pairs = both(list, key);
     if (pairs.length === 0) return ["-", "-"];
-    const total = pairs.reduce((a, row) => a + row[key], 0) / pairs.reduce((a, row) => a + row.pelers, 0);
+    const total =
+      pairs.reduce((a, row) => a + row[key], 0) /
+      pairs.reduce((a, row) => a + row.pelers, 0);
     const worst = Math.min(...pairs.map((row) => row[key] / row.pelers));
     return [`${total.toFixed(2)}x`, `${worst.toFixed(2)}x`];
   };
   const fmt = (value) => (value === null ? "-" : value.toFixed(4));
-  const head = ["type", "n", "identical", "pelers ms", ...columns.map((c) => `${c} ms`)];
+  const head = [
+    "type",
+    "n",
+    "identical",
+    "pelers ms",
+    ...columns.map((c) => `${c} ms`),
+  ];
   for (const column of columns) head.push(`vs ${column}`, `worst vs ${column}`);
-  const lines = [`| ${head.join(" | ")} |`, `| ${head.map((_, i) => (i === 0 ? "---" : "---:")).join(" | ")} |`];
-  const entries = [...byType.values()].sort((a, b) => a.type.localeCompare(b.type));
-  entries.push({ type: "**all**", n: rows.length, same: rows.filter((row) => row.same).length, rows });
+  const lines = [
+    `| ${head.join(" | ")} |`,
+    `| ${head.map((_, i) => (i === 0 ? "---" : "---:")).join(" | ")} |`,
+  ];
+  const entries = [...byType.values()].sort((a, b) =>
+    a.type.localeCompare(b.type),
+  );
+  entries.push({
+    type: "**all**",
+    n: rows.length,
+    same: rows.filter((row) => row.same).length,
+    rows,
+  });
   for (const entry of entries) {
-    const cells = [entry.type, entry.n, `${entry.same}/${entry.n}`, fmt(mean(entry.rows, "pelers")), ...columns.map((c) => fmt(mean(entry.rows, c)))];
+    const cells = [
+      entry.type,
+      entry.n,
+      `${entry.same}/${entry.n}`,
+      fmt(mean(entry.rows, "pelers")),
+      ...columns.map((c) => fmt(mean(entry.rows, c))),
+    ];
     for (const column of columns) cells.push(...speedup(entry.rows, column));
     lines.push(`| ${cells.join(" | ")} |`);
   }
@@ -195,7 +245,10 @@ ${table(browserRows, ["pele", "mermaid"])}
 
 ## Browser: WebAssembly in ${chrome}, small build (pelers/small)
 
-${table(browserRows.map((row) => ({ ...row, pelers: row.small })), ["pele", "mermaid"])}
+${table(
+  browserRows.map((row) => ({ ...row, pelers: row.small })),
+  ["pele", "mermaid"],
+)}
 `;
 writeFileSync(join(root, "bench", "results.md"), markdown);
 writeFileSync(

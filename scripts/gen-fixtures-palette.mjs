@@ -1,5 +1,10 @@
 import { mulberry32 } from "./random.mjs";
-import { fixtures as OUT, peleSrc, toUpstream, writeFixture } from "./oracle.mjs";
+import {
+  fixtures as OUT,
+  peleSrc,
+  toUpstream,
+  writeFixture,
+} from "./oracle.mjs";
 import { join } from "node:path";
 
 const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);

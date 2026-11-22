@@ -4,15 +4,21 @@ import { zoomWith } from "./zoom.js";
 function fontsFor(style, drawing) {
   const own = drawing ? windowOf(drawing).getComputedStyle(drawing) : style;
   return {
-    family: own.getPropertyValue("--pelers-font").trim() || style.fontFamily || undefined,
-    mono: own.getPropertyValue("--pelers-font-mono").trim() || undefined
+    family:
+      own.getPropertyValue("--pelers-font").trim() ||
+      style.fontFamily ||
+      undefined,
+    mono: own.getPropertyValue("--pelers-font-mono").trim() || undefined,
   };
 }
 function fontSets(element) {
-  const sets = new Set([element.ownerDocument?.fonts, globalThis.document?.fonts]);
+  const sets = new Set([
+    element.ownerDocument?.fonts,
+    globalThis.document?.fonts,
+  ]);
   return [...sets].filter((fonts) => fonts !== undefined);
 }
-const settling = new WeakMap;
+const settling = new WeakMap();
 function settled(fonts) {
   let done = settling.get(fonts);
   if (!done) {
@@ -24,26 +30,33 @@ function settled(fonts) {
   }
   return done;
 }
-const onFontsLoaded = new WeakMap;
+const onFontsLoaded = new WeakMap();
 function afterFonts(loading, diagram) {
   Promise.all(loading.map(settled)).then(() => {
     const handle = diagram.deref();
-    if (handle)
-      onFontsLoaded.get(handle)?.();
+    if (handle) onFontsLoaded.get(handle)?.();
   });
 }
-const mounts = new WeakMap;
+const mounts = new WeakMap();
 let mounted = 0;
 const copy = Math.random().toString(36).slice(2, 7);
-const OVER_STYLE = "position:relative;height:1.3em;margin-top:-1.3em;line-height:1.3;font-size:0.8em;" + "color:var(--pelers-error,#e45756);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
-const ALONE_STYLE = "margin:0;font-size:0.8em;font-family:var(--pelers-font-mono,monospace);" + "color:var(--pelers-error,#e45756);white-space:pre-wrap;";
+const OVER_STYLE =
+  "position:relative;height:1.3em;margin-top:-1.3em;line-height:1.3;font-size:0.8em;" +
+  "color:var(--pelers-error,#e45756);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
+const ALONE_STYLE =
+  "margin:0;font-size:0.8em;font-family:var(--pelers-font-mono,monospace);" +
+  "color:var(--pelers-error,#e45756);white-space:pre-wrap;";
 function messageOf(error) {
   return error instanceof Error ? error.message : String(error);
 }
 function summary(message) {
-  const lines = message.split(`
-`).filter((line) => line.trim() !== "");
-  return lines.length > 1 ? `${lines[0]} ${lines[lines.length - 1]}` : lines[0] ?? "";
+  const lines = message
+    .split(`
+`)
+    .filter((line) => line.trim() !== "");
+  return lines.length > 1
+    ? `${lines[0]} ${lines[lines.length - 1]}`
+    : (lines[0] ?? "");
 }
 export function mountWith(engine, element, text, options = {}) {
   mounts.get(element)?.destroy();
@@ -69,7 +82,7 @@ export function mountWith(engine, element, text, options = {}) {
       idPrefix: rest.idPrefix ?? idPrefix,
       fontFamily: rest.fontFamily ?? fonts.family,
       fontFamilyMono: rest.fontFamilyMono ?? fonts.mono,
-      maxWidth: undefined
+      maxWidth: undefined,
     };
     if (fresh) {
       natural = engine.render(model, base);
@@ -78,17 +91,15 @@ export function mountWith(engine, element, text, options = {}) {
     const available = settings.maxWidth ?? room(element, style);
     drawnFor = available;
     if (available > 0 && available < natural.width) {
-      adapts ??= engine.render(model, { ...base, maxWidth: 1 }).svg !== natural.svg;
-      if (adapts)
-        return engine.render(model, { ...base, maxWidth: available });
+      adapts ??=
+        engine.render(model, { ...base, maxWidth: 1 }).svg !== natural.svg;
+      if (adapts) return engine.render(model, { ...base, maxWidth: available });
     }
     return natural;
   };
   const put = (svg) => {
-    if (settings.sanitize)
-      element.replaceChildren(settings.sanitize(svg));
-    else
-      element.innerHTML = svg;
+    if (settings.sanitize) element.replaceChildren(settings.sanitize(svg));
+    else element.innerHTML = svg;
   };
   let errorElement;
   const mark = () => {
@@ -101,8 +112,7 @@ export function mountWith(engine, element, text, options = {}) {
       return;
     }
     const doc = element.ownerDocument;
-    if (!doc)
-      return;
+    if (!doc) return;
     errorElement ??= doc.createElement("div");
     errorElement.className = "pelers pelers-error";
     const message = messageOf(error);
@@ -110,8 +120,7 @@ export function mountWith(engine, element, text, options = {}) {
       errorElement.textContent = summary(message);
       errorElement.title = message;
       errorElement.setAttribute("style", OVER_STYLE);
-      if (errorElement.parentNode !== element)
-        element.append(errorElement);
+      if (errorElement.parentNode !== element) element.append(errorElement);
     } else {
       errorElement.textContent = message;
       errorElement.removeAttribute("title");
@@ -125,11 +134,11 @@ export function mountWith(engine, element, text, options = {}) {
     settings.onError?.(failure);
   };
   const awaitFonts = () => {
-    if (waiting || destroyed)
-      return;
-    const loading = fontSets(element).filter((fonts) => fonts.status === "loading");
-    if (loading.length === 0)
-      return;
+    if (waiting || destroyed) return;
+    const loading = fontSets(element).filter(
+      (fonts) => fonts.status === "loading",
+    );
+    if (loading.length === 0) return;
     waiting = true;
     afterFonts(loading, new WeakRef(handle));
   };
@@ -150,8 +159,7 @@ export function mountWith(engine, element, text, options = {}) {
       }
       next = fit(style, fresh);
       if (quiet && next.svg === shown?.svg) {
-        if (fresh)
-          drawnModel = model;
+        if (fresh) drawnModel = model;
         if (current && error !== undefined) {
           error = undefined;
           mark();
@@ -163,8 +171,7 @@ export function mountWith(engine, element, text, options = {}) {
       ({ fonts, natural, adapts, drawnFor, stale } = before);
       throw failure;
     }
-    if (fresh)
-      drawnModel = model;
+    if (fresh) drawnModel = model;
     if (fresh && !drawing && element.firstElementChild) {
       const seen = fontsFor(style, element.firstElementChild);
       if (seen.family !== fonts.family || seen.mono !== fonts.mono) {
@@ -180,8 +187,7 @@ export function mountWith(engine, element, text, options = {}) {
       }
     }
     shown = next;
-    if (current)
-      error = undefined;
+    if (current) error = undefined;
     mark();
     zoomer?.refresh();
     awaitFonts();
@@ -191,20 +197,26 @@ export function mountWith(engine, element, text, options = {}) {
   let zooming = false;
   const zoom = () => {
     const wanted = settings.zoom ?? "auto";
-    if (wanted === zooming)
-      return;
+    if (wanted === zooming) return;
     zoomer?.destroy();
     zooming = wanted;
-    zoomer = wanted === false ? undefined : zoomWith(element, typeof wanted === "object" ? wanted : { always: wanted === true }, false);
+    zoomer =
+      wanted === false
+        ? undefined
+        : zoomWith(
+            element,
+            typeof wanted === "object" ? wanted : { always: wanted === true },
+            false,
+          );
   };
-  const hidden = () => element.isConnected === false || !(element.clientWidth > 0);
-  const waits = () => element.isConnected !== false && !(element.clientWidth > 0);
+  const hidden = () =>
+    element.isConnected === false || !(element.clientWidth > 0);
+  const waits = () =>
+    element.isConnected !== false && !(element.clientWidth > 0);
   const refresh = () => {
-    if (destroyed)
-      return;
+    if (destroyed) return;
     watch();
-    if (!model || hidden())
-      return;
+    if (!model || hidden()) return;
     const style = windowOf(element).getComputedStyle(element);
     const now = fontsFor(style, element.firstElementChild ?? null);
     try {
@@ -212,13 +224,11 @@ export function mountWith(engine, element, text, options = {}) {
         draw(true, true);
       } else if (adapts !== false && settings.maxWidth === undefined) {
         const available = room(element, style);
-        if (available !== drawnFor && available !== shown?.width)
-          draw(false);
+        if (available !== drawnFor && available !== shown?.width) draw(false);
       }
     } catch (failure) {
       stale = false;
-      if (current)
-        error = failure;
+      if (current) error = failure;
       if (model !== drawnModel) {
         model = drawnModel;
         current = false;
@@ -233,27 +243,25 @@ export function mountWith(engine, element, text, options = {}) {
   let observer;
   let frame;
   const cancelFrame = () => {
-    if (frame !== undefined)
-      view?.cancelAnimationFrame(frame);
+    if (frame !== undefined) view?.cancelAnimationFrame(frame);
     frame = undefined;
   };
   const watch = () => {
     const next = windowOf(element);
-    if (next === view)
-      return;
+    if (next === view) return;
     observer?.disconnect();
     cancelFrame();
     view = next;
-    observer = next.ResizeObserver ? new next.ResizeObserver(() => {
-      if (frame !== undefined)
-        return;
-      if (!next.requestAnimationFrame)
-        return refresh();
-      frame = next.requestAnimationFrame(() => {
-        frame = undefined;
-        refresh();
-      });
-    }) : undefined;
+    observer = next.ResizeObserver
+      ? new next.ResizeObserver(() => {
+          if (frame !== undefined) return;
+          if (!next.requestAnimationFrame) return refresh();
+          frame = next.requestAnimationFrame(() => {
+            frame = undefined;
+            refresh();
+          });
+        })
+      : undefined;
     observer?.observe(element);
   };
   const handle = {
@@ -270,7 +278,12 @@ export function mountWith(engine, element, text, options = {}) {
       return zoomer;
     },
     update(next, nextOptions = settings) {
-      const reparse = !current || next !== source || nextOptions.limit !== settings.limit || nextOptions.maxEdges !== settings.maxEdges || nextOptions.config !== settings.config;
+      const reparse =
+        !current ||
+        next !== source ||
+        nextOptions.limit !== settings.limit ||
+        nextOptions.maxEdges !== settings.maxEdges ||
+        nextOptions.config !== settings.config;
       source = next;
       settings = nextOptions;
       let nextModel = model;
@@ -314,9 +327,8 @@ export function mountWith(engine, element, text, options = {}) {
       view = undefined;
       zoomer?.destroy();
       onFontsLoaded.delete(handle);
-      if (mounts.get(element) === handle)
-        mounts.delete(element);
-    }
+      if (mounts.get(element) === handle) mounts.delete(element);
+    },
   };
   onFontsLoaded.set(handle, fontsLoaded);
   try {
@@ -324,8 +336,7 @@ export function mountWith(engine, element, text, options = {}) {
     current = true;
     draw(true);
   } catch (failure) {
-    if (shown)
-      throw failure;
+    if (shown) throw failure;
     model = drawnModel;
     current = false;
     fail(failure);

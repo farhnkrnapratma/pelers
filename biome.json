@@ -1,0 +1,38 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!**/*.md",
+      "!**/*.svg",
+      "!.claude",
+      "!.agents",
+      "!**/skills-lock.json",
+      "!index.native.js",
+      "!index.native.d.ts",
+      "!tests/golden",
+      "!tests/fixtures",
+      "!bench/*.json"
+    ]
+  },
+  "formatter": { "indentStyle": "space", "indentWidth": 2 },
+  "css": { "parser": { "tailwindDirectives": true } },
+  "html": { "experimentalFullSupportEnabled": true },
+  "assist": { "enabled": false },
+  "linter": {
+    "rules": {
+      "preset": "recommended",
+      "correctness": { "noEmptyCharacterClassInRegex": "warn" },
+      "suspicious": {
+        "noAssignInExpressions": "warn",
+        "noControlCharactersInRegex": "warn",
+        "useIterableCallbackReturn": "warn"
+      }
+    }
+  },
+  "overrides": [
+    { "includes": ["**/*.svelte"], "formatter": { "enabled": false } }
+  ]
+}

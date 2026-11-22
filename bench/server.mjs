@@ -49,7 +49,10 @@ const rows = buildCorpus().map(({ type, source }) => {
   return {
     type,
     same: ours !== null && ours === theirs,
-    pelers: ours === null ? null : timeSync(() => pelers.render(source, { now: NOW })),
+    pelers:
+      ours === null
+        ? null
+        : timeSync(() => pelers.render(source, { now: NOW })),
     pele: theirs === null ? null : timeSync(() => pele.render(source, options)),
   };
 });

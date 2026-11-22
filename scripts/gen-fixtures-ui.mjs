@@ -1,5 +1,10 @@
 import { mulberry32 } from "./random.mjs";
-import { fixtures as OUT, peleInternals, peleSrc, writeFixture } from "./oracle.mjs";
+import {
+  fixtures as OUT,
+  peleInternals,
+  peleSrc,
+  writeFixture,
+} from "./oracle.mjs";
 import { join } from "node:path";
 
 const zoom = await peleInternals("zoom.ts", [
