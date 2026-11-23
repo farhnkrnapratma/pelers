@@ -1,6 +1,6 @@
 [package]
 name = "pelers"
-version = "1.0.0-alpha3"
+version = "1.0.0-alpha4"
 authors = ["Farhan Kurnia Pratama <farhnkrnapratma@gmail.com>"]
 edition = "2024"
 description = "Fast Mermaid renderer to themeable SVG, a Rust port of Pele with a CLI and Node.js and WebAssembly bindings"
