@@ -5,24 +5,25 @@ description: Render Mermaid diagrams from JavaScript, TypeScript, or Rust.
 
 # API
 
-Pelers ships one native binding for Node and Bun, and a Rust crate with the same renderer.
+Pelers ships as `@farhnkrnapratma/pelers` on npm, with a native addon for Node.js and Bun and a WebAssembly build for browsers, and as the `pelers` crate with the same renderer.
 
 ## JavaScript and TypeScript
 
 ```ts
-import { detectType, PelersError, render, renderFull, supports } from "pelers";
+import { detectType, parse, PelersError, render, supports } from "@farhnkrnapratma/pelers";
 
-const svg = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
-const { svg: sized, width, height, title } = renderFull('pie\n  "Dogs": 3');
+const { svg, width, height } = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
+const model = parse('pie\n  "Dogs": 3');
+const larger = render(model, { fontSize: 18 });
 ```
 
-### `render(source: string): string`
+### `render(source: string | ParsedDiagramModel, options?: RenderOptions): RenderResult`
 
-Returns the SVG for one Mermaid diagram. The SVG has a `class="pelers pelers-<type>"` root and styles itself through [CSS variables](/docs/theming).
+Renders one Mermaid diagram and returns `{ svg, width, height, links, type, mermaidType, title }`. The SVG has a `class="pelers pelers-<type>"` root and styles itself through [CSS variables](/docs/theming). `title` is present only when the diagram has one. Every option is declared in [`index.d.ts`](https://github.com/farhnkrnapratma/pelers/blob/main/index.d.ts).
 
-### `renderFull(source: string): RenderResult`
+### `parse(source: string, options?: ParseOptions): ParsedDiagramModel`
 
-Returns `{ svg, width, height, title }`. Use it when you need the size of the diagram or its accessibility title. `title` is `undefined` when the diagram has no title.
+Parses a diagram once, so it can be rendered several times with different options.
 
 ### `detectType(source: string): string | null`
 
@@ -34,7 +35,7 @@ Returns `true` when `detectType` finds a diagram type. Pelers supports every typ
 
 ### `PelersError`
 
-Thrown by `render` and `renderFull`. Its `code` is one of:
+Thrown by `parse` and `render`, with `code`, `type`, `mermaidType`, `line`, `column` and `snippet`. Its `code` is one of:
 
 | Code                  | Meaning                                                                                        |
 | --------------------- | ---------------------------------------------------------------------------------------------- |
@@ -56,10 +57,10 @@ try {
 ### Limits
 
 - Source: 50,000 UTF-16 code units (`limit`).
-- Output: 4,000,000 characters.
-- Flowcharts and agentflow diagrams: 5,000 edges (`max_edges`).
+- Output: 4,000,000 characters (`outputLimit`).
+- Flowcharts and agentflow diagrams: 5,000 edges (`maxEdges`).
 
-The JavaScript binding uses these defaults. Changing them needs the Rust API.
+Set them through the options of `parse` and `render`.
 
 ## Rust
 
@@ -76,4 +77,3 @@ println!("{}", rendered.svg);
 - `RenderOptions` has the font size, padding, `max_width`, `link_schemes`, `image_schemes`, and the `id_prefix` that keeps ids unique when several diagrams share a page.
 - `pelers::api::render_batch(&sources, threads)` renders many diagrams in parallel and returns the results in input order.
 
-The JavaScript binding does not yet expose `RenderOptions` or `ParseOptions`.
