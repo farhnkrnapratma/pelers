@@ -1,12 +1,12 @@
 # pelers
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main) [![npm](https://img.shields.io/npm/v/pelers/alpha?label=npm)](https://www.npmjs.com/package/pelers) [![crates.io](https://img.shields.io/crates/v/pelers?label=crates.io)](https://crates.io/crates/pelers) [![docs.rs](https://img.shields.io/docsrs/pelers)](https://docs.rs/pelers) ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
+[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/circleci/stZqvYiNAK17m5zy7ERCb/3MyzjfBswYtP68e4e1e9hk/tree/main) [![npm](https://img.shields.io/npm/v/@farhnkrnapratma/pelers?label=npm)](https://www.npmjs.com/package/@farhnkrnapratma/pelers) [![crates.io](https://img.shields.io/crates/v/pelers?label=crates.io)](https://crates.io/crates/pelers) [![docs.rs](https://img.shields.io/docsrs/pelers)](https://docs.rs/pelers) ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
 
 A fast Mermaid renderer that turns diagram source into themeable SVG, without a browser, a DOM or headless Chrome. The core is written in Rust and runs as a native addon in Node.js and Bun, as WebAssembly in browsers, as a Rust library and as a command-line tool.
 
 pelers is a Rust port of [Pele](https://github.com/obsidianmd/pele) 1.13.0 by kepano (Obsidian). For all 33 diagram types it produces the same SVG as Pele on Pele's own test corpus, apart from the naming described in [Differences from Pele](#differences-from-pele).
 
-> **Alpha.** The API follows Pele's and may still change before 1.0.0. On npm, install the `alpha` tag.
+> **Alpha.** The API follows Pele's and may still change before 1.0.0. The npm package moved from `pelers` to `@farhnkrnapratma/pelers` in 1.0.0-alpha4.
 
 ## Features
 
@@ -18,9 +18,9 @@ pelers is a Rust port of [Pele](https://github.com/obsidianmd/pele) 1.13.0 by ke
 ## Install
 
 ```sh
-npm install pelers@alpha     # or: bun add pelers@alpha, pnpm add pelers@alpha
-cargo add pelers             # Rust library
-cargo install pelers         # command-line renderer
+npm install @farhnkrnapratma/pelers   # or: bun add, pnpm add
+cargo add pelers                      # Rust library
+cargo install pelers                  # command-line renderer
 ```
 
 The npm package ships prebuilt native addons as optional dependencies, so nothing is compiled on install:
@@ -38,7 +38,7 @@ Browsers get the WebAssembly build through the package's `browser` export.
 ### Node.js and Bun
 
 ```ts
-import { render } from "pelers";
+import { render } from "@farhnkrnapratma/pelers";
 
 const { svg, width, height } = render("flowchart LR\n  A[Start] --> B[End]");
 ```
@@ -46,7 +46,7 @@ const { svg, width, height } = render("flowchart LR\n  A[Start] --> B[End]");
 `render` accepts diagram source or a model returned by `parse`, so a diagram can be parsed once and rendered with different options:
 
 ```ts
-import { parse, render } from "pelers";
+import { parse, render } from "@farhnkrnapratma/pelers";
 
 const model = parse('pie\n  "Dogs": 3\n  "Cats": 1');
 const small = render(model, { fontSize: 12, maxWidth: 320 });
@@ -57,20 +57,20 @@ const large = render(model, { fontSize: 18, padding: 16 });
 
 ### Browsers
 
-With a bundler, import `pelers` as above: the `browser` export resolves to WebAssembly. `mount` renders into an element and can add pan and zoom:
+With a bundler, import the package as above: the `browser` export resolves to WebAssembly. `mount` renders into an element and can add pan and zoom:
 
 ```ts
-import { mount } from "pelers";
+import { mount } from "@farhnkrnapratma/pelers";
 
 mount(document.querySelector("#diagram"), source, { zoom: "auto" });
 ```
 
-To keep the WebAssembly module out of the initial bundle, import from `pelers/lazy` and use `renderAsync` or `mountAsync`, which load the module on first use. Without a bundler, load `pelers/global` with a `<script>` tag and call `globalThis.pelers.render`.
+To keep the WebAssembly module out of the initial bundle, import from `@farhnkrnapratma/pelers/lazy` and use `renderAsync` or `mountAsync`, which load the module on first use. Without a bundler, load `@farhnkrnapratma/pelers/global` with a `<script>` tag and call `globalThis.pelers.render`.
 
-| Import                                                     | Build | Size (gzip) |
-| ---------------------------------------------------------- | ----- | ----------- |
-| `pelers`, `pelers/lazy`, `pelers/global`                   | fast  | 1.5 MB      |
-| `pelers/small`, `pelers/small/lazy`, `pelers/small/global` | small | 0.96 MB     |
+| Import (from `@farhnkrnapratma/pelers`) | Build | Size (gzip) |
+| ---------------------------------------- | ----- | ----------- |
+| `.`, `/lazy`, `/global`                  | fast  | 1.5 MB      |
+| `/small`, `/small/lazy`, `/small/global` | small | 0.96 MB     |
 
 Both builds render the same SVG. The fast build renders faster; the small build downloads less.
 
