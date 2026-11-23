@@ -292,7 +292,16 @@ jobs:
             rustup component add llvm-tools-preview
             curl -fsSL https://github.com/taiki-e/cargo-llvm-cov/releases/download/v0.9.1/cargo-llvm-cov-x86_64-unknown-linux-musl.tar.gz \
               | tar -xz -C "$HOME/.cargo/bin"
-      - run: cargo llvm-cov --locked --summary-only --fail-under-lines 90.000 --fail-under-functions 90.000
+      - run: cargo llvm-cov --locked --lcov --output-path target/lcov.info --fail-under-lines 90.000 --fail-under-functions 90.000
+      - run:
+          name: Upload coverage to Codecov
+          command: |
+            if [ -z "${CODECOV_TOKEN:-}" ]; then echo "CODECOV_TOKEN is not set; skipping the upload."; exit 0; fi
+            curl -fsSL -o codecov https://cli.codecov.io/v11.3.2/linux/codecov
+            echo "8e1bfb71661378530f6ea21e82b414095899e565cbb4cf555c613064be17b973  codecov" | sha256sum -c -
+            chmod +x codecov
+            ./codecov upload-process --fail-on-error --disable-search --git-service github \
+              --slug farhnkrnapratma/pelers --file target/lcov.info
       - save-cargo:
           scope: coverage
 
@@ -379,6 +388,7 @@ workflows:
             - addon-macos
             - addon-windows
             - addon-cross
-      - coverage
+      - coverage:
+          context: codecov
       - secrets
       - commitlint
