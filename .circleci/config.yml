@@ -279,6 +279,39 @@ jobs:
       - run: bunx napi artifacts --output-dir addons
       - store_artifacts:
           path: npm
+      - persist_to_workspace:
+          root: .
+          paths:
+            - npm
+
+  publish:
+    executor: rust
+    steps:
+      - checkout
+      - restore-cargo:
+          scope: test
+      - setup-bun
+      - setup-wasm-tools
+      - run: rustup target add wasm32-unknown-unknown
+      - attach_workspace:
+          at: .
+      - run: bun install --frozen-lockfile
+      - run: bun run build:wasm
+      - run:
+          name: Publish to npm
+          command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+            version=$(node -p "require('./package.json').version")
+            published() {
+              [ "$(curl -s -o /dev/null -w '%{http_code}' "https://registry.npmjs.org/${1/\//%2f}/$version")" = 200 ]
+            }
+            for dir in npm/*/; do
+              name=$(node -p "require('./${dir}package.json').name")
+              published "$name" || (cd "$dir" && npm publish --access public --tag latest)
+            done
+            bunx napi pre-publish -t npm --skip-optional-publish
+            name=$(node -p "require('./package.json').name")
+            published "$name" || npm publish --ignore-scripts --access public --tag latest
 
   coverage:
     executor: rust
@@ -340,7 +373,10 @@ workflows:
       - reuse
       - biome
       - lint
-      - test
+      - test:
+          filters:
+            tags:
+              only: /^v.*/
       - addon-linux:
           name: addon-linux-arm64-gnu
           platform: rust-arm
@@ -349,6 +385,8 @@ workflows:
               only:
                 - main
                 - /release\/.*/
+            tags:
+              only: /^v.*/
       - addon-linux:
           name: addon-linux-x64-musl
           platform: alpine
@@ -388,6 +426,15 @@ workflows:
             - addon-macos
             - addon-windows
             - addon-cross
+      - publish:
+          context: npm-publish
+          requires:
+            - package
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
       - coverage:
           context: codecov
       - secrets
