@@ -1,5 +1,5 @@
 {
-  "name": "pelers",
+  "name": "@farhnkrnapratma/pelers",
   "version": "1.0.0-alpha2",
   "description": "Fast Mermaid renderer to themeable SVG for Node.js, Bun and browsers. A Rust port of Pele.",
   "license": "MIT OR Apache-2.0",

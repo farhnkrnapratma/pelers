@@ -95,8 +95,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-android-arm64')
-        const bindingPackageVersion = require('pelers-android-arm64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-android-arm64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-android-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -111,8 +111,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-android-arm-eabi')
-        const bindingPackageVersion = require('pelers-android-arm-eabi/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-android-arm-eabi')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-android-arm-eabi/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -132,8 +132,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-win32-x64-gnu')
-          const bindingPackageVersion = require('pelers-win32-x64-gnu/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-win32-x64-gnu')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-win32-x64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -148,8 +148,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-win32-x64-msvc')
-          const bindingPackageVersion = require('pelers-win32-x64-msvc/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-win32-x64-msvc')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-win32-x64-msvc/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -165,8 +165,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-win32-ia32-msvc')
-        const bindingPackageVersion = require('pelers-win32-ia32-msvc/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-win32-ia32-msvc')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-win32-ia32-msvc/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -181,8 +181,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-win32-arm64-msvc')
-        const bindingPackageVersion = require('pelers-win32-arm64-msvc/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-win32-arm64-msvc')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-win32-arm64-msvc/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -200,8 +200,8 @@ function requireNative() {
       loadErrors.push(e)
     }
     try {
-      const binding = require('pelers-darwin-universal')
-      const bindingPackageVersion = require('pelers-darwin-universal/package.json').version
+      const binding = require('@farhnkrnapratma/pelers-darwin-universal')
+      const bindingPackageVersion = require('@farhnkrnapratma/pelers-darwin-universal/package.json').version
       if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
         throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
       }
@@ -216,8 +216,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-darwin-x64')
-        const bindingPackageVersion = require('pelers-darwin-x64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-darwin-x64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-darwin-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -232,8 +232,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-darwin-arm64')
-        const bindingPackageVersion = require('pelers-darwin-arm64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-darwin-arm64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-darwin-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -252,8 +252,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-freebsd-x64')
-        const bindingPackageVersion = require('pelers-freebsd-x64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-freebsd-x64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-freebsd-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -268,8 +268,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-freebsd-arm64')
-        const bindingPackageVersion = require('pelers-freebsd-arm64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-freebsd-arm64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-freebsd-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -284,8 +284,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-freebsd-ppc64')
-        const bindingPackageVersion = require('pelers-freebsd-ppc64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-freebsd-ppc64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-freebsd-ppc64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -305,8 +305,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-x64-musl')
-          const bindingPackageVersion = require('pelers-linux-x64-musl/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-x64-musl')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-x64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -321,8 +321,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-x64-gnu')
-          const bindingPackageVersion = require('pelers-linux-x64-gnu/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-x64-gnu')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-x64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -339,8 +339,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-arm64-musl')
-          const bindingPackageVersion = require('pelers-linux-arm64-musl/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-arm64-musl')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-arm64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -355,8 +355,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-arm64-gnu')
-          const bindingPackageVersion = require('pelers-linux-arm64-gnu/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-arm64-gnu')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-arm64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -373,8 +373,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-arm-musleabihf')
-          const bindingPackageVersion = require('pelers-linux-arm-musleabihf/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-arm-musleabihf')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-arm-musleabihf/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -389,8 +389,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-arm-gnueabihf')
-          const bindingPackageVersion = require('pelers-linux-arm-gnueabihf/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-arm-gnueabihf')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-arm-gnueabihf/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -407,8 +407,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-loong64-musl')
-          const bindingPackageVersion = require('pelers-linux-loong64-musl/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-loong64-musl')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-loong64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -423,8 +423,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-loong64-gnu')
-          const bindingPackageVersion = require('pelers-linux-loong64-gnu/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-loong64-gnu')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-loong64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -441,8 +441,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-riscv64-musl')
-          const bindingPackageVersion = require('pelers-linux-riscv64-musl/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-riscv64-musl')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-riscv64-musl/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -457,8 +457,8 @@ function requireNative() {
           loadErrors.push(e)
         }
         try {
-          const binding = require('pelers-linux-riscv64-gnu')
-          const bindingPackageVersion = require('pelers-linux-riscv64-gnu/package.json').version
+          const binding = require('@farhnkrnapratma/pelers-linux-riscv64-gnu')
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-riscv64-gnu/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
             throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
@@ -474,8 +474,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-linux-ppc64-gnu')
-        const bindingPackageVersion = require('pelers-linux-ppc64-gnu/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-linux-ppc64-gnu')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-ppc64-gnu/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -490,8 +490,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-linux-s390x-gnu')
-        const bindingPackageVersion = require('pelers-linux-s390x-gnu/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-linux-s390x-gnu')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-linux-s390x-gnu/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -510,8 +510,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-openharmony-arm64')
-        const bindingPackageVersion = require('pelers-openharmony-arm64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-openharmony-arm64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-openharmony-arm64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -526,8 +526,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-openharmony-x64')
-        const bindingPackageVersion = require('pelers-openharmony-x64/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-openharmony-x64')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-openharmony-x64/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -542,8 +542,8 @@ function requireNative() {
         loadErrors.push(e)
       }
       try {
-        const binding = require('pelers-openharmony-arm')
-        const bindingPackageVersion = require('pelers-openharmony-arm/package.json').version
+        const binding = require('@farhnkrnapratma/pelers-openharmony-arm')
+        const bindingPackageVersion = require('@farhnkrnapratma/pelers-openharmony-arm/package.json').version
         if (bindingPackageVersion !== '1.0.0-alpha2' && process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
           throw new Error(`Native binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
         }
@@ -681,16 +681,16 @@ if (!nativeBinding || forceWasi) {
     let candidateError = null
     let candidateFailed = false
     try {
-      candidateError = __napiWasiResolveCandidate('pelers-wasm32-wasi', true, undefined)
+      candidateError = __napiWasiResolveCandidate('@farhnkrnapratma/pelers-wasm32-wasi', true, undefined)
       candidateFailed = candidateError !== null
       if (!candidateFailed) {
         if (process.env.NAPI_RS_ENFORCE_VERSION_CHECK && process.env.NAPI_RS_ENFORCE_VERSION_CHECK !== '0') {
-          const bindingPackageVersion = require('pelers-wasm32-wasi/package.json').version
+          const bindingPackageVersion = require('@farhnkrnapratma/pelers-wasm32-wasi/package.json').version
           if (bindingPackageVersion !== '1.0.0-alpha2') {
             throw new Error(`WASI binding package version mismatch, expected 1.0.0-alpha2 but got ${bindingPackageVersion}. You can reinstall dependencies to fix this issue.`)
           }
         }
-        wasiBinding = require('pelers-wasm32-wasi')
+        wasiBinding = require('@farhnkrnapratma/pelers-wasm32-wasi')
         nativeBinding = wasiBinding
         __napiLoadedBindingTarget = 'wasm32-wasi'
         wasiBindingLoaded = true
