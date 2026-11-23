@@ -14,9 +14,9 @@ Pelers is a Rust rewrite of [Pele](https://github.com/obsidianmd/pele), a Mermai
 Pass Mermaid text, get an SVG string back:
 
 ```ts
-import { render } from "pelers";
+import { render } from "@farhnkrnapratma/pelers";
 
-const svg = render("flowchart LR\n  A --> B");
+const { svg } = render("flowchart LR\n  A --> B");
 ```
 
 ### Mermaid
@@ -47,8 +47,8 @@ flowchart TD
 ## Install
 
 ```sh
-bun add pelers          # JavaScript / TypeScript (native addon for Node and Bun)
-cargo add pelers        # Rust
+npm install @farhnkrnapratma/pelers   # JavaScript / TypeScript (or: bun add, pnpm add)
+cargo add pelers                      # Rust
 ```
 
 ## Status
