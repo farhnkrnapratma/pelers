@@ -17,6 +17,7 @@ mod palette_oracle;
 mod pelers_corpus;
 mod preprocess_oracle;
 mod render_oracle;
+mod security;
 mod semantic_oracle;
 mod svg_edges_oracle;
 mod svg_shapes_oracle;
