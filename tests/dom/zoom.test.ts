@@ -86,8 +86,11 @@ const drawingIn = (shown: number) => {
     element: element as unknown as HTMLElement,
     svg,
     listening: (type: string) => listening.get(type) ?? 0,
-    fire: (type: string, event: unknown) =>
-      handlers.get(type)?.forEach((handler) => handler(event)),
+    fire: (type: string, event: unknown) => {
+      handlers.get(type)?.forEach((handler) => {
+        handler(event);
+      });
+    },
     show: (width: number) => {
       shown = width;
       element.clientWidth = width;

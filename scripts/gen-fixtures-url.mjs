@@ -1,7 +1,6 @@
 import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 
-const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const url = await peleSrc("util/url.ts");
 
 const inputs = [
@@ -50,7 +49,7 @@ const inputs = [
   "https://example.com/%ZZ",
   "data&#58;x",
   "&#1e3;javascript:x",
-  "mailto:" + "a".repeat(50),
+  `mailto:${"a".repeat(50)}`,
   "https://a.b/?x=é中",
   "abc:def",
   "1:2",

@@ -400,8 +400,8 @@ describe("mount", () => {
     handle.update(FLOW, options);
     expect(handle.zoom).toBeDefined();
     // Nothing has been shrunk here, so there is nothing to enlarge.
-    expect(handle.zoom!.fit).toBe(1);
-    expect(handle.zoom!.scale).toBe(1);
+    expect(handle.zoom?.fit).toBe(1);
+    expect(handle.zoom?.scale).toBe(1);
   });
 
   it("keeps to a width the host sets", () => {
@@ -705,14 +705,14 @@ describe("mount", () => {
 
   it("gives each diagram its own ids", () => {
     const text = "flowchart LR\n  accTitle: Steps\n  A --> B";
-    const first = mount(element(500), text, options).result!.svg;
-    const second = mount(element(500), text, options).result!.svg;
+    const first = mount(element(500), text, options).result?.svg;
+    const second = mount(element(500), text, options).result?.svg;
     const ids = (svg: string) =>
       [...svg.matchAll(/ id="([^"]+)"/g)].map((m) => m[1]);
     expect(ids(first).length).toBeGreaterThan(0);
     expect(ids(first).filter((id) => ids(second).includes(id))).toEqual([]);
     expect(
-      mount(element(500), text, { ...options, idPrefix: "own" }).result!.svg,
+      mount(element(500), text, { ...options, idPrefix: "own" }).result?.svg,
     ).toContain('id="own-title"');
   });
 

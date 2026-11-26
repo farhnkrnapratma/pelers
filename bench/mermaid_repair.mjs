@@ -76,7 +76,7 @@ function stripAccDescr(lines) {
 }
 
 async function repair(source) {
-  let lines = stripAccDescr(source.split("\n"));
+  const lines = stripAccDescr(source.split("\n"));
   if (await renders(lines.join("\n"))) return { lines, removed: [] };
   const fm = frontMatterEnd(lines);
   const first = Math.max(fm, 0);

@@ -406,7 +406,7 @@ const ER_STATEMENTS = [
 ];
 
 function insertStatements(source, random, count, statements, header) {
-  if (!new RegExp("^\\s*" + header + "\\b").test(source)) return [];
+  if (!new RegExp(`^\\s*${header}\\b`).test(source)) return [];
   const lines = source.split("\n");
   const variants = [];
   for (let k = 0; k < count; k++) {
@@ -480,7 +480,7 @@ function usecaseStatement(random) {
   const props = [];
   const count = 1 + Math.floor(random() * 3);
   for (let k = 0; k < count; k++) {
-    if (random() < 0.4) props.push("type: " + pick(USECASE_TYPES));
+    if (random() < 0.4) props.push(`type: ${pick(USECASE_TYPES)}`);
     else
       props.push(
         pick(
@@ -490,7 +490,7 @@ function usecaseStatement(random) {
         ),
       );
   }
-  return kind + " " + id + "@{ " + props.join(", ") + " }";
+  return `${kind} ${id}@{ ${props.join(", ")} }`;
 }
 
 function usecaseStatements(source, random, count) {
@@ -523,7 +523,7 @@ function mathVariants(source, random, count) {
     const body = MATH_BODIES[Math.floor(random() * MATH_BODIES.length)];
     const replaced = source.replace(/\[([^\]\n]*)\]|"([^"\n]*)"/g, (whole) => {
       if (random() < 0.5) return whole;
-      return whole[0] + "$" + body + "$" + whole[whole.length - 1];
+      return `${whole[0]}$${body}$${whole[whole.length - 1]}`;
     });
     variants.push(replaced);
   }

@@ -29,7 +29,7 @@ async function launch() {
 await launch();
 let counter = 0;
 async function renders(text) {
-  const id = "s" + counter++;
+  const id = `s${counter++}`;
   try {
     return await page.evaluate(
       async (t, n) => {

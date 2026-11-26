@@ -1,7 +1,6 @@
 import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 
-const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const ink = await peleSrc("svg/ink.ts");
 
 const COLORS = [

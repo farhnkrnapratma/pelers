@@ -47,7 +47,10 @@ function canvasMeasurer(fontFamily, monoFamily = "monospace") {
         "px " +
         (style & MONO ? monoFamily : fontFamily);
       let cache = caches.get(font);
-      if (!cache) caches.set(font, (cache = new Map()));
+      if (!cache) {
+        cache = new Map();
+        caches.set(font, cache);
+      }
       let w = cache.get(text);
       if (w === undefined) {
         if (font !== currentFont) ctx.font = currentFont = font;

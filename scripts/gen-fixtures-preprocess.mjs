@@ -59,7 +59,7 @@ const YAML_CASES = [
   "__proto__: 1\nb:\n  __proto__: {x: 1}\n",
   "{ a: 1",
   "a:\n\tb: 1",
-  "{ a: " + "[".repeat(100) + " }",
+  `{ a: ${"[".repeat(100)} }`,
   'a: "\\xZZ"',
   'a: "\\u00e9\\x41\\U0001F600\\n\\t\\q"',
   'a: "\\uD800"',
@@ -212,7 +212,7 @@ function addPre(source) {
     });
   });
   pre.push([source, result]);
-  if (/^[\x00-\x7f]*$/.test(source) && !result.startsWith("!")) {
+  if (/^[\p{ASCII}]*$/u.test(source) && !result.startsWith("!")) {
     const steps = [];
     const out = preprocess(source, steps);
     const parsed = encodeEntities(

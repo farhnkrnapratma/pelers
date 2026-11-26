@@ -1,7 +1,6 @@
 import { fixtures as OUT, peleSrc, writeFixture } from "./oracle.mjs";
 import { join } from "node:path";
 
-const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const shapes = await peleSrc("diagrams/flowchart/shapes.ts");
 const names = [
   "rect",

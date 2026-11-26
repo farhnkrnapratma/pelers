@@ -47,7 +47,7 @@ function contentId(text) {
 }
 
 const sankeyGradient =
-  /<linearGradient id="([^"]*-sankey-)([0-9a-z]+)" gradientUnits="userSpaceOnUse" ([^]*?)<\/linearGradient>/g;
+  /<linearGradient id="([^"]*-sankey-)([0-9a-z]+)" gradientUnits="userSpaceOnUse" ([\s\S]*?)<\/linearGradient>/g;
 
 function rehashSankey(svg) {
   const ids = new Map();

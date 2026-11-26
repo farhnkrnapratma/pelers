@@ -227,7 +227,7 @@ const values = [
   -Infinity,
 ];
 for (let i = 0; i < 400 * SCALE; i++)
-  values.push((random() - 0.5) * Math.pow(10, Math.floor(random() * 8)));
+  values.push((random() - 0.5) * 10 ** Math.floor(random() * 8));
 const numbers = values.map((value) => [text(value), num(value)]);
 const escapes = ["plain", 'a<b>&"c', "\u0001\u007fx￾", "&amp;", "😀 <>"].map(
   (s) => [s, esc(s)],

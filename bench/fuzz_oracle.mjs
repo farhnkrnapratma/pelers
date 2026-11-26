@@ -1,10 +1,7 @@
 import { toPelers } from "./corpus.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
 import { createRequire } from "node:module";
-import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const [casesPath, outPath] = process.argv.slice(2);
 const oracle = await import(
   createRequire(import.meta.url).resolve("pele")

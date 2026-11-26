@@ -73,7 +73,7 @@ for (let h = 0; h < 6.3; h += 0.05)
 for (let n = 190; n <= 202; n++)
   colors.push(
     `rgb(1${" ".repeat(n - 9)}2 3)`,
-    `#fff${" ".repeat(5)}`.padEnd(n, " ") + "",
+    `#fff${" ".repeat(5)}`.padEnd(n, " "),
   );
 colors.push(
   "var(--pelers)",

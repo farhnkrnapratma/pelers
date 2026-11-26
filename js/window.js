@@ -6,5 +6,5 @@ export function room(element, style) {
     element.clientWidth -
     (parseFloat(style.paddingLeft) || 0) -
     (parseFloat(style.paddingRight) || 0);
-  return width > 0 ? width : 0;
+  return Math.max(width, 0);
 }

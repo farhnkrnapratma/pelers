@@ -2,9 +2,7 @@ import { fixtures as OUT, peleSrc, root, writeFixture } from "./oracle.mjs";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-const SCALE = Number(process.env.PELERS_FUZZ_SCALE ?? 1);
 const { tokenize } = await peleSrc("diagrams/flowchart/lexer.ts");
-const { T, TOKEN_NAMES } = await peleSrc("diagrams/flowchart/tokens.ts");
 
 const inputs = [];
 const goldenDir = join(root, "tests/golden/flowchart");
