@@ -5,6 +5,7 @@
     "": {
       "name": "pelers-website",
       "dependencies": {
+        "@farhnkrnapratma/pelers": "1.0.0-alpha4",
         "highlight.js": "^11.12.0",
         "marked": "^18.2.1",
       },
@@ -30,6 +31,34 @@
     "@emnapi/runtime": ["@emnapi/runtime@2.0.0-beta.2", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-JcrSPzPvZuNZvJqPTF9Fw25LbOJ8avzFVlaf2grmH4Cku0oGP47tRgqPZadcfj3YoZMHkFVnCYFbQM8I+i5QEw=="],
 
     "@emnapi/wasi-threads": ["@emnapi/wasi-threads@2.2.0", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-JP7OYH38Q7+pyTAe14raZHLQIK7BDKbdwji+Xi3pcd/6QkJYQH3SX4wu6EplGrGJWRepoNzedfm0G3B9Z4e9Rw=="],
+
+    "@farhnkrnapratma/pelers": ["@farhnkrnapratma/pelers@1.0.0-alpha4", "", { "optionalDependencies": { "@farhnkrnapratma/pelers-darwin-arm64": "1.0.0-alpha4", "@farhnkrnapratma/pelers-darwin-x64": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-arm-gnueabihf": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-arm64-gnu": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-arm64-musl": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-ppc64-gnu": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-riscv64-gnu": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-s390x-gnu": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-x64-gnu": "1.0.0-alpha4", "@farhnkrnapratma/pelers-linux-x64-musl": "1.0.0-alpha4", "@farhnkrnapratma/pelers-win32-arm64-msvc": "1.0.0-alpha4", "@farhnkrnapratma/pelers-win32-ia32-msvc": "1.0.0-alpha4", "@farhnkrnapratma/pelers-win32-x64-msvc": "1.0.0-alpha4" } }, "sha512-ExnS2Yg/a8aMbu/7pk8r1BvnkknDGLYwiso3WPrJMnqjHqsxULBD44o3/eiJzJewSV/DlxOXd4OLKVSmFp+VkQ=="],
+
+    "@farhnkrnapratma/pelers-darwin-arm64": ["@farhnkrnapratma/pelers-darwin-arm64@1.0.0-alpha4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-214766+Uqy5v+StnSlcOdisz1L7vc4ul/oi7AnCLcFFc9X4EomLwQCFfQdj6oYzj4dSbcSBTD35poW8AoFFkZA=="],
+
+    "@farhnkrnapratma/pelers-darwin-x64": ["@farhnkrnapratma/pelers-darwin-x64@1.0.0-alpha4", "", { "os": "darwin", "cpu": "x64" }, "sha512-khM3St3MGSzhrx7f+mpVYmvF5h5djJWcNTs8/6SLQLaigTQooYIafhnbjakFNJOEieGxz0CJ6HhCk9JOiTzseg=="],
+
+    "@farhnkrnapratma/pelers-linux-arm-gnueabihf": ["@farhnkrnapratma/pelers-linux-arm-gnueabihf@1.0.0-alpha4", "", { "os": "linux", "cpu": "arm" }, "sha512-SIZ6wa+wgS7PJW6cQ28Udim+hxOaM7WrPGfv3y1wwlGOY7h6dwvzTe2bEn8nO87fAFLXjBYQNwn1XnDX9FN25w=="],
+
+    "@farhnkrnapratma/pelers-linux-arm64-gnu": ["@farhnkrnapratma/pelers-linux-arm64-gnu@1.0.0-alpha4", "", { "os": "linux", "cpu": "arm64", "libc": "glibc" }, "sha512-vYBhyNqvp5uk4m/alqJAYWSkGTmMoO9FKL+F3kMhUplgaLikjzSMEOtnQejIc0kW5mj0gZH4cmExN9v/+zh+fA=="],
+
+    "@farhnkrnapratma/pelers-linux-arm64-musl": ["@farhnkrnapratma/pelers-linux-arm64-musl@1.0.0-alpha4", "", { "os": "linux", "cpu": "arm64", "libc": "musl" }, "sha512-zZn927y0uoiypRasQg/NrlpE84Lg5G0jOJeVUsG4kOjOrXMAhFVt6eyNi2W1WYsHarSiFFYXX/LRBnbbeGfTNQ=="],
+
+    "@farhnkrnapratma/pelers-linux-ppc64-gnu": ["@farhnkrnapratma/pelers-linux-ppc64-gnu@1.0.0-alpha4", "", { "os": "linux", "cpu": "ppc64", "libc": "glibc" }, "sha512-2yYTeMuoKhuDUsAWOnCDxRd11YlDlLykAOFQ18wm961TcDfFnu8F+bTw16mu3tg2gT7GBgMQzaaJpyYk90hpjg=="],
+
+    "@farhnkrnapratma/pelers-linux-riscv64-gnu": ["@farhnkrnapratma/pelers-linux-riscv64-gnu@1.0.0-alpha4", "", { "os": "linux", "cpu": "none", "libc": "glibc" }, "sha512-tv7MgswOecdCL4VD1ONUhWVEJ6NP1E/nO79rzmA/nGko9+JJLclX/LhAz9/Mi5K5cXD9rQscoc2DEAXJBQWd9w=="],
+
+    "@farhnkrnapratma/pelers-linux-s390x-gnu": ["@farhnkrnapratma/pelers-linux-s390x-gnu@1.0.0-alpha4", "", { "os": "linux", "cpu": "s390x", "libc": "glibc" }, "sha512-nec7iCntRcAP5WDVLEbf9+XpE0jbwTpaPJXCX1mlXBL3r437Tyyl5jadJCI27XrF4IU1XLZcdM9UqXF3voL3mA=="],
+
+    "@farhnkrnapratma/pelers-linux-x64-gnu": ["@farhnkrnapratma/pelers-linux-x64-gnu@1.0.0-alpha4", "", { "os": "linux", "cpu": "x64", "libc": "glibc" }, "sha512-U8Z9zLYJ4C2IZePD8sLM/2dy2BeHcImjlBK8p1Ssh3TRN8GS5uYOwZWpk7FSvoqejvhmFLugHonThY7c/uZJzw=="],
+
+    "@farhnkrnapratma/pelers-linux-x64-musl": ["@farhnkrnapratma/pelers-linux-x64-musl@1.0.0-alpha4", "", { "os": "linux", "cpu": "x64", "libc": "musl" }, "sha512-X1hIZPLlX/YFUnUQ4BuZc8UxEdl+uo9dsPPa3h1YTY5M2ambAJoOhaMqOYXK94Aj/dpirrKGtcLT4NCMrWNhbA=="],
+
+    "@farhnkrnapratma/pelers-win32-arm64-msvc": ["@farhnkrnapratma/pelers-win32-arm64-msvc@1.0.0-alpha4", "", { "os": "win32", "cpu": "arm64" }, "sha512-8q2M/Ea7wsoQ6ZvYvLz2LWzyJBygL/piEepgiaCpLSDNGLdTQoJMt+afTqcMFNlWYnNay3tN+TDoh/wgmZndvw=="],
+
+    "@farhnkrnapratma/pelers-win32-ia32-msvc": ["@farhnkrnapratma/pelers-win32-ia32-msvc@1.0.0-alpha4", "", { "os": "win32", "cpu": "ia32" }, "sha512-5z7lFIxeBG7U358Ooa5gnPyaxVmXTnOlSC2JOphfJe/+nWBy9vyKJj1VukmKxdvuT93CPandIwQ27/M9mGP8HQ=="],
+
+    "@farhnkrnapratma/pelers-win32-x64-msvc": ["@farhnkrnapratma/pelers-win32-x64-msvc@1.0.0-alpha4", "", { "os": "win32", "cpu": "x64" }, "sha512-3k5GeoMYtTeSnBbJOzaA1Ailem+BbWRNT+4N+UNWaBmsUbJ6c0SRpO7IAvpSAcYC6X8l+blG0tpQhXGtqMm0FA=="],
 
     "@fontsource-variable/archivo": ["@fontsource-variable/archivo@5.3.0", "", {}, "sha512-HogK8FJelrD1o7TlZlkIVtHgc20bO5PZRWE7mUeUTdMN055alznQV6/00J00IBeu8FQAH4s3zW9UJNvKExXf+g=="],
 

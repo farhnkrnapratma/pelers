@@ -16,6 +16,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
   },
   "dependencies": {
+    "@farhnkrnapratma/pelers": "1.0.0-alpha4",
     "highlight.js": "^11.12.0",
     "marked": "^18.2.1"
   },

@@ -26,6 +26,14 @@ const copyButton = (code: string): string =>
 const marked = new Marked({
   gfm: true,
   renderer: {
+    text(token) {
+      if ("tokens" in token && token.tokens) {
+        return this.parser.parseInline(token.tokens);
+      }
+      return "escaped" in token && token.escaped
+        ? token.text
+        : escapeHtml(token.text);
+    },
     code({ text, lang }) {
       const language =
         languageAliases[(lang ?? "").trim()] ?? (lang ?? "").trim();

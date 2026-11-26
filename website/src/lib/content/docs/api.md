@@ -10,9 +10,17 @@ Pelers ships as `@farhnkrnapratma/pelers` on npm, with a native addon for Node.j
 ## JavaScript and TypeScript
 
 ```ts
-import { detectType, parse, PelersError, render, supports } from "@farhnkrnapratma/pelers";
+import {
+  detectType,
+  parse,
+  PelersError,
+  render,
+  supports,
+} from "@farhnkrnapratma/pelers";
 
-const { svg, width, height } = render('pie title Pets\n  "Dogs": 3\n  "Cats": 1');
+const { svg, width, height } = render(
+  'pie title Pets\n  "Dogs": 3\n  "Cats": 1',
+);
 const model = parse('pie\n  "Dogs": 3');
 const larger = render(model, { fontSize: 18 });
 ```
@@ -76,4 +84,3 @@ println!("{}", rendered.svg);
 - `ParseOptions` has `limit` (source length) and `max_edges`.
 - `RenderOptions` has the font size, padding, `max_width`, `link_schemes`, `image_schemes`, and the `id_prefix` that keeps ids unique when several diagrams share a page.
 - `pelers::api::render_batch(&sources, threads)` renders many diagrams in parallel and returns the results in input order.
-
