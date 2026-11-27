@@ -6,6 +6,8 @@ A fast Mermaid renderer that turns diagram source into themeable SVG, without a 
 
 pelers is a Rust port of [Pele](https://github.com/obsidianmd/pele) 1.13.0 by kepano (Obsidian). For all 33 diagram types it produces the same SVG as Pele on Pele's own test corpus, apart from the naming described in [Differences from Pele](#differences-from-pele).
 
+The documentation and a browser playground live at [pelers.fkp.my.id](https://pelers.fkp.my.id) ([source](https://github.com/farhnkrnapratma/pelers-website)).
+
 > **Alpha.** The API follows Pele's and may still change before 1.0.0. The npm package moved from `pelers` to `@farhnkrnapratma/pelers` in 1.0.0-alpha4.
 
 ## Features
